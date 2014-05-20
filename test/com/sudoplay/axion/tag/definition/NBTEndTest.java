@@ -4,23 +4,25 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import com.sudoplay.axion.tag.impl.TagEnd;
+
 public class NBTEndTest {
 
   @Test
   public void hasTagIdZero() {
-    NBTEnd nbtEnd = new NBTEnd();
+    TagEnd nbtEnd = new TagEnd();
     assertTrue(nbtEnd.getTagId() == 0);
   }
 
   @Test
   public void hasTagNameTAG_End() {
-    NBTEnd nbtEnd = new NBTEnd();
+    TagEnd nbtEnd = new TagEnd();
     assertTrue("TAG_End".equals(nbtEnd.getTagName()));
   }
   
   @Test
   public void hasNoName() {
-    NBTEnd nbtEnd = new NBTEnd();
+    TagEnd nbtEnd = new TagEnd();
     nbtEnd.setName("shouldhavenoname");
     assertTrue("".equals(nbtEnd.getName()));
   }
@@ -28,7 +30,7 @@ public class NBTEndTest {
   @Test
   public void canNotRead() {
     try {
-      new NBTEnd().read(null);
+      new TagEnd().read(null);
     } catch (UnsupportedOperationException e) {
       assert true;
     }
@@ -38,7 +40,7 @@ public class NBTEndTest {
   @Test
   public void canNotWrite() {
     try {
-      new NBTEnd().write(null);
+      new TagEnd().write(null);
     } catch (UnsupportedOperationException e) {
       assert true;
     }

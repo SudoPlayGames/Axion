@@ -4,7 +4,7 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-public interface Interface_NBT {
+public interface Interface_Tag {
 
   public byte getTagId();
 

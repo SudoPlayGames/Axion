@@ -4,9 +4,9 @@ import java.io.Closeable;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-import com.sudoplay.axion.serializer.Interface_NBTSerializer;
-import com.sudoplay.axion.serializer.NBTSerializer;
-import com.sudoplay.axion.tag.definition.NBTCompound;
+import com.sudoplay.axion.serializer.Interface_TagSerializer;
+import com.sudoplay.axion.serializer.TagSerializer;
+import com.sudoplay.axion.tag.impl.TagCompound;
 
 /**
  * This class provides a wrapper around a DataOutputStream to facilitate writing
@@ -15,21 +15,21 @@ import com.sudoplay.axion.tag.definition.NBTCompound;
  * @author Jason Taylor
  * 
  */
-public class NBTOutputStream implements Closeable {
+public class TagOutputStream implements Closeable {
 
   private final DataOutputStream dataOutputStream;
-  private Interface_NBTSerializer nbtSerializer = NBTSerializer.INSTANCE;
+  private Interface_TagSerializer nbtSerializer = TagSerializer.INSTANCE;
 
-  public NBTOutputStream(final DataOutputStream newDataOutputStream) {
+  public TagOutputStream(final DataOutputStream newDataOutputStream) {
     dataOutputStream = newDataOutputStream;
   }
 
-  public NBTOutputStream(final DataOutputStream newDataOutputStream, final Interface_NBTSerializer newNBTSerializer) {
+  public TagOutputStream(final DataOutputStream newDataOutputStream, final Interface_TagSerializer newNBTSerializer) {
     dataOutputStream = newDataOutputStream;
     nbtSerializer = newNBTSerializer;
   }
 
-  public void write(NBTCompound nbt) throws IOException {
+  public void write(TagCompound nbt) throws IOException {
     nbtSerializer.write(nbt, dataOutputStream);
   }
 

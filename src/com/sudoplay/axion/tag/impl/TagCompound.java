@@ -1,4 +1,4 @@
-package com.sudoplay.axion.tag.definition;
+package com.sudoplay.axion.tag.impl;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.sudoplay.axion.tag.Abstract_NBT;
+import com.sudoplay.axion.tag.Abstract_Tag;
 
 /**
  * @tag.type 10
@@ -26,28 +26,28 @@ import com.sudoplay.axion.tag.Abstract_NBT;
  * @author Jason Taylor
  * 
  */
-public class NBTCompound extends Abstract_NBT {
+public class TagCompound extends Abstract_Tag {
 
   public static final byte TAG_ID = 10;
   public static final String TAG_NAME = "TAG_Compound";
 
-  private Map<String, Abstract_NBT> data;
+  private Map<String, Abstract_Tag> data;
 
-  public NBTCompound() {
+  public TagCompound() {
     super(null);
-    data = new HashMap<String, Abstract_NBT>();
+    data = new HashMap<String, Abstract_Tag>();
   }
 
-  public NBTCompound(final String newName) {
+  public TagCompound(final String newName) {
     super(newName);
-    data = new HashMap<String, Abstract_NBT>();
+    data = new HashMap<String, Abstract_Tag>();
   }
 
-  public Map<String, Abstract_NBT> getAsMap() {
+  public Map<String, Abstract_Tag> getAsMap() {
     return data;
   }
 
-  public Map<String, Abstract_NBT> getAsUnmodifiableMap() {
+  public Map<String, Abstract_Tag> getAsUnmodifiableMap() {
     return Collections.unmodifiableMap(data);
   }
 
@@ -68,7 +68,7 @@ public class NBTCompound extends Abstract_NBT {
    */
   public boolean getBoolean(final String name, final boolean defaultValue) {
     if (data.containsKey(name)) {
-      return ((NBTByte) data.get(name)).get() == 0x01 ? true : false;
+      return ((TagByte) data.get(name)).get() == 0x01 ? true : false;
     } else {
       return defaultValue;
     }
@@ -83,7 +83,7 @@ public class NBTCompound extends Abstract_NBT {
    */
   public Boolean getBooleanOrNull(final String name) {
     if (data.containsKey(name)) {
-      return ((NBTByte) data.get(name)).get() == 0x01 ? true : false;
+      return ((TagByte) data.get(name)).get() == 0x01 ? true : false;
     } else {
       return null;
     }
@@ -98,7 +98,7 @@ public class NBTCompound extends Abstract_NBT {
    */
   public byte getByte(final String name, final byte defaultValue) {
     if (data.containsKey(name)) {
-      return ((NBTByte) data.get(name)).get();
+      return ((TagByte) data.get(name)).get();
     } else {
       return defaultValue;
     }
@@ -112,7 +112,7 @@ public class NBTCompound extends Abstract_NBT {
    */
   public Byte getByteOrNull(final String name) {
     if (data.containsKey(name)) {
-      return ((NBTByte) data.get(name)).get();
+      return ((TagByte) data.get(name)).get();
     } else {
       return null;
     }
@@ -127,7 +127,7 @@ public class NBTCompound extends Abstract_NBT {
    */
   public byte[] getByteArray(final String name, final byte[] defaultValue) {
     if (data.containsKey(name)) {
-      return ((NBTByteArray) data.get(name)).get();
+      return ((TagByteArray) data.get(name)).get();
     } else {
       return defaultValue;
     }
@@ -141,7 +141,7 @@ public class NBTCompound extends Abstract_NBT {
    */
   public byte[] getByteArrayOrNull(final String name) {
     if (data.containsKey(name)) {
-      return ((NBTByteArray) data.get(name)).get();
+      return ((TagByteArray) data.get(name)).get();
     } else {
       return null;
     }
@@ -154,8 +154,8 @@ public class NBTCompound extends Abstract_NBT {
    * @param name
    * @return NBTCompound tag with name
    */
-  public NBTCompound getCompoundOrNull(final String name) {
-    return (NBTCompound) data.get(name);
+  public TagCompound getCompoundOrNull(final String name) {
+    return (TagCompound) data.get(name);
   }
 
   /**
@@ -167,7 +167,7 @@ public class NBTCompound extends Abstract_NBT {
    */
   public double getDouble(final String name, final double defaultValue) {
     if (data.containsKey(name)) {
-      return ((NBTDouble) data.get(name)).get();
+      return ((TagDouble) data.get(name)).get();
     } else {
       return defaultValue;
     }
@@ -181,7 +181,7 @@ public class NBTCompound extends Abstract_NBT {
    */
   public Double getDoubleOrNull(final String name) {
     if (data.containsKey(name)) {
-      return ((NBTDouble) data.get(name)).get();
+      return ((TagDouble) data.get(name)).get();
     } else {
       return null;
     }
@@ -196,7 +196,7 @@ public class NBTCompound extends Abstract_NBT {
    */
   public float getFloat(final String name, final float defaultValue) {
     if (data.containsKey(name)) {
-      return ((NBTFloat) data.get(name)).get();
+      return ((TagFloat) data.get(name)).get();
     } else {
       return defaultValue;
     }
@@ -210,7 +210,7 @@ public class NBTCompound extends Abstract_NBT {
    */
   public Float getFloatOrNull(final String name) {
     if (data.containsKey(name)) {
-      return ((NBTFloat) data.get(name)).get();
+      return ((TagFloat) data.get(name)).get();
     } else {
       return null;
     }
@@ -225,7 +225,7 @@ public class NBTCompound extends Abstract_NBT {
    */
   public int getInt(final String name, final int defaultValue) {
     if (data.containsKey(name)) {
-      return ((NBTInt) data.get(name)).get();
+      return ((TagInt) data.get(name)).get();
     } else {
       return defaultValue;
     }
@@ -239,7 +239,7 @@ public class NBTCompound extends Abstract_NBT {
    */
   public Integer getIntOrNull(final String name) {
     if (data.containsKey(name)) {
-      return ((NBTInt) data.get(name)).get();
+      return ((TagInt) data.get(name)).get();
     } else {
       return null;
     }
@@ -254,7 +254,7 @@ public class NBTCompound extends Abstract_NBT {
    */
   public int[] getIntArray(final String name, final int[] defaultValue) {
     if (data.containsKey(name)) {
-      return ((NBTIntArray) data.get(name)).get();
+      return ((TagIntArray) data.get(name)).get();
     } else {
       return defaultValue;
     }
@@ -268,7 +268,7 @@ public class NBTCompound extends Abstract_NBT {
    */
   public int[] getIntArrayOrNull(final String name) {
     if (data.containsKey(name)) {
-      return ((NBTIntArray) data.get(name)).get();
+      return ((TagIntArray) data.get(name)).get();
     } else {
       return null;
     }
@@ -280,8 +280,8 @@ public class NBTCompound extends Abstract_NBT {
    * @param name
    * @return NBTList named tag or null if no tag
    */
-  public NBTList getListOrNull(final String name) {
-    return (NBTList) data.get(name);
+  public TagList getListOrNull(final String name) {
+    return (TagList) data.get(name);
   }
 
   /**
@@ -293,7 +293,7 @@ public class NBTCompound extends Abstract_NBT {
    */
   public long getLong(final String name, final long defaultValue) {
     if (data.containsKey(name)) {
-      return ((NBTLong) data.get(name)).get();
+      return ((TagLong) data.get(name)).get();
     } else {
       return defaultValue;
     }
@@ -307,7 +307,7 @@ public class NBTCompound extends Abstract_NBT {
    */
   public Long getLongOrNull(final String name) {
     if (data.containsKey(name)) {
-      return ((NBTLong) data.get(name)).get();
+      return ((TagLong) data.get(name)).get();
     } else {
       return null;
     }
@@ -322,7 +322,7 @@ public class NBTCompound extends Abstract_NBT {
    */
   public short getShort(final String name, final short defaultValue) {
     if (data.containsKey(name)) {
-      return ((NBTShort) data.get(name)).get();
+      return ((TagShort) data.get(name)).get();
     } else {
       return defaultValue;
     }
@@ -336,7 +336,7 @@ public class NBTCompound extends Abstract_NBT {
    */
   public Short getShortOrNull(final String name) {
     if (data.containsKey(name)) {
-      return ((NBTShort) data.get(name)).get();
+      return ((TagShort) data.get(name)).get();
     } else {
       return null;
     }
@@ -351,7 +351,7 @@ public class NBTCompound extends Abstract_NBT {
    */
   public String getString(final String name, final String defaultValue) {
     if (data.containsKey(name)) {
-      return ((NBTString) data.get(name)).get();
+      return ((TagString) data.get(name)).get();
     } else {
       return defaultValue;
     }

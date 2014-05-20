@@ -1,10 +1,10 @@
 package com.sudoplay.axion.tag;
 
-public abstract class Abstract_NBT implements Interface_NBT {
+public abstract class Abstract_Tag implements Interface_Tag {
 
   private String name;
 
-  public Abstract_NBT(final String newName) {
+  public Abstract_Tag(final String newName) {
     setName(newName);
   }
 

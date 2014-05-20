@@ -1,10 +1,10 @@
-package com.sudoplay.axion.tag.definition;
+package com.sudoplay.axion.tag.impl;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-import com.sudoplay.axion.tag.Abstract_NBT;
+import com.sudoplay.axion.tag.Abstract_Tag;
 
 /**
  * @tag.type 3
@@ -16,18 +16,18 @@ import com.sudoplay.axion.tag.Abstract_NBT;
  * @author Jason Taylor
  * 
  */
-public class NBTInt extends Abstract_NBT {
+public class TagInt extends Abstract_Tag {
 
   public static final byte TAG_ID = (byte) 3;
   public static final String TAG_NAME = "TAG_Int";
   
   private int data;
   
-  public NBTInt(final String newName) {
+  public TagInt(final String newName) {
     super(newName);
   }
 
-  public NBTInt(final String newName, final int newInt) {
+  public TagInt(final String newName, final int newInt) {
     super(newName);
     data = newInt;
   }

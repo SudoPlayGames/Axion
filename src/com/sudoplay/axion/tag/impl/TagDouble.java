@@ -1,10 +1,10 @@
-package com.sudoplay.axion.tag.definition;
+package com.sudoplay.axion.tag.impl;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-import com.sudoplay.axion.tag.Abstract_NBT;
+import com.sudoplay.axion.tag.Abstract_Tag;
 
 /**
  * @tag.type 6
@@ -17,18 +17,18 @@ import com.sudoplay.axion.tag.Abstract_NBT;
  * @author Jason Taylor
  * 
  */
-public class NBTDouble extends Abstract_NBT {
+public class TagDouble extends Abstract_Tag {
 
   public static final byte TAG_ID = (byte) 6;
   public static final String TAG_NAME = "TAG_Double";
 
   private double data;
 
-  public NBTDouble(final String newName) {
+  public TagDouble(final String newName) {
     super(newName);
   }
 
-  public NBTDouble(final String newName, final double newDouble) {
+  public TagDouble(final String newName, final double newDouble) {
     super(newName);
     data = newDouble;
   }

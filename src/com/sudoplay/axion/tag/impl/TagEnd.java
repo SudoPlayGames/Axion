@@ -1,9 +1,9 @@
-package com.sudoplay.axion.tag.definition;
+package com.sudoplay.axion.tag.impl;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 
-import com.sudoplay.axion.tag.Abstract_NBT;
+import com.sudoplay.axion.tag.Abstract_Tag;
 
 /**
  * @tag.type 0
@@ -20,13 +20,13 @@ import com.sudoplay.axion.tag.Abstract_NBT;
  * @author Jason Taylor
  * 
  */
-public class NBTEnd extends Abstract_NBT {
+public class TagEnd extends Abstract_Tag {
 
   public static final byte TAG_ID = (byte) 0;
   public static final String TAG_NAME = "TAG_End";
-  public static final NBTEnd INSTANCE = new NBTEnd();
+  public static final TagEnd INSTANCE = new TagEnd();
 
-  public NBTEnd() {
+  public TagEnd() {
     super(null);
   }
 
