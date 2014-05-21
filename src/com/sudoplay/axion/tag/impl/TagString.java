@@ -4,6 +4,7 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
+import com.sudoplay.axion.Axion;
 import com.sudoplay.axion.tag.Abstract_Tag;
 
 /**
@@ -24,7 +25,7 @@ public class TagString extends Abstract_Tag {
   public static final String TAG_NAME = "TAG_String";
   public static final String EMPTY = "";
 
-  private String data;
+  private String data = EMPTY;
 
   public TagString(final String newName) {
     super(newName);
@@ -37,9 +38,10 @@ public class TagString extends Abstract_Tag {
 
   public void set(final String newString) {
     if (newString == null) {
-      throw new IllegalArgumentException("TAG_String does not support a null payload");
+      data = EMPTY;
+    } else {
+      data = newString;
     }
-    data = newString;
   }
 
   public String get() {
@@ -57,16 +59,13 @@ public class TagString extends Abstract_Tag {
   }
 
   @Override
-  public void read(DataInput dataInput) throws IOException {
-    data = dataInput.readUTF();
+  public void read(Axion axion, DataInput input) throws IOException {
+    set(input.readUTF());
   }
 
   @Override
-  public void write(DataOutput dataOutput) throws IOException {
-    if (data == null) {
-      throw new IllegalArgumentException("TAG_String does not support a null payload");
-    }
-    dataOutput.writeUTF(data);
+  public void write(Axion axion, DataOutput output) throws IOException {
+    output.writeUTF(data);
   }
 
 }

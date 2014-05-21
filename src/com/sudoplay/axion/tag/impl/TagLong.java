@@ -4,6 +4,7 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
+import com.sudoplay.axion.Axion;
 import com.sudoplay.axion.tag.Abstract_Tag;
 
 /**
@@ -51,13 +52,13 @@ public class TagLong extends Abstract_Tag {
   }
 
   @Override
-  public void read(DataInput dataInput) throws IOException {
-    data = dataInput.readLong();
+  public void read(Axion axion, DataInput input) throws IOException {
+    data = input.readLong();
   }
 
   @Override
-  public void write(DataOutput dataOutput) throws IOException {
-    dataOutput.writeLong(data);
+  public void write(Axion axion, DataOutput output) throws IOException {
+    output.writeLong(data);
   }
 
 }

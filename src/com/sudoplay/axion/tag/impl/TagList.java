@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.sudoplay.axion.Axion;
 import com.sudoplay.axion.tag.Abstract_Tag;
-import com.sudoplay.axion.tag.TagFactory;
 
 /**
  * @tag.type 9
@@ -103,26 +103,26 @@ public class TagList extends Abstract_Tag {
   }
 
   @Override
-  public void read(DataInput dataInput) throws IOException {
-    type = dataInput.readByte();
-    int len = dataInput.readInt();
+  public void read(Axion axion, DataInput input) throws IOException {
+    type = input.readByte();
+    int len = input.readInt();
     data = new ArrayList<Abstract_Tag>();
     for (int i = 0; i < len; i++) {
-      Abstract_Tag tag = TagFactory.create(type, null);
-      tag.read(dataInput);
+      Abstract_Tag tag = axion.createTag(type, null);
+      tag.read(axion, input);
       data.add(tag);
     }
   }
 
   @Override
-  public void write(DataOutput dataOutput) throws IOException {
+  public void write(Axion axion, DataOutput output) throws IOException {
     if (data.size() == 0) {
       type = TagByte.TAG_ID;
     }
-    dataOutput.writeByte(type);
-    dataOutput.writeInt(data.size());
+    output.writeByte(type);
+    output.writeInt(data.size());
     for (int i = 0; i < data.size(); i++) {
-      data.get(i).write(dataOutput);
+      data.get(i).write(axion, output);
     }
   }
 

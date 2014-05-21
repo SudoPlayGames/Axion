@@ -4,6 +4,7 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
+import com.sudoplay.axion.Axion;
 import com.sudoplay.axion.tag.Abstract_Tag;
 
 /**
@@ -53,19 +54,19 @@ public class TagIntArray extends Abstract_Tag {
   }
 
   @Override
-  public void read(DataInput dataInput) throws IOException {
-    int len = dataInput.readInt();
+  public void read(Axion axion, DataInput input) throws IOException {
+    int len = input.readInt();
     data = new int[len];
     for (int i = 0; i < len; i++) {
-      data[i] = dataInput.readInt();
+      data[i] = input.readInt();
     }
   }
 
   @Override
-  public void write(DataOutput dataOutput) throws IOException {
-    dataOutput.writeInt(data.length);
+  public void write(Axion axion, DataOutput output) throws IOException {
+    output.writeInt(data.length);
     for (int i = 0; i < data.length; i++) {
-      dataOutput.writeInt(data[i]);
+      output.writeInt(data[i]);
     }
   }
 

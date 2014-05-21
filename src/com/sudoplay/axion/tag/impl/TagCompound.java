@@ -2,10 +2,12 @@ package com.sudoplay.axion.tag.impl;
 
 import java.io.DataInput;
 import java.io.DataOutput;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.sudoplay.axion.Axion;
 import com.sudoplay.axion.tag.Abstract_Tag;
 
 /**
@@ -357,6 +359,129 @@ public class TagCompound extends Abstract_Tag {
     }
   }
 
+  /**
+   * Convert a boolean value to a byte and add to this compound tag.
+   * 
+   * @param name
+   * @param newBoolean
+   */
+  public void putBoolean(String name, boolean newBoolean) {
+    putByte(name, (byte) (newBoolean ? 0x01 : 0x00));
+  }
+
+  /**
+   * Add a byte tag with name and data to this compound tag.
+   * 
+   * @param name
+   * @param newByte
+   */
+  public void putByte(String name, byte newByte) {
+    data.put(name, new TagByte(name, newByte));
+  }
+
+  /**
+   * Add a byte array with name and data to this compound tag.
+   * 
+   * @param name
+   * @param newByteArray
+   */
+  public void putByteArray(String name, byte[] newByteArray) {
+    data.put(name, new TagByteArray(name, newByteArray));
+  }
+
+  /**
+   * Add a compound tag to this compound tag. Sets the name of the compound tag
+   * to name.
+   * 
+   * @param name
+   * @param newCompound
+   */
+  public void putCompound(String name, TagCompound newCompound) {
+    newCompound.setName(name);
+    data.put(name, newCompound);
+  }
+
+  /**
+   * Add a double tag with name and data to this compound tag.
+   * 
+   * @param name
+   * @param newDouble
+   */
+  public void putDouble(String name, double newDouble) {
+    data.put(name, new TagDouble(name, newDouble));
+  }
+
+  /**
+   * Add a float tag with name and data to this compound tag.
+   * 
+   * @param name
+   * @param newFloat
+   */
+  public void putFloat(String name, float newFloat) {
+    data.put(name, new TagFloat(name, newFloat));
+  }
+
+  /**
+   * Add an int tag with name and data to this compound tag.
+   * 
+   * @param name
+   * @param newInt
+   */
+  public void putInt(String name, int newInt) {
+    data.put(name, new TagInt(name, newInt));
+  }
+
+  /**
+   * Add an int array tag with name and data to this compound tag.
+   * 
+   * @param name
+   * @param newIntArray
+   */
+  public void putIntArray(String name, int[] newIntArray) {
+    data.put(name, new TagIntArray(name, newIntArray));
+  }
+
+  /**
+   * Add a list tag to this compound tag. Also set the name of the list to name.
+   * 
+   * @param name
+   * @param newList
+   */
+  public void putList(String name, TagList newList) {
+    newList.setName(name);
+    data.put(name, newList);
+  }
+
+  /**
+   * Add a long tag with name and data to this compound tag.
+   * 
+   * @param name
+   * @param newLong
+   */
+  public void putLong(String name, long newLong) {
+    data.put(name, new TagLong(name, newLong));
+  }
+
+  /**
+   * Add a short tag with name and data to this compound tag.
+   * 
+   * @param name
+   * @param newShort
+   */
+  public void putShort(String name, short newShort) {
+    data.put(name, new TagShort(name, newShort));
+  }
+
+  /**
+   * Add a string tag with name and data to this compound tag.
+   * 
+   * @param name
+   * @param newString
+   */
+  public void putString(String name, String newString) {
+    data.put(name, new TagString(name, newString));
+  }
+
   @Override
   public byte getTagId() {
     return TAG_ID;
@@ -368,15 +493,20 @@ public class TagCompound extends Abstract_Tag {
   }
 
   @Override
-  public void read(DataInput dataInput) {
-    // TODO Auto-generated method stub
-
+  public void read(Axion axion, DataInput input) throws IOException {
+    data.clear();
+    Abstract_Tag tag;
+    while ((tag = axion.read(input)).getTagId() != 0) {
+      data.put(tag.getName(), tag);
+    }
   }
 
   @Override
-  public void write(DataOutput dataOutput) {
-    // TODO Auto-generated method stub
-
+  public void write(Axion axion, DataOutput output) throws IOException {
+    for (Abstract_Tag tag : data.values()) {
+      axion.write(tag, output);
+    }
+    output.writeByte(TagEnd.TAG_ID);
   }
 
 }

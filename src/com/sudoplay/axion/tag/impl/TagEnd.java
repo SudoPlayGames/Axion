@@ -2,7 +2,9 @@ package com.sudoplay.axion.tag.impl;
 
 import java.io.DataInput;
 import java.io.DataOutput;
+import java.io.IOException;
 
+import com.sudoplay.axion.Axion;
 import com.sudoplay.axion.tag.Abstract_Tag;
 
 /**
@@ -39,19 +41,19 @@ public class TagEnd extends Abstract_Tag {
   public String getTagName() {
     return TAG_NAME;
   }
-  
+
   @Override
   public void setName(final String newName) {
     super.setName(null);
   }
 
   @Override
-  public void read(final DataInput dataInput) {
+  public void read(Axion axion, DataInput input) throws IOException {
     throw new UnsupportedOperationException(TAG_NAME + " does not support reading");
   }
 
   @Override
-  public void write(final DataOutput dataOutput) {
+  public void write(Axion axion, DataOutput output) throws IOException {
     throw new UnsupportedOperationException(TAG_NAME + " does not support writing");
   }
 

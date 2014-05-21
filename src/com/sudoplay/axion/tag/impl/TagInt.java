@@ -4,6 +4,7 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
+import com.sudoplay.axion.Axion;
 import com.sudoplay.axion.tag.Abstract_Tag;
 
 /**
@@ -20,9 +21,9 @@ public class TagInt extends Abstract_Tag {
 
   public static final byte TAG_ID = (byte) 3;
   public static final String TAG_NAME = "TAG_Int";
-  
+
   private int data;
-  
+
   public TagInt(final String newName) {
     super(newName);
   }
@@ -31,11 +32,11 @@ public class TagInt extends Abstract_Tag {
     super(newName);
     data = newInt;
   }
-  
+
   public void set(final int newInt) {
     data = newInt;
   }
-  
+
   public int get() {
     return data;
   }
@@ -51,13 +52,13 @@ public class TagInt extends Abstract_Tag {
   }
 
   @Override
-  public void read(DataInput dataInput) throws IOException {
-    data = dataInput.readInt();
+  public void read(Axion axion, DataInput input) throws IOException {
+    data = input.readInt();
   }
 
   @Override
-  public void write(DataOutput dataOutput) throws IOException {
-    dataOutput.writeInt(data);
+  public void write(Axion axion, DataOutput output) throws IOException {
+    output.writeInt(data);
   }
 
 }
