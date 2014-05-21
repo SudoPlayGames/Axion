@@ -82,5 +82,10 @@ public class TagInt extends Abstract_Tag {
       return false;
     return true;
   }
+  
+  @Override
+  public String toString() {
+    return TAG_NAME + super.toString() + ": " + data;
+  }
 
 }

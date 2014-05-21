@@ -57,4 +57,9 @@ public class TagEnd extends Abstract_Tag {
     throw new UnsupportedOperationException(TAG_NAME + " does not support writing");
   }
 
+  @Override
+  public String toString() {
+    return "";
+  }
+
 }

@@ -40,5 +40,14 @@ public abstract class Abstract_Tag implements Interface_Tag {
       return false;
     return true;
   }
+  
+  @Override
+  public String toString() {
+    if (!name.equals("") || name.equals(null)) {
+      return "(\"" + name + "\")";
+    } else {
+      return "";
+    }
+  }
 
 }

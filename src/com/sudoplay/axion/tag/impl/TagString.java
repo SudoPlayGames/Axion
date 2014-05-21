@@ -93,4 +93,9 @@ public class TagString extends Abstract_Tag {
     return true;
   }
 
+  @Override
+  public String toString() {
+    return TAG_NAME + super.toString() + ": " + data;
+  }
+
 }

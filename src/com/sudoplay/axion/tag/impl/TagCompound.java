@@ -534,4 +534,9 @@ public class TagCompound extends Abstract_Tag {
     return true;
   }
 
+  @Override
+  public String toString() {
+    return TAG_NAME + super.toString() + ": " + data.size() + " entries";
+  }
+
 }
