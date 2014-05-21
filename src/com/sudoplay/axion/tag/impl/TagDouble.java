@@ -62,4 +62,28 @@ public class TagDouble extends Abstract_Tag {
     output.writeDouble(data);
   }
 
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = super.hashCode();
+    long temp;
+    temp = Double.doubleToLongBits(data);
+    result = prime * result + (int) (temp ^ (temp >>> 32));
+    return result;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (!super.equals(obj))
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    TagDouble other = (TagDouble) obj;
+    if (Double.doubleToLongBits(data) != Double.doubleToLongBits(other.data))
+      return false;
+    return true;
+  }
+
 }

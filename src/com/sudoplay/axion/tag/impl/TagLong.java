@@ -61,4 +61,26 @@ public class TagLong extends Abstract_Tag {
     output.writeLong(data);
   }
 
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = super.hashCode();
+    result = prime * result + (int) (data ^ (data >>> 32));
+    return result;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (!super.equals(obj))
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    TagLong other = (TagLong) obj;
+    if (data != other.data)
+      return false;
+    return true;
+  }
+
 }

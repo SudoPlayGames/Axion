@@ -3,6 +3,7 @@ package com.sudoplay.axion.tag.impl;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
+import java.util.Arrays;
 
 import com.sudoplay.axion.Axion;
 import com.sudoplay.axion.tag.Abstract_Tag;
@@ -64,6 +65,28 @@ public class TagByteArray extends Abstract_Tag {
   public void write(Axion axion, DataOutput output) throws IOException {
     output.writeInt(data.length);
     output.write(data);
+  }
+
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = super.hashCode();
+    result = prime * result + Arrays.hashCode(data);
+    return result;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (!super.equals(obj))
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    TagByteArray other = (TagByteArray) obj;
+    if (!Arrays.equals(data, other.data))
+      return false;
+    return true;
   }
 
 }

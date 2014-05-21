@@ -126,4 +126,32 @@ public class TagList extends Abstract_Tag {
     }
   }
 
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = super.hashCode();
+    result = prime * result + ((data == null) ? 0 : data.hashCode());
+    result = prime * result + type;
+    return result;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (!super.equals(obj))
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    TagList other = (TagList) obj;
+    if (data == null) {
+      if (other.data != null)
+        return false;
+    } else if (!data.equals(other.data))
+      return false;
+    if (type != other.type)
+      return false;
+    return true;
+  }
+
 }

@@ -61,4 +61,26 @@ public class TagShort extends Abstract_Tag {
     output.writeShort(data);
   }
 
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = super.hashCode();
+    result = prime * result + data;
+    return result;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (!super.equals(obj))
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    TagShort other = (TagShort) obj;
+    if (data != other.data)
+      return false;
+    return true;
+  }
+
 }
