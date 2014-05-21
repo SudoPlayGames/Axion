@@ -61,17 +61,17 @@ public class Axion {
       return new TagEnd();
     } else {
       String name = dataInput.readUTF();
-      Abstract_Tag nbt = createTag(id, name);
-      nbt.read(this, dataInput);
-      return nbt;
+      Abstract_Tag tag = createTag(id, name);
+      tag.read(this, dataInput);
+      return tag;
     }
   }
 
-  public void write(final Abstract_Tag nbt, final DataOutput dataOutput) throws IOException {
-    dataOutput.writeByte(nbt.getTagId());
-    if (nbt.getTagId() != TagEnd.TAG_ID) {
-      dataOutput.writeUTF(nbt.getName());
-      nbt.write(this, dataOutput);
+  public void write(final Abstract_Tag tag, final DataOutput dataOutput) throws IOException {
+    dataOutput.writeByte(tag.getTagId());
+    if (tag.getTagId() != TagEnd.TAG_ID) {
+      dataOutput.writeUTF(tag.getName());
+      tag.write(this, dataOutput);
     }
   }
 

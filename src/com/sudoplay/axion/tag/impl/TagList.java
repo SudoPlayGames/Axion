@@ -63,8 +63,10 @@ public class TagList extends Abstract_Tag {
       throw new InvalidParameterException("Cannot add a TAG_End to a TAG_List.");
     } else if (type == TagEnd.TAG_ID) {
       type = tag.getTagId();
+      tag.setName(null);
       data.add(tag);
     } else if (type == tag.getTagId()) {
+      tag.setName(null);
       data.add(tag);
     } else {
       throw new InvalidParameterException("Cannot add multiple tag types to a list tag.");

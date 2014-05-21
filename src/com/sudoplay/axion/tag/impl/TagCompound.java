@@ -496,7 +496,7 @@ public class TagCompound extends Abstract_Tag {
   public void read(Axion axion, DataInput input) throws IOException {
     data.clear();
     Abstract_Tag tag;
-    while ((tag = axion.read(input)).getTagId() != 0) {
+    while ((tag = axion.read(input)).getTagId() != TagEnd.TAG_ID) {
       data.put(tag.getName(), tag);
     }
   }
