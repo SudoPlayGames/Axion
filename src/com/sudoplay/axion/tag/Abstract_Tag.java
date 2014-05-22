@@ -1,5 +1,7 @@
 package com.sudoplay.axion.tag;
 
+import com.sudoplay.axion.tag.impl.TagList;
+
 public abstract class Abstract_Tag implements Interface_Tag {
 
   private String name;
@@ -10,7 +12,11 @@ public abstract class Abstract_Tag implements Interface_Tag {
   }
 
   public void setName(final String newName) {
-    name = (newName == null) ? "" : newName;
+    if (parent instanceof TagList) {
+      throw new IllegalStateException(this.getClass().getSimpleName() + " belongs to a " + TagList.TAG_NAME + " and cannot be named");
+    } else {
+      name = (newName == null) ? "" : newName;
+    }
   }
 
   public String getName() {
