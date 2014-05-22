@@ -1,16 +1,9 @@
 package com.sudoplay.axion.tag.impl;
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.sudoplay.axion.Axion;
 import com.sudoplay.axion.tag.Abstract_Tag;
 
 /**
@@ -32,8 +25,6 @@ import com.sudoplay.axion.tag.Abstract_Tag;
  * 
  */
 public class TagCompound extends Abstract_Tag {
-
-  private static final Logger LOG = LoggerFactory.getLogger(TagCompound.class);
 
   public static final byte TAG_ID = 10;
   public static final String TAG_NAME = "TAG_Compound";
@@ -496,25 +487,6 @@ public class TagCompound extends Abstract_Tag {
   @Override
   public String getTagName() {
     return TAG_NAME;
-  }
-
-  @Override
-  public void read(Axion axion, DataInput input) throws IOException {
-    data.clear();
-    Abstract_Tag tag;
-    while ((tag = axion.readRaw(input)).getTagId() != TagEnd.TAG_ID) {
-      data.put(tag.getName(), tag);
-    }
-    LOG.trace("[{}] read compound [{}]", TAG_NAME, this);
-  }
-
-  @Override
-  public void write(Axion axion, DataOutput output) throws IOException {
-    for (Abstract_Tag tag : data.values()) {
-      axion.writeRaw(tag, output);
-    }
-    output.writeByte(TagEnd.TAG_ID);
-    LOG.trace("[{}] write compound [{}]", TAG_NAME, this);
   }
 
   @Override

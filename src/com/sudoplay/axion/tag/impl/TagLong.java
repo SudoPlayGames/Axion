@@ -1,13 +1,5 @@
 package com.sudoplay.axion.tag.impl;
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.sudoplay.axion.Axion;
 import com.sudoplay.axion.tag.Abstract_Tag;
 
 /**
@@ -21,8 +13,6 @@ import com.sudoplay.axion.tag.Abstract_Tag;
  * 
  */
 public class TagLong extends Abstract_Tag {
-
-  private static final Logger LOG = LoggerFactory.getLogger(TagLong.class);
 
   public static final byte TAG_ID = (byte) 4;
   public static final String TAG_NAME = "TAG_Long";
@@ -54,18 +44,6 @@ public class TagLong extends Abstract_Tag {
   @Override
   public String getTagName() {
     return TAG_NAME;
-  }
-
-  @Override
-  public void read(Axion axion, DataInput input) throws IOException {
-    data = input.readLong();
-    LOG.trace("[{}] read long [{}]", TAG_NAME, data);
-  }
-
-  @Override
-  public void write(Axion axion, DataOutput output) throws IOException {
-    output.writeLong(data);
-    LOG.trace("[{}] write long [{}]", TAG_NAME, data);
   }
 
   @Override

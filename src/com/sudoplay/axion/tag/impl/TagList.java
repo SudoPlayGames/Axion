@@ -1,19 +1,11 @@
 package com.sudoplay.axion.tag.impl;
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.sudoplay.axion.Axion;
 import com.sudoplay.axion.tag.Abstract_Tag;
-import com.sudoplay.axion.tag.TagHelper;
 
 /**
  * @tag.type 9
@@ -32,8 +24,6 @@ import com.sudoplay.axion.tag.TagHelper;
  * 
  */
 public class TagList extends Abstract_Tag {
-
-  private static final Logger LOG = LoggerFactory.getLogger(TagList.class);
 
   public static final byte TAG_ID = (byte) 9;
   public static final String TAG_NAME = "TAG_List";
@@ -114,32 +104,6 @@ public class TagList extends Abstract_Tag {
   @Override
   public String getTagName() {
     return TAG_NAME;
-  }
-
-  @Override
-  public void read(Axion axion, DataInput input) throws IOException {
-    type = input.readByte();
-    int len = input.readInt();
-    data = new ArrayList<Abstract_Tag>();
-    for (int i = 0; i < len; i++) {
-      Abstract_Tag tag = TagHelper.create(type, null);
-      tag.read(axion, input);
-      data.add(tag);
-    }
-    LOG.trace("[{}] read list [{}]", TAG_NAME, this);
-  }
-
-  @Override
-  public void write(Axion axion, DataOutput output) throws IOException {
-    if (data.size() == 0) {
-      type = TagByte.TAG_ID;
-    }
-    output.writeByte(type);
-    output.writeInt(data.size());
-    for (int i = 0; i < data.size(); i++) {
-      data.get(i).write(axion, output);
-    }
-    LOG.trace("[{}] write list [{}]", TAG_NAME, this);
   }
 
   @Override
