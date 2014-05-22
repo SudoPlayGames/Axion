@@ -3,6 +3,7 @@ package com.sudoplay.axion.tag;
 public abstract class Abstract_Tag implements Interface_Tag {
 
   private String name;
+  private Abstract_Tag parent;
 
   public Abstract_Tag(final String newName) {
     setName(newName);
@@ -14,6 +15,14 @@ public abstract class Abstract_Tag implements Interface_Tag {
 
   public String getName() {
     return (name == null) ? "" : name;
+  }
+
+  public void setParent(final Abstract_Tag newParent) {
+    parent = newParent;
+  }
+
+  public Abstract_Tag getParent() {
+    return parent;
   }
 
   @Override
@@ -40,7 +49,7 @@ public abstract class Abstract_Tag implements Interface_Tag {
       return false;
     return true;
   }
-  
+
   @Override
   public String toString() {
     if (!name.equals("") || name.equals(null)) {

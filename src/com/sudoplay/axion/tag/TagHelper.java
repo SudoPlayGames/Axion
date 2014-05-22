@@ -13,7 +13,41 @@ import com.sudoplay.axion.tag.impl.TagLong;
 import com.sudoplay.axion.tag.impl.TagShort;
 import com.sudoplay.axion.tag.impl.TagString;
 
-public class TagFactory {
+public class TagHelper {
+
+  public static String getName(final byte id) {
+
+    switch (id) {
+
+    case TagEnd.TAG_ID:
+      return TagEnd.TAG_NAME;
+    case TagByte.TAG_ID:
+      return TagByte.TAG_NAME;
+    case TagShort.TAG_ID:
+      return TagShort.TAG_NAME;
+    case TagInt.TAG_ID:
+      return TagInt.TAG_NAME;
+    case TagLong.TAG_ID:
+      return TagLong.TAG_NAME;
+    case TagFloat.TAG_ID:
+      return TagFloat.TAG_NAME;
+    case TagDouble.TAG_ID:
+      return TagDouble.TAG_NAME;
+    case TagByteArray.TAG_ID:
+      return TagByteArray.TAG_NAME;
+    case TagString.TAG_ID:
+      return TagString.TAG_NAME;
+    case TagList.TAG_ID:
+      return TagList.TAG_NAME;
+    case TagCompound.TAG_ID:
+      return TagCompound.TAG_NAME;
+    case TagIntArray.TAG_ID:
+      return TagIntArray.TAG_NAME;
+
+    }
+
+    return null;
+  }
 
   public static Abstract_Tag create(final byte id, final String newName) {
 

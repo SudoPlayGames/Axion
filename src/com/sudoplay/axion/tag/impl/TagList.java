@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import com.sudoplay.axion.Axion;
 import com.sudoplay.axion.tag.Abstract_Tag;
-import com.sudoplay.axion.tag.TagFactory;
+import com.sudoplay.axion.tag.TagHelper;
 
 /**
  * @tag.type 9
@@ -70,28 +70,26 @@ public class TagList extends Abstract_Tag {
     } else if (type == TagEnd.TAG_ID) {
       type = tag.getTagId();
       tag.setName(null);
+      tag.setParent(this);
       data.add(tag);
     } else if (type == tag.getTagId()) {
       tag.setName(null);
+      tag.setParent(this);
       data.add(tag);
     } else {
       throw new InvalidParameterException("Cannot add multiple tag types to a list tag.");
     }
   }
-  
+
   public void overrideType(byte newType) {
     type = newType;
   }
-  
+
   public byte getType() {
     return type;
   }
 
   public List<Abstract_Tag> getAsList() {
-    return data;
-  }
-
-  public List<Abstract_Tag> getAsUnmodifiableList() {
     return Collections.unmodifiableList(data);
   }
 
@@ -124,7 +122,7 @@ public class TagList extends Abstract_Tag {
     int len = input.readInt();
     data = new ArrayList<Abstract_Tag>();
     for (int i = 0; i < len; i++) {
-      Abstract_Tag tag = TagFactory.create(type, null);
+      Abstract_Tag tag = TagHelper.create(type, null);
       tag.read(axion, input);
       data.add(tag);
     }

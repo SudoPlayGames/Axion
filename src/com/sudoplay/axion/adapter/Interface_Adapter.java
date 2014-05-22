@@ -8,7 +8,7 @@ import com.sudoplay.axion.tag.Abstract_Tag;
 
 public interface Interface_Adapter {
 
-  public Abstract_Tag read(final DataInput in) throws IOException;
+  public Abstract_Tag read(final Abstract_Tag parent, final DataInput in) throws IOException;
 
   public void write(final Abstract_Tag tag, final DataOutput out) throws IOException;
 

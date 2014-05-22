@@ -51,10 +51,6 @@ public class TagCompound extends Abstract_Tag {
   }
 
   public Map<String, Abstract_Tag> getAsMap() {
-    return data;
-  }
-
-  public Map<String, Abstract_Tag> getAsUnmodifiableMap() {
     return Collections.unmodifiableMap(data);
   }
 
@@ -364,6 +360,11 @@ public class TagCompound extends Abstract_Tag {
     }
   }
 
+  public void put(final String name, final Abstract_Tag tag) {
+    tag.setParent(this);
+    data.put(name, tag);
+  }
+
   /**
    * Convert a boolean value to a byte and add to this compound tag.
    * 
@@ -381,7 +382,7 @@ public class TagCompound extends Abstract_Tag {
    * @param newByte
    */
   public void putByte(String name, byte newByte) {
-    data.put(name, new TagByte(name, newByte));
+    put(name, new TagByte(name, newByte));
   }
 
   /**
@@ -391,7 +392,7 @@ public class TagCompound extends Abstract_Tag {
    * @param newByteArray
    */
   public void putByteArray(String name, byte[] newByteArray) {
-    data.put(name, new TagByteArray(name, newByteArray));
+    put(name, new TagByteArray(name, newByteArray));
   }
 
   /**
@@ -403,7 +404,7 @@ public class TagCompound extends Abstract_Tag {
    */
   public void putCompound(String name, TagCompound newCompound) {
     newCompound.setName(name);
-    data.put(name, newCompound);
+    put(name, newCompound);
   }
 
   /**
@@ -413,7 +414,7 @@ public class TagCompound extends Abstract_Tag {
    * @param newDouble
    */
   public void putDouble(String name, double newDouble) {
-    data.put(name, new TagDouble(name, newDouble));
+    put(name, new TagDouble(name, newDouble));
   }
 
   /**
@@ -423,7 +424,7 @@ public class TagCompound extends Abstract_Tag {
    * @param newFloat
    */
   public void putFloat(String name, float newFloat) {
-    data.put(name, new TagFloat(name, newFloat));
+    put(name, new TagFloat(name, newFloat));
   }
 
   /**
@@ -433,7 +434,7 @@ public class TagCompound extends Abstract_Tag {
    * @param newInt
    */
   public void putInt(String name, int newInt) {
-    data.put(name, new TagInt(name, newInt));
+    put(name, new TagInt(name, newInt));
   }
 
   /**
@@ -443,7 +444,7 @@ public class TagCompound extends Abstract_Tag {
    * @param newIntArray
    */
   public void putIntArray(String name, int[] newIntArray) {
-    data.put(name, new TagIntArray(name, newIntArray));
+    put(name, new TagIntArray(name, newIntArray));
   }
 
   /**
@@ -454,7 +455,7 @@ public class TagCompound extends Abstract_Tag {
    */
   public void putList(String name, TagList newList) {
     newList.setName(name);
-    data.put(name, newList);
+    put(name, newList);
   }
 
   /**
@@ -464,7 +465,7 @@ public class TagCompound extends Abstract_Tag {
    * @param newLong
    */
   public void putLong(String name, long newLong) {
-    data.put(name, new TagLong(name, newLong));
+    put(name, new TagLong(name, newLong));
   }
 
   /**
@@ -474,7 +475,7 @@ public class TagCompound extends Abstract_Tag {
    * @param newShort
    */
   public void putShort(String name, short newShort) {
-    data.put(name, new TagShort(name, newShort));
+    put(name, new TagShort(name, newShort));
   }
 
   /**
@@ -484,7 +485,7 @@ public class TagCompound extends Abstract_Tag {
    * @param newString
    */
   public void putString(String name, String newString) {
-    data.put(name, new TagString(name, newString));
+    put(name, new TagString(name, newString));
   }
 
   @Override
@@ -501,7 +502,7 @@ public class TagCompound extends Abstract_Tag {
   public void read(Axion axion, DataInput input) throws IOException {
     data.clear();
     Abstract_Tag tag;
-    while ((tag = axion.read(input)).getTagId() != TagEnd.TAG_ID) {
+    while ((tag = axion.readRaw(input)).getTagId() != TagEnd.TAG_ID) {
       data.put(tag.getName(), tag);
     }
     LOG.trace("[{}] read compound [{}]", TAG_NAME, this);
@@ -510,7 +511,7 @@ public class TagCompound extends Abstract_Tag {
   @Override
   public void write(Axion axion, DataOutput output) throws IOException {
     for (Abstract_Tag tag : data.values()) {
-      axion.write(tag, output);
+      axion.writeRaw(tag, output);
     }
     output.writeByte(TagEnd.TAG_ID);
     LOG.trace("[{}] write compound [{}]", TAG_NAME, this);

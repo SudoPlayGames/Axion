@@ -59,7 +59,7 @@ public class TagEnd extends Abstract_Tag {
 
   @Override
   public String toString() {
-    return "";
+    return TAG_NAME;
   }
 
 }

@@ -3,45 +3,59 @@ package com.sudoplay.axion;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 import com.sudoplay.axion.adapter.Interface_Adapter;
 import com.sudoplay.axion.adapter.impl.DefaultAdapter;
+import com.sudoplay.axion.streamwrapper.Interface_StreamWrapper;
+import com.sudoplay.axion.streamwrapper.impl.StreamWrapper;
 import com.sudoplay.axion.tag.Abstract_Tag;
-import com.sudoplay.axion.tag.TagFactory;
-import com.sudoplay.axion.tag.impl.TagEnd;
+import com.sudoplay.axion.tag.impl.TagCompound;
 
 public class Axion {
 
-  private static final Logger LOG = LoggerFactory.getLogger(Axion.class);
-  
+  public enum CompressionType {
+    Deflater, GZip
+  }
+
   private Interface_Adapter adapter;
+  private Interface_StreamWrapper streamWrapper;
 
   public Axion() {
     adapter = new DefaultAdapter();
+    streamWrapper = StreamWrapper.GZIP_STREAM_WRAPPER;
   }
 
-  public Abstract_Tag read(final DataInput dataInput) throws IOException {
-    /*byte id = dataInput.readByte();
-    if (id == TagEnd.TAG_ID) {
-      return new TagEnd();
-    } else {
-      String name = dataInput.readUTF();
-      Abstract_Tag tag = TagFactory.create(id, name);
-      tag.read(this, dataInput);
-      return tag;
-    }*/
-    return adapter.read(dataInput);
+  public void setAdapter(final Interface_Adapter newAdapter) {
+    adapter = newAdapter;
   }
 
-  public void write(final Abstract_Tag tag, final DataOutput dataOutput) throws IOException {
-    /*dataOutput.writeByte(tag.getTagId());
-    if (tag.getTagId() != TagEnd.TAG_ID) {
-      dataOutput.writeUTF(tag.getName());
-      tag.write(this, dataOutput);
-    }*/
+  public void setCompressionType(final CompressionType newCompressionType) {
+    switch (newCompressionType) {
+    case Deflater:
+      streamWrapper = StreamWrapper.DEFLATE_STREAM_WRAPPER;
+      break;
+    default:
+    case GZip:
+      streamWrapper = StreamWrapper.GZIP_STREAM_WRAPPER;
+      break;
+    }
+  }
+
+  public Abstract_Tag read(final InputStream inputStream) throws IOException {
+    return readRaw(streamWrapper.wrapInput(inputStream));
+  }
+
+  public void write(final TagCompound tagCompound, final OutputStream outputStream) throws IOException {
+    writeRaw(tagCompound, streamWrapper.wrapOutput(outputStream));
+  }
+
+  public Abstract_Tag readRaw(final DataInput dataInput) throws IOException {
+    return adapter.read(null, dataInput);
+  }
+
+  public void writeRaw(final Abstract_Tag tag, final DataOutput dataOutput) throws IOException {
     adapter.write(tag, dataOutput);
   }
 
