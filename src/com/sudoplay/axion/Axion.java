@@ -14,7 +14,7 @@ import com.sudoplay.axion.tag.impl.TagCompound;
 public class Axion {
 
   public enum CompressionType {
-    Deflater, GZip
+    Deflater, GZip, None
   }
 
   private Interface_Adapter adapter;
@@ -33,6 +33,9 @@ public class Axion {
     switch (newCompressionType) {
     case Deflater:
       streamWrapper = StreamWrapper.DEFLATE_STREAM_WRAPPER;
+      break;
+    case None:
+      streamWrapper = StreamWrapper.PASSTHRU_STREAM_WRAPPER;
       break;
     default:
     case GZip:

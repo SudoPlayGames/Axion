@@ -14,6 +14,19 @@ import com.sudoplay.axion.streamwrapper.Interface_StreamWrapper;
 
 public class StreamWrapper {
 
+  public static final Interface_StreamWrapper PASSTHRU_STREAM_WRAPPER = new Interface_StreamWrapper() {
+
+    @Override
+    public OutputStream wrapOutput(OutputStream outputStream) throws IOException {
+      return outputStream;
+    }
+
+    @Override
+    public InputStream wrapInput(InputStream inputStream) throws IOException {
+      return inputStream;
+    }
+  };
+
   public static final Interface_StreamWrapper GZIP_STREAM_WRAPPER = new Interface_StreamWrapper() {
 
     @Override
