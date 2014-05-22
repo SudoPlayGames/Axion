@@ -8,8 +8,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.sudoplay.axion.Axion;
 import com.sudoplay.axion.tag.Abstract_Tag;
+import com.sudoplay.axion.tag.TagFactory;
 
 /**
  * @tag.type 9
@@ -28,6 +32,8 @@ import com.sudoplay.axion.tag.Abstract_Tag;
  * 
  */
 public class TagList extends Abstract_Tag {
+
+  private static final Logger LOG = LoggerFactory.getLogger(TagList.class);
 
   public static final byte TAG_ID = (byte) 9;
   public static final String TAG_NAME = "TAG_List";
@@ -72,6 +78,14 @@ public class TagList extends Abstract_Tag {
       throw new InvalidParameterException("Cannot add multiple tag types to a list tag.");
     }
   }
+  
+  public void overrideType(byte newType) {
+    type = newType;
+  }
+  
+  public byte getType() {
+    return type;
+  }
 
   public List<Abstract_Tag> getAsList() {
     return data;
@@ -110,10 +124,11 @@ public class TagList extends Abstract_Tag {
     int len = input.readInt();
     data = new ArrayList<Abstract_Tag>();
     for (int i = 0; i < len; i++) {
-      Abstract_Tag tag = axion.createTag(type, null);
+      Abstract_Tag tag = TagFactory.create(type, null);
       tag.read(axion, input);
       data.add(tag);
     }
+    LOG.trace("[{}] read list [{}]", TAG_NAME, this);
   }
 
   @Override
@@ -126,6 +141,7 @@ public class TagList extends Abstract_Tag {
     for (int i = 0; i < data.size(); i++) {
       data.get(i).write(axion, output);
     }
+    LOG.trace("[{}] write list [{}]", TAG_NAME, this);
   }
 
   @Override

@@ -7,6 +7,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.sudoplay.axion.Axion;
 import com.sudoplay.axion.tag.Abstract_Tag;
 
@@ -29,6 +32,8 @@ import com.sudoplay.axion.tag.Abstract_Tag;
  * 
  */
 public class TagCompound extends Abstract_Tag {
+
+  private static final Logger LOG = LoggerFactory.getLogger(TagCompound.class);
 
   public static final byte TAG_ID = 10;
   public static final String TAG_NAME = "TAG_Compound";
@@ -499,6 +504,7 @@ public class TagCompound extends Abstract_Tag {
     while ((tag = axion.read(input)).getTagId() != TagEnd.TAG_ID) {
       data.put(tag.getName(), tag);
     }
+    LOG.trace("[{}] read compound [{}]", TAG_NAME, this);
   }
 
   @Override
@@ -507,6 +513,7 @@ public class TagCompound extends Abstract_Tag {
       axion.write(tag, output);
     }
     output.writeByte(TagEnd.TAG_ID);
+    LOG.trace("[{}] write compound [{}]", TAG_NAME, this);
   }
 
   @Override

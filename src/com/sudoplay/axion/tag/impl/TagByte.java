@@ -4,6 +4,9 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.sudoplay.axion.Axion;
 import com.sudoplay.axion.tag.Abstract_Tag;
 
@@ -18,6 +21,8 @@ import com.sudoplay.axion.tag.Abstract_Tag;
  * 
  */
 public class TagByte extends Abstract_Tag {
+  
+  private static final Logger LOG = LoggerFactory.getLogger(TagByte.class);
 
   public static final byte TAG_ID = (byte) 1;
   public static final String TAG_NAME = "TAG_Byte";
@@ -54,11 +59,13 @@ public class TagByte extends Abstract_Tag {
   @Override
   public void read(Axion axion, DataInput input) throws IOException {
     data = input.readByte();
+    LOG.trace("[{}] read byte [{}]", TAG_NAME, data);
   }
 
   @Override
   public void write(Axion axion, DataOutput output) throws IOException {
     output.write(data);
+    LOG.trace("[{}] write byte [{}]", TAG_NAME, data);
   }
 
   @Override

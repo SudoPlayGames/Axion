@@ -5,6 +5,9 @@ import java.io.DataOutput;
 import java.io.IOException;
 import java.util.Arrays;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.sudoplay.axion.Axion;
 import com.sudoplay.axion.tag.Abstract_Tag;
 
@@ -21,6 +24,8 @@ import com.sudoplay.axion.tag.Abstract_Tag;
  * 
  */
 public class TagIntArray extends Abstract_Tag {
+  
+  public static final Logger LOG = LoggerFactory.getLogger(TagIntArray.class);
 
   public static final byte TAG_ID = (byte) 11;
   public static final String TAG_NAME = "TAG_Int_Array";
@@ -61,6 +66,7 @@ public class TagIntArray extends Abstract_Tag {
     for (int i = 0; i < len; i++) {
       data[i] = input.readInt();
     }
+    LOG.trace("[{}] read int array [{}]", TAG_NAME, data);
   }
 
   @Override
@@ -69,6 +75,7 @@ public class TagIntArray extends Abstract_Tag {
     for (int i = 0; i < data.length; i++) {
       output.writeInt(data[i]);
     }
+    LOG.trace("[{}] write int array [{}]", TAG_NAME, data);
   }
 
   @Override

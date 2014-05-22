@@ -21,28 +21,28 @@ public class StringOutputFormatter {
 
   private StringBuilder _format(final Abstract_Tag tag, final StringBuilder sb, int indent) {
 
-    getIndent(indent, sb);
+    applyIndent(indent, sb);
     sb.append(tag.toString()).append("\n");
 
     if (tag instanceof TagCompound) {
-      sb.append("{").append("\n");
+      applyIndent(indent, sb).append("{").append("\n");
       indent++;
       for (Abstract_Tag at : ((TagCompound) tag).getAsMap().values()) {
         _format(at, sb, indent);
       }
-      sb.append("}").append("\n");
+      applyIndent(indent - 1, sb).append("}").append("\n");
     } else if (tag instanceof TagList) {
-      sb.append("{").append("\n");
+      applyIndent(indent, sb).append("{").append("\n");
       indent++;
       for (Abstract_Tag at : ((TagList) tag).getAsList()) {
         _format(at, sb, indent);
       }
-      sb.append("}").append("\n");
+      applyIndent(indent - 1, sb).append("}").append("\n");
     }
     return sb;
   }
 
-  private StringBuilder getIndent(final int amount, final StringBuilder sb) {
+  private StringBuilder applyIndent(final int amount, final StringBuilder sb) {
     for (int i = 0; i < amount; i++) {
       sb.append(indentString);
     }
