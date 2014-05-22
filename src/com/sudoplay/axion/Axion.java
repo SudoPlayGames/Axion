@@ -1,7 +1,5 @@
 package com.sudoplay.axion;
 
-import java.io.DataInput;
-import java.io.DataOutput;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -51,12 +49,12 @@ public class Axion {
     writeRaw(tagCompound, streamWrapper.wrapOutput(outputStream));
   }
 
-  public Abstract_Tag readRaw(final DataInput dataInput) throws IOException {
-    return adapter.read(null, dataInput);
+  public Abstract_Tag readRaw(final InputStream in) throws IOException {
+    return adapter.read(null, in);
   }
 
-  public void writeRaw(final Abstract_Tag tag, final DataOutput dataOutput) throws IOException {
-    adapter.write(tag, dataOutput);
+  public void writeRaw(final Abstract_Tag tag, final OutputStream out) throws IOException {
+    adapter.write(tag, out);
   }
 
 }
