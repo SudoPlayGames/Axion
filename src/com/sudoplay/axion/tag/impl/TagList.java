@@ -54,7 +54,7 @@ public class TagList extends Abstract_Tag {
    * 
    * @param tag
    */
-  public void add(Abstract_Tag tag) {
+  public void add(final Abstract_Tag tag) {
     if (tag.getTagId() == TagEnd.TAG_ID) {
       throw new InvalidParameterException("Cannot add a TAG_End to a TAG_List.");
     } else if (type == TagEnd.TAG_ID) {
@@ -71,7 +71,51 @@ public class TagList extends Abstract_Tag {
     }
   }
 
-  public void overrideType(byte newType) {
+  public void addByte(final byte newByte) {
+    add(new TagByte(null, newByte));
+  }
+
+  public void addByteArray(final byte[] newByteArray) {
+    add(new TagByteArray(null, newByteArray));
+  }
+
+  public void addCompound(final TagCompound newTagCompound) {
+    add(newTagCompound);
+  }
+
+  public void addDouble(final double newDouble) {
+    add(new TagDouble(null, newDouble));
+  }
+
+  public void addFloat(final float newFloat) {
+    add(new TagFloat(null, newFloat));
+  }
+
+  public void addInt(final int newInt) {
+    add(new TagInt(null, newInt));
+  }
+
+  public void addIntArray(final int[] newIntArray) {
+    add(new TagIntArray(null, newIntArray));
+  }
+
+  public void addList(final TagList newTagList) {
+    add(newTagList);
+  }
+
+  public void addLong(final long newLong) {
+    add(new TagLong(null, newLong));
+  }
+
+  public void addShort(final short newShort) {
+    add(new TagShort(null, newShort));
+  }
+
+  public void addString(final String newString) {
+    add(new TagString(null, newString));
+  }
+
+  public void overrideType(final byte newType) {
     type = newType;
   }
 
