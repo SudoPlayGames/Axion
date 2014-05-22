@@ -72,8 +72,9 @@ public class TagList extends Abstract_Tag {
   }
   
   public void remove(final Abstract_Tag tag) {
-    data.remove(tag);
-    tag.setParent(null);
+    if (data.remove(tag)) {
+      tag.setParent(null);
+    }
   }
 
   public void addByte(final byte newByte) {
