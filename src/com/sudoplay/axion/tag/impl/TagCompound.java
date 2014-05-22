@@ -53,6 +53,14 @@ public class TagCompound extends Abstract_Tag {
     return data.containsKey(name);
   }
 
+  public Abstract_Tag remove(final String name) {
+    Abstract_Tag result = data.remove(name);
+    if (result != null) {
+      result.setParent(null);
+    }
+    return result;
+  }
+
   /**
    * Get the data from a boolean byte tag; returns default value if the tag does
    * not exist.
@@ -352,6 +360,12 @@ public class TagCompound extends Abstract_Tag {
   }
 
   public void put(final String name, final Abstract_Tag tag) {
+    if (name == null || name.equals("")) {
+      throw new IllegalArgumentException(TagCompound.TAG_NAME + " does not support unnamed tags");
+    }
+    if (tag == null) {
+      throw new NullPointerException(TagCompound.TAG_NAME + " does not support null tags");
+    }
     tag.setParent(this);
     data.put(name, tag);
   }
