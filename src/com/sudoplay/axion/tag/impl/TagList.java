@@ -70,6 +70,11 @@ public class TagList extends Abstract_Tag {
       throw new InvalidParameterException("Cannot add multiple tag types to a list tag.");
     }
   }
+  
+  public void remove(final Abstract_Tag tag) {
+    data.remove(tag);
+    tag.setParent(null);
+  }
 
   public void addByte(final byte newByte) {
     add(new TagByte(null, newByte));
