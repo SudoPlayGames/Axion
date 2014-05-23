@@ -1,4 +1,4 @@
-package com.sudoplay.axion.adapter.impl;
+package com.sudoplay.axion.adapter;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -10,8 +10,9 @@ import java.nio.charset.StandardCharsets;
 
 import org.junit.Test;
 
-import com.sudoplay.axion.tag.Abstract_Tag;
-import com.sudoplay.axion.tag.impl.TagCompound;
+import com.sudoplay.axion.adapter.StringOutputAdapter;
+import com.sudoplay.axion.tag.Tag;
+import com.sudoplay.axion.tag.TagCompound;
 
 public class StringOutputAdapterTest {
 
@@ -35,7 +36,7 @@ public class StringOutputAdapterTest {
     assertEquals(getTestTagString(), baos.toString("UTF-8"));
   }
 
-  private Abstract_Tag getTestTag() {
+  private Tag getTestTag() {
     return new TagCompound("root") {
       {
         putBoolean("boolean", true);

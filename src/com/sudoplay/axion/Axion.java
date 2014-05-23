@@ -4,12 +4,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import com.sudoplay.axion.adapter.Interface_Adapter;
-import com.sudoplay.axion.adapter.impl.DefaultAdapter;
-import com.sudoplay.axion.streamwrapper.Interface_StreamWrapper;
-import com.sudoplay.axion.streamwrapper.impl.StreamWrapper;
-import com.sudoplay.axion.tag.Abstract_Tag;
-import com.sudoplay.axion.tag.impl.TagCompound;
+import com.sudoplay.axion.adapter.DefaultAdapter;
+import com.sudoplay.axion.adapter.Adapter;
+import com.sudoplay.axion.stream.StreamCompressionWrapper;
+import com.sudoplay.axion.tag.Tag;
+import com.sudoplay.axion.tag.TagCompound;
 
 public class Axion {
 
@@ -17,34 +16,34 @@ public class Axion {
     Deflater, GZip, None
   }
 
-  private Interface_Adapter adapter;
-  private Interface_StreamWrapper streamWrapper;
+  private Adapter adapter;
+  private StreamCompressionWrapper streamWrapper;
 
   public Axion() {
     adapter = new DefaultAdapter();
-    streamWrapper = StreamWrapper.GZIP_STREAM_WRAPPER;
+    streamWrapper = StreamCompressionWrapper.GZIP_STREAM_WRAPPER;
   }
 
-  public void setAdapter(final Interface_Adapter newAdapter) {
+  public void setAdapter(final Adapter newAdapter) {
     adapter = newAdapter;
   }
 
   public void setCompressionType(final CompressionType newCompressionType) {
     switch (newCompressionType) {
     case Deflater:
-      streamWrapper = StreamWrapper.DEFLATE_STREAM_WRAPPER;
+      streamWrapper = StreamCompressionWrapper.DEFLATE_STREAM_WRAPPER;
       break;
     case None:
-      streamWrapper = StreamWrapper.PASSTHRU_STREAM_WRAPPER;
+      streamWrapper = StreamCompressionWrapper.PASSTHRU_STREAM_WRAPPER;
       break;
     default:
     case GZip:
-      streamWrapper = StreamWrapper.GZIP_STREAM_WRAPPER;
+      streamWrapper = StreamCompressionWrapper.GZIP_STREAM_WRAPPER;
       break;
     }
   }
 
-  public Abstract_Tag read(final InputStream inputStream) throws IOException {
+  public Tag read(final InputStream inputStream) throws IOException {
     return readRaw(streamWrapper.wrapInput(inputStream));
   }
 
@@ -52,11 +51,11 @@ public class Axion {
     writeRaw(tagCompound, streamWrapper.wrapOutput(outputStream));
   }
 
-  public Abstract_Tag readRaw(final InputStream in) throws IOException {
+  public Tag readRaw(final InputStream in) throws IOException {
     return adapter.read(null, in);
   }
 
-  public void writeRaw(final Abstract_Tag tag, final OutputStream out) throws IOException {
+  public void writeRaw(final Tag tag, final OutputStream out) throws IOException {
     adapter.write(tag, out);
   }
 

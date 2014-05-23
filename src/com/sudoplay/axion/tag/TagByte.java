@@ -1,38 +1,37 @@
-package com.sudoplay.axion.tag.impl;
+package com.sudoplay.axion.tag;
 
-import com.sudoplay.axion.tag.Abstract_Tag;
 
 /**
- * @tag.type 4
+ * @tag.type 1
  * 
- * @tag.name <code>TAG_Long</code>
+ * @tag.name <code>TAG_Byte</code>
  * 
- * @tag.payload * A signed long (64 bits, big endian).
+ * @tag.payload * A single signed byte (8 bits)
  * 
  * @author Jason Taylor
  * 
  */
-public class TagLong extends Abstract_Tag {
+public class TagByte extends Tag {
 
-  public static final byte TAG_ID = (byte) 4;
-  public static final String TAG_NAME = "TAG_Long";
+  public static final byte TAG_ID = (byte) 1;
+  public static final String TAG_NAME = "TAG_Byte";
 
-  private long data;
+  private byte data;
 
-  public TagLong(final String newName) {
+  public TagByte(final String newName) {
     super(newName);
   }
 
-  public TagLong(final String newName, final long newLong) {
+  public TagByte(final String newName, final byte newByte) {
     super(newName);
-    data = newLong;
+    data = newByte;
   }
 
-  public void set(final long newLong) {
-    data = newLong;
+  public void set(final byte newByte) {
+    data = newByte;
   }
 
-  public long get() {
+  public byte get() {
     return data;
   }
 
@@ -50,7 +49,7 @@ public class TagLong extends Abstract_Tag {
   public int hashCode() {
     final int prime = 31;
     int result = super.hashCode();
-    result = prime * result + (int) (data ^ (data >>> 32));
+    result = prime * result + data;
     return result;
   }
 
@@ -62,7 +61,7 @@ public class TagLong extends Abstract_Tag {
       return false;
     if (getClass() != obj.getClass())
       return false;
-    TagLong other = (TagLong) obj;
+    TagByte other = (TagByte) obj;
     if (data != other.data)
       return false;
     return true;

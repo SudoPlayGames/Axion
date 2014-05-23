@@ -1,6 +1,5 @@
-package com.sudoplay.axion.tag.impl;
+package com.sudoplay.axion.tag;
 
-import com.sudoplay.axion.tag.Abstract_Tag;
 
 /**
  * @tag.type 6
@@ -13,7 +12,7 @@ import com.sudoplay.axion.tag.Abstract_Tag;
  * @author Jason Taylor
  * 
  */
-public class TagDouble extends Abstract_Tag {
+public class TagDouble extends Tag {
 
   public static final byte TAG_ID = (byte) 6;
   public static final String TAG_NAME = "TAG_Double";

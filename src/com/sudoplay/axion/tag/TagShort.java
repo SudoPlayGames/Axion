@@ -1,38 +1,37 @@
-package com.sudoplay.axion.tag.impl;
+package com.sudoplay.axion.tag;
 
-import com.sudoplay.axion.tag.Abstract_Tag;
 
 /**
- * @tag.type 3
+ * @tag.type 2
  * 
- * @tag.name <code>TAG_Int</code>
+ * @tag.name <code>TAG_Short</code>
  * 
- * @tag.payload * A signed short (32 bits, big endian).
+ * @tag.payload * A signed short (16 bits, big endian).
  * 
  * @author Jason Taylor
  * 
  */
-public class TagInt extends Abstract_Tag {
+public class TagShort extends Tag {
 
-  public static final byte TAG_ID = (byte) 3;
-  public static final String TAG_NAME = "TAG_Int";
+  public static final byte TAG_ID = (byte) 2;
+  public static final String TAG_NAME = "TAG_Short";
 
-  private int data;
+  private short data;
 
-  public TagInt(final String newName) {
+  public TagShort(final String newName) {
     super(newName);
   }
 
-  public TagInt(final String newName, final int newInt) {
+  public TagShort(final String newName, final short newShort) {
     super(newName);
-    data = newInt;
+    data = newShort;
   }
 
-  public void set(final int newInt) {
-    data = newInt;
+  public void set(final short newShort) {
+    data = newShort;
   }
 
-  public int get() {
+  public short get() {
     return data;
   }
 
@@ -62,7 +61,7 @@ public class TagInt extends Abstract_Tag {
       return false;
     if (getClass() != obj.getClass())
       return false;
-    TagInt other = (TagInt) obj;
+    TagShort other = (TagShort) obj;
     if (data != other.data)
       return false;
     return true;

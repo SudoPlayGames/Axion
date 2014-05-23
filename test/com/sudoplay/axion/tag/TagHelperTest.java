@@ -4,18 +4,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.sudoplay.axion.tag.impl.TagByte;
-import com.sudoplay.axion.tag.impl.TagByteArray;
-import com.sudoplay.axion.tag.impl.TagCompound;
-import com.sudoplay.axion.tag.impl.TagDouble;
-import com.sudoplay.axion.tag.impl.TagEnd;
-import com.sudoplay.axion.tag.impl.TagFloat;
-import com.sudoplay.axion.tag.impl.TagInt;
-import com.sudoplay.axion.tag.impl.TagIntArray;
-import com.sudoplay.axion.tag.impl.TagList;
-import com.sudoplay.axion.tag.impl.TagLong;
-import com.sudoplay.axion.tag.impl.TagShort;
-import com.sudoplay.axion.tag.impl.TagString;
+import com.sudoplay.axion.helper.TagHelper;
 
 public class TagHelperTest {
 

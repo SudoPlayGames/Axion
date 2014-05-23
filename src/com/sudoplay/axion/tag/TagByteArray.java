@@ -1,8 +1,6 @@
-package com.sudoplay.axion.tag.impl;
+package com.sudoplay.axion.tag;
 
 import java.util.Arrays;
-
-import com.sudoplay.axion.tag.Abstract_Tag;
 
 /**
  * @tag.type 7
@@ -16,7 +14,7 @@ import com.sudoplay.axion.tag.Abstract_Tag;
  * @author Jason Taylor
  * 
  */
-public class TagByteArray extends Abstract_Tag {
+public class TagByteArray extends Tag {
 
   public static final byte TAG_ID = (byte) 7;
   public static final String TAG_NAME = "TAG_Byte_Array";

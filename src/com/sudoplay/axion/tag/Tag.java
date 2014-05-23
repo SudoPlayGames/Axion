@@ -1,14 +1,12 @@
 package com.sudoplay.axion.tag;
 
-import com.sudoplay.axion.tag.impl.TagCompound;
-import com.sudoplay.axion.tag.impl.TagList;
 
-public abstract class Abstract_Tag {
+public abstract class Tag {
 
   private String name;
-  private Abstract_Tag parent;
+  private Tag parent;
 
-  public Abstract_Tag(final String newName) {
+  public Tag(final String newName) {
     setName(newName);
   }
 
@@ -23,11 +21,11 @@ public abstract class Abstract_Tag {
     return (name == null) ? "" : name;
   }
 
-  public void setParent(final Abstract_Tag newParent) {
+  protected void setParent(final Tag newParent) {
     parent = newParent;
   }
 
-  public Abstract_Tag getParent() {
+  public Tag getParent() {
     return parent;
   }
 
@@ -61,7 +59,7 @@ public abstract class Abstract_Tag {
       return false;
     if (getClass() != obj.getClass())
       return false;
-    Abstract_Tag other = (Abstract_Tag) obj;
+    Tag other = (Tag) obj;
     if (name == null) {
       if (other.name != null)
         return false;

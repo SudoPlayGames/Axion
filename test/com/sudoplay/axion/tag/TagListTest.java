@@ -1,10 +1,14 @@
-package com.sudoplay.axion.tag.impl;
+package com.sudoplay.axion.tag;
 
 import static org.junit.Assert.*;
 
 import java.security.InvalidParameterException;
 
 import org.junit.Test;
+
+import com.sudoplay.axion.tag.TagByte;
+import com.sudoplay.axion.tag.TagList;
+import com.sudoplay.axion.tag.TagLong;
 
 public class TagListTest {
   

@@ -1,4 +1,4 @@
-package com.sudoplay.axion.streamwrapper.impl;
+package com.sudoplay.axion.stream;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,11 +8,13 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import java.util.zip.InflaterInputStream;
 
-import com.sudoplay.axion.streamwrapper.Interface_StreamWrapper;
+public interface StreamCompressionWrapper {
 
-public class StreamWrapper {
+  public InputStream wrapInput(final InputStream inputStream) throws IOException;
 
-  public static final Interface_StreamWrapper PASSTHRU_STREAM_WRAPPER = new Interface_StreamWrapper() {
+  public OutputStream wrapOutput(final OutputStream outputStream) throws IOException;
+
+  public static final StreamCompressionWrapper PASSTHRU_STREAM_WRAPPER = new StreamCompressionWrapper() {
 
     @Override
     public OutputStream wrapOutput(OutputStream outputStream) throws IOException {
@@ -25,7 +27,7 @@ public class StreamWrapper {
     }
   };
 
-  public static final Interface_StreamWrapper GZIP_STREAM_WRAPPER = new Interface_StreamWrapper() {
+  public static final StreamCompressionWrapper GZIP_STREAM_WRAPPER = new StreamCompressionWrapper() {
 
     @Override
     public InputStream wrapInput(InputStream inputStream) throws IOException {
@@ -39,7 +41,7 @@ public class StreamWrapper {
 
   };
 
-  public static final Interface_StreamWrapper DEFLATE_STREAM_WRAPPER = new Interface_StreamWrapper() {
+  public static final StreamCompressionWrapper DEFLATE_STREAM_WRAPPER = new StreamCompressionWrapper() {
 
     @Override
     public InputStream wrapInput(InputStream inputStream) throws IOException {

@@ -1,27 +1,28 @@
-package com.sudoplay.axion.tag;
+package com.sudoplay.axion.helper;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import com.sudoplay.axion.tag.impl.TagByte;
-import com.sudoplay.axion.tag.impl.TagByteArray;
-import com.sudoplay.axion.tag.impl.TagCompound;
-import com.sudoplay.axion.tag.impl.TagDouble;
-import com.sudoplay.axion.tag.impl.TagEnd;
-import com.sudoplay.axion.tag.impl.TagFloat;
-import com.sudoplay.axion.tag.impl.TagInt;
-import com.sudoplay.axion.tag.impl.TagIntArray;
-import com.sudoplay.axion.tag.impl.TagList;
-import com.sudoplay.axion.tag.impl.TagLong;
-import com.sudoplay.axion.tag.impl.TagShort;
-import com.sudoplay.axion.tag.impl.TagString;
+import com.sudoplay.axion.tag.Tag;
+import com.sudoplay.axion.tag.TagByte;
+import com.sudoplay.axion.tag.TagByteArray;
+import com.sudoplay.axion.tag.TagCompound;
+import com.sudoplay.axion.tag.TagDouble;
+import com.sudoplay.axion.tag.TagEnd;
+import com.sudoplay.axion.tag.TagFloat;
+import com.sudoplay.axion.tag.TagInt;
+import com.sudoplay.axion.tag.TagIntArray;
+import com.sudoplay.axion.tag.TagList;
+import com.sudoplay.axion.tag.TagLong;
+import com.sudoplay.axion.tag.TagShort;
+import com.sudoplay.axion.tag.TagString;
 
 public class TagHelper {
 
-  private static final Map<Class<? extends Abstract_Tag>, Byte> classToIdMap;
+  private static final Map<Class<? extends Tag>, Byte> classToIdMap;
 
   static {
-    classToIdMap = new HashMap<Class<? extends Abstract_Tag>, Byte>();
+    classToIdMap = new HashMap<Class<? extends Tag>, Byte>();
     classToIdMap.put(TagEnd.class, TagEnd.TAG_ID);
     classToIdMap.put(TagByte.class, TagByte.TAG_ID);
     classToIdMap.put(TagShort.class, TagShort.TAG_ID);
@@ -36,11 +37,11 @@ public class TagHelper {
     classToIdMap.put(TagIntArray.class, TagIntArray.TAG_ID);
   }
 
-  public static byte getId(final Class<? extends Abstract_Tag> tagClass) {
+  public static byte getId(final Class<? extends Tag> tagClass) {
     return classToIdMap.get(tagClass);
   }
 
-  public static Class<? extends Abstract_Tag> getTagClass(final byte id) {
+  public static Class<? extends Tag> getTagClass(final byte id) {
 
     switch (id) {
 

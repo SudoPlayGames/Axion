@@ -1,4 +1,4 @@
-package com.sudoplay.axion.tag.impl;
+package com.sudoplay.axion.tag;
 
 import static org.junit.Assert.*;
 
@@ -11,7 +11,19 @@ import java.io.IOException;
 import org.junit.Test;
 
 import com.sudoplay.axion.Axion;
-import com.sudoplay.axion.tag.Abstract_Tag;
+import com.sudoplay.axion.tag.Tag;
+import com.sudoplay.axion.tag.TagByte;
+import com.sudoplay.axion.tag.TagByteArray;
+import com.sudoplay.axion.tag.TagCompound;
+import com.sudoplay.axion.tag.TagDouble;
+import com.sudoplay.axion.tag.TagEnd;
+import com.sudoplay.axion.tag.TagFloat;
+import com.sudoplay.axion.tag.TagInt;
+import com.sudoplay.axion.tag.TagIntArray;
+import com.sudoplay.axion.tag.TagList;
+import com.sudoplay.axion.tag.TagLong;
+import com.sudoplay.axion.tag.TagShort;
+import com.sudoplay.axion.tag.TagString;
 
 public class SerializationTest {
 
@@ -127,7 +139,7 @@ public class SerializationTest {
         new int[] { 0, 1, 2, 3 })));
   }
 
-  private Abstract_Tag serialize(Abstract_Tag start) throws IOException {
+  private Tag serialize(Tag start) throws IOException {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     DataOutputStream out = new DataOutputStream(baos);
     axion.writeRaw(start, out);

@@ -1,12 +1,11 @@
-package com.sudoplay.axion.tag.impl;
+package com.sudoplay.axion.tag;
 
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.sudoplay.axion.tag.Abstract_Tag;
-import com.sudoplay.axion.tag.TagHelper;
+import com.sudoplay.axion.helper.TagHelper;
 
 /**
  * @tag.type 9
@@ -24,25 +23,25 @@ import com.sudoplay.axion.tag.TagHelper;
  * @author Jason Taylor
  * 
  */
-public class TagList extends Abstract_Tag {
+public class TagList extends Tag {
 
   public static final byte TAG_ID = (byte) 9;
   public static final String TAG_NAME = "TAG_List";
 
-  private List<Abstract_Tag> data;
+  private List<Tag> data;
 
   /**
    * Store type id for tags in this list; all tags must be of the same type.
    */
   private final byte type;
 
-  public TagList(final Class<? extends Abstract_Tag> tagClass) {
+  public TagList(final Class<? extends Tag> tagClass) {
     this(tagClass, null);
   }
 
-  public TagList(final Class<? extends Abstract_Tag> tagClass, final String newName) {
+  public TagList(final Class<? extends Tag> tagClass, final String newName) {
     super(newName);
-    data = new ArrayList<Abstract_Tag>();
+    data = new ArrayList<Tag>();
     type = TagHelper.getId(tagClass);
   }
 
@@ -54,7 +53,7 @@ public class TagList extends Abstract_Tag {
    * 
    * @param tag
    */
-  public void add(final Abstract_Tag tag) {
+  public void add(final Tag tag) {
     if (tag.hasParent()) {
       throw new IllegalStateException("Tag can not be added to more than one collection tag");
     } else if (tag.getTagId() == TagEnd.TAG_ID) {
@@ -68,13 +67,13 @@ public class TagList extends Abstract_Tag {
     }
   }
 
-  public void remove(final Abstract_Tag tag) {
+  public void remove(final Tag tag) {
     if (data.remove(tag)) {
       tag.setParent(null);
     }
   }
 
-  public Abstract_Tag remove(final int index) {
+  public Tag remove(final int index) {
     return data.remove(index);
   }
 
@@ -126,11 +125,11 @@ public class TagList extends Abstract_Tag {
     return type;
   }
 
-  public List<Abstract_Tag> getAsList() {
+  public List<Tag> getAsList() {
     return Collections.unmodifiableList(data);
   }
 
-  public Abstract_Tag get(final int index) {
+  public Tag get(final int index) {
     return data.get(index);
   }
 

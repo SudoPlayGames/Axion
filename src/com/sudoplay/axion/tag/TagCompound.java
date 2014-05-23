@@ -1,10 +1,8 @@
-package com.sudoplay.axion.tag.impl;
+package com.sudoplay.axion.tag;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.sudoplay.axion.tag.Abstract_Tag;
 
 /**
  * @tag.type 10
@@ -24,24 +22,24 @@ import com.sudoplay.axion.tag.Abstract_Tag;
  * @author Jason Taylor
  * 
  */
-public class TagCompound extends Abstract_Tag {
+public class TagCompound extends Tag {
 
   public static final byte TAG_ID = 10;
   public static final String TAG_NAME = "TAG_Compound";
 
-  private Map<String, Abstract_Tag> data;
+  private Map<String, Tag> data;
 
   public TagCompound() {
     super(null);
-    data = new HashMap<String, Abstract_Tag>();
+    data = new HashMap<String, Tag>();
   }
 
   public TagCompound(final String newName) {
     super(newName);
-    data = new HashMap<String, Abstract_Tag>();
+    data = new HashMap<String, Tag>();
   }
 
-  public Map<String, Abstract_Tag> getAsMap() {
+  public Map<String, Tag> getAsMap() {
     return Collections.unmodifiableMap(data);
   }
 
@@ -53,15 +51,15 @@ public class TagCompound extends Abstract_Tag {
     return data.containsKey(name);
   }
 
-  public Abstract_Tag remove(final String name) {
-    Abstract_Tag result = data.remove(name);
+  public Tag remove(final String name) {
+    Tag result = data.remove(name);
     if (result != null) {
       result.setParent(null);
     }
     return result;
   }
 
-  public Abstract_Tag get(final String name) {
+  public Tag get(final String name) {
     return data.get(name);
   }
 
@@ -363,7 +361,7 @@ public class TagCompound extends Abstract_Tag {
     }
   }
 
-  public void put(final String name, final Abstract_Tag tag) {
+  public void put(final String name, final Tag tag) {
     if (tag == null) {
       throw new NullPointerException(TagCompound.TAG_NAME + " does not support null tags");
     } else if (tag.hasParent()) {

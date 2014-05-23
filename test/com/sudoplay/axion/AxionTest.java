@@ -8,8 +8,8 @@ import java.io.PrintStream;
 import org.junit.Test;
 
 import com.sudoplay.axion.Axion.CompressionType;
-import com.sudoplay.axion.adapter.impl.StringOutputAdapter;
-import com.sudoplay.axion.tag.impl.TagCompound;
+import com.sudoplay.axion.adapter.StringOutputAdapter;
+import com.sudoplay.axion.tag.TagCompound;
 
 public class AxionTest {
 

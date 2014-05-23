@@ -1,4 +1,4 @@
-package com.sudoplay.axion.adapter.impl;
+package com.sudoplay.axion.adapter;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,12 +8,11 @@ import java.io.PrintWriter;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
-import com.sudoplay.axion.adapter.Interface_Adapter;
-import com.sudoplay.axion.tag.Abstract_Tag;
-import com.sudoplay.axion.tag.impl.TagCompound;
-import com.sudoplay.axion.tag.impl.TagList;
+import com.sudoplay.axion.tag.Tag;
+import com.sudoplay.axion.tag.TagCompound;
+import com.sudoplay.axion.tag.TagList;
 
-public class StringOutputAdapter implements Interface_Adapter {
+public class StringOutputAdapter implements Adapter {
 
   private class DataOutputWrapper {
 
@@ -59,31 +58,31 @@ public class StringOutputAdapter implements Interface_Adapter {
   }
 
   @Override
-  public Abstract_Tag read(Abstract_Tag parent, InputStream in) throws IOException {
+  public Tag read(Tag parent, InputStream in) throws IOException {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public void write(Abstract_Tag tag, OutputStream out) throws IOException {
+  public void write(Tag tag, OutputStream out) throws IOException {
     int indent = 0;
     _format(tag, new DataOutputWrapper(out, charset), indent);
   }
 
-  private void _format(final Abstract_Tag tag, final DataOutputWrapper out, int indent) throws IOException {
+  private void _format(final Tag tag, final DataOutputWrapper out, int indent) throws IOException {
 
     applyIndent(indent, out).append(tag.toString()).endLine();
 
     if (tag instanceof TagCompound) {
       applyIndent(indent, out).append("{").endLine();
       indent++;
-      for (Abstract_Tag at : ((TagCompound) tag).getAsMap().values()) {
+      for (Tag at : ((TagCompound) tag).getAsMap().values()) {
         _format(at, out, indent);
       }
       applyIndent(indent - 1, out).append("}").endLine();
     } else if (tag instanceof TagList) {
       applyIndent(indent, out).append("{").endLine();
       indent++;
-      for (Abstract_Tag at : ((TagList) tag).getAsList()) {
+      for (Tag at : ((TagList) tag).getAsList()) {
         _format(at, out, indent);
       }
       applyIndent(indent - 1, out).append("}").endLine();

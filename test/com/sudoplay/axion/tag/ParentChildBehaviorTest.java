@@ -1,8 +1,12 @@
-package com.sudoplay.axion.tag.impl;
+package com.sudoplay.axion.tag;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
+
+import com.sudoplay.axion.tag.TagByte;
+import com.sudoplay.axion.tag.TagCompound;
+import com.sudoplay.axion.tag.TagList;
 
 public class ParentChildBehaviorTest {
 
