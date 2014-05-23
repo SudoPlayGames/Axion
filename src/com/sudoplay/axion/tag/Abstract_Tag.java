@@ -3,7 +3,7 @@ package com.sudoplay.axion.tag;
 import com.sudoplay.axion.tag.impl.TagCompound;
 import com.sudoplay.axion.tag.impl.TagList;
 
-public abstract class Abstract_Tag implements Interface_Tag {
+public abstract class Abstract_Tag {
 
   private String name;
   private Abstract_Tag parent;
@@ -13,13 +13,10 @@ public abstract class Abstract_Tag implements Interface_Tag {
   }
 
   public void setName(final String newName) {
-    if (parent instanceof TagList && newName != null && !newName.isEmpty()) {
-      throw new IllegalStateException(this.getClass().getSimpleName() + " belongs to a " + TagList.TAG_NAME + " and can not be named");
-    } else if (parent instanceof TagCompound && (newName == null || newName.isEmpty())) {
-      throw new IllegalStateException(this.getClass().getSimpleName() + " belongs to a " + TagCompound.TAG_NAME + " and can not have an empty or null name");
-    } else {
-      name = (newName == null) ? "" : newName;
+    if (parent != null) {
+      parent.onNameChange(newName);
     }
+    name = (newName == null) ? "" : newName;
   }
 
   public String getName() {
@@ -33,7 +30,7 @@ public abstract class Abstract_Tag implements Interface_Tag {
   public Abstract_Tag getParent() {
     return parent;
   }
-  
+
   public boolean hasParent() {
     return parent != null;
   }
@@ -81,5 +78,13 @@ public abstract class Abstract_Tag implements Interface_Tag {
       return "";
     }
   }
+
+  protected void onNameChange(final String newName) {
+    // override
+  }
+
+  public abstract byte getTagId();
+
+  public abstract String getTagName();
 
 }

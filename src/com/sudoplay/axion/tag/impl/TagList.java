@@ -74,6 +74,10 @@ public class TagList extends Abstract_Tag {
     }
   }
 
+  public Abstract_Tag remove(final int index) {
+    return data.remove(index);
+  }
+
   public void addByte(final byte newByte) {
     add(new TagByte(null, newByte));
   }
@@ -179,6 +183,13 @@ public class TagList extends Abstract_Tag {
   @Override
   public String toString() {
     return TAG_NAME + super.toString() + ": " + data.size() + " entries of type " + type;
+  }
+
+  @Override
+  protected void onNameChange(String newName) {
+    if (newName != null && !newName.isEmpty()) {
+      throw new IllegalStateException("Tag belongs to a " + TagList.TAG_NAME + " and can not be named");
+    }
   }
 
 }
