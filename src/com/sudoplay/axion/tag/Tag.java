@@ -1,7 +1,6 @@
 package com.sudoplay.axion.tag;
 
-
-public abstract class Tag {
+public abstract class Tag implements Cloneable {
 
   private String name;
   private Tag parent;
@@ -84,5 +83,8 @@ public abstract class Tag {
   public abstract byte getTagId();
 
   public abstract String getTagName();
+
+  @Override
+  public abstract Tag clone();
 
 }

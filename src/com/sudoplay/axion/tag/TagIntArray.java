@@ -75,4 +75,9 @@ public class TagIntArray extends Tag {
     return TAG_NAME + super.toString() + ": [" + data.length + " ints]";
   }
 
+  @Override
+  public TagIntArray clone() {
+    return new TagIntArray(getName(), data.clone());
+  }
+
 }

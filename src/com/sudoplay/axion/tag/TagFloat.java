@@ -1,6 +1,5 @@
 package com.sudoplay.axion.tag;
 
-
 /**
  * @tag.type 5
  * 
@@ -71,6 +70,11 @@ public class TagFloat extends Tag {
   @Override
   public String toString() {
     return TAG_NAME + super.toString() + ": " + data;
+  }
+
+  @Override
+  public TagFloat clone() {
+    return new TagFloat(getName(), data);
   }
 
 }

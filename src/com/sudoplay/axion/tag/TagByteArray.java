@@ -75,4 +75,9 @@ public class TagByteArray extends Tag {
     return TAG_NAME + super.toString() + ": [" + data.length + " bytes]";
   }
 
+  @Override
+  public TagByteArray clone() {
+    return new TagByteArray(getName(), data.clone());
+  }
+
 }

@@ -22,7 +22,7 @@ public class TagIdTest {
 
   @Test
   public void test() {
-    check(new TagEnd(), 0);
+    check(TagEnd.INSTANCE, 0);
     check(new TagByte("name"), 1);
     check(new TagShort("name"), 2);
     check(new TagInt("name"), 3);

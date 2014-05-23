@@ -22,7 +22,7 @@ public class ToStringTest {
   @Test
   public void test() {
 
-    assertEquals("TAG_End", new TagEnd().toString());
+    assertEquals("TAG_End", TagEnd.INSTANCE.toString());
     assertEquals("TAG_Byte(\"name\"): 16", new TagByte("name", (byte) 16).toString());
     assertEquals("TAG_Short(\"name\"): 16", new TagShort("name", (short) 16).toString());
     assertEquals("TAG_Int(\"name\"): 16", new TagInt("name", 16).toString());

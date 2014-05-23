@@ -1,6 +1,5 @@
 package com.sudoplay.axion.tag;
 
-
 /**
  * @tag.type 0
  * 
@@ -22,8 +21,12 @@ public class TagEnd extends Tag {
   public static final String TAG_NAME = "TAG_End";
   public static final TagEnd INSTANCE = new TagEnd();
 
-  public TagEnd() {
+  private TagEnd() {
     super(null);
+  }
+
+  public static final TagEnd getInstance() {
+    return INSTANCE;
   }
 
   @Override
@@ -44,6 +47,11 @@ public class TagEnd extends Tag {
   @Override
   public String toString() {
     return TAG_NAME;
+  }
+
+  @Override
+  public TagEnd clone() {
+    return TagEnd.INSTANCE;
   }
 
 }

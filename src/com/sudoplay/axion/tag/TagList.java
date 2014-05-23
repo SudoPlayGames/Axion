@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import com.sudoplay.axion.helper.TagHelper;
+import com.sudoplay.axion.util.TagUtil;
 
 /**
  * @tag.type 9
@@ -28,7 +28,7 @@ public class TagList extends Tag implements Iterable<Tag> {
   public static final byte TAG_ID = (byte) 9;
   public static final String TAG_NAME = "TAG_List";
 
-  private List<Tag> data;
+  private final List<Tag> data;
 
   /**
    * Store type id for tags in this list; all tags must be of the same type.
@@ -36,14 +36,35 @@ public class TagList extends Tag implements Iterable<Tag> {
   private final byte type;
 
   public TagList(final Class<? extends Tag> tagClass) {
-    this(tagClass, null);
+    this(tagClass, null, null);
   }
 
   public TagList(final Class<? extends Tag> tagClass, final String newName) {
+    this(tagClass, newName, null);
+  }
+
+  private TagList(final Class<? extends Tag> tagClass, final String newName, final List<Tag> newList) {
     super(newName);
-    data = new ArrayList<Tag>();
-    if ((type = TagHelper.getId(tagClass)) == TagEnd.TAG_ID) {
+    if ((type = TagUtil.getId(tagClass)) == TagEnd.TAG_ID) {
       throw new IllegalArgumentException("Can't create " + TagList.TAG_NAME + " from type " + TagEnd.TAG_NAME);
+    }
+    if (newList == null) {
+      data = new ArrayList<Tag>();
+    } else {
+      data = new ArrayList<Tag>(newList);
+      for (Tag tag : data) {
+        assertValidTag(tag);
+      }
+    }
+  }
+
+  private void assertValidTag(final Tag tag) {
+    if (tag == null) {
+      throw new IllegalArgumentException(TagList.TAG_NAME + " can't contain null tags");
+    } else if (type != tag.getTagId()) {
+      throw new IllegalArgumentException("Can't add tag of type [" + tag.getTagName() + "] to " + TagList.TAG_NAME + " of type " + TagUtil.getName(type));
+    } else if (tag.hasParent()) {
+      throw new IllegalStateException("Tag can't be added to more than one collection tag");
     }
   }
 
@@ -56,11 +77,7 @@ public class TagList extends Tag implements Iterable<Tag> {
    * @param tag
    */
   public void add(final Tag tag) {
-    if (tag.hasParent()) {
-      throw new IllegalStateException("Tag can't be added to more than one collection tag");
-    } else if (type != tag.getTagId()) {
-      throw new IllegalArgumentException("Can't add tag of type [" + tag.getTagName() + "] to " + TagList.TAG_NAME + " of type " + TagHelper.getName(type));
-    }
+    assertValidTag(tag);
     tag.setName(null);
     tag.setParent(this);
     data.add(tag);
@@ -137,7 +154,7 @@ public class TagList extends Tag implements Iterable<Tag> {
 
   @Override
   public Iterator<Tag> iterator() {
-    return data.iterator();
+    return Collections.unmodifiableList(data).iterator();
   }
 
   public int size() {
@@ -195,6 +212,19 @@ public class TagList extends Tag implements Iterable<Tag> {
   protected void onNameChange(final String oldName, final String newName) {
     if (newName != null && !newName.isEmpty()) {
       throw new IllegalStateException("Tag belongs to a " + TagList.TAG_NAME + " and can not be named");
+    }
+  }
+
+  @Override
+  public TagList clone() {
+    if (data.isEmpty()) {
+      return new TagList(TagUtil.getTagClass(type), getName());
+    } else {
+      List<Tag> newList = new ArrayList<Tag>(data.size());
+      for (Tag tag : data) {
+        newList.add(tag.clone());
+      }
+      return new TagList(TagUtil.getTagClass(type), getName(), newList);
     }
   }
 

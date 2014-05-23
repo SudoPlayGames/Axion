@@ -21,7 +21,7 @@ public class TagNameTest {
 
   @Test
   public void test() {
-    assertTrue(new TagEnd().getTagName() == "TAG_End");
+    assertTrue(TagEnd.INSTANCE.getTagName() == "TAG_End");
     assertTrue(new TagByte("name").getTagName() == "TAG_Byte");
     assertTrue(new TagShort("name").getTagName() == "TAG_Short");
     assertTrue(new TagInt("name").getTagName() == "TAG_Int");

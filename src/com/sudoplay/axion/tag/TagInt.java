@@ -1,6 +1,5 @@
 package com.sudoplay.axion.tag;
 
-
 /**
  * @tag.type 3
  * 
@@ -70,6 +69,11 @@ public class TagInt extends Tag {
   @Override
   public String toString() {
     return TAG_NAME + super.toString() + ": " + data;
+  }
+
+  @Override
+  public TagInt clone() {
+    return new TagInt(getName(), data);
   }
 
 }

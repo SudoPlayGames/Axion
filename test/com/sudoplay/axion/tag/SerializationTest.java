@@ -31,7 +31,7 @@ public class SerializationTest {
 
   @Test
   public void test_TagEnd() throws IOException {
-    assertEquals(TagEnd.class.getSimpleName(), new TagEnd(), serialize(new TagEnd()));
+    assertEquals(TagEnd.class.getSimpleName(), TagEnd.INSTANCE, serialize(TagEnd.INSTANCE));
   }
 
   @Test

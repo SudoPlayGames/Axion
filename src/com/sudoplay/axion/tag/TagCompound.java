@@ -2,7 +2,9 @@ package com.sudoplay.axion.tag;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * @tag.type 10
@@ -22,25 +24,45 @@ import java.util.Map;
  * @author Jason Taylor
  * 
  */
-public class TagCompound extends Tag {
+public class TagCompound extends Tag implements Iterable<Tag> {
 
   public static final byte TAG_ID = 10;
   public static final String TAG_NAME = "TAG_Compound";
 
-  private Map<String, Tag> data;
+  private final Map<String, Tag> data;
 
   public TagCompound() {
-    super(null);
-    data = new HashMap<String, Tag>();
+    this(null, null);
   }
 
   public TagCompound(final String newName) {
+    this(newName, null);
+  }
+
+  private TagCompound(final String newName, final Map<String, Tag> newMap) {
     super(newName);
-    data = new HashMap<String, Tag>();
+    if (newMap == null) {
+      data = new HashMap<String, Tag>();
+    } else {
+      data = new HashMap<String, Tag>(newMap);
+      Iterator<Entry<String, Tag>> it = data.entrySet().iterator();
+      while (it.hasNext()) {
+        Entry<String, Tag> entry = it.next();
+        assertValidTag(entry.getKey(), entry.getValue());
+      }
+    }
   }
 
   public Map<String, Tag> getAsMap() {
     return Collections.unmodifiableMap(data);
+  }
+
+  public Iterator<Tag> iterator() {
+    return Collections.unmodifiableCollection(data.values()).iterator();
+  }
+
+  public void clear() {
+    data.clear();
   }
 
   public int size() {
@@ -362,6 +384,12 @@ public class TagCompound extends Tag {
   }
 
   public void put(final String name, final Tag tag) {
+    assertValidTag(name, tag);
+    tag.setParent(this);
+    data.put(name, tag);
+  }
+
+  private void assertValidTag(final String name, final Tag tag) {
     if (tag == null) {
       throw new NullPointerException(TagCompound.TAG_NAME + " does not support null tags");
     } else if (tag.hasParent()) {
@@ -369,8 +397,6 @@ public class TagCompound extends Tag {
     } else if (name == null || name.equals("")) {
       throw new IllegalArgumentException(TagCompound.TAG_NAME + " does not support unnamed tags");
     }
-    tag.setParent(this);
-    data.put(name, tag);
   }
 
   /**
@@ -544,4 +570,17 @@ public class TagCompound extends Tag {
     data.put(newName, data.remove(oldName));
   }
 
+  @Override
+  public TagCompound clone() {
+    if (data.isEmpty()) {
+      return new TagCompound(getName());
+    } else {
+      Map<String, Tag> newMap = new HashMap<String, Tag>(data.size());
+      for (Entry<String, Tag> entry : data.entrySet()) {
+        newMap.put(entry.getKey(), entry.getValue().clone());
+      }
+      return new TagCompound(getName(), newMap);
+    }
+
+  }
 }

@@ -1,4 +1,4 @@
-package com.sudoplay.axion.helper;
+package com.sudoplay.axion.util;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,7 +17,7 @@ import com.sudoplay.axion.tag.TagLong;
 import com.sudoplay.axion.tag.TagShort;
 import com.sudoplay.axion.tag.TagString;
 
-public class TagHelper {
+public class TagUtil {
 
   private static final Map<Class<? extends Tag>, Byte> classToIdMap;
 

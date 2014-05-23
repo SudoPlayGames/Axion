@@ -11,7 +11,6 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.sudoplay.axion.helper.TagHelper;
 import com.sudoplay.axion.tag.Tag;
 import com.sudoplay.axion.tag.TagByte;
 import com.sudoplay.axion.tag.TagByteArray;
@@ -25,6 +24,7 @@ import com.sudoplay.axion.tag.TagList;
 import com.sudoplay.axion.tag.TagLong;
 import com.sudoplay.axion.tag.TagShort;
 import com.sudoplay.axion.tag.TagString;
+import com.sudoplay.axion.util.TagUtil;
 
 public class DefaultAdapter implements Adapter {
 
@@ -58,7 +58,7 @@ public class DefaultAdapter implements Adapter {
     @Override
     public Tag read(final Tag parent, final DataInputStream in) throws IOException {
       byte id = in.readByte();
-      LOG.trace("reading [{}]", TagHelper.getName(id));
+      LOG.trace("reading [{}]", TagUtil.getName(id));
       if (id == TagEnd.TAG_ID) {
         LOG.trace("finished reading [{}]", TagEnd.TAG_NAME);
         return TagEnd.INSTANCE;
@@ -232,7 +232,7 @@ public class DefaultAdapter implements Adapter {
       String name = (parent instanceof TagList) ? null : in.readUTF();
       byte type = in.readByte();
       int size = in.readInt();
-      TagList tagList = new TagList(TagHelper.getTagClass(type), name);
+      TagList tagList = new TagList(TagUtil.getTagClass(type), name);
       Interface_InternalAdapter adapter = ADAPTERS.get(type);
       Tag child;
       for (int i = 0; i < size; i++) {

@@ -21,7 +21,7 @@ public class EqualsTest {
 
   @Test
   public void test_TagEnd() {
-    assertEquals(TagEnd.class.getSimpleName(), new TagEnd(), new TagEnd());
+    assertEquals(TagEnd.class.getSimpleName(), TagEnd.INSTANCE, TagEnd.getInstance());
   }
 
   @Test

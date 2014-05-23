@@ -24,7 +24,7 @@ public class NameTest {
   public void test() {
     Tag tag;
 
-    tag = new TagEnd();
+    tag = TagEnd.INSTANCE;
     tag.setName("name");
     assertEquals(tag.getClass().getSimpleName(), "", tag.getName());
 
