@@ -1,5 +1,8 @@
 package com.sudoplay.axion.tag;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.sudoplay.axion.tag.impl.TagByte;
 import com.sudoplay.axion.tag.impl.TagByteArray;
 import com.sudoplay.axion.tag.impl.TagCompound;
@@ -14,6 +17,28 @@ import com.sudoplay.axion.tag.impl.TagShort;
 import com.sudoplay.axion.tag.impl.TagString;
 
 public class TagHelper {
+
+  private static final Map<Class<? extends Abstract_Tag>, Byte> classToIdMap;
+
+  static {
+    classToIdMap = new HashMap<Class<? extends Abstract_Tag>, Byte>();
+    classToIdMap.put(TagEnd.class, TagEnd.TAG_ID);
+    classToIdMap.put(TagByte.class, TagByte.TAG_ID);
+    classToIdMap.put(TagShort.class, TagShort.TAG_ID);
+    classToIdMap.put(TagInt.class, TagInt.TAG_ID);
+    classToIdMap.put(TagLong.class, TagLong.TAG_ID);
+    classToIdMap.put(TagFloat.class, TagFloat.TAG_ID);
+    classToIdMap.put(TagDouble.class, TagDouble.TAG_ID);
+    classToIdMap.put(TagByteArray.class, TagByteArray.TAG_ID);
+    classToIdMap.put(TagString.class, TagString.TAG_ID);
+    classToIdMap.put(TagList.class, TagList.TAG_ID);
+    classToIdMap.put(TagCompound.class, TagCompound.TAG_ID);
+    classToIdMap.put(TagIntArray.class, TagIntArray.TAG_ID);
+  }
+
+  public static byte getId(final Class<? extends Abstract_Tag> tagClass) {
+    return classToIdMap.get(tagClass);
+  }
 
   public static String getName(final byte id) {
 
