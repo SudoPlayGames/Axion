@@ -51,7 +51,7 @@ public class TagList extends Tag implements Iterable<Tag> {
     if (newList == null) {
       data = new ArrayList<Tag>();
     } else {
-      data = new ArrayList<Tag>(newList);
+      data = newList;
       for (Tag tag : data) {
         assertValidTag(tag);
       }

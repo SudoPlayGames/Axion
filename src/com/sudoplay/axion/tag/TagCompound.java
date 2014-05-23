@@ -44,7 +44,7 @@ public class TagCompound extends Tag implements Iterable<Tag> {
     if (newMap == null) {
       data = new HashMap<String, Tag>();
     } else {
-      data = new HashMap<String, Tag>(newMap);
+      data = newMap;
       Iterator<Entry<String, Tag>> it = data.entrySet().iterator();
       while (it.hasNext()) {
         Entry<String, Tag> entry = it.next();
