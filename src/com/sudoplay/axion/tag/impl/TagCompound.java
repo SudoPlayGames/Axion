@@ -61,6 +61,10 @@ public class TagCompound extends Abstract_Tag {
     return result;
   }
 
+  public Abstract_Tag get(final String name) {
+    return data.get(name);
+  }
+
   /**
    * Get the data from a boolean byte tag; returns default value if the tag does
    * not exist.
@@ -360,11 +364,12 @@ public class TagCompound extends Abstract_Tag {
   }
 
   public void put(final String name, final Abstract_Tag tag) {
-    if (name == null || name.equals("")) {
-      throw new IllegalArgumentException(TagCompound.TAG_NAME + " does not support unnamed tags");
-    }
     if (tag == null) {
       throw new NullPointerException(TagCompound.TAG_NAME + " does not support null tags");
+    } else if (tag.hasParent()) {
+      throw new IllegalStateException("Tag can not be added to more than one collection tag");
+    } else if (name == null || name.equals("")) {
+      throw new IllegalArgumentException(TagCompound.TAG_NAME + " does not support unnamed tags");
     }
     tag.setParent(this);
     data.put(name, tag);

@@ -1,5 +1,6 @@
 package com.sudoplay.axion.tag;
 
+import com.sudoplay.axion.tag.impl.TagCompound;
 import com.sudoplay.axion.tag.impl.TagList;
 
 public abstract class Abstract_Tag implements Interface_Tag {
@@ -12,8 +13,10 @@ public abstract class Abstract_Tag implements Interface_Tag {
   }
 
   public void setName(final String newName) {
-    if (parent instanceof TagList) {
-      throw new IllegalStateException(this.getClass().getSimpleName() + " belongs to a " + TagList.TAG_NAME + " and cannot be named");
+    if (parent instanceof TagList && newName != null && !newName.isEmpty()) {
+      throw new IllegalStateException(this.getClass().getSimpleName() + " belongs to a " + TagList.TAG_NAME + " and can not be named");
+    } else if (parent instanceof TagCompound && (newName == null || newName.isEmpty())) {
+      throw new IllegalStateException(this.getClass().getSimpleName() + " belongs to a " + TagCompound.TAG_NAME + " and can not have an empty or null name");
     } else {
       name = (newName == null) ? "" : newName;
     }
@@ -29,6 +32,20 @@ public abstract class Abstract_Tag implements Interface_Tag {
 
   public Abstract_Tag getParent() {
     return parent;
+  }
+  
+  public boolean hasParent() {
+    return parent != null;
+  }
+
+  public void removeFromParent() {
+    if (parent instanceof TagList) {
+      ((TagList) parent).remove(this);
+      parent = null;
+    } else if (parent instanceof TagCompound) {
+      ((TagCompound) parent).remove(getName());
+      parent = null;
+    }
   }
 
   @Override

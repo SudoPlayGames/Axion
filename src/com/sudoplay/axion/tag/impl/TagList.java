@@ -55,8 +55,10 @@ public class TagList extends Abstract_Tag {
    * @param tag
    */
   public void add(final Abstract_Tag tag) {
-    if (tag.getTagId() == TagEnd.TAG_ID) {
-      throw new InvalidParameterException("Cannot add a TAG_End to a TAG_List.");
+    if (tag.hasParent()) {
+      throw new IllegalStateException("Tag can not be added to more than one collection tag");
+    } else if (tag.getTagId() == TagEnd.TAG_ID) {
+      throw new InvalidParameterException("Can not add a TAG_End to a TAG_List");
     } else if (type == TagEnd.TAG_ID) {
       type = tag.getTagId();
       tag.setName(null);
@@ -67,10 +69,10 @@ public class TagList extends Abstract_Tag {
       tag.setParent(this);
       data.add(tag);
     } else {
-      throw new InvalidParameterException("Cannot add multiple tag types to a list tag.");
+      throw new InvalidParameterException("Can not add multiple tag types to a list tag");
     }
   }
-  
+
   public void remove(final Abstract_Tag tag) {
     if (data.remove(tag)) {
       tag.setParent(null);
