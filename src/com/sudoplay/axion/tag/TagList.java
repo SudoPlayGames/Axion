@@ -45,9 +45,7 @@ public class TagList extends Tag implements Iterable<Tag> {
 
   private TagList(final Class<? extends Tag> tagClass, final String newName, final List<Tag> newList) {
     super(newName);
-    if ((type = TagUtil.getId(tagClass)) == TagEnd.TAG_ID) {
-      throw new IllegalArgumentException("Can't create " + TagList.TAG_NAME + " from type " + TagEnd.TAG_NAME);
-    }
+    type = TagUtil.getId(tagClass);
     if (newList == null) {
       data = new ArrayList<Tag>();
     } else {

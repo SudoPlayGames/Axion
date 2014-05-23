@@ -45,14 +45,6 @@ public class CloneTest {
     check(tag);
   }
 
-  @Test
-  public void testTagEnd() {
-    TagEnd tag = TagEnd.INSTANCE;
-    TagEnd clone = tag.clone();
-    assertTrue(tag == clone);
-    assertEquals(tag, clone);
-  }
-
   private void check(Tag tag) {
     Tag clone = tag.clone();
     assertTrue(tag != clone);

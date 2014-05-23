@@ -16,7 +16,6 @@ import com.sudoplay.axion.tag.TagByte;
 import com.sudoplay.axion.tag.TagByteArray;
 import com.sudoplay.axion.tag.TagCompound;
 import com.sudoplay.axion.tag.TagDouble;
-import com.sudoplay.axion.tag.TagEnd;
 import com.sudoplay.axion.tag.TagFloat;
 import com.sudoplay.axion.tag.TagInt;
 import com.sudoplay.axion.tag.TagIntArray;
@@ -27,6 +26,8 @@ import com.sudoplay.axion.tag.TagString;
 import com.sudoplay.axion.util.TagUtil;
 
 public class DefaultAdapter implements Adapter {
+
+  private static final byte TAG_END_ID = 0;
 
   private static final Logger LOG = LoggerFactory.getLogger(DefaultAdapter.class);
 
@@ -46,7 +47,7 @@ public class DefaultAdapter implements Adapter {
       LOG.trace("writing [{}]", tag);
       byte id = tag.getTagId();
       out.writeByte(id);
-      if (id != TagEnd.TAG_ID) {
+      if (id != TAG_END_ID) {
         if (!(tag.getParent() instanceof TagList)) {
           out.writeUTF(tag.getName());
         }
@@ -58,11 +59,10 @@ public class DefaultAdapter implements Adapter {
     @Override
     public Tag read(final Tag parent, final DataInputStream in) throws IOException {
       byte id = in.readByte();
-      LOG.trace("reading [{}]", TagUtil.getName(id));
-      if (id == TagEnd.TAG_ID) {
-        LOG.trace("finished reading [{}]", TagEnd.TAG_NAME);
-        return TagEnd.INSTANCE;
+      if (id == TAG_END_ID) {
+        return null;
       } else {
+        LOG.trace("reading [{}]", TagUtil.getName(id));
         Tag tag = ADAPTERS.get(id).read(parent, in);
         LOG.trace("finished reading [{}]", tag);
         return tag;
@@ -251,7 +251,7 @@ public class DefaultAdapter implements Adapter {
       for (Tag child : ((TagCompound) tag).getAsMap().values()) {
         BASE_ADAPTER.write(child, out);
       }
-      out.writeByte(TagEnd.TAG_ID);
+      out.writeByte(TAG_END_ID);
     }
 
     @Override
@@ -259,7 +259,7 @@ public class DefaultAdapter implements Adapter {
       String name = (parent instanceof TagList) ? null : in.readUTF();
       TagCompound tag = new TagCompound(name);
       Tag child;
-      while ((child = BASE_ADAPTER.read(tag, in)).getTagId() != TagEnd.TAG_ID) {
+      while ((child = BASE_ADAPTER.read(tag, in)) != null) {
         tag.put(child.getName(), child);
       }
       return tag;

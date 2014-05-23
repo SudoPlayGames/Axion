@@ -1,16 +1,15 @@
 package com.sudoplay.axion.tag;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
 import com.sudoplay.axion.util.TagUtil;
 
-public class TagHelperTest {
+public class TagUtilTest {
 
   @Test
   public void testClassToId() {
-    assertEquals(TagEnd.TAG_ID, TagUtil.getId(TagEnd.class));
     assertEquals(TagByte.TAG_ID, TagUtil.getId(TagByte.class));
     assertEquals(TagShort.TAG_ID, TagUtil.getId(TagShort.class));
     assertEquals(TagInt.TAG_ID, TagUtil.getId(TagInt.class));
@@ -26,7 +25,6 @@ public class TagHelperTest {
 
   @Test
   public void testIdToClass() {
-    assertEquals(TagEnd.class, TagUtil.getTagClass(TagEnd.TAG_ID));
     assertEquals(TagByte.class, TagUtil.getTagClass(TagByte.TAG_ID));
     assertEquals(TagShort.class, TagUtil.getTagClass(TagShort.TAG_ID));
     assertEquals(TagInt.class, TagUtil.getTagClass(TagInt.TAG_ID));

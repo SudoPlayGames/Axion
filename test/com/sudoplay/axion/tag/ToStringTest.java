@@ -4,25 +4,11 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import com.sudoplay.axion.tag.TagByte;
-import com.sudoplay.axion.tag.TagByteArray;
-import com.sudoplay.axion.tag.TagCompound;
-import com.sudoplay.axion.tag.TagDouble;
-import com.sudoplay.axion.tag.TagEnd;
-import com.sudoplay.axion.tag.TagFloat;
-import com.sudoplay.axion.tag.TagInt;
-import com.sudoplay.axion.tag.TagIntArray;
-import com.sudoplay.axion.tag.TagList;
-import com.sudoplay.axion.tag.TagLong;
-import com.sudoplay.axion.tag.TagShort;
-import com.sudoplay.axion.tag.TagString;
-
 public class ToStringTest {
 
   @Test
   public void test() {
 
-    assertEquals("TAG_End", TagEnd.INSTANCE.toString());
     assertEquals("TAG_Byte(\"name\"): 16", new TagByte("name", (byte) 16).toString());
     assertEquals("TAG_Short(\"name\"): 16", new TagShort("name", (short) 16).toString());
     assertEquals("TAG_Int(\"name\"): 16", new TagInt("name", 16).toString());

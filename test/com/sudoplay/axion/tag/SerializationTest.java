@@ -1,6 +1,6 @@
 package com.sudoplay.axion.tag;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -11,28 +11,10 @@ import java.io.IOException;
 import org.junit.Test;
 
 import com.sudoplay.axion.Axion;
-import com.sudoplay.axion.tag.Tag;
-import com.sudoplay.axion.tag.TagByte;
-import com.sudoplay.axion.tag.TagByteArray;
-import com.sudoplay.axion.tag.TagCompound;
-import com.sudoplay.axion.tag.TagDouble;
-import com.sudoplay.axion.tag.TagEnd;
-import com.sudoplay.axion.tag.TagFloat;
-import com.sudoplay.axion.tag.TagInt;
-import com.sudoplay.axion.tag.TagIntArray;
-import com.sudoplay.axion.tag.TagList;
-import com.sudoplay.axion.tag.TagLong;
-import com.sudoplay.axion.tag.TagShort;
-import com.sudoplay.axion.tag.TagString;
 
 public class SerializationTest {
 
   private Axion axion = new Axion();
-
-  @Test
-  public void test_TagEnd() throws IOException {
-    assertEquals(TagEnd.class.getSimpleName(), TagEnd.INSTANCE, serialize(TagEnd.INSTANCE));
-  }
 
   @Test
   public void test_TagByte() throws IOException {

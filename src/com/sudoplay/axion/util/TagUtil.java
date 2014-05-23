@@ -8,7 +8,6 @@ import com.sudoplay.axion.tag.TagByte;
 import com.sudoplay.axion.tag.TagByteArray;
 import com.sudoplay.axion.tag.TagCompound;
 import com.sudoplay.axion.tag.TagDouble;
-import com.sudoplay.axion.tag.TagEnd;
 import com.sudoplay.axion.tag.TagFloat;
 import com.sudoplay.axion.tag.TagInt;
 import com.sudoplay.axion.tag.TagIntArray;
@@ -23,7 +22,6 @@ public class TagUtil {
 
   static {
     classToIdMap = new HashMap<Class<? extends Tag>, Byte>();
-    classToIdMap.put(TagEnd.class, TagEnd.TAG_ID);
     classToIdMap.put(TagByte.class, TagByte.TAG_ID);
     classToIdMap.put(TagShort.class, TagShort.TAG_ID);
     classToIdMap.put(TagInt.class, TagInt.TAG_ID);
@@ -45,8 +43,6 @@ public class TagUtil {
 
     switch (id) {
 
-    case TagEnd.TAG_ID:
-      return TagEnd.class;
     case TagByte.TAG_ID:
       return TagByte.class;
     case TagShort.TAG_ID:
@@ -80,8 +76,6 @@ public class TagUtil {
 
     switch (id) {
 
-    case TagEnd.TAG_ID:
-      return TagEnd.TAG_NAME;
     case TagByte.TAG_ID:
       return TagByte.TAG_NAME;
     case TagShort.TAG_ID:
