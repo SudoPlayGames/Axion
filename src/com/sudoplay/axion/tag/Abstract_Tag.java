@@ -14,7 +14,7 @@ public abstract class Abstract_Tag {
 
   public void setName(final String newName) {
     if (parent != null) {
-      parent.onNameChange(newName);
+      parent.onNameChange(name, newName);
     }
     name = (newName == null) ? "" : newName;
   }
@@ -79,7 +79,7 @@ public abstract class Abstract_Tag {
     }
   }
 
-  protected void onNameChange(final String newName) {
+  protected void onNameChange(final String oldName, final String newName) {
     // override
   }
 

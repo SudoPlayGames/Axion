@@ -186,7 +186,7 @@ public class TagList extends Abstract_Tag {
   }
 
   @Override
-  protected void onNameChange(String newName) {
+  protected void onNameChange(final String oldName, final String newName) {
     if (newName != null && !newName.isEmpty()) {
       throw new IllegalStateException("Tag belongs to a " + TagList.TAG_NAME + " and can not be named");
     }

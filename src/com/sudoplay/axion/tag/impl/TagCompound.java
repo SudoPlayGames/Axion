@@ -539,10 +539,11 @@ public class TagCompound extends Abstract_Tag {
   }
 
   @Override
-  protected void onNameChange(String newName) {
+  protected void onNameChange(final String oldName, final String newName) {
     if (newName == null || newName.isEmpty()) {
       throw new IllegalStateException("Tag belongs to a " + TagCompound.TAG_NAME + " and can not have an empty or null name");
     }
+    data.put(newName, data.remove(oldName));
   }
 
 }
