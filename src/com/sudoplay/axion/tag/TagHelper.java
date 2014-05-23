@@ -41,9 +41,9 @@ public class TagHelper {
   }
 
   public static Class<? extends Abstract_Tag> getTagClass(final byte id) {
-    
+
     switch (id) {
-    
+
     case TagEnd.TAG_ID:
       return TagEnd.class;
     case TagByte.TAG_ID:
@@ -68,11 +68,11 @@ public class TagHelper {
       return TagCompound.class;
     case TagIntArray.TAG_ID:
       return TagIntArray.class;
-      
+
     }
-    
+
     return null;
-    
+
   }
 
   public static String getName(final byte id) {
@@ -107,41 +107,6 @@ public class TagHelper {
     }
 
     return null;
-  }
-
-  public static Abstract_Tag create(final byte id, final String newName) {
-
-    switch (id) {
-
-    case TagEnd.TAG_ID:
-      return new TagEnd();
-    case TagByte.TAG_ID:
-      return new TagByte(newName);
-    case TagShort.TAG_ID:
-      return new TagShort(newName);
-    case TagInt.TAG_ID:
-      return new TagInt(newName);
-    case TagLong.TAG_ID:
-      return new TagLong(newName);
-    case TagFloat.TAG_ID:
-      return new TagFloat(newName);
-    case TagDouble.TAG_ID:
-      return new TagDouble(newName);
-    case TagByteArray.TAG_ID:
-      return new TagByteArray(newName);
-    case TagString.TAG_ID:
-      return new TagString(newName);
-    case TagList.TAG_ID:
-      return new TagList(newName);
-    case TagCompound.TAG_ID:
-      return new TagCompound(newName);
-    case TagIntArray.TAG_ID:
-      return new TagIntArray(newName);
-
-    }
-
-    return null;
-
   }
 
 }

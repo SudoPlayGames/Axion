@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.sudoplay.axion.tag.Abstract_Tag;
+import com.sudoplay.axion.tag.TagHelper;
 
 /**
  * @tag.type 9
@@ -31,19 +32,18 @@ public class TagList extends Abstract_Tag {
   private List<Abstract_Tag> data;
 
   /**
-   * Used to store type id for tags in this list; all tags must be of the same
-   * type.
+   * Store type id for tags in this list; all tags must be of the same type.
    */
-  private byte type = TagEnd.TAG_ID;
+  private final byte type;
 
-  public TagList() {
-    super(null);
-    data = new ArrayList<Abstract_Tag>();
+  public TagList(final Class<? extends Abstract_Tag> tagClass) {
+    this(tagClass, null);
   }
 
-  public TagList(final String newName) {
+  public TagList(final Class<? extends Abstract_Tag> tagClass, final String newName) {
     super(newName);
     data = new ArrayList<Abstract_Tag>();
+    type = TagHelper.getId(tagClass);
   }
 
   /**
@@ -59,11 +59,6 @@ public class TagList extends Abstract_Tag {
       throw new IllegalStateException("Tag can not be added to more than one collection tag");
     } else if (tag.getTagId() == TagEnd.TAG_ID) {
       throw new InvalidParameterException("Can not add a TAG_End to a TAG_List");
-    } else if (type == TagEnd.TAG_ID) {
-      type = tag.getTagId();
-      tag.setName(null);
-      tag.setParent(this);
-      data.add(tag);
     } else if (type == tag.getTagId()) {
       tag.setName(null);
       tag.setParent(this);
@@ -123,10 +118,6 @@ public class TagList extends Abstract_Tag {
     add(new TagString(null, newString));
   }
 
-  public void overrideType(final byte newType) {
-    type = newType;
-  }
-
   public byte getType() {
     return type;
   }
@@ -145,7 +136,6 @@ public class TagList extends Abstract_Tag {
 
   public void clear() {
     data.clear();
-    type = TagEnd.TAG_ID;
   }
 
   @Override

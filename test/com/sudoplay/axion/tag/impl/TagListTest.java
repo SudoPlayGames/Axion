@@ -11,7 +11,7 @@ public class TagListTest {
   @Test
   public void testMixedTypes() {
     try {
-      new TagList("newList") {
+      new TagList(TagByte.class, "newList") {
         {
           add(new TagByte("name", (byte) 14));
           add(new TagLong("long", 45L));

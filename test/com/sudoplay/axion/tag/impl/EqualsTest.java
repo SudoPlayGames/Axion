@@ -53,13 +53,13 @@ public class EqualsTest {
 
   @Test
   public void test_TagList() {
-    TagList listA = new TagList("name");
+    TagList listA = new TagList(TagByte.class, "name");
     listA.add(new TagByte("tagA", (byte) 16));
     listA.add(new TagByte("tagB", (byte) 8));
     listA.add(new TagByte("tagC", (byte) 4));
     listA.add(new TagByte("tagD", (byte) 2));
 
-    TagList listB = new TagList("name");
+    TagList listB = new TagList(TagByte.class, "name");
     listB.add(new TagByte("tagA", (byte) 16));
     listB.add(new TagByte("tagB", (byte) 8));
     listB.add(new TagByte("tagC", (byte) 4));
@@ -71,7 +71,7 @@ public class EqualsTest {
   @Test
   public void test_TagCompound() {
     TagCompound compoundA = new TagCompound("name");
-    TagList listA = new TagList("name");
+    TagList listA = new TagList(TagByte.class, "name");
     listA.add(new TagByte("tagA", (byte) 16));
     listA.add(new TagByte("tagB", (byte) 8));
     listA.add(new TagByte("tagC", (byte) 4));
@@ -83,13 +83,13 @@ public class EqualsTest {
     compoundA.putDouble("double", 67.394857);
     compoundA.putFloat("float", 6.453f);
     compoundA.putInt("int", 16);
-    compoundA.putIntArray("intArray", new int[] {0,1,2,3});
+    compoundA.putIntArray("intArray", new int[] { 0, 1, 2, 3 });
     compoundA.putLong("long", 79L);
     compoundA.putShort("short", (short) 947);
     compoundA.putString("string", "somestring");
 
     TagCompound compoundB = new TagCompound("name");
-    TagList listB = new TagList("name");
+    TagList listB = new TagList(TagByte.class, "name");
     listB.add(new TagByte("tagA", (byte) 16));
     listB.add(new TagByte("tagB", (byte) 8));
     listB.add(new TagByte("tagC", (byte) 4));
@@ -101,7 +101,7 @@ public class EqualsTest {
     compoundB.putDouble("double", 67.394857);
     compoundB.putFloat("float", 6.453f);
     compoundB.putInt("int", 16);
-    compoundB.putIntArray("intArray", new int[] {0,1,2,3});
+    compoundB.putIntArray("intArray", new int[] { 0, 1, 2, 3 });
     compoundB.putLong("long", 79L);
     compoundB.putShort("short", (short) 947);
     compoundB.putString("string", "somestring");

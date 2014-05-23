@@ -17,7 +17,7 @@ public class TagNameTest {
     assertTrue(new TagDouble("name").getTagName() == "TAG_Double");
     assertTrue(new TagByteArray("name").getTagName() == "TAG_Byte_Array");
     assertTrue(new TagString("name").getTagName() == "TAG_String");
-    assertTrue(new TagList().getTagName() == "TAG_List");
+    assertTrue(new TagList(TagByte.class).getTagName() == "TAG_List");
     assertTrue(new TagCompound().getTagName() == "TAG_Compound");
     assertTrue(new TagIntArray("name").getTagName() == "TAG_Int_Array");
   }

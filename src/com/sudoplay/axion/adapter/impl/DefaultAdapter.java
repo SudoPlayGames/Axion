@@ -233,8 +233,7 @@ public class DefaultAdapter implements Interface_Adapter {
       String name = (parent instanceof TagList) ? null : in.readUTF();
       byte type = in.readByte();
       int size = in.readInt();
-      TagList tagList = new TagList(name);
-      tagList.overrideType(type);
+      TagList tagList = new TagList(TagHelper.getTagClass(type), name);
       Interface_InternalAdapter adapter = ADAPTERS.get(type);
       Abstract_Tag child;
       for (int i = 0; i < size; i++) {

@@ -24,7 +24,7 @@ public class NameTest {
     check(new TagDouble("name"));
     check(new TagByteArray("name"));
     check(new TagString("name"));
-    check(new TagList("name"));
+    check(new TagList(TagByte.class, "name"));
     check(new TagCompound("name"));
     check(new TagIntArray("name"));
 

@@ -12,13 +12,13 @@ public class ParentChildBehaviorTest {
    */
   @Test
   public void testListToListParentChange() {
-    TagList list = new TagList("list") {
+    TagList list = new TagList(TagByte.class, "list") {
       {
         add(new TagByte("name", (byte) 14));
       }
     };
     assertEquals(1, list.size());
-    TagList newList = new TagList("newList");
+    TagList newList = new TagList(TagByte.class, "newList");
     try {
       newList.add(list.get(0));
       fail("Expected IllegalStateException");
@@ -38,7 +38,7 @@ public class ParentChildBehaviorTest {
    */
   @Test
   public void testListToCompoundParentChange() {
-    TagList list = new TagList("list");
+    TagList list = new TagList(TagByte.class, "list");
     TagCompound compound = new TagCompound("compound");
 
     list.addByte((byte) 16);
@@ -54,7 +54,7 @@ public class ParentChildBehaviorTest {
 
   @Test
   public void testListChildNameChange() {
-    TagList list = new TagList("newList") {
+    TagList list = new TagList(TagByte.class, "newList") {
       {
         add(new TagByte("name", (byte) 14));
       }

@@ -19,7 +19,7 @@ public class TagIdTest {
     check(new TagDouble("name"), 6);
     check(new TagByteArray("name"), 7);
     check(new TagString("name"), 8);
-    check(new TagList(), 9);
+    check(new TagList(TagByte.class), 9);
     check(new TagCompound(), 10);
     check(new TagIntArray("name"), 11);
   }

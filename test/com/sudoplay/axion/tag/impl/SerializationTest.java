@@ -65,13 +65,13 @@ public class SerializationTest {
 
   @Test
   public void test_TagList() throws IOException {
-    TagList listA = new TagList("name");
+    TagList listA = new TagList(TagByte.class, "name");
     listA.add(new TagByte("tagA", (byte) 16));
     listA.add(new TagByte("tagB", (byte) 8));
     listA.add(new TagByte("tagC", (byte) 4));
     listA.add(new TagByte("tagD", (byte) 2));
 
-    TagList listB = new TagList("name");
+    TagList listB = new TagList(TagByte.class, "name");
     listB.add(new TagByte("tagA", (byte) 16));
     listB.add(new TagByte("tagB", (byte) 8));
     listB.add(new TagByte("tagC", (byte) 4));
@@ -83,7 +83,7 @@ public class SerializationTest {
   @Test
   public void test_TagCompound() throws IOException {
     TagCompound compoundA = new TagCompound("name");
-    TagList listA = new TagList("name");
+    TagList listA = new TagList(TagByte.class, "name");
     listA.add(new TagByte("tagA", (byte) 16));
     listA.add(new TagByte("tagB", (byte) 8));
     listA.add(new TagByte("tagC", (byte) 4));
@@ -101,7 +101,7 @@ public class SerializationTest {
     compoundA.putString("string", "somestring");
 
     TagCompound compoundB = new TagCompound("name");
-    TagList listB = new TagList("name");
+    TagList listB = new TagList(TagByte.class, "name");
     listB.add(new TagByte("tagA", (byte) 16));
     listB.add(new TagByte("tagB", (byte) 8));
     listB.add(new TagByte("tagC", (byte) 4));

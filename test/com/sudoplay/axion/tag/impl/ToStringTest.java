@@ -19,7 +19,7 @@ public class ToStringTest {
     assertEquals("TAG_Byte_Array(\"name\"): [4 bytes]", new TagByteArray("name", new byte[] { 0, 1, 2, 3 }).toString());
     assertEquals("TAG_String(\"name\"): string", new TagString("name", "string").toString());
 
-    TagList list = new TagList("name");
+    TagList list = new TagList(TagInt.class, "name");
     list.add(new TagInt("name", 56));
     list.add(new TagInt("name", 56));
     list.add(new TagInt("name", 56));
