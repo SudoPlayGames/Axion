@@ -1,8 +1,8 @@
 package com.sudoplay.axion.tag;
 
-import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import com.sudoplay.axion.helper.TagHelper;
@@ -23,7 +23,7 @@ import com.sudoplay.axion.helper.TagHelper;
  * @author Jason Taylor
  * 
  */
-public class TagList extends Tag {
+public class TagList extends Tag implements Iterable<Tag> {
 
   public static final byte TAG_ID = (byte) 9;
   public static final String TAG_NAME = "TAG_List";
@@ -42,7 +42,9 @@ public class TagList extends Tag {
   public TagList(final Class<? extends Tag> tagClass, final String newName) {
     super(newName);
     data = new ArrayList<Tag>();
-    type = TagHelper.getId(tagClass);
+    if ((type = TagHelper.getId(tagClass)) == TagEnd.TAG_ID) {
+      throw new IllegalArgumentException("Can't create " + TagList.TAG_NAME + " from type " + TagEnd.TAG_NAME);
+    }
   }
 
   /**
@@ -55,22 +57,21 @@ public class TagList extends Tag {
    */
   public void add(final Tag tag) {
     if (tag.hasParent()) {
-      throw new IllegalStateException("Tag can not be added to more than one collection tag");
-    } else if (tag.getTagId() == TagEnd.TAG_ID) {
-      throw new InvalidParameterException("Can not add a TAG_End to a TAG_List");
-    } else if (type == tag.getTagId()) {
-      tag.setName(null);
-      tag.setParent(this);
-      data.add(tag);
-    } else {
-      throw new InvalidParameterException("Can not add multiple tag types to a list tag");
+      throw new IllegalStateException("Tag can't be added to more than one collection tag");
+    } else if (type != tag.getTagId()) {
+      throw new IllegalArgumentException("Can't add tag of type [" + tag.getTagName() + "] to " + TagList.TAG_NAME + " of type " + TagHelper.getName(type));
     }
+    tag.setName(null);
+    tag.setParent(this);
+    data.add(tag);
   }
 
-  public void remove(final Tag tag) {
+  public boolean remove(final Tag tag) {
     if (data.remove(tag)) {
       tag.setParent(null);
+      return true;
     }
+    return false;
   }
 
   public Tag remove(final int index) {
@@ -129,8 +130,14 @@ public class TagList extends Tag {
     return Collections.unmodifiableList(data);
   }
 
-  public Tag get(final int index) {
-    return data.get(index);
+  @SuppressWarnings("unchecked")
+  public <T extends Tag> T get(final int index) {
+    return (T) data.get(index);
+  }
+
+  @Override
+  public Iterator<Tag> iterator() {
+    return data.iterator();
   }
 
   public int size() {

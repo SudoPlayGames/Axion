@@ -1,17 +1,11 @@
 package com.sudoplay.axion.tag;
 
-import static org.junit.Assert.*;
-
-import java.security.InvalidParameterException;
+import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
-import com.sudoplay.axion.tag.TagByte;
-import com.sudoplay.axion.tag.TagList;
-import com.sudoplay.axion.tag.TagLong;
-
 public class TagListTest {
-  
+
   @Test
   public void testMixedTypes() {
     try {
@@ -21,8 +15,8 @@ public class TagListTest {
           add(new TagLong("long", 45L));
         }
       };
-      fail("Should throw InvalidParameterException");
-    } catch (InvalidParameterException e) {
+      fail("Should throw IllegalArgumentException");
+    } catch (IllegalArgumentException e) {
       //
     }
   }
