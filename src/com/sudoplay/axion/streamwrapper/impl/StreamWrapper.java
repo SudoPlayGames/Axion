@@ -1,7 +1,5 @@
 package com.sudoplay.axion.streamwrapper.impl;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -31,12 +29,12 @@ public class StreamWrapper {
 
     @Override
     public InputStream wrapInput(InputStream inputStream) throws IOException {
-      return new DataInputStream(new GZIPInputStream(inputStream));
+      return new GZIPInputStream(inputStream);
     }
 
     @Override
     public OutputStream wrapOutput(OutputStream outputStream) throws IOException {
-      return new DataOutputStream(new GZIPOutputStream(outputStream));
+      return new GZIPOutputStream(outputStream);
     }
 
   };
@@ -45,12 +43,12 @@ public class StreamWrapper {
 
     @Override
     public InputStream wrapInput(InputStream inputStream) throws IOException {
-      return new DataInputStream(new InflaterInputStream(inputStream));
+      return new InflaterInputStream(inputStream);
     }
 
     @Override
     public OutputStream wrapOutput(OutputStream outputStream) throws IOException {
-      return new DataOutputStream(new DeflaterOutputStream(outputStream));
+      return new DeflaterOutputStream(outputStream);
     }
 
   };
