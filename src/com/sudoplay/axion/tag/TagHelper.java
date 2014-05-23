@@ -40,6 +40,41 @@ public class TagHelper {
     return classToIdMap.get(tagClass);
   }
 
+  public static Class<? extends Abstract_Tag> getTagClass(final byte id) {
+    
+    switch (id) {
+    
+    case TagEnd.TAG_ID:
+      return TagEnd.class;
+    case TagByte.TAG_ID:
+      return TagByte.class;
+    case TagShort.TAG_ID:
+      return TagShort.class;
+    case TagInt.TAG_ID:
+      return TagInt.class;
+    case TagLong.TAG_ID:
+      return TagLong.class;
+    case TagFloat.TAG_ID:
+      return TagFloat.class;
+    case TagDouble.TAG_ID:
+      return TagDouble.class;
+    case TagByteArray.TAG_ID:
+      return TagByteArray.class;
+    case TagString.TAG_ID:
+      return TagString.class;
+    case TagList.TAG_ID:
+      return TagList.class;
+    case TagCompound.TAG_ID:
+      return TagCompound.class;
+    case TagIntArray.TAG_ID:
+      return TagIntArray.class;
+      
+    }
+    
+    return null;
+    
+  }
+
   public static String getName(final byte id) {
 
     switch (id) {
