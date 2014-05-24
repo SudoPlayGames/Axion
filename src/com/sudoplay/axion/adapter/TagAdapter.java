@@ -4,9 +4,9 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-import com.sudoplay.axion.tag.standard.Tag;
+import com.sudoplay.axion.tag.spec.Tag;
 
-public interface Adapter {
+public interface TagAdapter {
 
   public Tag read(final Tag parent, final DataInputStream in) throws IOException;
 

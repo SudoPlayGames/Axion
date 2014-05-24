@@ -1,4 +1,4 @@
-package com.sudoplay.axion.tag.standard;
+package com.sudoplay.axion.tag.spec;
 
 public abstract class Tag implements Cloneable {
 

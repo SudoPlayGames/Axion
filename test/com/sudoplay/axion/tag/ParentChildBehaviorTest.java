@@ -4,9 +4,9 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.sudoplay.axion.tag.standard.TagByte;
-import com.sudoplay.axion.tag.standard.TagCompound;
-import com.sudoplay.axion.tag.standard.TagList;
+import com.sudoplay.axion.tag.spec.TagByte;
+import com.sudoplay.axion.tag.spec.TagCompound;
+import com.sudoplay.axion.tag.spec.TagList;
 
 public class ParentChildBehaviorTest {
 

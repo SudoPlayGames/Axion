@@ -1,35 +1,35 @@
-package com.sudoplay.axion.tag.standard;
+package com.sudoplay.axion.tag.spec;
 
 import com.sudoplay.axion.Axion;
 
 /**
- * @tag.type 2
+ * @tag.type 4
  * 
- * @tag.name <code>TAG_Short</code>
+ * @tag.name <code>TAG_Long</code>
  * 
- * @tag.payload * A signed short (16 bits, big endian).
+ * @tag.payload * A signed long (64 bits, big endian).
  * 
  * @author Jason Taylor
  * 
  */
-public class TagShort extends Tag {
+public class TagLong extends Tag {
 
-  private short data;
+  private long data;
 
-  public TagShort(final String newName) {
+  public TagLong(final String newName) {
     super(newName);
   }
 
-  public TagShort(final String newName, final short newShort) {
+  public TagLong(final String newName, final long newLong) {
     super(newName);
-    data = newShort;
+    data = newLong;
   }
 
-  public void set(final short newShort) {
-    data = newShort;
+  public void set(final long newLong) {
+    data = newLong;
   }
 
-  public short get() {
+  public long get() {
     return data;
   }
 
@@ -37,7 +37,7 @@ public class TagShort extends Tag {
   public int hashCode() {
     final int prime = 31;
     int result = super.hashCode();
-    result = prime * result + data;
+    result = prime * result + (int) (data ^ (data >>> 32));
     return result;
   }
 
@@ -49,7 +49,7 @@ public class TagShort extends Tag {
       return false;
     if (getClass() != obj.getClass())
       return false;
-    TagShort other = (TagShort) obj;
+    TagLong other = (TagLong) obj;
     if (data != other.data)
       return false;
     return true;
@@ -61,8 +61,8 @@ public class TagShort extends Tag {
   }
 
   @Override
-  public TagShort clone() {
-    return new TagShort(getName(), data);
+  public TagLong clone() {
+    return new TagLong(getName(), data);
   }
 
 }

@@ -1,4 +1,4 @@
-package com.sudoplay.axion.tag.standard;
+package com.sudoplay.axion.tag.spec;
 
 import java.util.Arrays;
 
@@ -26,15 +26,15 @@ public class TagIntArray extends Tag {
 
   public TagIntArray(final String newName, final int[] newIntArray) {
     super(newName);
-    data = newIntArray;
+    set(newIntArray);
   }
 
   public void set(final int[] newIntArray) {
-    data = newIntArray;
+    data = newIntArray.clone();
   }
 
   public int[] get() {
-    return data;
+    return data.clone();
   }
 
   @Override

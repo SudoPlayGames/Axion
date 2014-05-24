@@ -1,4 +1,4 @@
-package com.sudoplay.axion.tag.standard;
+package com.sudoplay.axion.tag.spec;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.sudoplay.axion.Axion;
+import com.sudoplay.axion.tag.extended.TagBoolean;
 
 /**
  * @tag.type 9
@@ -43,10 +44,10 @@ public class TagList extends Tag implements Iterable<Tag> {
   public TagList(final int newType, final String newName, final List<Tag> newList) {
     super(newName);
     type = newType;
-    if (newList == null) {
+    if (newList == null || newList.isEmpty()) {
       data = new ArrayList<Tag>();
     } else {
-      data = newList;
+      data = new ArrayList<Tag>(newList);
       for (Tag tag : data) {
         assertValidTag(tag);
       }
@@ -91,6 +92,10 @@ public class TagList extends Tag implements Iterable<Tag> {
     return data.remove(index);
   }
 
+  /*
+   * Spec Tags
+   */
+
   public void addByte(final byte newByte) {
     add(new TagByte(null, newByte));
   }
@@ -133,6 +138,13 @@ public class TagList extends Tag implements Iterable<Tag> {
 
   public void addString(final String newString) {
     add(new TagString(null, newString));
+  }
+
+  /*
+   * Extended Tags
+   */
+  public void addBoolean(final boolean newBoolean) {
+    add(new TagBoolean(null, newBoolean));
   }
 
   public int getType() {

@@ -1,4 +1,4 @@
-package com.sudoplay.axion.tag.standard;
+package com.sudoplay.axion.tag.spec;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import com.sudoplay.axion.Axion;
+import com.sudoplay.axion.tag.extended.TagBoolean;
 
 /**
  * @tag.type 10
@@ -38,7 +39,7 @@ public class TagCompound extends Tag implements Iterable<Tag> {
     this(newName, null);
   }
 
-  private TagCompound(final String newName, final Map<String, Tag> newMap) {
+  public TagCompound(final String newName, final Map<String, Tag> newMap) {
     super(newName);
     if (newMap == null) {
       data = new HashMap<String, Tag>();
@@ -84,35 +85,25 @@ public class TagCompound extends Tag implements Iterable<Tag> {
     return data.get(name);
   }
 
-  /**
-   * Get the data from a boolean byte tag; returns default value if the tag does
-   * not exist.
-   * 
-   * @param name
-   * @return boolean from named tag or default value if no tag
-   */
-  public boolean getBoolean(final String name, final boolean defaultValue) {
-    if (data.containsKey(name)) {
-      return ((TagByte) data.get(name)).get() == 0x01 ? true : false;
-    } else {
-      return defaultValue;
+  public void put(final String name, final Tag tag) {
+    assertValidTag(name, tag);
+    tag.setParent(this);
+    data.put(name, tag);
+  }
+
+  private void assertValidTag(final String name, final Tag tag) {
+    if (tag == null) {
+      throw new NullPointerException(Axion.getNameFor(this) + " does not support null tags");
+    } else if (tag.hasParent()) {
+      throw new IllegalStateException("Tag can not be added to more than one collection tag");
+    } else if (name == null || name.equals("")) {
+      throw new IllegalArgumentException(Axion.getNameFor(this) + " does not support unnamed tags");
     }
   }
 
-  /**
-   * Get the data from a boolean byte tag; returns null if the tag does not
-   * exist.
-   * 
-   * @param name
-   * @return boolean from named tag or null if no tag
+  /*
+   * Spec Tags
    */
-  public Boolean getBooleanOrNull(final String name) {
-    if (data.containsKey(name)) {
-      return ((TagByte) data.get(name)).get() == 0x01 ? true : false;
-    } else {
-      return null;
-    }
-  }
 
   /**
    * Get the data from a byte tag; returns default value if the tag does not
@@ -382,32 +373,6 @@ public class TagCompound extends Tag implements Iterable<Tag> {
     }
   }
 
-  public void put(final String name, final Tag tag) {
-    assertValidTag(name, tag);
-    tag.setParent(this);
-    data.put(name, tag);
-  }
-
-  private void assertValidTag(final String name, final Tag tag) {
-    if (tag == null) {
-      throw new NullPointerException(Axion.getNameFor(this) + " does not support null tags");
-    } else if (tag.hasParent()) {
-      throw new IllegalStateException("Tag can not be added to more than one collection tag");
-    } else if (name == null || name.equals("")) {
-      throw new IllegalArgumentException(Axion.getNameFor(this) + " does not support unnamed tags");
-    }
-  }
-
-  /**
-   * Convert a boolean value to a byte and add to this compound tag.
-   * 
-   * @param name
-   * @param newBoolean
-   */
-  public void putBoolean(String name, boolean newBoolean) {
-    putByte(name, (byte) (newBoolean ? 0x01 : 0x00));
-  }
-
   /**
    * Add a byte tag with name and data to this compound tag.
    * 
@@ -519,6 +484,50 @@ public class TagCompound extends Tag implements Iterable<Tag> {
    */
   public void putString(String name, String newString) {
     put(name, new TagString(name, newString));
+  }
+
+  /*
+   * Extended Tags
+   */
+
+  /**
+   * Get the data from a boolean byte tag; returns default value if the tag does
+   * not exist.
+   * 
+   * @param name
+   * @return boolean from named tag or default value if no tag
+   */
+  public boolean getBoolean(final String name, final boolean defaultValue) {
+    if (data.containsKey(name)) {
+      return ((TagByte) data.get(name)).get() == 0x01 ? true : false;
+    } else {
+      return defaultValue;
+    }
+  }
+
+  /**
+   * Get the data from a boolean byte tag; returns null if the tag does not
+   * exist.
+   * 
+   * @param name
+   * @return boolean from named tag or null if no tag
+   */
+  public Boolean getBooleanOrNull(final String name) {
+    if (data.containsKey(name)) {
+      return ((TagByte) data.get(name)).get() == 0x01 ? true : false;
+    } else {
+      return null;
+    }
+  }
+
+  /**
+   * Convert a boolean tag with name and data to this compound tag.
+   * 
+   * @param name
+   * @param newBoolean
+   */
+  public void putBoolean(String name, boolean newBoolean) {
+    put(name, new TagBoolean(name, newBoolean));
   }
 
   @Override
