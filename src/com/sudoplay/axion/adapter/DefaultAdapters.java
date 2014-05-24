@@ -169,7 +169,7 @@ public class DefaultAdapters {
       TagList tagList = (TagList) tag;
       int size = tagList.size();
       int type = tagList.getType();
-      out.writeByte((size == 0) ? TagByte.TAG_ID : type);
+      out.writeByte((size == 0) ? Axion.getIdFor(TagByte.class) : type);
       out.writeInt(size);
       Adapter adapter = Axion.getAdapterFor(type);
       Tag child;

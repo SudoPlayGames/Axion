@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
+import com.sudoplay.axion.Axion;
 import com.sudoplay.axion.tag.standard.Tag;
 import com.sudoplay.axion.tag.standard.TagByte;
 import com.sudoplay.axion.tag.standard.TagByteArray;
@@ -35,7 +36,7 @@ public class TagIdTest {
   }
 
   private void check(Tag tag, int id) {
-    assertEquals(tag.getClass().getSimpleName(), tag.getTagId(), id);
+    assertEquals(tag.getClass().getSimpleName(), Axion.getIdFor(tag.getClass()), id);
   }
 
 }

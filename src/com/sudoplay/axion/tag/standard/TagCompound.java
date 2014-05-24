@@ -6,6 +6,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.sudoplay.axion.Axion;
+
 /**
  * @tag.type 10
  * 
@@ -25,9 +27,6 @@ import java.util.Map.Entry;
  * 
  */
 public class TagCompound extends Tag implements Iterable<Tag> {
-
-  public static final byte TAG_ID = 10;
-  public static final String TAG_NAME = "TAG_Compound";
 
   private final Map<String, Tag> data;
 
@@ -391,11 +390,11 @@ public class TagCompound extends Tag implements Iterable<Tag> {
 
   private void assertValidTag(final String name, final Tag tag) {
     if (tag == null) {
-      throw new NullPointerException(TagCompound.TAG_NAME + " does not support null tags");
+      throw new NullPointerException(Axion.getNameFor(this) + " does not support null tags");
     } else if (tag.hasParent()) {
       throw new IllegalStateException("Tag can not be added to more than one collection tag");
     } else if (name == null || name.equals("")) {
-      throw new IllegalArgumentException(TagCompound.TAG_NAME + " does not support unnamed tags");
+      throw new IllegalArgumentException(Axion.getNameFor(this) + " does not support unnamed tags");
     }
   }
 
@@ -523,16 +522,6 @@ public class TagCompound extends Tag implements Iterable<Tag> {
   }
 
   @Override
-  public byte getTagId() {
-    return TAG_ID;
-  }
-
-  @Override
-  public String getTagName() {
-    return TAG_NAME;
-  }
-
-  @Override
   public int hashCode() {
     final int prime = 31;
     int result = super.hashCode();
@@ -559,13 +548,13 @@ public class TagCompound extends Tag implements Iterable<Tag> {
 
   @Override
   public String toString() {
-    return TAG_NAME + super.toString() + ": " + data.size() + " entries";
+    return Axion.getNameFor(this) + super.toString() + ": " + data.size() + " entries";
   }
 
   @Override
   protected void onNameChange(final String oldName, final String newName) {
     if (newName == null || newName.isEmpty()) {
-      throw new IllegalStateException("Tag belongs to a " + TagCompound.TAG_NAME + " and can not have an empty or null name");
+      throw new IllegalStateException("Tag belongs to a " + Axion.getNameFor(this) + " and can not have an empty or null name");
     }
     data.put(newName, data.remove(oldName));
   }

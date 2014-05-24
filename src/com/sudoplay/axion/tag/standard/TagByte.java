@@ -1,5 +1,6 @@
 package com.sudoplay.axion.tag.standard;
 
+import com.sudoplay.axion.Axion;
 
 /**
  * @tag.type 1
@@ -12,9 +13,6 @@ package com.sudoplay.axion.tag.standard;
  * 
  */
 public class TagByte extends Tag {
-
-  public static final byte TAG_ID = (byte) 1;
-  public static final String TAG_NAME = "TAG_Byte";
 
   private byte data;
 
@@ -33,16 +31,6 @@ public class TagByte extends Tag {
 
   public byte get() {
     return data;
-  }
-
-  @Override
-  public byte getTagId() {
-    return TAG_ID;
-  }
-
-  @Override
-  public String getTagName() {
-    return TAG_NAME;
   }
 
   @Override
@@ -69,7 +57,7 @@ public class TagByte extends Tag {
 
   @Override
   public String toString() {
-    return TAG_NAME + super.toString() + ": " + data;
+    return Axion.getNameFor(this) + super.toString() + ": " + data;
   }
 
   @Override

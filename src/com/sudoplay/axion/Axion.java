@@ -29,7 +29,6 @@ import com.sudoplay.axion.tag.standard.TagList;
 import com.sudoplay.axion.tag.standard.TagLong;
 import com.sudoplay.axion.tag.standard.TagShort;
 import com.sudoplay.axion.tag.standard.TagString;
-import com.sudoplay.axion.util.TagUtil;
 
 public class Axion {
 
@@ -68,6 +67,14 @@ public class Axion {
     idToClass.put(id, tagClass);
     classToAdapter.put(tagClass, adapter);
     idToAdapter.put(id, adapter);
+  }
+
+  public static String getNameFor(final int id) {
+    return getClassFor(id).getSimpleName();
+  }
+
+  public static String getNameFor(final Tag tag) {
+    return tag.getClass().getSimpleName();
   }
 
   public static int getIdFor(final Class<? extends Tag> tagClass) {
@@ -131,7 +138,7 @@ public class Axion {
     if (id == 0) {
       return null;
     } else {
-      LOG.trace("reading [{}]", TagUtil.getName(id));
+      LOG.trace("reading [{}]", getClassFor(id).getSimpleName());
       Tag tag = getAdapterFor(id).read(parent, in);
       LOG.trace("finished reading [{}]", tag);
       return tag;

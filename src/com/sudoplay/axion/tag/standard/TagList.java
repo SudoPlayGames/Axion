@@ -6,7 +6,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.sudoplay.axion.Axion;
-import com.sudoplay.axion.util.TagUtil;
 
 /**
  * @tag.type 9
@@ -25,9 +24,6 @@ import com.sudoplay.axion.util.TagUtil;
  * 
  */
 public class TagList extends Tag implements Iterable<Tag> {
-
-  public static final byte TAG_ID = (byte) 9;
-  public static final String TAG_NAME = "TAG_List";
 
   private final List<Tag> data;
 
@@ -59,9 +55,10 @@ public class TagList extends Tag implements Iterable<Tag> {
 
   private void assertValidTag(final Tag tag) {
     if (tag == null) {
-      throw new IllegalArgumentException(TagList.TAG_NAME + " can't contain null tags");
-    } else if (type != tag.getTagId()) {
-      throw new IllegalArgumentException("Can't add tag of type [" + tag.getTagName() + "] to " + TagList.TAG_NAME + " of type " + TagUtil.getName(type));
+      throw new IllegalArgumentException(Axion.getNameFor(this) + " can't contain null tags");
+    } else if (type != Axion.getIdFor(tag.getClass())) {
+      throw new IllegalArgumentException("Can't add tag of type [" + Axion.getNameFor(tag) + "] to " + Axion.getNameFor(this) + " of type "
+          + Axion.getNameFor(type));
     } else if (tag.hasParent()) {
       throw new IllegalStateException("Tag can't be added to more than one collection tag");
     }
@@ -165,16 +162,6 @@ public class TagList extends Tag implements Iterable<Tag> {
   }
 
   @Override
-  public byte getTagId() {
-    return TAG_ID;
-  }
-
-  @Override
-  public String getTagName() {
-    return TAG_NAME;
-  }
-
-  @Override
   public int hashCode() {
     final int prime = 31;
     int result = super.hashCode();
@@ -204,13 +191,13 @@ public class TagList extends Tag implements Iterable<Tag> {
 
   @Override
   public String toString() {
-    return TAG_NAME + super.toString() + ": " + data.size() + " entries of type " + type;
+    return Axion.getNameFor(this) + super.toString() + ": " + data.size() + " entries of type " + type;
   }
 
   @Override
   protected void onNameChange(final String oldName, final String newName) {
     if (newName != null && !newName.isEmpty()) {
-      throw new IllegalStateException("Tag belongs to a " + TagList.TAG_NAME + " and can not be named");
+      throw new IllegalStateException("Tag belongs to a " + Axion.getNameFor(this) + " and can not be named");
     }
   }
 

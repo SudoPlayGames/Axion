@@ -2,6 +2,8 @@ package com.sudoplay.axion.tag.standard;
 
 import java.util.Arrays;
 
+import com.sudoplay.axion.Axion;
+
 /**
  * @tag.type 11
  * 
@@ -15,9 +17,6 @@ import java.util.Arrays;
  * 
  */
 public class TagIntArray extends Tag {
-
-  public static final byte TAG_ID = (byte) 11;
-  public static final String TAG_NAME = "TAG_Int_Array";
 
   private int[] data;
 
@@ -36,16 +35,6 @@ public class TagIntArray extends Tag {
 
   public int[] get() {
     return data;
-  }
-
-  @Override
-  public byte getTagId() {
-    return TAG_ID;
-  }
-
-  @Override
-  public String getTagName() {
-    return TAG_NAME;
   }
 
   @Override
@@ -72,7 +61,7 @@ public class TagIntArray extends Tag {
 
   @Override
   public String toString() {
-    return TAG_NAME + super.toString() + ": [" + data.length + " ints]";
+    return Axion.getNameFor(this) + super.toString() + ": [" + data.length + " ints]";
   }
 
   @Override

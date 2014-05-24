@@ -2,6 +2,8 @@ package com.sudoplay.axion.tag.standard;
 
 import java.util.Arrays;
 
+import com.sudoplay.axion.Axion;
+
 /**
  * @tag.type 7
  * 
@@ -16,9 +18,6 @@ import java.util.Arrays;
  */
 public class TagByteArray extends Tag {
 
-  public static final byte TAG_ID = (byte) 7;
-  public static final String TAG_NAME = "TAG_Byte_Array";
-
   private byte[] data;
 
   public TagByteArray(final String newName) {
@@ -28,16 +27,6 @@ public class TagByteArray extends Tag {
   public TagByteArray(final String newName, final byte[] newByteArray) {
     super(newName);
     data = newByteArray;
-  }
-
-  @Override
-  public byte getTagId() {
-    return TAG_ID;
-  }
-
-  @Override
-  public String getTagName() {
-    return TAG_NAME;
   }
 
   public void set(final byte[] newByteArray) {
@@ -72,7 +61,7 @@ public class TagByteArray extends Tag {
 
   @Override
   public String toString() {
-    return TAG_NAME + super.toString() + ": [" + data.length + " bytes]";
+    return Axion.getNameFor(this) + super.toString() + ": [" + data.length + " bytes]";
   }
 
   @Override

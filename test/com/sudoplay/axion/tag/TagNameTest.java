@@ -1,9 +1,10 @@
 package com.sudoplay.axion.tag;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import com.sudoplay.axion.Axion;
 import com.sudoplay.axion.tag.standard.TagByte;
 import com.sudoplay.axion.tag.standard.TagByteArray;
 import com.sudoplay.axion.tag.standard.TagCompound;
@@ -20,17 +21,17 @@ public class TagNameTest {
 
   @Test
   public void test() {
-    assertTrue(new TagByte("name").getTagName() == "TAG_Byte");
-    assertTrue(new TagShort("name").getTagName() == "TAG_Short");
-    assertTrue(new TagInt("name").getTagName() == "TAG_Int");
-    assertTrue(new TagLong("name").getTagName() == "TAG_Long");
-    assertTrue(new TagFloat("name").getTagName() == "TAG_Float");
-    assertTrue(new TagDouble("name").getTagName() == "TAG_Double");
-    assertTrue(new TagByteArray("name").getTagName() == "TAG_Byte_Array");
-    assertTrue(new TagString("name").getTagName() == "TAG_String");
-    assertTrue(new TagList(TagByte.class).getTagName() == "TAG_List");
-    assertTrue(new TagCompound().getTagName() == "TAG_Compound");
-    assertTrue(new TagIntArray("name").getTagName() == "TAG_Int_Array");
+    assertEquals(Axion.getNameFor(new TagByte("name")), "TagByte");
+    assertEquals(Axion.getNameFor(new TagShort("name")), "TagShort");
+    assertEquals(Axion.getNameFor(new TagInt("name")), "TagInt");
+    assertEquals(Axion.getNameFor(new TagLong("name")), "TagLong");
+    assertEquals(Axion.getNameFor(new TagFloat("name")), "TagFloat");
+    assertEquals(Axion.getNameFor(new TagDouble("name")), "TagDouble");
+    assertEquals(Axion.getNameFor(new TagByteArray("name")), "TagByteArray");
+    assertEquals(Axion.getNameFor(new TagString("name")), "TagString");
+    assertEquals(Axion.getNameFor(new TagList(TagByte.class)), "TagList");
+    assertEquals(Axion.getNameFor(new TagCompound()), "TagCompound");
+    assertEquals(Axion.getNameFor(new TagIntArray("name")), "TagIntArray");
   }
 
 }

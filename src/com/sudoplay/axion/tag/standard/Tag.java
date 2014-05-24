@@ -1,6 +1,5 @@
 package com.sudoplay.axion.tag.standard;
 
-
 public abstract class Tag implements Cloneable {
 
   private String name;
@@ -80,10 +79,6 @@ public abstract class Tag implements Cloneable {
   protected void onNameChange(final String oldName, final String newName) {
     // override
   }
-
-  public abstract byte getTagId();
-
-  public abstract String getTagName();
 
   @Override
   public abstract Tag clone();
