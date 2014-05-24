@@ -1,10 +1,11 @@
-package com.sudoplay.axion.tag;
+package com.sudoplay.axion.tag.standard;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import com.sudoplay.axion.Axion;
 import com.sudoplay.axion.util.TagUtil;
 
 /**
@@ -33,19 +34,19 @@ public class TagList extends Tag implements Iterable<Tag> {
   /**
    * Store type id for tags in this list; all tags must be of the same type.
    */
-  private final byte type;
+  private final int type;
 
   public TagList(final Class<? extends Tag> tagClass) {
-    this(tagClass, null, null);
+    this(Axion.getIdFor(tagClass), "", new ArrayList<Tag>());
   }
 
   public TagList(final Class<? extends Tag> tagClass, final String newName) {
-    this(tagClass, newName, null);
+    this(Axion.getIdFor(tagClass), newName, new ArrayList<Tag>());
   }
 
-  private TagList(final Class<? extends Tag> tagClass, final String newName, final List<Tag> newList) {
+  public TagList(final int newType, final String newName, final List<Tag> newList) {
     super(newName);
-    type = TagUtil.getId(tagClass);
+    type = newType;
     if (newList == null) {
       data = new ArrayList<Tag>();
     } else {
@@ -137,7 +138,7 @@ public class TagList extends Tag implements Iterable<Tag> {
     add(new TagString(null, newString));
   }
 
-  public byte getType() {
+  public int getType() {
     return type;
   }
 
@@ -216,13 +217,13 @@ public class TagList extends Tag implements Iterable<Tag> {
   @Override
   public TagList clone() {
     if (data.isEmpty()) {
-      return new TagList(TagUtil.getTagClass(type), getName());
+      return new TagList(type, getName(), new ArrayList<Tag>());
     } else {
       List<Tag> newList = new ArrayList<Tag>(data.size());
       for (Tag tag : data) {
         newList.add(tag.clone());
       }
-      return new TagList(TagUtil.getTagClass(type), getName(), newList);
+      return new TagList(type, getName(), newList);
     }
   }
 

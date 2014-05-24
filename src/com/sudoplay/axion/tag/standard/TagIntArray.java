@@ -1,4 +1,4 @@
-package com.sudoplay.axion.tag;
+package com.sudoplay.axion.tag.standard;
 
 import java.util.Arrays;
 

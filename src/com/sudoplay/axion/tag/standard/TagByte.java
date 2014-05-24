@@ -1,36 +1,37 @@
-package com.sudoplay.axion.tag;
+package com.sudoplay.axion.tag.standard;
+
 
 /**
- * @tag.type 3
+ * @tag.type 1
  * 
- * @tag.name <code>TAG_Int</code>
+ * @tag.name <code>TAG_Byte</code>
  * 
- * @tag.payload * A signed short (32 bits, big endian).
+ * @tag.payload * A single signed byte (8 bits)
  * 
  * @author Jason Taylor
  * 
  */
-public class TagInt extends Tag {
+public class TagByte extends Tag {
 
-  public static final byte TAG_ID = (byte) 3;
-  public static final String TAG_NAME = "TAG_Int";
+  public static final byte TAG_ID = (byte) 1;
+  public static final String TAG_NAME = "TAG_Byte";
 
-  private int data;
+  private byte data;
 
-  public TagInt(final String newName) {
+  public TagByte(final String newName) {
     super(newName);
   }
 
-  public TagInt(final String newName, final int newInt) {
+  public TagByte(final String newName, final byte newByte) {
     super(newName);
-    data = newInt;
+    data = newByte;
   }
 
-  public void set(final int newInt) {
-    data = newInt;
+  public void set(final byte newByte) {
+    data = newByte;
   }
 
-  public int get() {
+  public byte get() {
     return data;
   }
 
@@ -60,7 +61,7 @@ public class TagInt extends Tag {
       return false;
     if (getClass() != obj.getClass())
       return false;
-    TagInt other = (TagInt) obj;
+    TagByte other = (TagByte) obj;
     if (data != other.data)
       return false;
     return true;
@@ -72,8 +73,8 @@ public class TagInt extends Tag {
   }
 
   @Override
-  public TagInt clone() {
-    return new TagInt(getName(), data);
+  public TagByte clone() {
+    return new TagByte(getName(), data);
   }
 
 }

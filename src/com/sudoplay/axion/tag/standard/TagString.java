@@ -1,4 +1,5 @@
-package com.sudoplay.axion.tag;
+package com.sudoplay.axion.tag.standard;
+
 
 /**
  * @tag.type 8

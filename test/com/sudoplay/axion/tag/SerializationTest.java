@@ -11,10 +11,20 @@ import java.io.IOException;
 import org.junit.Test;
 
 import com.sudoplay.axion.Axion;
+import com.sudoplay.axion.tag.standard.Tag;
+import com.sudoplay.axion.tag.standard.TagByte;
+import com.sudoplay.axion.tag.standard.TagByteArray;
+import com.sudoplay.axion.tag.standard.TagCompound;
+import com.sudoplay.axion.tag.standard.TagDouble;
+import com.sudoplay.axion.tag.standard.TagFloat;
+import com.sudoplay.axion.tag.standard.TagInt;
+import com.sudoplay.axion.tag.standard.TagIntArray;
+import com.sudoplay.axion.tag.standard.TagList;
+import com.sudoplay.axion.tag.standard.TagLong;
+import com.sudoplay.axion.tag.standard.TagShort;
+import com.sudoplay.axion.tag.standard.TagString;
 
 public class SerializationTest {
-
-  private Axion axion = new Axion();
 
   @Test
   public void test_TagByte() throws IOException {
@@ -124,11 +134,11 @@ public class SerializationTest {
   private Tag serialize(Tag start) throws IOException {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     DataOutputStream out = new DataOutputStream(baos);
-    axion.writeRaw(start, out);
+    Axion.write(start, out);
 
     ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
     DataInputStream in = new DataInputStream(bais);
-    return axion.readRaw(in);
+    return Axion.read(in);
   }
 
 }

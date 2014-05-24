@@ -3,74 +3,32 @@ package com.sudoplay.axion.adapter;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.sudoplay.axion.tag.Tag;
-import com.sudoplay.axion.tag.TagByte;
-import com.sudoplay.axion.tag.TagByteArray;
-import com.sudoplay.axion.tag.TagCompound;
-import com.sudoplay.axion.tag.TagDouble;
-import com.sudoplay.axion.tag.TagFloat;
-import com.sudoplay.axion.tag.TagInt;
-import com.sudoplay.axion.tag.TagIntArray;
-import com.sudoplay.axion.tag.TagList;
-import com.sudoplay.axion.tag.TagLong;
-import com.sudoplay.axion.tag.TagShort;
-import com.sudoplay.axion.tag.TagString;
-import com.sudoplay.axion.util.TagUtil;
+import com.sudoplay.axion.Axion;
+import com.sudoplay.axion.tag.standard.Tag;
+import com.sudoplay.axion.tag.standard.TagByte;
+import com.sudoplay.axion.tag.standard.TagByteArray;
+import com.sudoplay.axion.tag.standard.TagCompound;
+import com.sudoplay.axion.tag.standard.TagDouble;
+import com.sudoplay.axion.tag.standard.TagFloat;
+import com.sudoplay.axion.tag.standard.TagInt;
+import com.sudoplay.axion.tag.standard.TagIntArray;
+import com.sudoplay.axion.tag.standard.TagList;
+import com.sudoplay.axion.tag.standard.TagLong;
+import com.sudoplay.axion.tag.standard.TagShort;
+import com.sudoplay.axion.tag.standard.TagString;
 
-public class DefaultAdapter implements Adapter {
+public class DefaultAdapters {
 
   private static final byte TAG_END_ID = 0;
 
-  private static final Logger LOG = LoggerFactory.getLogger(DefaultAdapter.class);
+  private static final Logger LOG = LoggerFactory.getLogger(DefaultAdapters.class);
 
-  private static final Map<Byte, Interface_InternalAdapter> ADAPTERS = new HashMap<Byte, Interface_InternalAdapter>();
-
-  private static interface Interface_InternalAdapter {
-
-    public Tag read(final Tag parent, final DataInputStream in) throws IOException;
-
-    public void write(final Tag tag, final DataOutputStream out) throws IOException;
-
-  }
-
-  private static final Interface_InternalAdapter BASE_ADAPTER = new Interface_InternalAdapter() {
-    @Override
-    public void write(final Tag tag, final DataOutputStream out) throws IOException {
-      LOG.trace("writing [{}]", tag);
-      byte id = tag.getTagId();
-      out.writeByte(id);
-      if (id != TAG_END_ID) {
-        if (!(tag.getParent() instanceof TagList)) {
-          out.writeUTF(tag.getName());
-        }
-        ADAPTERS.get(id).write(tag, out);
-      }
-      LOG.trace("finished writing [{}]", tag);
-    }
-
-    @Override
-    public Tag read(final Tag parent, final DataInputStream in) throws IOException {
-      byte id = in.readByte();
-      if (id == TAG_END_ID) {
-        return null;
-      } else {
-        LOG.trace("reading [{}]", TagUtil.getName(id));
-        Tag tag = ADAPTERS.get(id).read(parent, in);
-        LOG.trace("finished reading [{}]", tag);
-        return tag;
-      }
-    }
-  };
-
-  private static final Interface_InternalAdapter TAG_BYTE_ADAPTER = new Interface_InternalAdapter() {
+  public static final Adapter TAG_BYTE_ADAPTER = new Adapter() {
     @Override
     public void write(Tag tag, DataOutputStream out) throws IOException {
       out.writeByte(((TagByte) tag).get());
@@ -86,7 +44,7 @@ public class DefaultAdapter implements Adapter {
     }
   };
 
-  private static final Interface_InternalAdapter TAG_SHORT_ADAPTER = new Interface_InternalAdapter() {
+  public static final Adapter TAG_SHORT_ADAPTER = new Adapter() {
     @Override
     public void write(final Tag tag, final DataOutputStream out) throws IOException {
       out.writeShort(((TagShort) tag).get());
@@ -102,7 +60,7 @@ public class DefaultAdapter implements Adapter {
     }
   };
 
-  private static final Interface_InternalAdapter TAG_INT_ADAPTER = new Interface_InternalAdapter() {
+  public static final Adapter TAG_INT_ADAPTER = new Adapter() {
     @Override
     public void write(final Tag tag, final DataOutputStream out) throws IOException {
       out.writeInt(((TagInt) tag).get());
@@ -118,7 +76,7 @@ public class DefaultAdapter implements Adapter {
     }
   };
 
-  private static final Interface_InternalAdapter TAG_LONG_ADAPTER = new Interface_InternalAdapter() {
+  public static final Adapter TAG_LONG_ADAPTER = new Adapter() {
     @Override
     public void write(final Tag tag, final DataOutputStream out) throws IOException {
       out.writeLong(((TagLong) tag).get());
@@ -134,7 +92,7 @@ public class DefaultAdapter implements Adapter {
     }
   };
 
-  private static final Interface_InternalAdapter TAG_FLOAT_ADAPTER = new Interface_InternalAdapter() {
+  public static final Adapter TAG_FLOAT_ADAPTER = new Adapter() {
     @Override
     public void write(final Tag tag, final DataOutputStream out) throws IOException {
       out.writeFloat(((TagFloat) tag).get());
@@ -150,7 +108,7 @@ public class DefaultAdapter implements Adapter {
     }
   };
 
-  private static final Interface_InternalAdapter TAG_DOUBLE_ADAPTER = new Interface_InternalAdapter() {
+  public static final Adapter TAG_DOUBLE_ADAPTER = new Adapter() {
     @Override
     public void write(final Tag tag, final DataOutputStream out) throws IOException {
       out.writeDouble(((TagDouble) tag).get());
@@ -166,7 +124,7 @@ public class DefaultAdapter implements Adapter {
     }
   };
 
-  private static final Interface_InternalAdapter TAG_BYTE_ARRAY_ADAPTER = new Interface_InternalAdapter() {
+  public static final Adapter TAG_BYTE_ARRAY_ADAPTER = new Adapter() {
     @Override
     public void write(final Tag tag, final DataOutputStream out) throws IOException {
       byte[] data = ((TagByteArray) tag).get();
@@ -189,7 +147,7 @@ public class DefaultAdapter implements Adapter {
     }
   };
 
-  private static final Interface_InternalAdapter TAG_STRING_ADAPTER = new Interface_InternalAdapter() {
+  public static final Adapter TAG_STRING_ADAPTER = new Adapter() {
     @Override
     public void write(final Tag tag, final DataOutputStream out) throws IOException {
       out.writeUTF(((TagString) tag).get());
@@ -205,19 +163,15 @@ public class DefaultAdapter implements Adapter {
     }
   };
 
-  private static final Interface_InternalAdapter TAG_LIST_ADAPTER = new Interface_InternalAdapter() {
+  public static final Adapter TAG_LIST_ADAPTER = new Adapter() {
     @Override
     public void write(final Tag tag, final DataOutputStream out) throws IOException {
       TagList tagList = (TagList) tag;
       int size = tagList.size();
-      byte type = tagList.getType();
-      if (size == 0) {
-        out.writeByte(TagByte.TAG_ID);
-      } else {
-        out.writeByte(type);
-      }
+      int type = tagList.getType();
+      out.writeByte((size == 0) ? TagByte.TAG_ID : type);
       out.writeInt(size);
-      Interface_InternalAdapter adapter = ADAPTERS.get(type);
+      Adapter adapter = Axion.getAdapterFor(type);
       Tag child;
       for (int i = 0; i < size; i++) {
         LOG.trace("writing #[{}]", i);
@@ -230,10 +184,10 @@ public class DefaultAdapter implements Adapter {
     @Override
     public Tag read(final Tag parent, final DataInputStream in) throws IOException {
       String name = (parent instanceof TagList) ? null : in.readUTF();
-      byte type = in.readByte();
+      int type = in.readUnsignedByte();
       int size = in.readInt();
-      TagList tagList = new TagList(TagUtil.getTagClass(type), name);
-      Interface_InternalAdapter adapter = ADAPTERS.get(type);
+      TagList tagList = new TagList(type, name, new ArrayList<Tag>());
+      Adapter adapter = Axion.getAdapterFor(type);
       Tag child;
       for (int i = 0; i < size; i++) {
         LOG.trace("reading #[{}]", i);
@@ -245,11 +199,11 @@ public class DefaultAdapter implements Adapter {
     }
   };
 
-  private static final Interface_InternalAdapter TAG_COMPOUND_ADAPTER = new Interface_InternalAdapter() {
+  public static final Adapter TAG_COMPOUND_ADAPTER = new Adapter() {
     @Override
     public void write(final Tag tag, final DataOutputStream out) throws IOException {
       for (Tag child : ((TagCompound) tag).getAsMap().values()) {
-        BASE_ADAPTER.write(child, out);
+        Axion.writeTag(child, out);
       }
       out.writeByte(TAG_END_ID);
     }
@@ -259,14 +213,14 @@ public class DefaultAdapter implements Adapter {
       String name = (parent instanceof TagList) ? null : in.readUTF();
       TagCompound tag = new TagCompound(name);
       Tag child;
-      while ((child = BASE_ADAPTER.read(tag, in)) != null) {
+      while ((child = Axion.readTag(tag, in)) != null) {
         tag.put(child.getName(), child);
       }
       return tag;
     }
   };
 
-  private static final Interface_InternalAdapter TAG_INT_ARRAY_ADAPTER = new Interface_InternalAdapter() {
+  public static final Adapter TAG_INT_ARRAY_ADAPTER = new Adapter() {
     @Override
     public void write(final Tag tag, final DataOutputStream out) throws IOException {
       int[] data = ((TagIntArray) tag).get();
@@ -288,29 +242,5 @@ public class DefaultAdapter implements Adapter {
       return new TagIntArray(name, data);
     }
   };
-
-  static {
-    ADAPTERS.put(TagByte.TAG_ID, TAG_BYTE_ADAPTER);
-    ADAPTERS.put(TagShort.TAG_ID, TAG_SHORT_ADAPTER);
-    ADAPTERS.put(TagInt.TAG_ID, TAG_INT_ADAPTER);
-    ADAPTERS.put(TagLong.TAG_ID, TAG_LONG_ADAPTER);
-    ADAPTERS.put(TagFloat.TAG_ID, TAG_FLOAT_ADAPTER);
-    ADAPTERS.put(TagDouble.TAG_ID, TAG_DOUBLE_ADAPTER);
-    ADAPTERS.put(TagByteArray.TAG_ID, TAG_BYTE_ARRAY_ADAPTER);
-    ADAPTERS.put(TagString.TAG_ID, TAG_STRING_ADAPTER);
-    ADAPTERS.put(TagList.TAG_ID, TAG_LIST_ADAPTER);
-    ADAPTERS.put(TagCompound.TAG_ID, TAG_COMPOUND_ADAPTER);
-    ADAPTERS.put(TagIntArray.TAG_ID, TAG_INT_ARRAY_ADAPTER);
-  }
-
-  @Override
-  public void write(Tag tag, OutputStream out) throws IOException {
-    BASE_ADAPTER.write(tag, new DataOutputStream(out));
-  }
-
-  @Override
-  public Tag read(final Tag parent, InputStream in) throws IOException {
-    return BASE_ADAPTER.read(parent, new DataInputStream(in));
-  }
 
 }

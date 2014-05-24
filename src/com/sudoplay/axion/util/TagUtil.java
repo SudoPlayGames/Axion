@@ -3,18 +3,18 @@ package com.sudoplay.axion.util;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.sudoplay.axion.tag.Tag;
-import com.sudoplay.axion.tag.TagByte;
-import com.sudoplay.axion.tag.TagByteArray;
-import com.sudoplay.axion.tag.TagCompound;
-import com.sudoplay.axion.tag.TagDouble;
-import com.sudoplay.axion.tag.TagFloat;
-import com.sudoplay.axion.tag.TagInt;
-import com.sudoplay.axion.tag.TagIntArray;
-import com.sudoplay.axion.tag.TagList;
-import com.sudoplay.axion.tag.TagLong;
-import com.sudoplay.axion.tag.TagShort;
-import com.sudoplay.axion.tag.TagString;
+import com.sudoplay.axion.tag.standard.Tag;
+import com.sudoplay.axion.tag.standard.TagByte;
+import com.sudoplay.axion.tag.standard.TagByteArray;
+import com.sudoplay.axion.tag.standard.TagCompound;
+import com.sudoplay.axion.tag.standard.TagDouble;
+import com.sudoplay.axion.tag.standard.TagFloat;
+import com.sudoplay.axion.tag.standard.TagInt;
+import com.sudoplay.axion.tag.standard.TagIntArray;
+import com.sudoplay.axion.tag.standard.TagList;
+import com.sudoplay.axion.tag.standard.TagLong;
+import com.sudoplay.axion.tag.standard.TagShort;
+import com.sudoplay.axion.tag.standard.TagString;
 
 public class TagUtil {
 
@@ -72,7 +72,7 @@ public class TagUtil {
 
   }
 
-  public static String getName(final byte id) {
+  public static String getName(final int id) {
 
     switch (id) {
 
