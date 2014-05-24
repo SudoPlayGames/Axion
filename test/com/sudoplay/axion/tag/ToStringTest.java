@@ -4,17 +4,17 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import com.sudoplay.axion.tag.spec.TagByte;
-import com.sudoplay.axion.tag.spec.TagByteArray;
-import com.sudoplay.axion.tag.spec.TagCompound;
-import com.sudoplay.axion.tag.spec.TagDouble;
-import com.sudoplay.axion.tag.spec.TagFloat;
-import com.sudoplay.axion.tag.spec.TagInt;
-import com.sudoplay.axion.tag.spec.TagIntArray;
-import com.sudoplay.axion.tag.spec.TagList;
-import com.sudoplay.axion.tag.spec.TagLong;
-import com.sudoplay.axion.tag.spec.TagShort;
-import com.sudoplay.axion.tag.spec.TagString;
+import com.sudoplay.axion.spec.tag.TagByte;
+import com.sudoplay.axion.spec.tag.TagByteArray;
+import com.sudoplay.axion.spec.tag.TagCompound;
+import com.sudoplay.axion.spec.tag.TagDouble;
+import com.sudoplay.axion.spec.tag.TagFloat;
+import com.sudoplay.axion.spec.tag.TagInt;
+import com.sudoplay.axion.spec.tag.TagIntArray;
+import com.sudoplay.axion.spec.tag.TagList;
+import com.sudoplay.axion.spec.tag.TagLong;
+import com.sudoplay.axion.spec.tag.TagShort;
+import com.sudoplay.axion.spec.tag.TagString;
 
 public class ToStringTest {
 
@@ -38,9 +38,8 @@ public class ToStringTest {
     assertEquals("TagList(\"name\"): 4 entries of type 3", list.toString());
 
     TagCompound compound = new TagCompound("name");
-    compound.putFloat("float", 6.5f);
-    compound.putBoolean("booean", true);
-    assertEquals("TagCompound(\"name\"): 2 entries", compound.toString());
+    compound.put("float", 6.5f);
+    assertEquals("TagCompound(\"name\"): 1 entries", compound.toString());
 
     assertEquals("TagIntArray(\"name\"): [4 ints]", new TagIntArray("name", new int[] { 0, 1, 2, 3 }).toString());
 

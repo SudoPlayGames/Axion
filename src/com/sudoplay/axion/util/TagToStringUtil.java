@@ -1,8 +1,8 @@
 package com.sudoplay.axion.util;
 
-import com.sudoplay.axion.tag.spec.Tag;
-import com.sudoplay.axion.tag.spec.TagCompound;
-import com.sudoplay.axion.tag.spec.TagList;
+import com.sudoplay.axion.spec.tag.Tag;
+import com.sudoplay.axion.spec.tag.TagCompound;
+import com.sudoplay.axion.spec.tag.TagList;
 
 public class TagToStringUtil {
 

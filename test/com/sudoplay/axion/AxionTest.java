@@ -7,7 +7,7 @@ import java.io.InputStream;
 
 import org.junit.Test;
 
-import com.sudoplay.axion.tag.spec.TagCompound;
+import com.sudoplay.axion.spec.tag.TagCompound;
 import com.sudoplay.axion.util.TagToStringUtil;
 
 public class AxionTest {

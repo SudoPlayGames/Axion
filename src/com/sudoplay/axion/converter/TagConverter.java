@@ -1,6 +1,6 @@
 package com.sudoplay.axion.converter;
 
-import com.sudoplay.axion.tag.spec.Tag;
+import com.sudoplay.axion.spec.tag.Tag;
 
 public interface TagConverter<T extends Tag, V> {
 

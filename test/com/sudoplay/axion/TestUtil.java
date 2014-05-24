@@ -5,9 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.sudoplay.axion.tag.spec.TagByte;
-import com.sudoplay.axion.tag.spec.TagCompound;
-import com.sudoplay.axion.tag.spec.TagList;
+import com.sudoplay.axion.spec.tag.TagByte;
+import com.sudoplay.axion.spec.tag.TagCompound;
+import com.sudoplay.axion.spec.tag.TagList;
 
 public class TestUtil {
 
@@ -17,22 +17,21 @@ public class TestUtil {
 
   public static TagCompound getTagCompound() {
     TagCompound tag = new TagCompound("name");
-    TagList listA = new TagList(TagByte.class, "name");
+    TagList listA = new TagList(TagByte.class, "list");
     listA.add(new TagByte("tagA", (byte) 16));
     listA.add(new TagByte("tagB", (byte) 8));
     listA.add(new TagByte("tagC", (byte) 4));
     listA.add(new TagByte("tagD", (byte) 2));
-    tag.putList("list", listA);
-    tag.putBoolean("boolean", true);
-    tag.putByte("byte", (byte) 16);
-    tag.putByteArray("byteArray", new byte[] { 0, 1, 2, 3 });
-    tag.putDouble("double", 67.394857);
-    tag.putFloat("float", 6.453f);
-    tag.putInt("int", 16);
-    tag.putIntArray("intArray", new int[] { 0, 1, 2, 3 });
-    tag.putLong("long", 79L);
-    tag.putShort("short", (short) 947);
-    tag.putString("string", "somestring");
+    tag.put(listA);
+    tag.put("byte", (byte) 16);
+    tag.put("byteArray", new byte[] { 0, 1, 2, 3 });
+    tag.put("double", 67.394857);
+    tag.put("float", 6.453f);
+    tag.put("int", 16);
+    tag.put("intArray", new int[] { 0, 1, 2, 3 });
+    tag.put("long", 79L);
+    tag.put("short", (short) 947);
+    tag.put("string", "somestring");
     return tag;
   }
 
@@ -45,7 +44,6 @@ public class TestUtil {
 
     Map<String, Object> map = new HashMap<String, Object>();
     map.put("list", list);
-    map.put("boolean", true);
     map.put("byte", (byte) 16);
     map.put("byteArray", new byte[] { 0, 1, 2, 3 });
     map.put("double", 67.394857);

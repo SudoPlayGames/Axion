@@ -4,8 +4,8 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.sudoplay.axion.tag.spec.TagByteArray;
-import com.sudoplay.axion.tag.spec.TagIntArray;
+import com.sudoplay.axion.spec.tag.TagByteArray;
+import com.sudoplay.axion.spec.tag.TagIntArray;
 
 /**
  * Array tags should create a copy of the array passed in the constructor,

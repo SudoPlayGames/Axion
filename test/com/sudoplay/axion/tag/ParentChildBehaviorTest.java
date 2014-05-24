@@ -4,9 +4,9 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.sudoplay.axion.tag.spec.TagByte;
-import com.sudoplay.axion.tag.spec.TagCompound;
-import com.sudoplay.axion.tag.spec.TagList;
+import com.sudoplay.axion.spec.tag.TagByte;
+import com.sudoplay.axion.spec.tag.TagCompound;
+import com.sudoplay.axion.spec.tag.TagList;
 
 public class ParentChildBehaviorTest {
 
@@ -48,7 +48,7 @@ public class ParentChildBehaviorTest {
     list.addByte((byte) 16);
     assertEquals(1, list.size());
     try {
-      compound.put("byteTag", list.get(0));
+      compound.put(list.get(0));
       fail("Expected IllegalStateException");
     } catch (IllegalStateException e) {
       //
@@ -76,8 +76,8 @@ public class ParentChildBehaviorTest {
   @Test
   public void testCompoundChildNameChange() {
     TagCompound compound = new TagCompound("compound");
-    compound.putByte("tagByte", (byte) 16);
-    TagByte tagByte = (TagByte) compound.get("tagByte");
+    compound.put("tagByte", (byte) 16);
+    TagByte tagByte = compound.get("tagByte");
     assertEquals("tagByte", tagByte.getName());
     tagByte.setName("newName");
     assertEquals("newName", tagByte.getName());

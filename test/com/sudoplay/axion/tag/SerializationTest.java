@@ -12,18 +12,18 @@ import org.junit.Test;
 
 import com.sudoplay.axion.Axion;
 import com.sudoplay.axion.TestUtil;
-import com.sudoplay.axion.tag.spec.Tag;
-import com.sudoplay.axion.tag.spec.TagByte;
-import com.sudoplay.axion.tag.spec.TagByteArray;
-import com.sudoplay.axion.tag.spec.TagCompound;
-import com.sudoplay.axion.tag.spec.TagDouble;
-import com.sudoplay.axion.tag.spec.TagFloat;
-import com.sudoplay.axion.tag.spec.TagInt;
-import com.sudoplay.axion.tag.spec.TagIntArray;
-import com.sudoplay.axion.tag.spec.TagList;
-import com.sudoplay.axion.tag.spec.TagLong;
-import com.sudoplay.axion.tag.spec.TagShort;
-import com.sudoplay.axion.tag.spec.TagString;
+import com.sudoplay.axion.spec.tag.Tag;
+import com.sudoplay.axion.spec.tag.TagByte;
+import com.sudoplay.axion.spec.tag.TagByteArray;
+import com.sudoplay.axion.spec.tag.TagCompound;
+import com.sudoplay.axion.spec.tag.TagDouble;
+import com.sudoplay.axion.spec.tag.TagFloat;
+import com.sudoplay.axion.spec.tag.TagInt;
+import com.sudoplay.axion.spec.tag.TagIntArray;
+import com.sudoplay.axion.spec.tag.TagList;
+import com.sudoplay.axion.spec.tag.TagLong;
+import com.sudoplay.axion.spec.tag.TagShort;
+import com.sudoplay.axion.spec.tag.TagString;
 
 public class SerializationTest {
 

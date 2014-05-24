@@ -4,9 +4,9 @@ import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
-import com.sudoplay.axion.tag.spec.TagByte;
-import com.sudoplay.axion.tag.spec.TagList;
-import com.sudoplay.axion.tag.spec.TagLong;
+import com.sudoplay.axion.spec.tag.TagByte;
+import com.sudoplay.axion.spec.tag.TagList;
+import com.sudoplay.axion.spec.tag.TagLong;
 
 public class TagListTest {
 

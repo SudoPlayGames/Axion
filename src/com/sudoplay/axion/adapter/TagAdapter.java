@@ -4,7 +4,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-import com.sudoplay.axion.tag.spec.Tag;
+import com.sudoplay.axion.spec.tag.Tag;
 
 public interface TagAdapter {
 

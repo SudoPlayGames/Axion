@@ -4,17 +4,18 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import com.sudoplay.axion.tag.spec.TagByte;
-import com.sudoplay.axion.tag.spec.TagByteArray;
-import com.sudoplay.axion.tag.spec.TagCompound;
-import com.sudoplay.axion.tag.spec.TagDouble;
-import com.sudoplay.axion.tag.spec.TagFloat;
-import com.sudoplay.axion.tag.spec.TagInt;
-import com.sudoplay.axion.tag.spec.TagIntArray;
-import com.sudoplay.axion.tag.spec.TagList;
-import com.sudoplay.axion.tag.spec.TagLong;
-import com.sudoplay.axion.tag.spec.TagShort;
-import com.sudoplay.axion.tag.spec.TagString;
+import com.sudoplay.axion.TestUtil;
+import com.sudoplay.axion.spec.tag.TagByte;
+import com.sudoplay.axion.spec.tag.TagByteArray;
+import com.sudoplay.axion.spec.tag.TagCompound;
+import com.sudoplay.axion.spec.tag.TagDouble;
+import com.sudoplay.axion.spec.tag.TagFloat;
+import com.sudoplay.axion.spec.tag.TagInt;
+import com.sudoplay.axion.spec.tag.TagIntArray;
+import com.sudoplay.axion.spec.tag.TagList;
+import com.sudoplay.axion.spec.tag.TagLong;
+import com.sudoplay.axion.spec.tag.TagShort;
+import com.sudoplay.axion.spec.tag.TagString;
 
 public class EqualsTest {
 
@@ -77,42 +78,8 @@ public class EqualsTest {
 
   @Test
   public void test_TagCompound() {
-    TagCompound compoundA = new TagCompound("name");
-    TagList listA = new TagList(TagByte.class, "name");
-    listA.add(new TagByte("tagA", (byte) 16));
-    listA.add(new TagByte("tagB", (byte) 8));
-    listA.add(new TagByte("tagC", (byte) 4));
-    listA.add(new TagByte("tagD", (byte) 2));
-    compoundA.putList("list", listA);
-    compoundA.putBoolean("boolean", true);
-    compoundA.putByte("byte", (byte) 16);
-    compoundA.putByteArray("byteArray", new byte[] { 0, 1, 2, 3 });
-    compoundA.putDouble("double", 67.394857);
-    compoundA.putFloat("float", 6.453f);
-    compoundA.putInt("int", 16);
-    compoundA.putIntArray("intArray", new int[] { 0, 1, 2, 3 });
-    compoundA.putLong("long", 79L);
-    compoundA.putShort("short", (short) 947);
-    compoundA.putString("string", "somestring");
-
-    TagCompound compoundB = new TagCompound("name");
-    TagList listB = new TagList(TagByte.class, "name");
-    listB.add(new TagByte("tagA", (byte) 16));
-    listB.add(new TagByte("tagB", (byte) 8));
-    listB.add(new TagByte("tagC", (byte) 4));
-    listB.add(new TagByte("tagD", (byte) 2));
-    compoundB.putList("list", listB);
-    compoundB.putBoolean("boolean", true);
-    compoundB.putByte("byte", (byte) 16);
-    compoundB.putByteArray("byteArray", new byte[] { 0, 1, 2, 3 });
-    compoundB.putDouble("double", 67.394857);
-    compoundB.putFloat("float", 6.453f);
-    compoundB.putInt("int", 16);
-    compoundB.putIntArray("intArray", new int[] { 0, 1, 2, 3 });
-    compoundB.putLong("long", 79L);
-    compoundB.putShort("short", (short) 947);
-    compoundB.putString("string", "somestring");
-
+    TagCompound compoundA = TestUtil.getTagCompound();
+    TagCompound compoundB = TestUtil.getTagCompound();
     assertEquals(TagCompound.class.getSimpleName(), compoundA, compoundB);
   }
 
