@@ -19,11 +19,7 @@ public class TagStringAdapter implements TagAdapter {
 
   @Override
   public Tag read(final Tag parent, final DataInputStream in, final Axion axion) throws IOException {
-    if (parent instanceof TagList) {
-      return new TagString(null, in.readUTF());
-    } else {
-      return new TagString(in.readUTF(), in.readUTF());
-    }
+    return axion.convertToTag((parent instanceof TagList) ? null : in.readUTF(), in.readUTF());
   }
 
 }

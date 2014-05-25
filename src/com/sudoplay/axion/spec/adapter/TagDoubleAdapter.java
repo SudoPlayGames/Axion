@@ -19,11 +19,7 @@ public class TagDoubleAdapter implements TagAdapter {
 
   @Override
   public Tag read(final Tag parent, final DataInputStream in, final Axion axion) throws IOException {
-    if (parent instanceof TagList) {
-      return new TagDouble(null, in.readDouble());
-    } else {
-      return new TagDouble(in.readUTF(), in.readDouble());
-    }
+    return axion.convertToTag((parent instanceof TagList) ? null : in.readUTF(), in.readDouble());
   }
 
 }

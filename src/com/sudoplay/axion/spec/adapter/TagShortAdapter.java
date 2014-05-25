@@ -19,11 +19,7 @@ public class TagShortAdapter implements TagAdapter {
 
   @Override
   public Tag read(final Tag parent, final DataInputStream in, final Axion axion) throws IOException {
-    if (parent instanceof TagList) {
-      return new TagShort(null, in.readShort());
-    } else {
-      return new TagShort(in.readUTF(), in.readShort());
-    }
+    return axion.convertToTag((parent instanceof TagList) ? null : in.readUTF(), in.readShort());
   }
 
 }

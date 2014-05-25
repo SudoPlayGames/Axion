@@ -19,11 +19,7 @@ public class TagFloatAdapter implements TagAdapter {
 
   @Override
   public Tag read(final Tag parent, final DataInputStream in, final Axion axion) throws IOException {
-    if (parent instanceof TagList) {
-      return new TagFloat(null, in.readFloat());
-    } else {
-      return new TagFloat(in.readUTF(), in.readFloat());
-    }
+    return axion.convertToTag((parent instanceof TagList) ? null : in.readUTF(), in.readFloat());
   }
 
 }

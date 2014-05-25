@@ -30,7 +30,7 @@ public class TagIntArrayAdapter implements TagAdapter {
     for (int i = 0; i < len; i++) {
       data[i] = in.readInt();
     }
-    return new TagIntArray(name, data);
+    return axion.convertToTag(name, data);
   }
 
 }

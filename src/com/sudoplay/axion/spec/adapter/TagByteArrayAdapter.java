@@ -21,16 +21,10 @@ public class TagByteArrayAdapter implements TagAdapter {
 
   @Override
   public Tag read(final Tag parent, final DataInputStream in, final Axion axion) throws IOException {
-    if (parent instanceof TagList) {
-      byte[] data = new byte[in.readInt()];
-      in.readFully(data);
-      return new TagByteArray(null, data);
-    } else {
-      String name = in.readUTF();
-      byte[] data = new byte[in.readInt()];
-      in.readFully(data);
-      return new TagByteArray(name, data);
-    }
+    String name = (parent instanceof TagList) ? null : in.readUTF();
+    byte[] data = new byte[in.readInt()];
+    in.readFully(data);
+    return axion.convertToTag(name, data);
   }
 
 }
