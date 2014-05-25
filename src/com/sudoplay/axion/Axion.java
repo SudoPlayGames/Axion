@@ -8,10 +8,6 @@ import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.zip.DeflaterOutputStream;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.GZIPOutputStream;
-import java.util.zip.InflaterInputStream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,6 +53,7 @@ import com.sudoplay.axion.spec.tag.TagList;
 import com.sudoplay.axion.spec.tag.TagLong;
 import com.sudoplay.axion.spec.tag.TagShort;
 import com.sudoplay.axion.spec.tag.TagString;
+import com.sudoplay.axion.stream.StreamCompressionWrapper;
 
 public class Axion {
 
@@ -103,8 +100,13 @@ public class Axion {
     }
   };
 
+  public static enum CompressionType {
+    GZip, Deflater, None
+  }
+
   private final TagAdapterRegistry adapters = new TagAdapterRegistry();
   private final TagConverterRegistry converters = new TagConverterRegistry();
+  private StreamCompressionWrapper compressionWrapper = StreamCompressionWrapper.GZIP_STREAM_COMPRESSION_WRAPPER;
 
   private Axion() {
     //
@@ -127,6 +129,10 @@ public class Axion {
     return INSTANCES.get(DEFAULT_INSTANCE_NAME);
   }
 
+  public static String getNameFor(final Tag tag) {
+    return tag.getClass().getSimpleName();
+  }
+
   public <T extends Tag, V> void registerTagConverter(final Class<T> tagClass, final Class<V> type, final TagConverter<T, V> converter) {
     converters.register(tagClass, type, converter);
   }
@@ -135,12 +141,20 @@ public class Axion {
     adapters.register(id, tagClass, adapter);
   }
 
-  public String getNameFor(final int id) {
-    return getClassFor(id).getSimpleName();
+  public void setCompressionType(final CompressionType newCompressionType) {
+    switch (newCompressionType) {
+    case Deflater:
+      compressionWrapper = StreamCompressionWrapper.DEFLATER_STREAM_COMPRESSION_WRAPPER;
+    case None:
+      compressionWrapper = StreamCompressionWrapper.PASSTHROUGH_STREAM_COMPRESSION_WRAPPER;
+    default:
+    case GZip:
+      compressionWrapper = StreamCompressionWrapper.GZIP_STREAM_COMPRESSION_WRAPPER;
+    }
   }
 
-  public static String getNameFor(final Tag tag) {
-    return tag.getClass().getSimpleName();
+  public String getNameFor(final int id) {
+    return getClassFor(id).getSimpleName();
   }
 
   public int getIdFor(final Class<? extends Tag> tagClass) {
@@ -175,28 +189,16 @@ public class Axion {
     return converters.convertToTag(name, value, this);
   }
 
-  public Tag readGZip(final InputStream inputStream) throws IOException {
-    return read(new GZIPInputStream(inputStream));
+  public TagCompound read(final InputStream inputStream) throws IOException {
+    Tag result = readTag(null, new DataInputStream(compressionWrapper.wrap(inputStream)));
+    if (!(result instanceof TagCompound)) {
+      throw new IllegalStateException("Root tag not of type " + TagCompound.class.getSimpleName());
+    }
+    return (TagCompound) result;
   }
 
-  public void writeGZip(final TagCompound tagCompound, final OutputStream outputStream) throws IOException {
-    write(tagCompound, new GZIPOutputStream(outputStream));
-  }
-
-  public Tag readDeflater(final InputStream inputStream) throws IOException {
-    return read(new InflaterInputStream(inputStream));
-  }
-
-  public void writeDeflater(final TagCompound tagCompound, final OutputStream outputStream) throws IOException {
-    write(tagCompound, new DeflaterOutputStream(outputStream));
-  }
-
-  public Tag read(final InputStream in) throws IOException {
-    return readTag(null, new DataInputStream(in));
-  }
-
-  public void write(final Tag tag, final OutputStream out) throws IOException {
-    writeTag(tag, new DataOutputStream(out));
+  public void write(final TagCompound tagCompound, final OutputStream outputStream) throws IOException {
+    writeTag(tagCompound, new DataOutputStream(compressionWrapper.wrap(outputStream)));
   }
 
   public Tag readTag(final Tag parent, final DataInputStream in) throws IOException {

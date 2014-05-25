@@ -101,11 +101,11 @@ public class SerializationTest {
   private Tag serialize(Tag start) throws IOException {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     DataOutputStream out = new DataOutputStream(baos);
-    Axion.getDefault().write(start, out);
+    Axion.getDefault().writeTag(start, out);
 
     ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
     DataInputStream in = new DataInputStream(bais);
-    return Axion.getDefault().read(in);
+    return Axion.getDefault().readTag(null, in);
   }
 
 }
