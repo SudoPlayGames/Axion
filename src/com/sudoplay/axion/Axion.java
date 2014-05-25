@@ -60,6 +60,7 @@ public class Axion {
   private static final Logger LOG = LoggerFactory.getLogger(Axion.class);
 
   private static final String DEFAULT_INSTANCE_NAME = "AXION_DEFAULT";
+  private static final String ORIGINAL_SPEC_INSTANCE_NAME = "AXION_ORIGINAL_SPEC";
 
   private static final Axion DEFAULT_INSTANCE = new Axion() {
     {
@@ -93,10 +94,39 @@ public class Axion {
     }
   };
 
+  private static final Axion ORIGINAL_SPEC_INSTANCE = new Axion() {
+    {
+      registerTagAdapter(1, TagByte.class, new TagByteAdapter());
+      registerTagAdapter(2, TagShort.class, new TagShortAdapter());
+      registerTagAdapter(3, TagInt.class, new TagIntAdapter());
+      registerTagAdapter(4, TagLong.class, new TagLongAdapter());
+      registerTagAdapter(5, TagFloat.class, new TagFloatAdapter());
+      registerTagAdapter(6, TagDouble.class, new TagDoubleAdapter());
+      registerTagAdapter(7, TagByteArray.class, new TagByteArrayAdapter());
+      registerTagAdapter(8, TagString.class, new TagStringAdapter());
+      registerTagAdapter(9, TagList.class, new TagListAdapter());
+      registerTagAdapter(10, TagCompound.class, new TagCompoundAdapter());
+      registerTagAdapter(11, TagIntArray.class, new TagIntArrayAdapter());
+
+      registerTagConverter(TagByte.class, Byte.class, new TagByteConverter());
+      registerTagConverter(TagShort.class, Short.class, new TagShortConverter());
+      registerTagConverter(TagInt.class, Integer.class, new TagIntConverter());
+      registerTagConverter(TagLong.class, Long.class, new TagLongConverter());
+      registerTagConverter(TagFloat.class, Float.class, new TagFloatConverter());
+      registerTagConverter(TagDouble.class, Double.class, new TagDoubleConverter());
+      registerTagConverter(TagByteArray.class, byte[].class, new TagByteArrayConverter());
+      registerTagConverter(TagString.class, String.class, new TagStringConverter());
+      registerTagConverter(TagList.class, List.class, new TagListConverter());
+      registerTagConverter(TagCompound.class, Map.class, new TagCompoundConverter());
+      registerTagConverter(TagIntArray.class, int[].class, new TagIntArrayConverter());
+    }
+  };
+
   @SuppressWarnings("serial")
   private static final Map<String, Axion> INSTANCES = new HashMap<String, Axion>() {
     {
       put(DEFAULT_INSTANCE_NAME, DEFAULT_INSTANCE);
+      put(ORIGINAL_SPEC_INSTANCE_NAME, ORIGINAL_SPEC_INSTANCE);
     }
   };
 
@@ -127,6 +157,10 @@ public class Axion {
 
   public static Axion getDefault() {
     return INSTANCES.get(DEFAULT_INSTANCE_NAME);
+  }
+
+  public static Axion getOriginal() {
+    return INSTANCES.get(ORIGINAL_SPEC_INSTANCE_NAME);
   }
 
   public static String getNameFor(final Tag tag) {
