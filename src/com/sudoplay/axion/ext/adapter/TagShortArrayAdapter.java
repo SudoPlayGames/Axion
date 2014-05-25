@@ -14,7 +14,7 @@ public class TagShortArrayAdapter implements TagAdapter<TagShortArray> {
 
   @Override
   public TagShortArray read(Tag parent, DataInputStream in, Axion axion) throws IOException {
-    String name = (parent instanceof TagList) ? null : in.readUTF();
+    String name = (parent instanceof TagList) ? null : axion.readString(in);
     int len = in.readInt();
     short[] data = new short[len];
     for (int i = 0; i < len; i++) {

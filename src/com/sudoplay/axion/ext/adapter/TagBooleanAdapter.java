@@ -19,6 +19,6 @@ public class TagBooleanAdapter implements TagAdapter<TagBoolean> {
 
   @Override
   public TagBoolean read(final Tag parent, final DataInputStream in, final Axion axion) throws IOException {
-    return axion.convertToTag((parent instanceof TagList) ? null : in.readUTF(), in.readBoolean());
+    return axion.convertToTag((parent instanceof TagList) ? null : axion.readString(in), in.readBoolean());
   }
 }

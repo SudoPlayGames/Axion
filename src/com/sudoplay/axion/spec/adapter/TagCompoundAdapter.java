@@ -22,7 +22,7 @@ public class TagCompoundAdapter implements TagAdapter<TagCompound> {
 
   @Override
   public TagCompound read(final Tag parent, final DataInputStream in, final Axion axion) throws IOException {
-    TagCompound tag = new TagCompound((parent instanceof TagList) ? null : in.readUTF());
+    TagCompound tag = new TagCompound((parent instanceof TagList) ? null : axion.readString(in));
     Tag child;
     while ((child = axion.readTag(tag, in)) != null) {
       tag.put(child);

@@ -14,7 +14,7 @@ public class TagLongArrayAdapter implements TagAdapter<TagLongArray> {
 
   @Override
   public TagLongArray read(Tag parent, DataInputStream in, Axion axion) throws IOException {
-    String name = (parent instanceof TagList) ? null : in.readUTF();
+    String name = (parent instanceof TagList) ? null : axion.readString(in);
     int len = in.readInt();
     long[] data = new long[len];
     for (int i = 0; i < len; i++) {

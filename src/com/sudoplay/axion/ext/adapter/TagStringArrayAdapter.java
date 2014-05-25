@@ -14,11 +14,11 @@ public class TagStringArrayAdapter implements TagAdapter<TagStringArray> {
 
   @Override
   public TagStringArray read(Tag parent, DataInputStream in, Axion axion) throws IOException {
-    String name = (parent instanceof TagList) ? null : in.readUTF();
+    String name = (parent instanceof TagList) ? null : axion.readString(in);
     int len = in.readInt();
     String[] data = new String[len];
     for (int i = 0; i < len; i++) {
-      data[i] = in.readUTF();
+      data[i] = axion.readString(in);
     }
     return axion.convertToTag(name, data);
   }
@@ -29,7 +29,7 @@ public class TagStringArrayAdapter implements TagAdapter<TagStringArray> {
     int len = data.length;
     out.writeInt(len);
     for (int i = 0; i < len; i++) {
-      out.writeUTF(data[i]);
+      axion.writeString(out, data[i]);
     }
   }
 

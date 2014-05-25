@@ -19,7 +19,7 @@ public class TagIntAdapter implements TagAdapter<TagInt> {
 
   @Override
   public TagInt read(final Tag parent, final DataInputStream in, final Axion axion) throws IOException {
-    return axion.convertToTag((parent instanceof TagList) ? null : in.readUTF(), in.readInt());
+    return axion.convertToTag((parent instanceof TagList) ? null : axion.readString(in), in.readInt());
   }
 
 }

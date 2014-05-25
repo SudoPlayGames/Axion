@@ -35,7 +35,7 @@ public class TagListAdapter implements TagAdapter<TagList> {
 
   @Override
   public TagList read(final Tag parent, final DataInputStream in, final Axion axion) throws IOException {
-    String name = (parent instanceof TagList) ? null : in.readUTF();
+    String name = (parent instanceof TagList) ? null : axion.readString(in);
     Class<? extends Tag> type = axion.getClassFor(in.readUnsignedByte());
     int size = in.readInt();
     TagList tagList = new TagList(type, name, new ArrayList<Tag>());

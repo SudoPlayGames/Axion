@@ -68,6 +68,7 @@ import com.sudoplay.axion.spec.tag.TagList;
 import com.sudoplay.axion.spec.tag.TagLong;
 import com.sudoplay.axion.spec.tag.TagShort;
 import com.sudoplay.axion.spec.tag.TagString;
+import com.sudoplay.axion.stream.CharacterEncoder;
 import com.sudoplay.axion.stream.StreamCompressionWrapper;
 
 public class Axion {
@@ -159,9 +160,14 @@ public class Axion {
     GZip, Deflater, None
   }
 
+  public static enum CharacterEncodingType {
+    MODIFIED_UTF_8, US_ASCII, ISO_8859_1, UTF_8, UTF_16BE, UTF_16LE, UTF_16
+  }
+
   private final TagAdapterRegistry adapters = new TagAdapterRegistry();
   private final TagConverterRegistry converters = new TagConverterRegistry();
   private StreamCompressionWrapper compressionWrapper = StreamCompressionWrapper.GZIP_STREAM_COMPRESSION_WRAPPER;
+  private CharacterEncoder characterEncoder = CharacterEncoder.MODIFIED_UTF_8;
 
   private Axion() {
     //
@@ -190,6 +196,27 @@ public class Axion {
 
   public static String getNameFor(final Tag tag) {
     return tag.getClass().getSimpleName();
+  }
+
+  public void setCharacterEncodingType(final CharacterEncodingType newCharacterEncodingType) {
+    switch (newCharacterEncodingType) {
+    case ISO_8859_1:
+      break;
+    case US_ASCII:
+      break;
+    case UTF_16:
+      break;
+    case UTF_16BE:
+      break;
+    case UTF_16LE:
+      break;
+    case UTF_8:
+      break;
+    default:
+    case MODIFIED_UTF_8:
+      characterEncoder = CharacterEncoder.MODIFIED_UTF_8;
+      break;
+    }
   }
 
   public <T extends Tag, V> void registerTagConverter(final Class<T> tagClass, final Class<V> type, final TagConverter<T, V> converter) {
@@ -248,6 +275,14 @@ public class Axion {
     return converters.convertToTag(name, value, this);
   }
 
+  public String readString(final DataInputStream dataInputStream) throws IOException {
+    return characterEncoder.read(dataInputStream);
+  }
+
+  public void writeString(final DataOutputStream dataOutputStream, final String data) throws IOException {
+    characterEncoder.write(dataOutputStream, data);
+  }
+
   public TagCompound read(final InputStream inputStream) throws IOException {
     Tag result = readTag(null, new DataInputStream(compressionWrapper.wrap(inputStream)));
     if (!(result instanceof TagCompound)) {
@@ -278,7 +313,7 @@ public class Axion {
     out.writeByte(id);
     if (id != 0) {
       if (!(tag.getParent() instanceof TagList)) {
-        out.writeUTF(tag.getName());
+        writeString(out, tag.getName());
       }
       getAdapterFor(id).write(tag, out, this);
     }

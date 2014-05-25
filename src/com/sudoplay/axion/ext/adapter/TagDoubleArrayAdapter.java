@@ -14,7 +14,7 @@ public class TagDoubleArrayAdapter implements TagAdapter<TagDoubleArray> {
 
   @Override
   public TagDoubleArray read(Tag parent, DataInputStream in, Axion axion) throws IOException {
-    String name = (parent instanceof TagList) ? null : in.readUTF();
+    String name = (parent instanceof TagList) ? null : axion.readString(in);
     int len = in.readInt();
     double[] data = new double[len];
     for (int i = 0; i < len; i++) {

@@ -19,7 +19,7 @@ public class TagByteAdapter implements TagAdapter<TagByte> {
 
   @Override
   public TagByte read(final Tag parent, final DataInputStream in, final Axion axion) throws IOException {
-    return axion.convertToTag((parent instanceof TagList) ? null : in.readUTF(), in.readByte());
+    return axion.convertToTag((parent instanceof TagList) ? null : axion.readString(in), in.readByte());
   }
 
 }

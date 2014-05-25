@@ -24,7 +24,7 @@ public class TagIntArrayAdapter implements TagAdapter<TagIntArray> {
 
   @Override
   public TagIntArray read(final Tag parent, final DataInputStream in, final Axion axion) throws IOException {
-    String name = (parent instanceof TagList) ? null : in.readUTF();
+    String name = (parent instanceof TagList) ? null : axion.readString(in);
     int len = in.readInt();
     int[] data = new int[len];
     for (int i = 0; i < len; i++) {

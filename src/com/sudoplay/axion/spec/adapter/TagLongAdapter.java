@@ -19,7 +19,7 @@ public class TagLongAdapter implements TagAdapter<TagLong> {
 
   @Override
   public TagLong read(final Tag parent, final DataInputStream in, final Axion axion) throws IOException {
-    return axion.convertToTag((parent instanceof TagList) ? null : in.readUTF(), in.readLong());
+    return axion.convertToTag((parent instanceof TagList) ? null : axion.readString(in), in.readLong());
   }
 
 }
