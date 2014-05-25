@@ -21,7 +21,7 @@ public class TagIntArray extends Tag {
   private int[] data;
 
   public TagIntArray(final String newName) {
-    super(newName);
+    this(newName, new int[0]);
   }
 
   public TagIntArray(final String newName, final int[] newIntArray) {
@@ -30,6 +30,9 @@ public class TagIntArray extends Tag {
   }
 
   public void set(final int[] newIntArray) {
+    if (newIntArray == null) {
+      throw new IllegalArgumentException(TagIntArray.class.getSimpleName() + " doesn't support null payload");
+    }
     data = newIntArray.clone();
   }
 

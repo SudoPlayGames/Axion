@@ -21,7 +21,7 @@ public class TagByteArray extends Tag {
   private byte[] data;
 
   public TagByteArray(final String newName) {
-    super(newName);
+    this(newName, new byte[0]);
   }
 
   public TagByteArray(final String newName, final byte[] newByteArray) {
@@ -30,6 +30,9 @@ public class TagByteArray extends Tag {
   }
 
   public void set(final byte[] newByteArray) {
+    if (newByteArray == null) {
+      throw new IllegalArgumentException(TagByteArray.class.getSimpleName() + " doesn't support null payload");
+    }
     data = newByteArray.clone();
   }
 
