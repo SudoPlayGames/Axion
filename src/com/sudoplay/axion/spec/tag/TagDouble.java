@@ -1,7 +1,5 @@
 package com.sudoplay.axion.spec.tag;
 
-import com.sudoplay.axion.Axion;
-
 /**
  * @tag.type 6
  * 
@@ -60,7 +58,7 @@ public class TagDouble extends Tag {
 
   @Override
   public String toString() {
-    return Axion.getNameFor(this) + super.toString() + ": " + data;
+    return super.toString() + ": " + data;
   }
 
   @Override

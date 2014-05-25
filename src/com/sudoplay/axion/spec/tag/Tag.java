@@ -70,9 +70,9 @@ public abstract class Tag implements Cloneable {
   @Override
   public String toString() {
     if (!name.equals("") || name.equals(null)) {
-      return "(\"" + name + "\")";
+      return this.getClass().getSimpleName() + "(\"" + name + "\")";
     } else {
-      return "";
+      return this.getClass().getSimpleName();
     }
   }
 

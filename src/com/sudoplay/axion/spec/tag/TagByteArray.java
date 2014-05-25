@@ -2,8 +2,6 @@ package com.sudoplay.axion.spec.tag;
 
 import java.util.Arrays;
 
-import com.sudoplay.axion.Axion;
-
 /**
  * @tag.type 7
  * 
@@ -31,7 +29,7 @@ public class TagByteArray extends Tag {
 
   public void set(final byte[] newByteArray) {
     if (newByteArray == null) {
-      throw new IllegalArgumentException(Axion.getNameFor(this) + " doesn't support null payload");
+      throw new IllegalArgumentException(this.toString() + " doesn't support null payload");
     }
     data = newByteArray.clone();
   }
@@ -64,7 +62,7 @@ public class TagByteArray extends Tag {
 
   @Override
   public String toString() {
-    return Axion.getNameFor(this) + super.toString() + ": [" + data.length + " bytes]";
+    return super.toString() + ": [" + data.length + " bytes]";
   }
 
   @Override

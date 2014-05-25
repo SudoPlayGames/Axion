@@ -5,8 +5,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import com.sudoplay.axion.Axion;
-
 /**
  * @tag.type 9
  * 
@@ -55,10 +53,9 @@ public class TagList extends Tag implements Iterable<Tag> {
 
   private void assertValidTag(final Tag tag) {
     if (tag == null) {
-      throw new IllegalArgumentException(Axion.getNameFor(this) + " can't contain null tags");
+      throw new IllegalArgumentException(this.toString() + " can't contain null tags");
     } else if (type != tag.getClass()) {
-      throw new IllegalArgumentException("Can't add tag of type [" + Axion.getNameFor(tag) + "] to " + Axion.getNameFor(this) + " of type "
-          + type.getSimpleName());
+      throw new IllegalArgumentException("Can't add tag of type [" + tag.getClass().getSimpleName() + "] to " + this.toString());
     } else if (tag.hasParent()) {
       throw new IllegalStateException("Tag can't be added to more than one collection tag");
     }
@@ -194,13 +191,13 @@ public class TagList extends Tag implements Iterable<Tag> {
 
   @Override
   public String toString() {
-    return Axion.getNameFor(this) + super.toString() + ": " + data.size() + " entries of type " + type.getSimpleName();
+    return super.toString() + ": " + data.size() + " entries of type " + type.getSimpleName();
   }
 
   @Override
   protected void onNameChange(final String oldName, final String newName) {
     if (newName != null && !newName.isEmpty()) {
-      throw new IllegalStateException("Tag belongs to a " + Axion.getNameFor(this) + " and can not be named");
+      throw new IllegalStateException("Tag belongs to a " + TagList.class.getSimpleName() + " and can not be named");
     }
   }
 

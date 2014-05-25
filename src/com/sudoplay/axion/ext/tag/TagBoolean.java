@@ -58,7 +58,7 @@ public class TagBoolean extends Tag {
 
   @Override
   public String toString() {
-    return this.getClass().getSimpleName() + super.toString() + ": " + data;
+    return super.toString() + ": " + data;
   }
 
   @Override

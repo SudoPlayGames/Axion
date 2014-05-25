@@ -6,8 +6,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.sudoplay.axion.Axion;
-
 /**
  * @tag.type 10
  * 
@@ -92,11 +90,12 @@ public class TagCompound extends Tag implements Iterable<Tag> {
 
   protected void assertValidTag(final Tag tag) {
     if (tag == null) {
-      throw new NullPointerException(Axion.getNameFor(this) + " does not support null tags");
+      throw new NullPointerException(this.toString() + " does not support null tags");
     } else if (tag.hasParent()) {
-      throw new IllegalStateException("Tag can not be added to more than one collection tag");
+      throw new IllegalStateException("Tag [" + tag.toString() + "] can not be added to tag [" + this.toString() + "] because it already has parent tag ["
+          + tag.getParent().toString() + "]");
     } else if (tag.getName().equals("")) {
-      throw new IllegalArgumentException(Axion.getNameFor(this) + " does not support unnamed tags");
+      throw new IllegalArgumentException(this.toString() + " does not support unnamed tags");
     }
   }
 
@@ -127,13 +126,13 @@ public class TagCompound extends Tag implements Iterable<Tag> {
 
   @Override
   public String toString() {
-    return Axion.getNameFor(this) + super.toString() + ": " + data.size() + " entries";
+    return super.toString() + ": " + data.size() + " entries";
   }
 
   @Override
   protected void onNameChange(final String oldName, final String newName) {
     if (newName == null || newName.isEmpty()) {
-      throw new IllegalStateException("Tag belongs to a " + Axion.getNameFor(this) + " and can not have an empty or null name");
+      throw new IllegalStateException("Tag belongs to [" + this.toString() + "] and can not have an empty or null name");
     }
     data.put(newName, data.remove(oldName));
   }

@@ -12,10 +12,8 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.sudoplay.axion.AxionConfiguration.ProtectionMode;
 import com.sudoplay.axion.adapter.TagAdapter;
-import com.sudoplay.axion.adapter.TagAdapterRegistry;
-import com.sudoplay.axion.converter.TagConverter;
-import com.sudoplay.axion.converter.TagConverterRegistry;
 import com.sudoplay.axion.ext.adapter.TagBooleanAdapter;
 import com.sudoplay.axion.ext.adapter.TagDoubleArrayAdapter;
 import com.sudoplay.axion.ext.adapter.TagFloatArrayAdapter;
@@ -68,8 +66,6 @@ import com.sudoplay.axion.spec.tag.TagList;
 import com.sudoplay.axion.spec.tag.TagLong;
 import com.sudoplay.axion.spec.tag.TagShort;
 import com.sudoplay.axion.spec.tag.TagString;
-import com.sudoplay.axion.stream.CharacterEncoder;
-import com.sudoplay.axion.stream.StreamCompressionWrapper;
 
 public class Axion {
 
@@ -80,71 +76,75 @@ public class Axion {
 
   private static final Axion DEFAULT_INSTANCE = new Axion() {
     {
-      registerTagAdapter(1, TagByte.class, new TagByteAdapter());
-      registerTagAdapter(2, TagShort.class, new TagShortAdapter());
-      registerTagAdapter(3, TagInt.class, new TagIntAdapter());
-      registerTagAdapter(4, TagLong.class, new TagLongAdapter());
-      registerTagAdapter(5, TagFloat.class, new TagFloatAdapter());
-      registerTagAdapter(6, TagDouble.class, new TagDoubleAdapter());
-      registerTagAdapter(7, TagByteArray.class, new TagByteArrayAdapter());
-      registerTagAdapter(8, TagString.class, new TagStringAdapter());
-      registerTagAdapter(9, TagList.class, new TagListAdapter());
-      registerTagAdapter(10, TagCompound.class, new TagCompoundAdapter());
-      registerTagAdapter(11, TagIntArray.class, new TagIntArrayAdapter());
+      getConfiguration().registerTagAdapter(1, TagByte.class, new TagByteAdapter());
+      getConfiguration().registerTagAdapter(2, TagShort.class, new TagShortAdapter());
+      getConfiguration().registerTagAdapter(3, TagInt.class, new TagIntAdapter());
+      getConfiguration().registerTagAdapter(4, TagLong.class, new TagLongAdapter());
+      getConfiguration().registerTagAdapter(5, TagFloat.class, new TagFloatAdapter());
+      getConfiguration().registerTagAdapter(6, TagDouble.class, new TagDoubleAdapter());
+      getConfiguration().registerTagAdapter(7, TagByteArray.class, new TagByteArrayAdapter());
+      getConfiguration().registerTagAdapter(8, TagString.class, new TagStringAdapter());
+      getConfiguration().registerTagAdapter(9, TagList.class, new TagListAdapter());
+      getConfiguration().registerTagAdapter(10, TagCompound.class, new TagCompoundAdapter());
+      getConfiguration().registerTagAdapter(11, TagIntArray.class, new TagIntArrayAdapter());
 
-      registerTagAdapter(80, TagBoolean.class, new TagBooleanAdapter());
-      registerTagAdapter(81, TagDoubleArray.class, new TagDoubleArrayAdapter());
-      registerTagAdapter(82, TagFloatArray.class, new TagFloatArrayAdapter());
-      registerTagAdapter(83, TagLongArray.class, new TagLongArrayAdapter());
-      registerTagAdapter(84, TagShortArray.class, new TagShortArrayAdapter());
-      registerTagAdapter(85, TagStringArray.class, new TagStringArrayAdapter());
+      getConfiguration().registerTagAdapter(80, TagBoolean.class, new TagBooleanAdapter());
+      getConfiguration().registerTagAdapter(81, TagDoubleArray.class, new TagDoubleArrayAdapter());
+      getConfiguration().registerTagAdapter(82, TagFloatArray.class, new TagFloatArrayAdapter());
+      getConfiguration().registerTagAdapter(83, TagLongArray.class, new TagLongArrayAdapter());
+      getConfiguration().registerTagAdapter(84, TagShortArray.class, new TagShortArrayAdapter());
+      getConfiguration().registerTagAdapter(85, TagStringArray.class, new TagStringArrayAdapter());
 
-      registerTagConverter(TagByte.class, Byte.class, new TagByteConverter());
-      registerTagConverter(TagShort.class, Short.class, new TagShortConverter());
-      registerTagConverter(TagInt.class, Integer.class, new TagIntConverter());
-      registerTagConverter(TagLong.class, Long.class, new TagLongConverter());
-      registerTagConverter(TagFloat.class, Float.class, new TagFloatConverter());
-      registerTagConverter(TagDouble.class, Double.class, new TagDoubleConverter());
-      registerTagConverter(TagByteArray.class, byte[].class, new TagByteArrayConverter());
-      registerTagConverter(TagString.class, String.class, new TagStringConverter());
-      registerTagConverter(TagList.class, List.class, new TagListConverter());
-      registerTagConverter(TagCompound.class, Map.class, new TagCompoundConverter());
-      registerTagConverter(TagIntArray.class, int[].class, new TagIntArrayConverter());
+      getConfiguration().registerTagConverter(TagByte.class, Byte.class, new TagByteConverter());
+      getConfiguration().registerTagConverter(TagShort.class, Short.class, new TagShortConverter());
+      getConfiguration().registerTagConverter(TagInt.class, Integer.class, new TagIntConverter());
+      getConfiguration().registerTagConverter(TagLong.class, Long.class, new TagLongConverter());
+      getConfiguration().registerTagConverter(TagFloat.class, Float.class, new TagFloatConverter());
+      getConfiguration().registerTagConverter(TagDouble.class, Double.class, new TagDoubleConverter());
+      getConfiguration().registerTagConverter(TagByteArray.class, byte[].class, new TagByteArrayConverter());
+      getConfiguration().registerTagConverter(TagString.class, String.class, new TagStringConverter());
+      getConfiguration().registerTagConverter(TagList.class, List.class, new TagListConverter());
+      getConfiguration().registerTagConverter(TagCompound.class, Map.class, new TagCompoundConverter());
+      getConfiguration().registerTagConverter(TagIntArray.class, int[].class, new TagIntArrayConverter());
 
-      registerTagConverter(TagBoolean.class, Boolean.class, new TagBooleanConverter());
-      registerTagConverter(TagDoubleArray.class, double[].class, new TagDoubleArrayConverter());
-      registerTagConverter(TagFloatArray.class, float[].class, new TagFloatArrayConverter());
-      registerTagConverter(TagLongArray.class, long[].class, new TagLongArrayConverter());
-      registerTagConverter(TagShortArray.class, short[].class, new TagShortArrayConverter());
-      registerTagConverter(TagStringArray.class, String[].class, new TagStringArrayConverter());
+      getConfiguration().registerTagConverter(TagBoolean.class, Boolean.class, new TagBooleanConverter());
+      getConfiguration().registerTagConverter(TagDoubleArray.class, double[].class, new TagDoubleArrayConverter());
+      getConfiguration().registerTagConverter(TagFloatArray.class, float[].class, new TagFloatArrayConverter());
+      getConfiguration().registerTagConverter(TagLongArray.class, long[].class, new TagLongArrayConverter());
+      getConfiguration().registerTagConverter(TagShortArray.class, short[].class, new TagShortArrayConverter());
+      getConfiguration().registerTagConverter(TagStringArray.class, String[].class, new TagStringArrayConverter());
+
+      getConfiguration().setConfigurationImmutable();
     }
   };
 
   private static final Axion ORIGINAL_SPEC_INSTANCE = new Axion() {
     {
-      registerTagAdapter(1, TagByte.class, new TagByteAdapter());
-      registerTagAdapter(2, TagShort.class, new TagShortAdapter());
-      registerTagAdapter(3, TagInt.class, new TagIntAdapter());
-      registerTagAdapter(4, TagLong.class, new TagLongAdapter());
-      registerTagAdapter(5, TagFloat.class, new TagFloatAdapter());
-      registerTagAdapter(6, TagDouble.class, new TagDoubleAdapter());
-      registerTagAdapter(7, TagByteArray.class, new TagByteArrayAdapter());
-      registerTagAdapter(8, TagString.class, new TagStringAdapter());
-      registerTagAdapter(9, TagList.class, new TagListAdapter());
-      registerTagAdapter(10, TagCompound.class, new TagCompoundAdapter());
-      registerTagAdapter(11, TagIntArray.class, new TagIntArrayAdapter());
+      getConfiguration().registerTagAdapter(1, TagByte.class, new TagByteAdapter());
+      getConfiguration().registerTagAdapter(2, TagShort.class, new TagShortAdapter());
+      getConfiguration().registerTagAdapter(3, TagInt.class, new TagIntAdapter());
+      getConfiguration().registerTagAdapter(4, TagLong.class, new TagLongAdapter());
+      getConfiguration().registerTagAdapter(5, TagFloat.class, new TagFloatAdapter());
+      getConfiguration().registerTagAdapter(6, TagDouble.class, new TagDoubleAdapter());
+      getConfiguration().registerTagAdapter(7, TagByteArray.class, new TagByteArrayAdapter());
+      getConfiguration().registerTagAdapter(8, TagString.class, new TagStringAdapter());
+      getConfiguration().registerTagAdapter(9, TagList.class, new TagListAdapter());
+      getConfiguration().registerTagAdapter(10, TagCompound.class, new TagCompoundAdapter());
+      getConfiguration().registerTagAdapter(11, TagIntArray.class, new TagIntArrayAdapter());
 
-      registerTagConverter(TagByte.class, Byte.class, new TagByteConverter());
-      registerTagConverter(TagShort.class, Short.class, new TagShortConverter());
-      registerTagConverter(TagInt.class, Integer.class, new TagIntConverter());
-      registerTagConverter(TagLong.class, Long.class, new TagLongConverter());
-      registerTagConverter(TagFloat.class, Float.class, new TagFloatConverter());
-      registerTagConverter(TagDouble.class, Double.class, new TagDoubleConverter());
-      registerTagConverter(TagByteArray.class, byte[].class, new TagByteArrayConverter());
-      registerTagConverter(TagString.class, String.class, new TagStringConverter());
-      registerTagConverter(TagList.class, List.class, new TagListConverter());
-      registerTagConverter(TagCompound.class, Map.class, new TagCompoundConverter());
-      registerTagConverter(TagIntArray.class, int[].class, new TagIntArrayConverter());
+      getConfiguration().registerTagConverter(TagByte.class, Byte.class, new TagByteConverter());
+      getConfiguration().registerTagConverter(TagShort.class, Short.class, new TagShortConverter());
+      getConfiguration().registerTagConverter(TagInt.class, Integer.class, new TagIntConverter());
+      getConfiguration().registerTagConverter(TagLong.class, Long.class, new TagLongConverter());
+      getConfiguration().registerTagConverter(TagFloat.class, Float.class, new TagFloatConverter());
+      getConfiguration().registerTagConverter(TagDouble.class, Double.class, new TagDoubleConverter());
+      getConfiguration().registerTagConverter(TagByteArray.class, byte[].class, new TagByteArrayConverter());
+      getConfiguration().registerTagConverter(TagString.class, String.class, new TagStringConverter());
+      getConfiguration().registerTagConverter(TagList.class, List.class, new TagListConverter());
+      getConfiguration().registerTagConverter(TagCompound.class, Map.class, new TagCompoundConverter());
+      getConfiguration().registerTagConverter(TagIntArray.class, int[].class, new TagIntArrayConverter());
+
+      getConfiguration().setConfigurationImmutable();
     }
   };
 
@@ -156,28 +156,21 @@ public class Axion {
     }
   };
 
-  public static enum CompressionType {
-    GZip, Deflater, None
-  }
-
-  public static enum CharacterEncodingType {
-    MODIFIED_UTF_8, US_ASCII, ISO_8859_1, UTF_8, UTF_16BE, UTF_16LE, UTF_16
-  }
-
-  private final TagAdapterRegistry adapters = new TagAdapterRegistry();
-  private final TagConverterRegistry converters = new TagConverterRegistry();
-  private StreamCompressionWrapper compressionWrapper = StreamCompressionWrapper.GZIP_STREAM_COMPRESSION_WRAPPER;
-  private CharacterEncoder characterEncoder = CharacterEncoder.MODIFIED_UTF_8;
+  private AxionConfiguration configuration;
 
   private Axion() {
-    //
+    this(new AxionConfiguration(ProtectionMode.Unlocked));
   }
 
-  public static Axion create(final String newName) {
+  private Axion(final AxionConfiguration newConfiguration) {
+    configuration = newConfiguration;
+  }
+
+  public static Axion create(final String newName, final AxionConfiguration newConfiguration) {
     if (INSTANCES.containsKey(newName)) {
-      throw new IllegalArgumentException("Axion instance alread exists with name: " + newName);
+      throw new IllegalArgumentException(Axion.class.getSimpleName() + " instance alread exists with name: " + newName);
     }
-    Axion instance = new Axion();
+    Axion instance = new Axion(newConfiguration);
     INSTANCES.put(newName, instance);
     return instance;
   }
@@ -194,103 +187,56 @@ public class Axion {
     return INSTANCES.get(ORIGINAL_SPEC_INSTANCE_NAME);
   }
 
-  public static String getNameFor(final Tag tag) {
+  public AxionConfiguration getConfiguration() {
+    return configuration;
+  }
+
+  public String getNameFor(final Tag tag) {
     return tag.getClass().getSimpleName();
   }
 
-  public void setCharacterEncodingType(final CharacterEncodingType newCharacterEncodingType) {
-    switch (newCharacterEncodingType) {
-    case ISO_8859_1:
-      characterEncoder = CharacterEncoder.ISO_8859_1;
-      break;
-    case US_ASCII:
-      characterEncoder = CharacterEncoder.US_ASCII;
-      break;
-    case UTF_16:
-      characterEncoder = CharacterEncoder.UTF_16;
-      break;
-    case UTF_16BE:
-      characterEncoder = CharacterEncoder.UTF_16BE;
-      break;
-    case UTF_16LE:
-      characterEncoder = CharacterEncoder.UTF_16LE;
-      break;
-    case UTF_8:
-      characterEncoder = CharacterEncoder.UTF_8;
-      break;
-    default:
-    case MODIFIED_UTF_8:
-      characterEncoder = CharacterEncoder.MODIFIED_UTF_8;
-      break;
-    }
-  }
-
-  public <T extends Tag, V> void registerTagConverter(final Class<T> tagClass, final Class<V> type, final TagConverter<T, V> converter) {
-    converters.register(tagClass, type, converter);
-  }
-
-  public <T extends Tag> void registerTagAdapter(final int id, final Class<T> tagClass, final TagAdapter<T> adapter) {
-    adapters.register(id, tagClass, adapter);
-  }
-
-  public void setCompressionType(final CompressionType newCompressionType) {
-    switch (newCompressionType) {
-    case Deflater:
-      compressionWrapper = StreamCompressionWrapper.DEFLATER_STREAM_COMPRESSION_WRAPPER;
-    case None:
-      compressionWrapper = StreamCompressionWrapper.PASSTHROUGH_STREAM_COMPRESSION_WRAPPER;
-    default:
-    case GZip:
-      compressionWrapper = StreamCompressionWrapper.GZIP_STREAM_COMPRESSION_WRAPPER;
-    }
-  }
-
-  public String getNameFor(final int id) {
-    return getClassFor(id).getSimpleName();
-  }
-
   public int getIdFor(final Class<? extends Tag> tagClass) {
-    return adapters.getIdFor(tagClass);
+    return configuration.getIdFor(tagClass);
   }
 
   public Class<? extends Tag> getClassFor(final int id) {
-    return adapters.getClassFor(id);
+    return configuration.getClassFor(id);
   }
 
-  public Tag createInstance(final int id, final String newName) {
-    return adapters.createInstance(id, newName);
+  public <T extends Tag> T createInstance(final int id, final String newName) {
+    return configuration.createInstance(id, newName);
   }
 
-  public Tag createInstance(final Class<? extends Tag> tagClass, final String newName) {
-    return adapters.createInstance(tagClass, newName);
+  public <T extends Tag> T createInstance(final Class<T> tagClass, final String newName) {
+    return configuration.createInstance(tagClass, newName);
   }
 
   public <T extends Tag> TagAdapter<T> getAdapterFor(final int id) {
-    return adapters.getAdapterFor(id);
+    return configuration.getAdapterFor(id);
   }
 
   public <T extends Tag> TagAdapter<T> getAdapterFor(final Class<T> tagClass) {
-    return adapters.getAdapterFor(tagClass);
+    return configuration.getAdapterFor(tagClass);
   }
 
   public <T extends Tag, V> V convertToValue(final T tag) {
-    return converters.convertToValue(tag, this);
+    return configuration.convertToValue(tag, this);
   }
 
   public <V, T extends Tag> T convertToTag(final String name, final V value) {
-    return converters.convertToTag(name, value, this);
+    return configuration.convertToTag(name, value, this);
   }
 
   public String readString(final DataInputStream dataInputStream) throws IOException {
-    return characterEncoder.read(dataInputStream);
+    return configuration.readString(dataInputStream);
   }
 
   public void writeString(final DataOutputStream dataOutputStream, final String data) throws IOException {
-    characterEncoder.write(dataOutputStream, data);
+    configuration.writeString(dataOutputStream, data);
   }
 
   public TagCompound read(final InputStream inputStream) throws IOException {
-    Tag result = readTag(null, new DataInputStream(compressionWrapper.wrap(inputStream)));
+    Tag result = readTag(null, new DataInputStream(configuration.wrap(inputStream)));
     if (!(result instanceof TagCompound)) {
       throw new IllegalStateException("Root tag not of type " + TagCompound.class.getSimpleName());
     }
@@ -298,7 +244,7 @@ public class Axion {
   }
 
   public void write(final TagCompound tagCompound, final OutputStream outputStream) throws IOException {
-    writeTag(tagCompound, new DataOutputStream(compressionWrapper.wrap(outputStream)));
+    writeTag(tagCompound, new DataOutputStream(configuration.wrap(outputStream)));
   }
 
   public Tag readTag(final Tag parent, final DataInputStream in) throws IOException {
@@ -306,8 +252,8 @@ public class Axion {
     if (id == 0) {
       return null;
     } else {
-      LOG.trace("reading [{}]", getClassFor(id).getSimpleName());
-      Tag tag = getAdapterFor(id).read(parent, in, this);
+      LOG.trace("reading [{}]", configuration.getClassFor(id).getSimpleName());
+      Tag tag = configuration.getAdapterFor(id).read(parent, in, this);
       LOG.trace("finished reading [{}]", tag);
       return tag;
     }
@@ -315,13 +261,13 @@ public class Axion {
 
   public void writeTag(final Tag tag, final DataOutputStream out) throws IOException {
     LOG.trace("writing [{}]", tag);
-    int id = getIdFor(tag.getClass());
+    int id = configuration.getIdFor(tag.getClass());
     out.writeByte(id);
     if (id != 0) {
       if (!(tag.getParent() instanceof TagList)) {
-        writeString(out, tag.getName());
+        configuration.writeString(out, tag.getName());
       }
-      getAdapterFor(id).write(tag, out, this);
+      configuration.getAdapterFor(id).write(tag, out, this);
     }
     LOG.trace("finished writing [{}]", tag);
   }

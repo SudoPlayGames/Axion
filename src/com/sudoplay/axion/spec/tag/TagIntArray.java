@@ -2,8 +2,6 @@ package com.sudoplay.axion.spec.tag;
 
 import java.util.Arrays;
 
-import com.sudoplay.axion.Axion;
-
 /**
  * @tag.type 11
  * 
@@ -31,7 +29,7 @@ public class TagIntArray extends Tag {
 
   public void set(final int[] newIntArray) {
     if (newIntArray == null) {
-      throw new IllegalArgumentException(Axion.getNameFor(this) + " doesn't support null payload");
+      throw new IllegalArgumentException(this.toString() + " doesn't support null payload");
     }
     data = newIntArray.clone();
   }
@@ -64,7 +62,7 @@ public class TagIntArray extends Tag {
 
   @Override
   public String toString() {
-    return Axion.getNameFor(this) + super.toString() + ": [" + data.length + " ints]";
+    return super.toString() + ": [" + data.length + " ints]";
   }
 
   @Override
