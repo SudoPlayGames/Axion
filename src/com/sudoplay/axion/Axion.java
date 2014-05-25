@@ -201,16 +201,22 @@ public class Axion {
   public void setCharacterEncodingType(final CharacterEncodingType newCharacterEncodingType) {
     switch (newCharacterEncodingType) {
     case ISO_8859_1:
+      characterEncoder = CharacterEncoder.ISO_8859_1;
       break;
     case US_ASCII:
+      characterEncoder = CharacterEncoder.US_ASCII;
       break;
     case UTF_16:
+      characterEncoder = CharacterEncoder.UTF_16;
       break;
     case UTF_16BE:
+      characterEncoder = CharacterEncoder.UTF_16BE;
       break;
     case UTF_16LE:
+      characterEncoder = CharacterEncoder.UTF_16LE;
       break;
     case UTF_8:
+      characterEncoder = CharacterEncoder.UTF_8;
       break;
     default:
     case MODIFIED_UTF_8:

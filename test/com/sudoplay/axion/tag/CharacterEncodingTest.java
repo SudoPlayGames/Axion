@@ -8,6 +8,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
+import org.junit.AfterClass;
 import org.junit.Test;
 
 import com.sudoplay.axion.Axion;
@@ -16,6 +17,12 @@ import com.sudoplay.axion.spec.tag.Tag;
 import com.sudoplay.axion.spec.tag.TagString;
 
 public class CharacterEncodingTest {
+
+  @AfterClass
+  public static void done() {
+    // Reset default character encoding so other tests will pass
+    Axion.getDefault().setCharacterEncodingType(CharacterEncodingType.MODIFIED_UTF_8);
+  }
 
   @Test
   public void testMODIFIED_UTF_8() throws IOException {
