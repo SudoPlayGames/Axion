@@ -4,6 +4,12 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
+import com.sudoplay.axion.ext.tag.TagBoolean;
+import com.sudoplay.axion.ext.tag.TagDoubleArray;
+import com.sudoplay.axion.ext.tag.TagFloatArray;
+import com.sudoplay.axion.ext.tag.TagLongArray;
+import com.sudoplay.axion.ext.tag.TagShortArray;
+import com.sudoplay.axion.ext.tag.TagStringArray;
 import com.sudoplay.axion.spec.tag.Tag;
 import com.sudoplay.axion.spec.tag.TagByte;
 import com.sudoplay.axion.spec.tag.TagByteArray;
@@ -20,7 +26,7 @@ import com.sudoplay.axion.spec.tag.TagString;
 public class NameTest {
 
   @Test
-  public void test() {
+  public void testSpec() {
     check(new TagByte("name"));
     check(new TagShort("name"));
     check(new TagInt("name"));
@@ -32,6 +38,16 @@ public class NameTest {
     check(new TagList(TagByte.class, "name"));
     check(new TagCompound("name"));
     check(new TagIntArray("name"));
+  }
+
+  @Test
+  public void testExt() {
+    check(new TagBoolean("name"));
+    check(new TagDoubleArray("name"));
+    check(new TagFloatArray("name"));
+    check(new TagLongArray("name"));
+    check(new TagShortArray("name"));
+    check(new TagStringArray("name"));
   }
 
   private void check(Tag tag) {

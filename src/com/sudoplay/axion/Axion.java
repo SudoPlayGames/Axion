@@ -17,8 +17,23 @@ import com.sudoplay.axion.adapter.TagAdapterRegistry;
 import com.sudoplay.axion.converter.TagConverter;
 import com.sudoplay.axion.converter.TagConverterRegistry;
 import com.sudoplay.axion.ext.adapter.TagBooleanAdapter;
+import com.sudoplay.axion.ext.adapter.TagDoubleArrayAdapter;
+import com.sudoplay.axion.ext.adapter.TagFloatArrayAdapter;
+import com.sudoplay.axion.ext.adapter.TagLongArrayAdapter;
+import com.sudoplay.axion.ext.adapter.TagShortArrayAdapter;
+import com.sudoplay.axion.ext.adapter.TagStringArrayAdapter;
 import com.sudoplay.axion.ext.converter.TagBooleanConverter;
+import com.sudoplay.axion.ext.converter.TagDoubleArrayConverter;
+import com.sudoplay.axion.ext.converter.TagFloatArrayConverter;
+import com.sudoplay.axion.ext.converter.TagLongArrayConverter;
+import com.sudoplay.axion.ext.converter.TagShortArrayConverter;
+import com.sudoplay.axion.ext.converter.TagStringArrayConverter;
 import com.sudoplay.axion.ext.tag.TagBoolean;
+import com.sudoplay.axion.ext.tag.TagDoubleArray;
+import com.sudoplay.axion.ext.tag.TagFloatArray;
+import com.sudoplay.axion.ext.tag.TagLongArray;
+import com.sudoplay.axion.ext.tag.TagShortArray;
+import com.sudoplay.axion.ext.tag.TagStringArray;
 import com.sudoplay.axion.spec.adapter.TagByteAdapter;
 import com.sudoplay.axion.spec.adapter.TagByteArrayAdapter;
 import com.sudoplay.axion.spec.adapter.TagCompoundAdapter;
@@ -77,6 +92,11 @@ public class Axion {
       registerTagAdapter(11, TagIntArray.class, new TagIntArrayAdapter());
 
       registerTagAdapter(80, TagBoolean.class, new TagBooleanAdapter());
+      registerTagAdapter(81, TagDoubleArray.class, new TagDoubleArrayAdapter());
+      registerTagAdapter(82, TagFloatArray.class, new TagFloatArrayAdapter());
+      registerTagAdapter(83, TagLongArray.class, new TagLongArrayAdapter());
+      registerTagAdapter(84, TagShortArray.class, new TagShortArrayAdapter());
+      registerTagAdapter(85, TagStringArray.class, new TagStringArrayAdapter());
 
       registerTagConverter(TagByte.class, Byte.class, new TagByteConverter());
       registerTagConverter(TagShort.class, Short.class, new TagShortConverter());
@@ -91,6 +111,11 @@ public class Axion {
       registerTagConverter(TagIntArray.class, int[].class, new TagIntArrayConverter());
 
       registerTagConverter(TagBoolean.class, Boolean.class, new TagBooleanConverter());
+      registerTagConverter(TagDoubleArray.class, double[].class, new TagDoubleArrayConverter());
+      registerTagConverter(TagFloatArray.class, float[].class, new TagFloatArrayConverter());
+      registerTagConverter(TagLongArray.class, long[].class, new TagLongArrayConverter());
+      registerTagConverter(TagShortArray.class, short[].class, new TagShortArrayConverter());
+      registerTagConverter(TagStringArray.class, String[].class, new TagStringArrayConverter());
     }
   };
 

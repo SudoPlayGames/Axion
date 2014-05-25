@@ -10,19 +10,15 @@ import com.sudoplay.axion.ext.tag.TagBoolean;
 import com.sudoplay.axion.spec.tag.Tag;
 import com.sudoplay.axion.spec.tag.TagList;
 
-public class TagBooleanAdapter implements TagAdapter {
+public class TagBooleanAdapter implements TagAdapter<TagBoolean> {
 
   @Override
-  public void write(final Tag tag, final DataOutputStream out, final Axion axion) throws IOException {
-    out.writeBoolean(((TagBoolean) tag).get());
+  public void write(final TagBoolean tag, final DataOutputStream out, final Axion axion) throws IOException {
+    out.writeBoolean(tag.get());
   }
 
   @Override
-  public Tag read(final Tag parent, final DataInputStream in, final Axion axion) throws IOException {
-    if (parent instanceof TagList) {
-      return new TagBoolean(null, in.readBoolean());
-    } else {
-      return new TagBoolean(in.readUTF(), in.readBoolean());
-    }
+  public TagBoolean read(final Tag parent, final DataInputStream in, final Axion axion) throws IOException {
+    return axion.convertToTag((parent instanceof TagList) ? null : in.readUTF(), in.readBoolean());
   }
 }

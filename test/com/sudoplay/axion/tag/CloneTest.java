@@ -1,9 +1,11 @@
 package com.sudoplay.axion.tag;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
+import com.sudoplay.axion.TestUtil;
 import com.sudoplay.axion.spec.tag.Tag;
 import com.sudoplay.axion.spec.tag.TagByte;
 import com.sudoplay.axion.spec.tag.TagByteArray;
@@ -30,6 +32,13 @@ public class CloneTest {
     check(new TagLong("tagLong", 45L));
     check(new TagShort("tagShort", (short) 23434));
     check(new TagString("tagString", "someString"));
+
+    check(TestUtil.getTagBoolean());
+    check(TestUtil.getTagDoubleArray());
+    check(TestUtil.getTagFloatArray());
+    check(TestUtil.getTagLongArray());
+    check(TestUtil.getTagShortArray());
+    check(TestUtil.getTagStringArray());
   }
 
   @Test

@@ -5,6 +5,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.sudoplay.axion.ext.tag.TagBoolean;
+import com.sudoplay.axion.ext.tag.TagDoubleArray;
+import com.sudoplay.axion.ext.tag.TagFloatArray;
+import com.sudoplay.axion.ext.tag.TagLongArray;
+import com.sudoplay.axion.ext.tag.TagShortArray;
+import com.sudoplay.axion.ext.tag.TagStringArray;
 import com.sudoplay.axion.spec.tag.TagByte;
 import com.sudoplay.axion.spec.tag.TagByteArray;
 import com.sudoplay.axion.spec.tag.TagCompound;
@@ -21,6 +27,30 @@ public class TestUtil {
 
   private TestUtil() {
     //
+  }
+
+  public static TagBoolean getTagBoolean() {
+    return new TagBoolean("tagBoolean", true);
+  }
+
+  public static TagDoubleArray getTagDoubleArray() {
+    return new TagDoubleArray("tagDoubleArray", new double[] { 45.345, 7456.34, 5713.0012, 251.32 });
+  }
+
+  public static TagFloatArray getTagFloatArray() {
+    return new TagFloatArray("tagFloatArray", new float[] { 2.5f, 13.58f, 1.02f, 778.02001f });
+  }
+
+  public static TagLongArray getTagLongArray() {
+    return new TagLongArray("tagLongArray", new long[] { 163986384486338L, 36868746684636843L, 68798798789468798L, 561657876813368L });
+  }
+
+  public static TagShortArray getTagShortArray() {
+    return new TagShortArray("tagShortArray", new short[] { 45, 689, 874, 12254 });
+  }
+
+  public static TagStringArray getTagStringArray() {
+    return new TagStringArray("tagStringArray", new String[] { "hello", "world", "foo", "bar" });
   }
 
   public static TagCompound getTagCompound() {

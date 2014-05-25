@@ -2,6 +2,17 @@ package com.sudoplay.axion.ext.tag;
 
 import com.sudoplay.axion.spec.tag.Tag;
 
+/**
+ * @tag.type 80
+ * 
+ * @tag.name <code>TAG_Boolean</code>
+ * 
+ * @tag.payload * True is recorded as a byte value of 1 and false is a byte
+ *              value of 0.
+ * 
+ * @author Jason Taylor
+ * 
+ */
 public class TagBoolean extends Tag {
 
   private boolean data;
@@ -43,6 +54,11 @@ public class TagBoolean extends Tag {
     if (data != other.data)
       return false;
     return true;
+  }
+
+  @Override
+  public String toString() {
+    return this.getClass().getSimpleName() + super.toString() + ": " + data;
   }
 
   @Override

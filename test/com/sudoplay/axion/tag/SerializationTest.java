@@ -28,74 +28,44 @@ import com.sudoplay.axion.spec.tag.TagString;
 public class SerializationTest {
 
   @Test
-  public void test_TagByte() throws IOException {
+  public void testSpec() throws IOException {
     assertEquals(TagByte.class.getSimpleName(), new TagByte("name", Byte.MAX_VALUE), serialize(new TagByte("name", Byte.MAX_VALUE)));
-  }
-
-  @Test
-  public void test_TagShort() throws IOException {
     assertEquals(TagShort.class.getSimpleName(), new TagShort("name", Short.MAX_VALUE), serialize(new TagShort("name", Short.MAX_VALUE)));
-  }
-
-  @Test
-  public void test_TagInt() throws IOException {
     assertEquals(TagInt.class.getSimpleName(), new TagInt("name", Integer.MAX_VALUE), serialize(new TagInt("name", Integer.MAX_VALUE)));
-  }
-
-  @Test
-  public void test_TagLong() throws IOException {
     assertEquals(TagLong.class.getSimpleName(), new TagLong("name", Long.MAX_VALUE), serialize(new TagLong("name", Long.MAX_VALUE)));
-  }
-
-  @Test
-  public void test_TagFloat() throws IOException {
     assertEquals(TagFloat.class.getSimpleName(), new TagFloat("name", Float.MAX_VALUE), serialize(new TagFloat("name", Float.MAX_VALUE)));
-  }
-
-  @Test
-  public void test_TagDouble() throws IOException {
     assertEquals(TagDouble.class.getSimpleName(), new TagDouble("name", Double.MAX_VALUE), serialize(new TagDouble("name", Double.MAX_VALUE)));
-  }
-
-  @Test
-  public void test_TagByteArray() throws IOException {
     assertEquals(TagByteArray.class.getSimpleName(), new TagByteArray("name", new byte[] { 0, 1, 2, 3 }), serialize(new TagByteArray("name", new byte[] { 0, 1,
         2, 3 })));
-  }
-
-  @Test
-  public void test_TagString() throws IOException {
     assertEquals(TagString.class.getSimpleName(), new TagString("name", "string"), serialize(new TagString("name", "string")));
-  }
+    assertEquals(TagIntArray.class.getSimpleName(), new TagIntArray("name", new int[] { 0, 1, 2, 3 }), serialize(new TagIntArray("name",
+        new int[] { 0, 1, 2, 3 })));
 
-  @Test
-  public void test_TagList() throws IOException {
     TagList listA = new TagList(TagByte.class, "name");
     listA.add(new TagByte("tagA", (byte) 16));
     listA.add(new TagByte("tagB", (byte) 8));
     listA.add(new TagByte("tagC", (byte) 4));
     listA.add(new TagByte("tagD", (byte) 2));
-
     TagList listB = new TagList(TagByte.class, "name");
     listB.add(new TagByte("tagA", (byte) 16));
     listB.add(new TagByte("tagB", (byte) 8));
     listB.add(new TagByte("tagC", (byte) 4));
     listB.add(new TagByte("tagD", (byte) 2));
-
     assertEquals(TagList.class.getSimpleName(), listA, serialize(listB));
-  }
 
-  @Test
-  public void test_TagCompound() throws IOException {
     TagCompound compoundA = TestUtil.getTagCompound();
     TagCompound compoundB = TestUtil.getTagCompound();
     assertEquals(TagCompound.class.getSimpleName(), compoundA, serialize(compoundB));
   }
 
   @Test
-  public void test_TagIntArray() throws IOException {
-    assertEquals(TagIntArray.class.getSimpleName(), new TagIntArray("name", new int[] { 0, 1, 2, 3 }), serialize(new TagIntArray("name",
-        new int[] { 0, 1, 2, 3 })));
+  public void testExt() throws IOException {
+    assertEquals(TestUtil.getTagBoolean(), serialize(TestUtil.getTagBoolean()));
+    assertEquals(TestUtil.getTagDoubleArray(), serialize(TestUtil.getTagDoubleArray()));
+    assertEquals(TestUtil.getTagFloatArray(), serialize(TestUtil.getTagFloatArray()));
+    assertEquals(TestUtil.getTagLongArray(), serialize(TestUtil.getTagLongArray()));
+    assertEquals(TestUtil.getTagShortArray(), serialize(TestUtil.getTagShortArray()));
+    assertEquals(TestUtil.getTagStringArray(), serialize(TestUtil.getTagStringArray()));
   }
 
   private Tag serialize(Tag start) throws IOException {
