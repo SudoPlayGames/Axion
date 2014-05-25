@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import com.sudoplay.axion.Axion;
 import com.sudoplay.axion.adapter.TagAdapter;
 import com.sudoplay.axion.spec.tag.Tag;
-import com.sudoplay.axion.spec.tag.TagByte;
 import com.sudoplay.axion.spec.tag.TagList;
 
 public class TagListAdapter implements TagAdapter {
@@ -19,33 +18,33 @@ public class TagListAdapter implements TagAdapter {
   private static final Logger LOG = LoggerFactory.getLogger(TagListAdapter.class);
 
   @Override
-  public void write(final Tag tag, final DataOutputStream out) throws IOException {
+  public void write(final Tag tag, final DataOutputStream out, final Axion axion) throws IOException {
     TagList tagList = (TagList) tag;
     int size = tagList.size();
-    int type = tagList.getType();
-    out.writeByte((size == 0) ? Axion.getIdFor(TagByte.class) : type);
+    int type = axion.getIdFor(tagList.getType());
+    out.writeByte(type);
     out.writeInt(size);
-    TagAdapter adapter = Axion.getAdapterFor(type);
+    TagAdapter adapter = axion.getAdapterFor(type);
     Tag child;
     for (int i = 0; i < size; i++) {
       LOG.trace("writing #[{}]", i);
       child = tagList.get(i);
-      adapter.write(child, out);
+      adapter.write(child, out, axion);
       LOG.trace("finished writing [{}]", child);
     }
   }
 
   @Override
-  public Tag read(final Tag parent, final DataInputStream in) throws IOException {
+  public Tag read(final Tag parent, final DataInputStream in, final Axion axion) throws IOException {
     String name = (parent instanceof TagList) ? null : in.readUTF();
-    int type = in.readUnsignedByte();
+    Class<? extends Tag> type = axion.getClassFor(in.readUnsignedByte());
     int size = in.readInt();
     TagList tagList = new TagList(type, name, new ArrayList<Tag>());
-    TagAdapter adapter = Axion.getAdapterFor(type);
+    TagAdapter adapter = axion.getAdapterFor(type);
     Tag child;
     for (int i = 0; i < size; i++) {
       LOG.trace("reading #[{}]", i);
-      child = adapter.read(tagList, in);
+      child = adapter.read(tagList, in, axion);
       tagList.add(child);
       LOG.trace("finished reading [{}]", child);
     }

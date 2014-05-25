@@ -13,19 +13,19 @@ import com.sudoplay.axion.spec.tag.TagList;
 public class TagCompoundAdapter implements TagAdapter {
 
   @Override
-  public void write(final Tag tag, final DataOutputStream out) throws IOException {
+  public void write(final Tag tag, final DataOutputStream out, final Axion axion) throws IOException {
     for (Tag child : ((TagCompound) tag).getAsMap().values()) {
-      Axion.writeTag(child, out);
+      axion.writeTag(child, out);
     }
     out.writeByte(0);
   }
 
   @Override
-  public Tag read(final Tag parent, final DataInputStream in) throws IOException {
+  public Tag read(final Tag parent, final DataInputStream in, final Axion axion) throws IOException {
     String name = (parent instanceof TagList) ? null : in.readUTF();
     TagCompound tag = new TagCompound(name);
     Tag child;
-    while ((child = Axion.readTag(tag, in)) != null) {
+    while ((child = axion.readTag(tag, in)) != null) {
       tag.put(child);
     }
     return tag;

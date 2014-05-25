@@ -6,8 +6,16 @@ import java.util.List;
 import java.util.Map;
 
 import com.sudoplay.axion.spec.tag.TagByte;
+import com.sudoplay.axion.spec.tag.TagByteArray;
 import com.sudoplay.axion.spec.tag.TagCompound;
+import com.sudoplay.axion.spec.tag.TagDouble;
+import com.sudoplay.axion.spec.tag.TagFloat;
+import com.sudoplay.axion.spec.tag.TagInt;
+import com.sudoplay.axion.spec.tag.TagIntArray;
 import com.sudoplay.axion.spec.tag.TagList;
+import com.sudoplay.axion.spec.tag.TagLong;
+import com.sudoplay.axion.spec.tag.TagShort;
+import com.sudoplay.axion.spec.tag.TagString;
 
 public class TestUtil {
 
@@ -23,15 +31,15 @@ public class TestUtil {
     listA.add(new TagByte("tagC", (byte) 4));
     listA.add(new TagByte("tagD", (byte) 2));
     tag.put(listA);
-    tag.put("byte", (byte) 16);
-    tag.put("byteArray", new byte[] { 0, 1, 2, 3 });
-    tag.put("double", 67.394857);
-    tag.put("float", 6.453f);
-    tag.put("int", 16);
-    tag.put("intArray", new int[] { 0, 1, 2, 3 });
-    tag.put("long", 79L);
-    tag.put("short", (short) 947);
-    tag.put("string", "somestring");
+    tag.put(new TagByte("byte", (byte) 16));
+    tag.put(new TagByteArray("byteArray", new byte[] { 0, 1, 2, 3 }));
+    tag.put(new TagDouble("double", 67.394857));
+    tag.put(new TagFloat("float", 6.453f));
+    tag.put(new TagInt("int", 16));
+    tag.put(new TagIntArray("intArray", new int[] { 0, 1, 2, 3 }));
+    tag.put(new TagLong("long", 79L));
+    tag.put(new TagShort("short", (short) 947));
+    tag.put(new TagString("string", "somestring"));
     return tag;
   }
 

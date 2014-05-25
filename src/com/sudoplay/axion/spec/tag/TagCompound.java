@@ -90,18 +90,6 @@ public class TagCompound extends Tag implements Iterable<Tag> {
     data.put(tag.getName(), tag);
   }
 
-  public <V> V get(final String name, final V defaultValue) {
-    Tag tag = data.get(name);
-    if (tag == null) {
-      return defaultValue;
-    }
-    return Axion.convertToValue(tag);
-  }
-  
-  public <T extends Tag, V> void put(final String newName, final V value) {
-    put(Axion.convertToTag(newName, value));
-  }
-
   protected void assertValidTag(final Tag tag) {
     if (tag == null) {
       throw new NullPointerException(Axion.getNameFor(this) + " does not support null tags");

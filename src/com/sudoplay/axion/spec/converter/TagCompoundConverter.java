@@ -12,22 +12,22 @@ import com.sudoplay.axion.spec.tag.TagCompound;
 public class TagCompoundConverter implements TagConverter<TagCompound, Map> {
 
   @Override
-  public TagCompound convert(String name, Map value) {
+  public TagCompound convert(final String name, final Map value, final Axion axion) {
     Map<String, Tag> tags = new HashMap<String, Tag>();
     for (Object o : value.keySet()) {
       String n = (String) o;
-      tags.put(n, Axion.convertToTag(n, value.get(n)));
+      tags.put(n, axion.convertToTag(n, value.get(n)));
     }
     return new TagCompound(name, tags);
   }
 
   @Override
-  public Map convert(TagCompound tag) {
+  public Map convert(final TagCompound tag, final Axion axion) {
     Map<String, Object> map = new HashMap<String, Object>();
     Map<String, Tag> tags = tag.getAsMap();
     for (String name : tags.keySet()) {
       Tag t = tags.get(name);
-      map.put(t.getName(), Axion.convertToValue(t));
+      map.put(t.getName(), axion.convertToValue(t));
     }
     return map;
   }

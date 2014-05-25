@@ -53,7 +53,7 @@ public class CloneTest {
   @Test
   public void testTagCompound() {
     TagCompound tag = new TagCompound("tagCompound");
-    tag.put("intArray", new int[] { 0, 1, 2, 3 });
+    tag.put(new TagIntArray("intArray", new int[] { 0, 1, 2, 3 }));
     check(tag);
   }
 

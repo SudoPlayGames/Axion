@@ -12,23 +12,23 @@ import com.sudoplay.axion.spec.tag.TagList;
 public class TagListConverter implements TagConverter<TagList, List> {
 
   @Override
-  public TagList convert(String name, List value) {
+  public TagList convert(final String name, final List value, final Axion axion) {
     if (value.isEmpty()) {
       throw new IllegalArgumentException("Can't convert an empty list");
     }
     List<Tag> tags = new ArrayList<Tag>();
     for (Object o : value) {
-      tags.add(Axion.convertToTag("", o));
+      tags.add(axion.convertToTag("", o));
     }
-    return new TagList(Axion.getIdFor(tags.get(0).getClass()), name, tags);
+    return new TagList(tags.get(0).getClass(), name, tags);
   }
 
   @Override
-  public List<?> convert(TagList tag) {
+  public List<?> convert(final TagList tag, final Axion axion) {
     List<Object> list = new ArrayList<Object>();
     List<? extends Tag> tags = tag.getAsList();
     for (Tag child : tags) {
-      list.add(Axion.convertToValue(child));
+      list.add(axion.convertToValue(child));
     }
     return list;
   }

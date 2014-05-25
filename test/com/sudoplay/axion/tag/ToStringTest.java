@@ -35,10 +35,10 @@ public class ToStringTest {
     list.add(new TagInt("name", 56));
     list.add(new TagInt("name", 56));
     list.add(new TagInt("name", 56));
-    assertEquals("TagList(\"name\"): 4 entries of type 3", list.toString());
+    assertEquals("TagList(\"name\"): 4 entries of type TagInt", list.toString());
 
     TagCompound compound = new TagCompound("name");
-    compound.put("float", 6.5f);
+    compound.put(new TagFloat("float", 6.5f));
     assertEquals("TagCompound(\"name\"): 1 entries", compound.toString());
 
     assertEquals("TagIntArray(\"name\"): [4 ints]", new TagIntArray("name", new int[] { 0, 1, 2, 3 }).toString());

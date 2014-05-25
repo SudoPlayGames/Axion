@@ -76,7 +76,7 @@ public class ParentChildBehaviorTest {
   @Test
   public void testCompoundChildNameChange() {
     TagCompound compound = new TagCompound("compound");
-    compound.put("tagByte", (byte) 16);
+    compound.put(new TagByte("tagByte", (byte) 16));
     TagByte tagByte = compound.get("tagByte");
     assertEquals("tagByte", tagByte.getName());
     tagByte.setName("newName");

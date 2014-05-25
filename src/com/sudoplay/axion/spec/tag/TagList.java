@@ -6,7 +6,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.sudoplay.axion.Axion;
-import com.sudoplay.axion.ext.tag.TagBoolean;
 
 /**
  * @tag.type 9
@@ -31,19 +30,19 @@ public class TagList extends Tag implements Iterable<Tag> {
   /**
    * Store type id for tags in this list; all tags must be of the same type.
    */
-  private final int type;
+  private final Class<? extends Tag> type;
 
   public TagList(final Class<? extends Tag> tagClass) {
-    this(Axion.getIdFor(tagClass), "", new ArrayList<Tag>());
+    this(tagClass, "", new ArrayList<Tag>());
   }
 
   public TagList(final Class<? extends Tag> tagClass, final String newName) {
-    this(Axion.getIdFor(tagClass), newName, new ArrayList<Tag>());
+    this(tagClass, newName, new ArrayList<Tag>());
   }
 
-  public TagList(final int newType, final String newName, final List<Tag> newList) {
+  public TagList(final Class<? extends Tag> tagClass, final String newName, final List<Tag> newList) {
     super(newName);
-    type = newType;
+    type = tagClass;
     if (newList == null || newList.isEmpty()) {
       data = new ArrayList<Tag>();
     } else {
@@ -57,9 +56,9 @@ public class TagList extends Tag implements Iterable<Tag> {
   private void assertValidTag(final Tag tag) {
     if (tag == null) {
       throw new IllegalArgumentException(Axion.getNameFor(this) + " can't contain null tags");
-    } else if (type != Axion.getIdFor(tag.getClass())) {
+    } else if (type != tag.getClass()) {
       throw new IllegalArgumentException("Can't add tag of type [" + Axion.getNameFor(tag) + "] to " + Axion.getNameFor(this) + " of type "
-          + Axion.getNameFor(type));
+          + type.getSimpleName());
     } else if (tag.hasParent()) {
       throw new IllegalStateException("Tag can't be added to more than one collection tag");
     }
@@ -91,10 +90,6 @@ public class TagList extends Tag implements Iterable<Tag> {
   public Tag remove(final int index) {
     return data.remove(index);
   }
-
-  /*
-   * Spec Tags
-   */
 
   public void addByte(final byte newByte) {
     add(new TagByte(null, newByte));
@@ -140,14 +135,7 @@ public class TagList extends Tag implements Iterable<Tag> {
     add(new TagString(null, newString));
   }
 
-  /*
-   * Extended Tags
-   */
-  public void addBoolean(final boolean newBoolean) {
-    add(new TagBoolean(null, newBoolean));
-  }
-
-  public int getType() {
+  public Class<? extends Tag> getType() {
     return type;
   }
 
@@ -178,7 +166,7 @@ public class TagList extends Tag implements Iterable<Tag> {
     final int prime = 31;
     int result = super.hashCode();
     result = prime * result + ((data == null) ? 0 : data.hashCode());
-    result = prime * result + type;
+    result = prime * result + ((type == null) ? 0 : type.hashCode());
     return result;
   }
 
@@ -196,14 +184,17 @@ public class TagList extends Tag implements Iterable<Tag> {
         return false;
     } else if (!data.equals(other.data))
       return false;
-    if (type != other.type)
+    if (type == null) {
+      if (other.type != null)
+        return false;
+    } else if (!type.equals(other.type))
       return false;
     return true;
   }
 
   @Override
   public String toString() {
-    return Axion.getNameFor(this) + super.toString() + ": " + data.size() + " entries of type " + type;
+    return Axion.getNameFor(this) + super.toString() + ": " + data.size() + " entries of type " + type.getSimpleName();
   }
 
   @Override

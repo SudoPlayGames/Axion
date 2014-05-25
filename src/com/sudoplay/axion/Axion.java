@@ -5,6 +5,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.DeflaterOutputStream;
@@ -56,66 +57,85 @@ import com.sudoplay.axion.spec.tag.TagList;
 import com.sudoplay.axion.spec.tag.TagLong;
 import com.sudoplay.axion.spec.tag.TagShort;
 import com.sudoplay.axion.spec.tag.TagString;
-import com.sudoplay.axion.tag.TagRegistry;
 
 public class Axion {
 
   private static final Logger LOG = LoggerFactory.getLogger(Axion.class);
 
-  static {
+  private static final String DEFAULT_INSTANCE_NAME = "AXION_DEFAULT";
 
-    /*
-     * Standard Tag Adapters
-     */
-    register(1, TagByte.class, new TagByteAdapter());
-    register(2, TagShort.class, new TagShortAdapter());
-    register(3, TagInt.class, new TagIntAdapter());
-    register(4, TagLong.class, new TagLongAdapter());
-    register(5, TagFloat.class, new TagFloatAdapter());
-    register(6, TagDouble.class, new TagDoubleAdapter());
-    register(7, TagByteArray.class, new TagByteArrayAdapter());
-    register(8, TagString.class, new TagStringAdapter());
-    register(9, TagList.class, new TagListAdapter());
-    register(10, TagCompound.class, new TagCompoundAdapter());
-    register(11, TagIntArray.class, new TagIntArrayAdapter());
+  private static final Axion DEFAULT_INSTANCE = new Axion() {
+    {
+      registerTagAdapter(1, TagByte.class, new TagByteAdapter());
+      registerTagAdapter(2, TagShort.class, new TagShortAdapter());
+      registerTagAdapter(3, TagInt.class, new TagIntAdapter());
+      registerTagAdapter(4, TagLong.class, new TagLongAdapter());
+      registerTagAdapter(5, TagFloat.class, new TagFloatAdapter());
+      registerTagAdapter(6, TagDouble.class, new TagDoubleAdapter());
+      registerTagAdapter(7, TagByteArray.class, new TagByteArrayAdapter());
+      registerTagAdapter(8, TagString.class, new TagStringAdapter());
+      registerTagAdapter(9, TagList.class, new TagListAdapter());
+      registerTagAdapter(10, TagCompound.class, new TagCompoundAdapter());
+      registerTagAdapter(11, TagIntArray.class, new TagIntArrayAdapter());
 
-    /*
-     * Standard Tag Converters
-     */
-    registerTagConverter(TagByte.class, Byte.class, new TagByteConverter());
-    registerTagConverter(TagShort.class, Short.class, new TagShortConverter());
-    registerTagConverter(TagInt.class, Integer.class, new TagIntConverter());
-    registerTagConverter(TagLong.class, Long.class, new TagLongConverter());
-    registerTagConverter(TagFloat.class, Float.class, new TagFloatConverter());
-    registerTagConverter(TagDouble.class, Double.class, new TagDoubleConverter());
-    registerTagConverter(TagByteArray.class, byte[].class, new TagByteArrayConverter());
-    registerTagConverter(TagString.class, String.class, new TagStringConverter());
-    registerTagConverter(TagList.class, List.class, new TagListConverter());
-    registerTagConverter(TagCompound.class, Map.class, new TagCompoundConverter());
-    registerTagConverter(TagIntArray.class, int[].class, new TagIntArrayConverter());
+      registerTagAdapter(80, TagBoolean.class, new TagBooleanAdapter());
 
-    /*
-     * Extended Tag Adapters
-     */
-    register(80, TagBoolean.class, new TagBooleanAdapter());
+      registerTagConverter(TagByte.class, Byte.class, new TagByteConverter());
+      registerTagConverter(TagShort.class, Short.class, new TagShortConverter());
+      registerTagConverter(TagInt.class, Integer.class, new TagIntConverter());
+      registerTagConverter(TagLong.class, Long.class, new TagLongConverter());
+      registerTagConverter(TagFloat.class, Float.class, new TagFloatConverter());
+      registerTagConverter(TagDouble.class, Double.class, new TagDoubleConverter());
+      registerTagConverter(TagByteArray.class, byte[].class, new TagByteArrayConverter());
+      registerTagConverter(TagString.class, String.class, new TagStringConverter());
+      registerTagConverter(TagList.class, List.class, new TagListConverter());
+      registerTagConverter(TagCompound.class, Map.class, new TagCompoundConverter());
+      registerTagConverter(TagIntArray.class, int[].class, new TagIntArrayConverter());
 
-    /*
-     * Extended Tag Converters
-     */
-    registerTagConverter(TagBoolean.class, Boolean.class, new TagBooleanConverter());
+      registerTagConverter(TagBoolean.class, Boolean.class, new TagBooleanConverter());
+    }
+  };
 
-  }
+  @SuppressWarnings("serial")
+  private static final Map<String, Axion> INSTANCES = new HashMap<String, Axion>() {
+    {
+      put(DEFAULT_INSTANCE_NAME, DEFAULT_INSTANCE);
+    }
+  };
+
+  private final TagAdapterRegistry adapters = new TagAdapterRegistry();
+  private final TagConverterRegistry converters = new TagConverterRegistry();
 
   private Axion() {
     //
   }
 
-  public static void register(final int id, final Class<? extends Tag> tagClass, final TagAdapter adapter) {
-    TagRegistry.register(id, tagClass);
-    TagAdapterRegistry.register(id, tagClass, adapter);
+  public static Axion create(final String newName) {
+    if (INSTANCES.containsKey(newName)) {
+      throw new IllegalArgumentException("Axion instance alread exists with name: " + newName);
+    }
+    Axion instance = new Axion();
+    INSTANCES.put(newName, instance);
+    return instance;
   }
 
-  public static String getNameFor(final int id) {
+  public static Axion get(final String name) {
+    return INSTANCES.get(name);
+  }
+
+  public static Axion getDefault() {
+    return INSTANCES.get(DEFAULT_INSTANCE_NAME);
+  }
+
+  public <T extends Tag, V> void registerTagConverter(final Class<T> tagClass, final Class<V> type, final TagConverter<T, V> converter) {
+    converters.register(tagClass, type, converter);
+  }
+
+  public void registerTagAdapter(final int id, final Class<? extends Tag> tagClass, final TagAdapter adapter) {
+    adapters.register(id, tagClass, adapter);
+  }
+
+  public String getNameFor(final int id) {
     return getClassFor(id).getSimpleName();
   }
 
@@ -123,43 +143,39 @@ public class Axion {
     return tag.getClass().getSimpleName();
   }
 
-  public static int getIdFor(final Class<? extends Tag> tagClass) {
-    return TagRegistry.getIdFor(tagClass);
+  public int getIdFor(final Class<? extends Tag> tagClass) {
+    return adapters.getIdFor(tagClass);
   }
 
-  public static Class<? extends Tag> getClassFor(final int id) {
-    return TagRegistry.getClassFor(id);
+  public Class<? extends Tag> getClassFor(final int id) {
+    return adapters.getClassFor(id);
   }
 
-  public static Tag createInstance(final int id, final String newName) {
-    return TagRegistry.createInstance(id, newName);
+  public Tag createInstance(final int id, final String newName) {
+    return adapters.createInstance(id, newName);
   }
 
-  public static Tag createInstance(final Class<? extends Tag> tagClass, final String newName) {
-    return TagRegistry.createInstance(tagClass, newName);
+  public Tag createInstance(final Class<? extends Tag> tagClass, final String newName) {
+    return adapters.createInstance(tagClass, newName);
   }
 
-  public static TagAdapter getAdapterFor(final int id) {
-    return TagAdapterRegistry.getAdapterFor(id);
+  public TagAdapter getAdapterFor(final int id) {
+    return adapters.getAdapterFor(id);
   }
 
-  public static TagAdapter getAdapterFor(final Class<? extends Tag> tagClass) {
-    return TagAdapterRegistry.getAdapterFor(tagClass);
+  public TagAdapter getAdapterFor(final Class<? extends Tag> tagClass) {
+    return adapters.getAdapterFor(tagClass);
   }
 
-  public static <T extends Tag, V> void registerTagConverter(final Class<T> tagClass, final Class<V> type, final TagConverter<T, V> converter) {
-    TagConverterRegistry.registerTagConverter(tagClass, type, converter);
+  public <T extends Tag, V> V convertToValue(final T tag) {
+    return converters.convertToValue(tag, this);
   }
 
-  public static <T extends Tag, V> V convertToValue(final T tag) {
-    return TagConverterRegistry.convertToValue(tag);
+  public <V, T extends Tag> T convertToTag(final String name, final V value) {
+    return converters.convertToTag(name, value, this);
   }
 
-  public static <V, T extends Tag> T convertToTag(final String name, final V value) {
-    return TagConverterRegistry.convertToTag(name, value);
-  }
-
-  public static Tag readGZip(final InputStream inputStream) throws IOException {
+  public Tag readGZip(final InputStream inputStream) throws IOException {
     return read(new GZIPInputStream(inputStream));
   }
 
@@ -167,7 +183,7 @@ public class Axion {
     write(tagCompound, new GZIPOutputStream(outputStream));
   }
 
-  public static Tag readDeflater(final InputStream inputStream) throws IOException {
+  public Tag readDeflater(final InputStream inputStream) throws IOException {
     return read(new InflaterInputStream(inputStream));
   }
 
@@ -175,27 +191,27 @@ public class Axion {
     write(tagCompound, new DeflaterOutputStream(outputStream));
   }
 
-  public static Tag read(final InputStream in) throws IOException {
+  public Tag read(final InputStream in) throws IOException {
     return readTag(null, new DataInputStream(in));
   }
 
-  public static void write(final Tag tag, final OutputStream out) throws IOException {
+  public void write(final Tag tag, final OutputStream out) throws IOException {
     writeTag(tag, new DataOutputStream(out));
   }
 
-  public static Tag readTag(final Tag parent, final DataInputStream in) throws IOException {
+  public Tag readTag(final Tag parent, final DataInputStream in) throws IOException {
     int id = in.readUnsignedByte();
     if (id == 0) {
       return null;
     } else {
       LOG.trace("reading [{}]", getClassFor(id).getSimpleName());
-      Tag tag = getAdapterFor(id).read(parent, in);
+      Tag tag = getAdapterFor(id).read(parent, in, this);
       LOG.trace("finished reading [{}]", tag);
       return tag;
     }
   }
 
-  public static void writeTag(final Tag tag, final DataOutputStream out) throws IOException {
+  public void writeTag(final Tag tag, final DataOutputStream out) throws IOException {
     LOG.trace("writing [{}]", tag);
     int id = getIdFor(tag.getClass());
     out.writeByte(id);
@@ -203,7 +219,7 @@ public class Axion {
       if (!(tag.getParent() instanceof TagList)) {
         out.writeUTF(tag.getName());
       }
-      getAdapterFor(id).write(tag, out);
+      getAdapterFor(id).write(tag, out, this);
     }
     LOG.trace("finished writing [{}]", tag);
   }

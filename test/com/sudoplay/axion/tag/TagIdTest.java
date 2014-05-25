@@ -36,7 +36,7 @@ public class TagIdTest {
   }
 
   private void check(Tag tag, int id) {
-    assertEquals(tag.getClass().getSimpleName(), Axion.getIdFor(tag.getClass()), id);
+    assertEquals(tag.getClass().getSimpleName(), Axion.getDefault().getIdFor(tag.getClass()), id);
   }
 
 }
