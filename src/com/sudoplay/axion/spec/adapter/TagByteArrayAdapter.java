@@ -10,17 +10,17 @@ import com.sudoplay.axion.spec.tag.Tag;
 import com.sudoplay.axion.spec.tag.TagByteArray;
 import com.sudoplay.axion.spec.tag.TagList;
 
-public class TagByteArrayAdapter implements TagAdapter {
+public class TagByteArrayAdapter implements TagAdapter<TagByteArray> {
 
   @Override
-  public void write(final Tag tag, final DataOutputStream out, final Axion axion) throws IOException {
-    byte[] data = ((TagByteArray) tag).get();
+  public void write(final TagByteArray tag, final DataOutputStream out, final Axion axion) throws IOException {
+    byte[] data = (tag.get());
     out.writeInt(data.length);
     out.write(data);
   }
 
   @Override
-  public Tag read(final Tag parent, final DataInputStream in, final Axion axion) throws IOException {
+  public TagByteArray read(final Tag parent, final DataInputStream in, final Axion axion) throws IOException {
     String name = (parent instanceof TagList) ? null : in.readUTF();
     byte[] data = new byte[in.readInt()];
     in.readFully(data);

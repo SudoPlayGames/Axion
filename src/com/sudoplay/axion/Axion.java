@@ -171,7 +171,7 @@ public class Axion {
     converters.register(tagClass, type, converter);
   }
 
-  public void registerTagAdapter(final int id, final Class<? extends Tag> tagClass, final TagAdapter adapter) {
+  public <T extends Tag> void registerTagAdapter(final int id, final Class<T> tagClass, final TagAdapter<T> adapter) {
     adapters.register(id, tagClass, adapter);
   }
 
@@ -207,11 +207,11 @@ public class Axion {
     return adapters.createInstance(tagClass, newName);
   }
 
-  public TagAdapter getAdapterFor(final int id) {
+  public <T extends Tag> TagAdapter<T> getAdapterFor(final int id) {
     return adapters.getAdapterFor(id);
   }
 
-  public TagAdapter getAdapterFor(final Class<? extends Tag> tagClass) {
+  public <T extends Tag> TagAdapter<T> getAdapterFor(final Class<T> tagClass) {
     return adapters.getAdapterFor(tagClass);
   }
 

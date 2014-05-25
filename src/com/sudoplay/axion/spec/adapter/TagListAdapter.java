@@ -13,34 +13,33 @@ import com.sudoplay.axion.adapter.TagAdapter;
 import com.sudoplay.axion.spec.tag.Tag;
 import com.sudoplay.axion.spec.tag.TagList;
 
-public class TagListAdapter implements TagAdapter {
+public class TagListAdapter implements TagAdapter<TagList> {
 
   private static final Logger LOG = LoggerFactory.getLogger(TagListAdapter.class);
 
   @Override
-  public void write(final Tag tag, final DataOutputStream out, final Axion axion) throws IOException {
-    TagList tagList = (TagList) tag;
-    int size = tagList.size();
-    int type = axion.getIdFor(tagList.getType());
+  public void write(final TagList tag, final DataOutputStream out, final Axion axion) throws IOException {
+    int size = tag.size();
+    int type = axion.getIdFor(tag.getType());
     out.writeByte(type);
     out.writeInt(size);
-    TagAdapter adapter = axion.getAdapterFor(type);
+    TagAdapter<Tag> adapter = axion.getAdapterFor(type);
     Tag child;
     for (int i = 0; i < size; i++) {
       LOG.trace("writing #[{}]", i);
-      child = tagList.get(i);
+      child = tag.get(i);
       adapter.write(child, out, axion);
       LOG.trace("finished writing [{}]", child);
     }
   }
 
   @Override
-  public Tag read(final Tag parent, final DataInputStream in, final Axion axion) throws IOException {
+  public TagList read(final Tag parent, final DataInputStream in, final Axion axion) throws IOException {
     String name = (parent instanceof TagList) ? null : in.readUTF();
     Class<? extends Tag> type = axion.getClassFor(in.readUnsignedByte());
     int size = in.readInt();
     TagList tagList = new TagList(type, name, new ArrayList<Tag>());
-    TagAdapter adapter = axion.getAdapterFor(type);
+    TagAdapter<? extends Tag> adapter = axion.getAdapterFor(type);
     Tag child;
     for (int i = 0; i < size; i++) {
       LOG.trace("reading #[{}]", i);

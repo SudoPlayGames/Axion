@@ -10,20 +10,19 @@ import com.sudoplay.axion.spec.tag.Tag;
 import com.sudoplay.axion.spec.tag.TagCompound;
 import com.sudoplay.axion.spec.tag.TagList;
 
-public class TagCompoundAdapter implements TagAdapter {
+public class TagCompoundAdapter implements TagAdapter<TagCompound> {
 
   @Override
-  public void write(final Tag tag, final DataOutputStream out, final Axion axion) throws IOException {
-    for (Tag child : ((TagCompound) tag).getAsMap().values()) {
+  public void write(final TagCompound tag, final DataOutputStream out, final Axion axion) throws IOException {
+    for (Tag child : tag.getAsMap().values()) {
       axion.writeTag(child, out);
     }
     out.writeByte(0);
   }
 
   @Override
-  public Tag read(final Tag parent, final DataInputStream in, final Axion axion) throws IOException {
-    String name = (parent instanceof TagList) ? null : in.readUTF();
-    TagCompound tag = new TagCompound(name);
+  public TagCompound read(final Tag parent, final DataInputStream in, final Axion axion) throws IOException {
+    TagCompound tag = new TagCompound((parent instanceof TagList) ? null : in.readUTF());
     Tag child;
     while ((child = axion.readTag(tag, in)) != null) {
       tag.put(child);

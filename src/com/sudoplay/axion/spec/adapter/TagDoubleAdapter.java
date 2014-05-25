@@ -10,15 +10,15 @@ import com.sudoplay.axion.spec.tag.Tag;
 import com.sudoplay.axion.spec.tag.TagDouble;
 import com.sudoplay.axion.spec.tag.TagList;
 
-public class TagDoubleAdapter implements TagAdapter {
+public class TagDoubleAdapter implements TagAdapter<TagDouble> {
 
   @Override
-  public void write(final Tag tag, final DataOutputStream out, final Axion axion) throws IOException {
-    out.writeDouble(((TagDouble) tag).get());
+  public void write(final TagDouble tag, final DataOutputStream out, final Axion axion) throws IOException {
+    out.writeDouble(tag.get());
   }
 
   @Override
-  public Tag read(final Tag parent, final DataInputStream in, final Axion axion) throws IOException {
+  public TagDouble read(final Tag parent, final DataInputStream in, final Axion axion) throws IOException {
     return axion.convertToTag((parent instanceof TagList) ? null : in.readUTF(), in.readDouble());
   }
 

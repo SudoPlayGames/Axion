@@ -10,11 +10,11 @@ import com.sudoplay.axion.spec.tag.Tag;
 import com.sudoplay.axion.spec.tag.TagIntArray;
 import com.sudoplay.axion.spec.tag.TagList;
 
-public class TagIntArrayAdapter implements TagAdapter {
+public class TagIntArrayAdapter implements TagAdapter<TagIntArray> {
 
   @Override
-  public void write(final Tag tag, final DataOutputStream out, final Axion axion) throws IOException {
-    int[] data = ((TagIntArray) tag).get();
+  public void write(final TagIntArray tag, final DataOutputStream out, final Axion axion) throws IOException {
+    int[] data = (tag.get());
     int len = data.length;
     out.writeInt(len);
     for (int i = 0; i < len; i++) {
@@ -23,7 +23,7 @@ public class TagIntArrayAdapter implements TagAdapter {
   }
 
   @Override
-  public Tag read(final Tag parent, final DataInputStream in, final Axion axion) throws IOException {
+  public TagIntArray read(final Tag parent, final DataInputStream in, final Axion axion) throws IOException {
     String name = (parent instanceof TagList) ? null : in.readUTF();
     int len = in.readInt();
     int[] data = new int[len];
