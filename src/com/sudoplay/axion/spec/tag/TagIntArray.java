@@ -31,7 +31,7 @@ public class TagIntArray extends Tag {
 
   public void set(final int[] newIntArray) {
     if (newIntArray == null) {
-      throw new IllegalArgumentException(TagIntArray.class.getSimpleName() + " doesn't support null payload");
+      throw new IllegalArgumentException(Axion.getNameFor(this) + " doesn't support null payload");
     }
     data = newIntArray.clone();
   }
@@ -69,7 +69,7 @@ public class TagIntArray extends Tag {
 
   @Override
   public TagIntArray clone() {
-    return new TagIntArray(getName(), data.clone());
+    return new TagIntArray(getName(), data);
   }
 
 }

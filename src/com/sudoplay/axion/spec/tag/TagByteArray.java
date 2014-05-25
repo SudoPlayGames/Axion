@@ -31,7 +31,7 @@ public class TagByteArray extends Tag {
 
   public void set(final byte[] newByteArray) {
     if (newByteArray == null) {
-      throw new IllegalArgumentException(TagByteArray.class.getSimpleName() + " doesn't support null payload");
+      throw new IllegalArgumentException(Axion.getNameFor(this) + " doesn't support null payload");
     }
     data = newByteArray.clone();
   }
@@ -69,7 +69,7 @@ public class TagByteArray extends Tag {
 
   @Override
   public TagByteArray clone() {
-    return new TagByteArray(getName(), data.clone());
+    return new TagByteArray(getName(), data);
   }
 
 }
