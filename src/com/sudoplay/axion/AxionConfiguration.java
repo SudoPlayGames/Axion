@@ -17,6 +17,8 @@ import com.sudoplay.axion.ext.tag.TagFloatArray;
 import com.sudoplay.axion.ext.tag.TagLongArray;
 import com.sudoplay.axion.ext.tag.TagShortArray;
 import com.sudoplay.axion.ext.tag.TagStringArray;
+import com.sudoplay.axion.mapper.NBTObjectMapper;
+import com.sudoplay.axion.mapper.NBTObjectMapperRegistry;
 import com.sudoplay.axion.spec.tag.Tag;
 import com.sudoplay.axion.spec.tag.TagByte;
 import com.sudoplay.axion.spec.tag.TagByteArray;
@@ -106,6 +108,7 @@ public class AxionConfiguration implements Cloneable {
 
   private final TagAdapterRegistry adapters;
   private final TagConverterRegistry converters;
+  private final NBTObjectMapperRegistry mappers;
   private StreamCompressionWrapper streamCompressionWrapper;
   private CharacterEncodingType characterEncodingType;
   private ProtectionMode configurationProtectionMode;
@@ -117,6 +120,7 @@ public class AxionConfiguration implements Cloneable {
   protected AxionConfiguration(final AxionConfiguration toCopy) {
     adapters = toCopy.adapters.clone();
     converters = toCopy.converters.clone();
+    mappers = toCopy.mappers.clone();
     configurationProtectionMode = ProtectionMode.Unlocked;
     streamCompressionWrapper = toCopy.streamCompressionWrapper;
     characterEncodingType = toCopy.characterEncodingType;
@@ -125,6 +129,7 @@ public class AxionConfiguration implements Cloneable {
   protected AxionConfiguration(final ProtectionMode newProtectionMode) {
     adapters = new TagAdapterRegistry();
     converters = new TagConverterRegistry();
+    mappers = new NBTObjectMapperRegistry();
     configurationProtectionMode = newProtectionMode;
     streamCompressionWrapper = StreamCompressionWrapper.GZIP_STREAM_COMPRESSION_WRAPPER;
     characterEncodingType = CharacterEncodingType.MODIFIED_UTF_8;
@@ -194,6 +199,13 @@ public class AxionConfiguration implements Cloneable {
     return this;
   }
 
+  public <T extends Tag, O> AxionConfiguration registerNBTObjectMapper(final Class<O> type, final NBTObjectMapper<T, O> mapper) {
+    assertUnlocked();
+    assertMutable();
+    mappers.register(type, mapper);
+    return this;
+  }
+
   public AxionConfiguration setCompressionType(final CompressionType newCompressionType) {
     assertUnlocked();
     assertMutable();
@@ -238,8 +250,16 @@ public class AxionConfiguration implements Cloneable {
     return converters.convertToValue(tag, axion);
   }
 
-  protected <V, T extends Tag> T convertToTag(final String name, final V value, final Axion axion) {
+  protected <T extends Tag, V> T convertToTag(final String name, final V value, final Axion axion) {
     return converters.convertToTag(name, value, axion);
+  }
+
+  protected <T extends Tag, O> O createObjectFrom(final T tag, final Class<O> type, final Axion axion) {
+    return mappers.createObjectFrom(tag, type, axion);
+  }
+
+  protected <T extends Tag, O> T createTagFrom(final String name, final O object, final Axion axion) {
+    return mappers.createTagFrom(name, object, axion);
   }
 
   protected AxionInputStream wrap(final InputStream inputStream) throws IOException {

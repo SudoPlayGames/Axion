@@ -127,6 +127,14 @@ public class Axion {
     return configuration.convertToTag(name, value, this);
   }
 
+  public <T extends Tag, O> O createObjectFrom(final T tag, final Class<O> type) {
+    return configuration.createObjectFrom(tag, type, this);
+  }
+
+  public <T extends Tag, O> T createTagFrom(final String name, final O object) {
+    return configuration.createTagFrom(name, object, this);
+  }
+
   public TagCompound read(final File file) throws FileNotFoundException, IOException {
     FileInputStream fileInputStream = new FileInputStream(file);
     TagCompound result = read(fileInputStream);
