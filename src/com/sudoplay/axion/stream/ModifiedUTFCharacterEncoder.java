@@ -1,5 +1,7 @@
 package com.sudoplay.axion.stream;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.UTFDataFormatException;
 
@@ -12,6 +14,11 @@ public class ModifiedUTFCharacterEncoder extends CharacterEncoder {
   private byte bytearr[] = new byte[80];
   private char chararr[] = new char[80];
 
+  /**
+   * Modified of {@link DataOutputStream#writeUTF(String)}
+   * 
+   * @see DataOutputStream#writeUTF(String)
+   */
   @Override
   public void write(final AxionOutputStream out, final String data) throws IOException {
     int strlen = data.length();
@@ -66,22 +73,22 @@ public class ModifiedUTFCharacterEncoder extends CharacterEncoder {
     out.write(bytearr, 0, utflen + 2);
   }
 
+  /**
+   * Modified version of {@link DataInputStream#readUTF(java.io.DataInput)}
+   * 
+   * @see DataInputStream#readUTF(java.io.DataInput)
+   */
   @Override
   public String read(final AxionInputStream in) throws IOException {
     int utflen = in.readUnsignedShort();
     byte[] bytearr = null;
     char[] chararr = null;
-    if (in instanceof AxionInputStream) {
-      if (this.bytearr.length < utflen) {
-        this.bytearr = new byte[utflen * 2];
-        this.chararr = new char[utflen * 2];
-      }
-      chararr = this.chararr;
-      bytearr = this.bytearr;
-    } else {
-      bytearr = new byte[utflen];
-      chararr = new char[utflen];
+    if (this.bytearr.length < utflen) {
+      this.bytearr = new byte[utflen * 2];
+      this.chararr = new char[utflen * 2];
     }
+    chararr = this.chararr;
+    bytearr = this.bytearr;
 
     int c, char2, char3;
     int count = 0;
