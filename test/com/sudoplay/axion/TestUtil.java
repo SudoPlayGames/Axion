@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.sudoplay.axion.ext.tag.TagBoolean;
+import com.sudoplay.axion.ext.tag.TagBooleanArray;
 import com.sudoplay.axion.ext.tag.TagDoubleArray;
 import com.sudoplay.axion.ext.tag.TagFloatArray;
 import com.sudoplay.axion.ext.tag.TagLongArray;
@@ -51,6 +52,12 @@ public class TestUtil {
 
   public static TagStringArray getTagStringArray() {
     return new TagStringArray("tagStringArray", new String[] { "hello", "world", "foo", "bar" });
+  }
+
+  public static TagBooleanArray getTagBooleanArray() {
+    return new TagBooleanArray("tagBooleanArray", new boolean[] { true, false, true, false, true, false, true, false, true, false, true, false, true, false,
+        true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true,
+        false, true, false });
   }
 
   public static TagCompound getTagCompound() {

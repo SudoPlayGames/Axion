@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import com.sudoplay.axion.TestUtil;
 import com.sudoplay.axion.ext.tag.TagBoolean;
+import com.sudoplay.axion.ext.tag.TagBooleanArray;
 import com.sudoplay.axion.ext.tag.TagDoubleArray;
 import com.sudoplay.axion.ext.tag.TagFloatArray;
 import com.sudoplay.axion.ext.tag.TagLongArray;
@@ -62,6 +63,7 @@ public class EqualsTest {
     assertEquals(TagLongArray.class.getSimpleName(), TestUtil.getTagLongArray(), TestUtil.getTagLongArray());
     assertEquals(TagShortArray.class.getSimpleName(), TestUtil.getTagShortArray(), TestUtil.getTagShortArray());
     assertEquals(TagStringArray.class.getSimpleName(), TestUtil.getTagStringArray(), TestUtil.getTagStringArray());
+    assertEquals(TagBooleanArray.class.getSimpleName(), TestUtil.getTagBooleanArray(), TestUtil.getTagBooleanArray());
   }
 
 }

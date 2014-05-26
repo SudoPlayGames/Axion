@@ -7,6 +7,7 @@ import java.util.Arrays;
 
 import org.junit.Test;
 
+import com.sudoplay.axion.ext.tag.TagBooleanArray;
 import com.sudoplay.axion.ext.tag.TagDoubleArray;
 import com.sudoplay.axion.ext.tag.TagFloatArray;
 import com.sudoplay.axion.ext.tag.TagLongArray;
@@ -57,7 +58,7 @@ public class TagArrayDefensiveCopyTest {
     array[0] = 5.23;
     assertTrue(array[0] != tag.get()[0]);
     tag.set(array);
-    array[0] = 0.11;
+    array[0] = 0.2;
     assertTrue(array[0] != tag.get()[0]);
   }
 
@@ -70,7 +71,7 @@ public class TagArrayDefensiveCopyTest {
     array[0] = 5.23f;
     assertTrue(array[0] != tag.get()[0]);
     tag.set(array);
-    array[0] = 0.11f;
+    array[0] = 0.2f;
     assertTrue(array[0] != tag.get()[0]);
   }
 
@@ -83,7 +84,7 @@ public class TagArrayDefensiveCopyTest {
     array[0] = 12473215652432021L;
     assertTrue(array[0] != tag.get()[0]);
     tag.set(array);
-    array[0] = 78458222567457L;
+    array[0] = 153245684532L;
     assertTrue(array[0] != tag.get()[0]);
   }
 
@@ -96,7 +97,7 @@ public class TagArrayDefensiveCopyTest {
     array[0] = 1247;
     assertTrue(array[0] != tag.get()[0]);
     tag.set(array);
-    array[0] = 7845;
+    array[0] = 1532;
     assertTrue(array[0] != tag.get()[0]);
   }
 
@@ -109,7 +110,20 @@ public class TagArrayDefensiveCopyTest {
     array[0] = "1247";
     assertTrue(array[0] != tag.get()[0]);
     tag.set(array);
-    array[0] = "7845";
+    array[0] = "1532";
+    assertTrue(array[0] != tag.get()[0]);
+  }
+
+  @Test
+  public void testBooleanArray() {
+    boolean[] array = new boolean[] { true, false, false, true };
+    TagBooleanArray tag = new TagBooleanArray("name", array);
+    assertTrue(Arrays.equals(array, tag.get()));
+    assertTrue(array != tag.get());
+    array[0] = false;
+    assertTrue(array[0] != tag.get()[0]);
+    tag.set(array);
+    array[0] = true;
     assertTrue(array[0] != tag.get()[0]);
   }
 

@@ -66,6 +66,7 @@ public class SerializationTest {
     assertEquals(TestUtil.getTagLongArray(), serialize(TestUtil.getTagLongArray()));
     assertEquals(TestUtil.getTagShortArray(), serialize(TestUtil.getTagShortArray()));
     assertEquals(TestUtil.getTagStringArray(), serialize(TestUtil.getTagStringArray()));
+    assertEquals(TestUtil.getTagBooleanArray(), serialize(TestUtil.getTagBooleanArray()));
   }
 
   private Tag serialize(Tag start) throws IOException {

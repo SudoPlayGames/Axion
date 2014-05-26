@@ -39,6 +39,7 @@ public class CloneTest {
     check(TestUtil.getTagLongArray());
     check(TestUtil.getTagShortArray());
     check(TestUtil.getTagStringArray());
+    check(TestUtil.getTagBooleanArray());
   }
 
   @Test

@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import com.sudoplay.axion.ext.tag.TagBoolean;
+import com.sudoplay.axion.ext.tag.TagBooleanArray;
 import com.sudoplay.axion.ext.tag.TagDoubleArray;
 import com.sudoplay.axion.ext.tag.TagFloatArray;
 import com.sudoplay.axion.ext.tag.TagLongArray;
@@ -57,7 +58,7 @@ public class ToStringTest {
     assertEquals("TagLongArray(\"name\"): [4 longs]", new TagLongArray("name", new long[] { 0, 1, 2, 3 }).toString());
     assertEquals("TagShortArray(\"name\"): [4 shorts]", new TagShortArray("name", new short[] { 0, 1, 2, 3 }).toString());
     assertEquals("TagStringArray(\"name\"): [4 strings]", new TagStringArray("name", new String[] { "0", "1", "2", "3" }).toString());
-
+    assertEquals("TagBooleanArray(\"name\"): [4 booleans]", new TagBooleanArray("name", new boolean[] { true, false, false, true }).toString());
   }
 
 }

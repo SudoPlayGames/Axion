@@ -1,6 +1,7 @@
 package com.sudoplay.axion.converter;
 
 import com.sudoplay.axion.Axion;
+import com.sudoplay.axion.ext.converter.TagBooleanArrayConverter;
 import com.sudoplay.axion.ext.converter.TagBooleanConverter;
 import com.sudoplay.axion.ext.converter.TagDoubleArrayConverter;
 import com.sudoplay.axion.ext.converter.TagFloatArrayConverter;
@@ -44,5 +45,6 @@ public interface TagConverter<T extends Tag, V> {
   public static final TagLongArrayConverter LONG_ARRAY = new TagLongArrayConverter();
   public static final TagShortArrayConverter SHORT_ARRAY = new TagShortArrayConverter();
   public static final TagStringArrayConverter STRING_ARRAY = new TagStringArrayConverter();
+  public static final TagBooleanArrayConverter BOOLEAN_ARRAY = new TagBooleanArrayConverter();
 
 }

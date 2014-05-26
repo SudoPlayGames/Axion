@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import com.sudoplay.axion.ext.tag.TagBoolean;
+import com.sudoplay.axion.ext.tag.TagBooleanArray;
 import com.sudoplay.axion.ext.tag.TagDoubleArray;
 import com.sudoplay.axion.ext.tag.TagFloatArray;
 import com.sudoplay.axion.ext.tag.TagLongArray;
@@ -48,6 +49,7 @@ public class NameTest {
     check(new TagLongArray("name"));
     check(new TagShortArray("name"));
     check(new TagStringArray("name"));
+    check(new TagBooleanArray("name"));
   }
 
   private void check(Tag tag) {

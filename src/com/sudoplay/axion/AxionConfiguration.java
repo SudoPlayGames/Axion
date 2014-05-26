@@ -13,6 +13,7 @@ import com.sudoplay.axion.adapter.TagAdapterRegistry;
 import com.sudoplay.axion.converter.TagConverter;
 import com.sudoplay.axion.converter.TagConverterRegistry;
 import com.sudoplay.axion.ext.tag.TagBoolean;
+import com.sudoplay.axion.ext.tag.TagBooleanArray;
 import com.sudoplay.axion.ext.tag.TagDoubleArray;
 import com.sudoplay.axion.ext.tag.TagFloatArray;
 import com.sudoplay.axion.ext.tag.TagLongArray;
@@ -75,6 +76,7 @@ public class AxionConfiguration implements Cloneable {
       registerTagAdapter(83, TagLongArray.class, TagAdapter.LONG_ARRAY);
       registerTagAdapter(84, TagShortArray.class, TagAdapter.SHORT_ARRAY);
       registerTagAdapter(85, TagStringArray.class, TagAdapter.STRING_ARRAY);
+      registerTagAdapter(86, TagBooleanArray.class, TagAdapter.BOOLEAN_ARRAY);
 
       registerTagConverter(TagBoolean.class, Boolean.class, TagConverter.BOOLEAN);
       registerTagConverter(TagDoubleArray.class, double[].class, TagConverter.DOUBLE_ARRAY);
@@ -82,6 +84,7 @@ public class AxionConfiguration implements Cloneable {
       registerTagConverter(TagLongArray.class, long[].class, TagConverter.LONG_ARRAY);
       registerTagConverter(TagShortArray.class, short[].class, TagConverter.SHORT_ARRAY);
       registerTagConverter(TagStringArray.class, String[].class, TagConverter.STRING_ARRAY);
+      registerTagConverter(TagBooleanArray.class, boolean[].class, TagConverter.BOOLEAN_ARRAY);
 
       setCharacterEncodingType(CharacterEncodingType.MODIFIED_UTF_8);
       setCompressionType(CompressionType.GZip);

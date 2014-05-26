@@ -44,6 +44,7 @@ public class TagIdTest {
     check(TestUtil.getTagLongArray(), 83);
     check(TestUtil.getTagShortArray(), 84);
     check(TestUtil.getTagStringArray(), 85);
+    check(TestUtil.getTagBooleanArray(), 86);
   }
 
   private void check(Tag tag, int id) {

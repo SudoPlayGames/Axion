@@ -6,6 +6,7 @@ import java.io.IOException;
 
 import com.sudoplay.axion.Axion;
 import com.sudoplay.axion.ext.adapter.TagBooleanAdapter;
+import com.sudoplay.axion.ext.adapter.TagBooleanArrayAdapter;
 import com.sudoplay.axion.ext.adapter.TagDoubleArrayAdapter;
 import com.sudoplay.axion.ext.adapter.TagFloatArrayAdapter;
 import com.sudoplay.axion.ext.adapter.TagLongArrayAdapter;
@@ -48,5 +49,6 @@ public interface TagAdapter<T extends Tag> {
   public static final TagLongArrayAdapter LONG_ARRAY = new TagLongArrayAdapter();
   public static final TagShortArrayAdapter SHORT_ARRAY = new TagShortArrayAdapter();
   public static final TagStringArrayAdapter STRING_ARRAY = new TagStringArrayAdapter();
+  public static final TagBooleanArrayAdapter BOOLEAN_ARRAY = new TagBooleanArrayAdapter();
 
 }
