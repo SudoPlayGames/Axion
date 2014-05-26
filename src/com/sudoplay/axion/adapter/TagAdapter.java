@@ -5,6 +5,18 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 import com.sudoplay.axion.Axion;
+import com.sudoplay.axion.ext.adapter.TagBooleanAdapter;
+import com.sudoplay.axion.ext.adapter.TagDoubleArrayAdapter;
+import com.sudoplay.axion.ext.adapter.TagFloatArrayAdapter;
+import com.sudoplay.axion.ext.adapter.TagLongArrayAdapter;
+import com.sudoplay.axion.ext.adapter.TagShortArrayAdapter;
+import com.sudoplay.axion.ext.adapter.TagStringArrayAdapter;
+import com.sudoplay.axion.ext.tag.TagBoolean;
+import com.sudoplay.axion.ext.tag.TagDoubleArray;
+import com.sudoplay.axion.ext.tag.TagFloatArray;
+import com.sudoplay.axion.ext.tag.TagLongArray;
+import com.sudoplay.axion.ext.tag.TagShortArray;
+import com.sudoplay.axion.ext.tag.TagStringArray;
 import com.sudoplay.axion.spec.adapter.TagByteAdapter;
 import com.sudoplay.axion.spec.adapter.TagByteArrayAdapter;
 import com.sudoplay.axion.spec.adapter.TagCompoundAdapter;
@@ -46,5 +58,12 @@ public interface TagAdapter<T extends Tag> {
   public static final TagAdapter<TagShort> SHORT = new TagShortAdapter();
   public static final TagAdapter<TagString> STRING = new TagStringAdapter();
   public static final TagAdapter<TagIntArray> INT_ARRAY = new TagIntArrayAdapter();
+
+  public static final TagAdapter<TagBoolean> BOOLEAN = new TagBooleanAdapter();
+  public static final TagAdapter<TagDoubleArray> DOUBLE_ARRAY = new TagDoubleArrayAdapter();
+  public static final TagAdapter<TagFloatArray> FLOAT_ARRAY = new TagFloatArrayAdapter();
+  public static final TagAdapter<TagLongArray> LONG_ARRAY = new TagLongArrayAdapter();
+  public static final TagAdapter<TagShortArray> SHORT_ARRAY = new TagShortArrayAdapter();
+  public static final TagAdapter<TagStringArray> STRING_ARRAY = new TagStringArrayAdapter();
 
 }

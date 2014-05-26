@@ -12,12 +12,6 @@ import com.sudoplay.axion.adapter.TagAdapter;
 import com.sudoplay.axion.adapter.TagAdapterRegistry;
 import com.sudoplay.axion.converter.TagConverter;
 import com.sudoplay.axion.converter.TagConverterRegistry;
-import com.sudoplay.axion.ext.adapter.TagBooleanAdapter;
-import com.sudoplay.axion.ext.adapter.TagDoubleArrayAdapter;
-import com.sudoplay.axion.ext.adapter.TagFloatArrayAdapter;
-import com.sudoplay.axion.ext.adapter.TagLongArrayAdapter;
-import com.sudoplay.axion.ext.adapter.TagShortArrayAdapter;
-import com.sudoplay.axion.ext.adapter.TagStringArrayAdapter;
 import com.sudoplay.axion.ext.converter.TagBooleanConverter;
 import com.sudoplay.axion.ext.converter.TagDoubleArrayConverter;
 import com.sudoplay.axion.ext.converter.TagFloatArrayConverter;
@@ -72,12 +66,12 @@ public class AxionConfiguration implements Cloneable {
       registerTagAdapter(10, TagCompound.class, TagAdapter.COMPOUND);
       registerTagAdapter(11, TagIntArray.class, TagAdapter.INT_ARRAY);
 
-      registerTagAdapter(80, TagBoolean.class, new TagBooleanAdapter());
-      registerTagAdapter(81, TagDoubleArray.class, new TagDoubleArrayAdapter());
-      registerTagAdapter(82, TagFloatArray.class, new TagFloatArrayAdapter());
-      registerTagAdapter(83, TagLongArray.class, new TagLongArrayAdapter());
-      registerTagAdapter(84, TagShortArray.class, new TagShortArrayAdapter());
-      registerTagAdapter(85, TagStringArray.class, new TagStringArrayAdapter());
+      registerTagAdapter(80, TagBoolean.class, TagAdapter.BOOLEAN);
+      registerTagAdapter(81, TagDoubleArray.class, TagAdapter.DOUBLE_ARRAY);
+      registerTagAdapter(82, TagFloatArray.class, TagAdapter.FLOAT_ARRAY);
+      registerTagAdapter(83, TagLongArray.class, TagAdapter.LONG_ARRAY);
+      registerTagAdapter(84, TagShortArray.class, TagAdapter.SHORT_ARRAY);
+      registerTagAdapter(85, TagStringArray.class, TagAdapter.STRING_ARRAY);
 
       registerTagConverter(TagByte.class, Byte.class, new TagByteConverter());
       registerTagConverter(TagShort.class, Short.class, new TagShortConverter());
