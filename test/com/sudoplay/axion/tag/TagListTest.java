@@ -19,9 +19,9 @@ public class TagListTest {
           add(new TagLong("long", 45L));
         }
       };
-      fail("Should throw IllegalArgumentException");
-    } catch (IllegalArgumentException e) {
-      //
+      fail("Should throw AxionInvalidTagException");
+    } catch (AxionInvalidTagException e) {
+      // Expected AxionInvalidTagException
     }
   }
 

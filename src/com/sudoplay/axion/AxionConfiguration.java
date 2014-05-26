@@ -229,15 +229,6 @@ public class AxionConfiguration implements Cloneable {
     return adapters.getClassFor(id);
   }
 
-  @SuppressWarnings("unchecked")
-  protected <T extends Tag> T createInstance(final int id, final String newName) {
-    return (T) adapters.createInstance(id, newName);
-  }
-
-  protected <T extends Tag> T createInstance(final Class<T> tagClass, final String newName) {
-    return adapters.createInstance(tagClass, newName);
-  }
-
   protected <T extends Tag> TagAdapter<T> getAdapterFor(final int id) {
     return adapters.getAdapterFor(id);
   }

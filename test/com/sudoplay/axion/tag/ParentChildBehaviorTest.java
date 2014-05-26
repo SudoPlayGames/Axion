@@ -12,7 +12,7 @@ public class ParentChildBehaviorTest {
 
   /**
    * When a tag that belongs to one list is added to another list, an
-   * {@link IllegalStateException} should be thrown.
+   * {@link AxionInvalidTagException} should be thrown.
    */
   @Test
   public void testListToListParentChange() {
@@ -25,8 +25,8 @@ public class ParentChildBehaviorTest {
     TagList newList = new TagList(TagByte.class, "newList");
     try {
       newList.add(list.get(0));
-      fail("Expected IllegalStateException");
-    } catch (IllegalStateException e) {
+      fail("Expected AxionInvalidTagException");
+    } catch (AxionInvalidTagException e) {
       //
     }
     TagByte tagByte = (TagByte) list.get(0);
@@ -38,7 +38,7 @@ public class ParentChildBehaviorTest {
 
   /**
    * When a tag that belongs to a list is added to a compound, or vice-versa, an
-   * {@link IllegalStateException} should be thrown.
+   * {@link AxionInvalidTagException} should be thrown.
    */
   @Test
   public void testListToCompoundParentChange() {
@@ -49,8 +49,8 @@ public class ParentChildBehaviorTest {
     assertEquals(1, list.size());
     try {
       compound.put(list.get(0));
-      fail("Expected IllegalStateException");
-    } catch (IllegalStateException e) {
+      fail("Expected AxionInvalidTagException");
+    } catch (AxionInvalidTagException e) {
       //
     }
 
@@ -66,8 +66,8 @@ public class ParentChildBehaviorTest {
     assertTrue(list.size() == 1);
     try {
       list.get(0).setName("shouldNotHaveAName");
-      fail("Should throw IllegalStateException");
-    } catch (IllegalStateException e) {
+      fail("Should throw AxionIllegalNameChangeException");
+    } catch (AxionIllegalNameChangeException e) {
       //
     }
     assertEquals("", list.get(0).getName());

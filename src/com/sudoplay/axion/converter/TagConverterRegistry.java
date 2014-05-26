@@ -21,29 +21,30 @@ public class TagConverterRegistry implements Cloneable {
     typeToConverter.putAll(toCopy.typeToConverter);
   }
 
-  public <T extends Tag, V> void register(final Class<T> tagClass, final Class<V> type, final TagConverter<T, V> converter) {
+  public <T extends Tag, V> void register(final Class<T> tagClass, final Class<V> type, final TagConverter<T, V> converter)
+      throws AxionConverterRegistrationException {
     if (classToConverter.containsKey(tagClass)) {
-      throw new IllegalArgumentException("Converter already registered for class: " + tagClass.getSimpleName());
+      throw new AxionConverterRegistrationException("Converter already registered for class: " + tagClass.getSimpleName());
     } else if (typeToConverter.containsKey(type)) {
-      throw new IllegalArgumentException("Converter already registered for type: " + type.getSimpleName());
+      throw new AxionConverterRegistrationException("Converter already registered for type: " + type.getSimpleName());
     }
     classToConverter.put(tagClass, converter);
     typeToConverter.put(type, converter);
   }
 
   @SuppressWarnings("unchecked")
-  public <T extends Tag, V> V convertToValue(final T tag, final Axion axion) {
+  public <T extends Tag, V> V convertToValue(final T tag, final Axion axion) throws AxionConverterRegistrationException {
     if (tag == null) {
       return null;
     } else if (!classToConverter.containsKey(tag.getClass())) {
-      throw new IllegalArgumentException("No converter registered for tag class: " + tag.getClass());
+      throw new AxionConverterRegistrationException("No converter registered for tag class: " + tag.getClass());
     }
     TagConverter<T, ?> converter = (TagConverter<T, ?>) classToConverter.get(tag.getClass());
     return (V) converter.convert(tag, axion);
   }
 
   @SuppressWarnings("unchecked")
-  public <V, T extends Tag> T convertToTag(final String name, final V value, final Axion axion) {
+  public <V, T extends Tag> T convertToTag(final String name, final V value, final Axion axion) throws AxionConverterRegistrationException {
     if (value == null) {
       return null;
     }
@@ -61,7 +62,7 @@ public class TagConverterRegistry implements Cloneable {
       }
     }
     if (converter == null) {
-      throw new IllegalArgumentException("No converter registered for type: " + value.getClass().getSimpleName());
+      throw new AxionConverterRegistrationException("No converter registered for type: " + value.getClass().getSimpleName());
     }
     return converter.convert(name, value, axion);
   }

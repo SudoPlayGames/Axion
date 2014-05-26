@@ -2,7 +2,6 @@ package com.sudoplay.axion;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -49,18 +48,18 @@ public class Axion {
     configuration = newConfiguration;
   }
 
-  public static Axion create(final String newName) {
+  public static Axion create(final String newName) throws AxionInstanceCreationException {
     if (INSTANCES.containsKey(newName)) {
-      throw new IllegalArgumentException(Axion.class.getSimpleName() + " instance alread exists with name: " + newName);
+      throw new AxionInstanceCreationException(Axion.class.getSimpleName() + " instance alread exists with name: " + newName);
     }
     Axion instance = new Axion();
     INSTANCES.put(newName, instance);
     return instance;
   }
 
-  public static Axion createFrom(final Axion axion, final String newName) {
+  public static Axion createFrom(final Axion axion, final String newName) throws AxionInstanceCreationException {
     if (INSTANCES.containsKey(newName)) {
-      throw new IllegalArgumentException(Axion.class.getSimpleName() + " instance alread exists with name: " + newName);
+      throw new AxionInstanceCreationException(Axion.class.getSimpleName() + " instance alread exists with name: " + newName);
     }
     Axion instance = new Axion(axion.getConfiguration().clone());
     INSTANCES.put(newName, instance);
@@ -103,14 +102,6 @@ public class Axion {
     return configuration.getClassFor(id);
   }
 
-  public <T extends Tag> T createInstance(final int id, final String newName) {
-    return configuration.createInstance(id, newName);
-  }
-
-  public <T extends Tag> T createInstance(final Class<T> tagClass, final String newName) {
-    return configuration.createInstance(tagClass, newName);
-  }
-
   public <T extends Tag> TagAdapter<T> getAdapterFor(final int id) {
     return configuration.getAdapterFor(id);
   }
@@ -135,7 +126,7 @@ public class Axion {
     return configuration.createTagFrom(name, object, this);
   }
 
-  public TagCompound read(final File file) throws FileNotFoundException, IOException {
+  public TagCompound read(final File file) throws IOException {
     FileInputStream fileInputStream = new FileInputStream(file);
     TagCompound result = read(fileInputStream);
     fileInputStream.close();
@@ -151,7 +142,7 @@ public class Axion {
   public TagCompound read(final InputStream inputStream) throws IOException {
     Tag result = readTag(null, configuration.wrap(inputStream));
     if (!(result instanceof TagCompound)) {
-      throw new IllegalStateException("Root tag not of type " + TagCompound.class.getSimpleName());
+      throw new AxionReadException("Root tag not of type " + TagCompound.class.getSimpleName());
     }
     return (TagCompound) result;
   }

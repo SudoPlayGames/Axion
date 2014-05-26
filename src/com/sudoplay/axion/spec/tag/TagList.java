@@ -5,6 +5,9 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import com.sudoplay.axion.tag.AxionIllegalNameChangeException;
+import com.sudoplay.axion.tag.AxionInvalidTagException;
+
 /**
  * @tag.type 9
  * 
@@ -14,7 +17,7 @@ import java.util.List;
  *              * <code>TAG_Int</code> length<br>
  *              * A sequential list of Tags (not Named Tags), of type
  *              <code>typeId</code>. The length of this array is
- *              <code>length</code> Tags
+ *              <code>length</code> Tags.
  * 
  * @tag.note All tags share the same type.
  * 
@@ -26,7 +29,7 @@ public class TagList extends Tag implements Iterable<Tag> {
   private final List<Tag> data;
 
   /**
-   * Store type id for tags in this list; all tags must be of the same type.
+   * Stores the type for tags in this list; all tags must be of the same type.
    */
   private final Class<? extends Tag> type;
 
@@ -51,21 +54,19 @@ public class TagList extends Tag implements Iterable<Tag> {
     }
   }
 
-  private void assertValidTag(final Tag tag) {
+  private void assertValidTag(final Tag tag) throws AxionInvalidTagException {
     if (tag == null) {
-      throw new IllegalArgumentException(this.toString() + " can't contain null tags");
+      throw new AxionInvalidTagException(this.toString() + " can't contain null tags");
     } else if (type != tag.getClass()) {
-      throw new IllegalArgumentException("Can't add tag of type [" + tag.getClass().getSimpleName() + "] to " + this.toString());
+      throw new AxionInvalidTagException("Can't add tag of type [" + tag.getClass().getSimpleName() + "] to " + this.toString());
     } else if (tag.hasParent()) {
-      throw new IllegalStateException("Tag can't be added to more than one collection tag");
+      throw new AxionInvalidTagException("Tag can't be added to more than one collection tag");
     }
   }
 
   /**
-   * Add tag to the end of the list. If no tag type has been assigned to the
-   * list, assign the type of the tag to be added. If a tag type has been
-   * assigned to the list and the tag to be added does not match this type, an
-   * exception is thrown. Cannot add <code>TAG_End</code> to the list.
+   * Add tag to the end of the list. If the tag to be added does not match this
+   * list's type, an exception is thrown.
    * 
    * @param tag
    */
@@ -195,9 +196,9 @@ public class TagList extends Tag implements Iterable<Tag> {
   }
 
   @Override
-  protected void onNameChange(final String oldName, final String newName) {
+  protected void onNameChange(final String oldName, final String newName) throws AxionIllegalNameChangeException {
     if (newName != null && !newName.isEmpty()) {
-      throw new IllegalStateException("Tag belongs to a " + TagList.class.getSimpleName() + " and can not be named");
+      throw new AxionIllegalNameChangeException("Tag belongs to a " + TagList.class.getSimpleName() + " and can not be named");
     }
   }
 

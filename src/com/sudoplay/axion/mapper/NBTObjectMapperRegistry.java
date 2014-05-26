@@ -19,9 +19,9 @@ public class NBTObjectMapperRegistry implements Cloneable {
     typeToMapper.putAll(toCopy.typeToMapper);
   }
 
-  public <T extends Tag, O> void register(final Class<O> type, final NBTObjectMapper<T, O> mapper) {
+  public <T extends Tag, O> void register(final Class<O> type, final NBTObjectMapper<T, O> mapper) throws AxionMapperRegistrationException {
     if (typeToMapper.containsKey(type)) {
-      throw new IllegalArgumentException("Mapper already registered for type: " + type.getSimpleName());
+      throw new AxionMapperRegistrationException("Mapper already registered for type: " + type.getSimpleName());
     }
     typeToMapper.put(type, mapper);
   }
@@ -43,7 +43,7 @@ public class NBTObjectMapperRegistry implements Cloneable {
   }
 
   @SuppressWarnings("unchecked")
-  protected <T extends Tag, O> NBTObjectMapper<T, O> getMapperFor(final Class<O> type) {
+  protected <T extends Tag, O> NBTObjectMapper<T, O> getMapperFor(final Class<O> type) throws AxionMapperRegistrationException {
     if (type == null) {
       return null;
     }
@@ -61,7 +61,7 @@ public class NBTObjectMapperRegistry implements Cloneable {
       }
     }
     if (converter == null) {
-      throw new IllegalArgumentException("No mapper registered for type: " + type.getSimpleName());
+      throw new AxionMapperRegistrationException("No mapper registered for type: " + type.getSimpleName());
     }
     return converter;
   }
