@@ -15,7 +15,7 @@ public class ModifiedUTFCharacterEncoder extends CharacterEncoder {
   private char chararr[] = new char[80];
 
   /**
-   * Modified of {@link DataOutputStream#writeUTF(String)}
+   * Modified version of {@link DataOutputStream#writeUTF(String)}
    * 
    * @see DataOutputStream#writeUTF(String)
    */
