@@ -63,7 +63,7 @@ public class AxionConfiguration implements Cloneable {
 
       setCharacterEncodingType(CharacterEncodingType.MODIFIED_UTF_8);
       setCompressionType(CompressionType.GZip);
-      setConfigurationImmutable();
+      setImmutable();
     }
   };
 
@@ -85,7 +85,7 @@ public class AxionConfiguration implements Cloneable {
 
       setCharacterEncodingType(CharacterEncodingType.MODIFIED_UTF_8);
       setCompressionType(CompressionType.GZip);
-      setConfigurationImmutable();
+      setImmutable();
     }
   };
 
@@ -127,18 +127,23 @@ public class AxionConfiguration implements Cloneable {
     characterEncoder = CharacterEncoder.MODIFIED_UTF_8;
   }
 
-  public void lockConfiguration() {
+  public AxionConfiguration lock() {
     assertMutable();
     configurationProtectionMode = ProtectionMode.Locked;
+    return this;
   }
 
-  public void unlockConfiguration() {
+  public AxionConfiguration unlock() {
     assertMutable();
     configurationProtectionMode = ProtectionMode.Unlocked;
+    return this;
   }
 
-  public void setConfigurationImmutable() {
+  public AxionConfiguration setImmutable() {
+    assertUnlocked();
+    assertMutable();
     configurationProtectionMode = ProtectionMode.Immutable;
+    return this;
   }
 
   public boolean isLocked() {
@@ -165,7 +170,7 @@ public class AxionConfiguration implements Cloneable {
     }
   }
 
-  public void setCharacterEncodingType(final CharacterEncodingType newCharacterEncodingType) {
+  public AxionConfiguration setCharacterEncodingType(final CharacterEncodingType newCharacterEncodingType) {
     assertUnlocked();
     assertMutable();
     switch (newCharacterEncodingType) {
@@ -192,21 +197,24 @@ public class AxionConfiguration implements Cloneable {
       characterEncoder = CharacterEncoder.MODIFIED_UTF_8;
       break;
     }
+    return this;
   }
 
-  public <T extends Tag, V> void registerTagConverter(final Class<T> tagClass, final Class<V> type, final TagConverter<T, V> converter) {
+  public <T extends Tag, V> AxionConfiguration registerTagConverter(final Class<T> tagClass, final Class<V> type, final TagConverter<T, V> converter) {
     assertUnlocked();
     assertMutable();
     converters.register(tagClass, type, converter);
+    return this;
   }
 
-  public <T extends Tag> void registerTagAdapter(final int id, final Class<T> tagClass, final TagAdapter<T> adapter) {
+  public <T extends Tag> AxionConfiguration registerTagAdapter(final int id, final Class<T> tagClass, final TagAdapter<T> adapter) {
     assertUnlocked();
     assertMutable();
     adapters.register(id, tagClass, adapter);
+    return this;
   }
 
-  public void setCompressionType(final CompressionType newCompressionType) {
+  public AxionConfiguration setCompressionType(final CompressionType newCompressionType) {
     assertUnlocked();
     assertMutable();
     switch (newCompressionType) {
@@ -218,6 +226,7 @@ public class AxionConfiguration implements Cloneable {
     case GZip:
       streamCompressionWrapper = StreamCompressionWrapper.GZIP_STREAM_COMPRESSION_WRAPPER;
     }
+    return this;
   }
 
   protected int getIdFor(final Class<? extends Tag> tagClass) {
