@@ -30,17 +30,6 @@ import com.sudoplay.axion.ext.tag.TagFloatArray;
 import com.sudoplay.axion.ext.tag.TagLongArray;
 import com.sudoplay.axion.ext.tag.TagShortArray;
 import com.sudoplay.axion.ext.tag.TagStringArray;
-import com.sudoplay.axion.spec.adapter.TagByteAdapter;
-import com.sudoplay.axion.spec.adapter.TagByteArrayAdapter;
-import com.sudoplay.axion.spec.adapter.TagCompoundAdapter;
-import com.sudoplay.axion.spec.adapter.TagDoubleAdapter;
-import com.sudoplay.axion.spec.adapter.TagFloatAdapter;
-import com.sudoplay.axion.spec.adapter.TagIntAdapter;
-import com.sudoplay.axion.spec.adapter.TagIntArrayAdapter;
-import com.sudoplay.axion.spec.adapter.TagListAdapter;
-import com.sudoplay.axion.spec.adapter.TagLongAdapter;
-import com.sudoplay.axion.spec.adapter.TagShortAdapter;
-import com.sudoplay.axion.spec.adapter.TagStringAdapter;
 import com.sudoplay.axion.spec.converter.TagByteArrayConverter;
 import com.sudoplay.axion.spec.converter.TagByteConverter;
 import com.sudoplay.axion.spec.converter.TagCompoundConverter;
@@ -71,17 +60,17 @@ public class AxionConfiguration implements Cloneable {
 
   protected static final AxionConfiguration DEFAULT_CONFIGURATION = new AxionConfiguration() {
     {
-      registerTagAdapter(1, TagByte.class, new TagByteAdapter());
-      registerTagAdapter(2, TagShort.class, new TagShortAdapter());
-      registerTagAdapter(3, TagInt.class, new TagIntAdapter());
-      registerTagAdapter(4, TagLong.class, new TagLongAdapter());
-      registerTagAdapter(5, TagFloat.class, new TagFloatAdapter());
-      registerTagAdapter(6, TagDouble.class, new TagDoubleAdapter());
-      registerTagAdapter(7, TagByteArray.class, new TagByteArrayAdapter());
-      registerTagAdapter(8, TagString.class, new TagStringAdapter());
-      registerTagAdapter(9, TagList.class, new TagListAdapter());
-      registerTagAdapter(10, TagCompound.class, new TagCompoundAdapter());
-      registerTagAdapter(11, TagIntArray.class, new TagIntArrayAdapter());
+      registerTagAdapter(1, TagByte.class, TagAdapter.BYTE);
+      registerTagAdapter(2, TagShort.class, TagAdapter.SHORT);
+      registerTagAdapter(3, TagInt.class, TagAdapter.INT);
+      registerTagAdapter(4, TagLong.class, TagAdapter.LONG);
+      registerTagAdapter(5, TagFloat.class, TagAdapter.FLOAT);
+      registerTagAdapter(6, TagDouble.class, TagAdapter.DOUBLE);
+      registerTagAdapter(7, TagByteArray.class, TagAdapter.BYTE_ARRAY);
+      registerTagAdapter(8, TagString.class, TagAdapter.STRING);
+      registerTagAdapter(9, TagList.class, TagAdapter.LIST);
+      registerTagAdapter(10, TagCompound.class, TagAdapter.COMPOUND);
+      registerTagAdapter(11, TagIntArray.class, TagAdapter.INT_ARRAY);
 
       registerTagAdapter(80, TagBoolean.class, new TagBooleanAdapter());
       registerTagAdapter(81, TagDoubleArray.class, new TagDoubleArrayAdapter());
@@ -117,17 +106,17 @@ public class AxionConfiguration implements Cloneable {
 
   protected static final AxionConfiguration ORIGINAL_SPEC_CONFIGURATION = new AxionConfiguration() {
     {
-      registerTagAdapter(1, TagByte.class, new TagByteAdapter());
-      registerTagAdapter(2, TagShort.class, new TagShortAdapter());
-      registerTagAdapter(3, TagInt.class, new TagIntAdapter());
-      registerTagAdapter(4, TagLong.class, new TagLongAdapter());
-      registerTagAdapter(5, TagFloat.class, new TagFloatAdapter());
-      registerTagAdapter(6, TagDouble.class, new TagDoubleAdapter());
-      registerTagAdapter(7, TagByteArray.class, new TagByteArrayAdapter());
-      registerTagAdapter(8, TagString.class, new TagStringAdapter());
-      registerTagAdapter(9, TagList.class, new TagListAdapter());
-      registerTagAdapter(10, TagCompound.class, new TagCompoundAdapter());
-      registerTagAdapter(11, TagIntArray.class, new TagIntArrayAdapter());
+      registerTagAdapter(1, TagByte.class, TagAdapter.BYTE);
+      registerTagAdapter(2, TagShort.class, TagAdapter.SHORT);
+      registerTagAdapter(3, TagInt.class, TagAdapter.INT);
+      registerTagAdapter(4, TagLong.class, TagAdapter.LONG);
+      registerTagAdapter(5, TagFloat.class, TagAdapter.FLOAT);
+      registerTagAdapter(6, TagDouble.class, TagAdapter.DOUBLE);
+      registerTagAdapter(7, TagByteArray.class, TagAdapter.BYTE_ARRAY);
+      registerTagAdapter(8, TagString.class, TagAdapter.STRING);
+      registerTagAdapter(9, TagList.class, TagAdapter.LIST);
+      registerTagAdapter(10, TagCompound.class, TagAdapter.COMPOUND);
+      registerTagAdapter(11, TagIntArray.class, TagAdapter.INT_ARRAY);
 
       registerTagConverter(TagByte.class, Byte.class, new TagByteConverter());
       registerTagConverter(TagShort.class, Short.class, new TagShortConverter());
