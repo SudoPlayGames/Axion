@@ -1,11 +1,12 @@
 package com.sudoplay.axion.converter;
 
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 
 import com.sudoplay.axion.Axion;
 import com.sudoplay.axion.spec.tag.Tag;
-import com.sudoplay.axion.util.TypeUtil;
 
 public class TagConverterRegistry implements Cloneable {
 
@@ -49,7 +50,7 @@ public class TagConverterRegistry implements Cloneable {
     }
     TagConverter<T, V> converter = (TagConverter<T, V>) typeToConverter.get(value.getClass());
     if (converter == null) {
-      for (Class<?> c : TypeUtil.getAllClasses(value.getClass())) {
+      for (Class<?> c : getAllClasses(value.getClass())) {
         if (typeToConverter.containsKey(c)) {
           try {
             converter = (TagConverter<T, V>) typeToConverter.get(c);
@@ -69,6 +70,25 @@ public class TagConverterRegistry implements Cloneable {
   @Override
   public TagConverterRegistry clone() {
     return new TagConverterRegistry(this);
+  }
+
+  private static Set<Class<?>> getAllClasses(Class<?> clazz) {
+    Set<Class<?>> set = new LinkedHashSet<Class<?>>();
+    Class<?> c = clazz;
+    while (c != null) {
+      set.add(c);
+      getAllSuperInterfaces(c, set);
+      c = c.getSuperclass();
+    }
+    return set;
+  }
+
+  private static Set<Class<?>> getAllSuperInterfaces(Class<?> clazz, Set<Class<?>> set) {
+    for (Class<?> c : clazz.getInterfaces()) {
+      set.add(c);
+      getAllSuperInterfaces(c, set);
+    }
+    return set;
   }
 
 }

@@ -1,7 +1,5 @@
 package com.sudoplay.axion;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -17,6 +15,8 @@ import com.sudoplay.axion.adapter.TagAdapter;
 import com.sudoplay.axion.spec.tag.Tag;
 import com.sudoplay.axion.spec.tag.TagCompound;
 import com.sudoplay.axion.spec.tag.TagList;
+import com.sudoplay.axion.stream.AxionInputStream;
+import com.sudoplay.axion.stream.AxionOutputStream;
 
 public class Axion {
 
@@ -123,16 +123,8 @@ public class Axion {
     return configuration.convertToTag(name, value, this);
   }
 
-  public String readString(final DataInputStream dataInputStream) throws IOException {
-    return configuration.readString(dataInputStream);
-  }
-
-  public void writeString(final DataOutputStream dataOutputStream, final String data) throws IOException {
-    configuration.writeString(dataOutputStream, data);
-  }
-
   public TagCompound read(final InputStream inputStream) throws IOException {
-    Tag result = readTag(null, new DataInputStream(configuration.wrap(inputStream)));
+    Tag result = readTag(null, configuration.wrap(inputStream));
     if (!(result instanceof TagCompound)) {
       throw new IllegalStateException("Root tag not of type " + TagCompound.class.getSimpleName());
     }
@@ -140,10 +132,10 @@ public class Axion {
   }
 
   public void write(final TagCompound tagCompound, final OutputStream outputStream) throws IOException {
-    writeTag(tagCompound, new DataOutputStream(configuration.wrap(outputStream)));
+    writeTag(tagCompound, configuration.wrap(outputStream));
   }
 
-  public Tag readTag(final Tag parent, final DataInputStream in) throws IOException {
+  public Tag readTag(final Tag parent, final AxionInputStream in) throws IOException {
     int id = in.readUnsignedByte();
     if (id == 0) {
       return null;
@@ -155,13 +147,13 @@ public class Axion {
     }
   }
 
-  public void writeTag(final Tag tag, final DataOutputStream out) throws IOException {
+  public void writeTag(final Tag tag, final AxionOutputStream out) throws IOException {
     LOG.trace("writing [{}]", tag);
     int id = configuration.getIdFor(tag.getClass());
     out.writeByte(id);
     if (id != 0) {
       if (!(tag.getParent() instanceof TagList)) {
-        configuration.writeString(out, tag.getName());
+        out.writeString(tag.getName());
       }
       configuration.getAdapterFor(id).write(tag, out, this);
     }

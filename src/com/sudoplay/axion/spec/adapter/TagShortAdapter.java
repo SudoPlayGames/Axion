@@ -1,7 +1,5 @@
 package com.sudoplay.axion.spec.adapter;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 
 import com.sudoplay.axion.Axion;
@@ -9,17 +7,19 @@ import com.sudoplay.axion.adapter.TagAdapter;
 import com.sudoplay.axion.spec.tag.Tag;
 import com.sudoplay.axion.spec.tag.TagList;
 import com.sudoplay.axion.spec.tag.TagShort;
+import com.sudoplay.axion.stream.AxionInputStream;
+import com.sudoplay.axion.stream.AxionOutputStream;
 
 public class TagShortAdapter implements TagAdapter<TagShort> {
 
   @Override
-  public void write(final TagShort tag, final DataOutputStream out, final Axion axion) throws IOException {
+  public void write(final TagShort tag, final AxionOutputStream out, final Axion axion) throws IOException {
     out.writeShort(tag.get());
   }
 
   @Override
-  public TagShort read(final Tag parent, final DataInputStream in, final Axion axion) throws IOException {
-    return axion.convertToTag((parent instanceof TagList) ? null : axion.readString(in), in.readShort());
+  public TagShort read(final Tag parent, final AxionInputStream in, final Axion axion) throws IOException {
+    return axion.convertToTag((parent instanceof TagList) ? null : in.readString(), in.readShort());
   }
 
 }

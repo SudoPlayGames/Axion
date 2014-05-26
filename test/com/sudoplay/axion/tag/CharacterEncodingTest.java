@@ -4,8 +4,6 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 
 import org.junit.AfterClass;
@@ -16,6 +14,9 @@ import com.sudoplay.axion.Axion;
 import com.sudoplay.axion.AxionConfiguration.CharacterEncodingType;
 import com.sudoplay.axion.spec.tag.Tag;
 import com.sudoplay.axion.spec.tag.TagString;
+import com.sudoplay.axion.stream.AxionInputStream;
+import com.sudoplay.axion.stream.AxionOutputStream;
+import com.sudoplay.axion.stream.CharacterEncoderFactory;
 
 public class CharacterEncodingTest {
 
@@ -82,11 +83,11 @@ public class CharacterEncodingTest {
 
   private Tag serialize(Tag start) throws IOException {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    DataOutputStream out = new DataOutputStream(baos);
+    AxionOutputStream out = new AxionOutputStream(baos, CharacterEncoderFactory.create(CharacterEncodingType.MODIFIED_UTF_8));
     Axion.get("CharacterEncodingTest").writeTag(start, out);
 
     ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
-    DataInputStream in = new DataInputStream(bais);
+    AxionInputStream in = new AxionInputStream(bais, CharacterEncoderFactory.create(CharacterEncodingType.MODIFIED_UTF_8));
     return Axion.get("CharacterEncodingTest").readTag(null, in);
   }
 

@@ -1,7 +1,5 @@
 package com.sudoplay.axion.spec.adapter;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 
 import com.sudoplay.axion.Axion;
@@ -9,11 +7,13 @@ import com.sudoplay.axion.adapter.TagAdapter;
 import com.sudoplay.axion.spec.tag.Tag;
 import com.sudoplay.axion.spec.tag.TagIntArray;
 import com.sudoplay.axion.spec.tag.TagList;
+import com.sudoplay.axion.stream.AxionInputStream;
+import com.sudoplay.axion.stream.AxionOutputStream;
 
 public class TagIntArrayAdapter implements TagAdapter<TagIntArray> {
 
   @Override
-  public void write(final TagIntArray tag, final DataOutputStream out, final Axion axion) throws IOException {
+  public void write(final TagIntArray tag, final AxionOutputStream out, final Axion axion) throws IOException {
     int[] data = (tag.get());
     int len = data.length;
     out.writeInt(len);
@@ -23,8 +23,8 @@ public class TagIntArrayAdapter implements TagAdapter<TagIntArray> {
   }
 
   @Override
-  public TagIntArray read(final Tag parent, final DataInputStream in, final Axion axion) throws IOException {
-    String name = (parent instanceof TagList) ? null : axion.readString(in);
+  public TagIntArray read(final Tag parent, final AxionInputStream in, final Axion axion) throws IOException {
+    String name = (parent instanceof TagList) ? null : in.readString();
     int len = in.readInt();
     int[] data = new int[len];
     for (int i = 0; i < len; i++) {

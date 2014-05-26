@@ -1,7 +1,5 @@
 package com.sudoplay.axion.spec.adapter;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -12,13 +10,15 @@ import com.sudoplay.axion.Axion;
 import com.sudoplay.axion.adapter.TagAdapter;
 import com.sudoplay.axion.spec.tag.Tag;
 import com.sudoplay.axion.spec.tag.TagList;
+import com.sudoplay.axion.stream.AxionInputStream;
+import com.sudoplay.axion.stream.AxionOutputStream;
 
 public class TagListAdapter implements TagAdapter<TagList> {
 
   private static final Logger LOG = LoggerFactory.getLogger(TagListAdapter.class);
 
   @Override
-  public void write(final TagList tag, final DataOutputStream out, final Axion axion) throws IOException {
+  public void write(final TagList tag, final AxionOutputStream out, final Axion axion) throws IOException {
     int size = tag.size();
     int type = axion.getIdFor(tag.getType());
     out.writeByte(type);
@@ -34,8 +34,8 @@ public class TagListAdapter implements TagAdapter<TagList> {
   }
 
   @Override
-  public TagList read(final Tag parent, final DataInputStream in, final Axion axion) throws IOException {
-    String name = (parent instanceof TagList) ? null : axion.readString(in);
+  public TagList read(final Tag parent, final AxionInputStream in, final Axion axion) throws IOException {
+    String name = (parent instanceof TagList) ? null : in.readString();
     Class<? extends Tag> type = axion.getClassFor(in.readUnsignedByte());
     int size = in.readInt();
     TagList tagList = new TagList(type, name, new ArrayList<Tag>());

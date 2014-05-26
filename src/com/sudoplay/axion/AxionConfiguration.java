@@ -1,7 +1,5 @@
 package com.sudoplay.axion;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -31,7 +29,9 @@ import com.sudoplay.axion.spec.tag.TagList;
 import com.sudoplay.axion.spec.tag.TagLong;
 import com.sudoplay.axion.spec.tag.TagShort;
 import com.sudoplay.axion.spec.tag.TagString;
-import com.sudoplay.axion.stream.CharacterEncoder;
+import com.sudoplay.axion.stream.AxionInputStream;
+import com.sudoplay.axion.stream.AxionOutputStream;
+import com.sudoplay.axion.stream.CharacterEncoderFactory;
 import com.sudoplay.axion.stream.StreamCompressionWrapper;
 
 public class AxionConfiguration implements Cloneable {
@@ -107,7 +107,7 @@ public class AxionConfiguration implements Cloneable {
   private final TagAdapterRegistry adapters;
   private final TagConverterRegistry converters;
   private StreamCompressionWrapper streamCompressionWrapper;
-  private CharacterEncoder characterEncoder;
+  private CharacterEncodingType characterEncodingType;
   private ProtectionMode configurationProtectionMode;
 
   protected AxionConfiguration() {
@@ -119,7 +119,7 @@ public class AxionConfiguration implements Cloneable {
     converters = toCopy.converters.clone();
     configurationProtectionMode = ProtectionMode.Unlocked;
     streamCompressionWrapper = toCopy.streamCompressionWrapper;
-    characterEncoder = toCopy.characterEncoder;
+    characterEncodingType = toCopy.characterEncodingType;
   }
 
   protected AxionConfiguration(final ProtectionMode newProtectionMode) {
@@ -127,7 +127,7 @@ public class AxionConfiguration implements Cloneable {
     converters = new TagConverterRegistry();
     configurationProtectionMode = newProtectionMode;
     streamCompressionWrapper = StreamCompressionWrapper.GZIP_STREAM_COMPRESSION_WRAPPER;
-    characterEncoder = CharacterEncoder.MODIFIED_UTF_8;
+    characterEncodingType = CharacterEncodingType.MODIFIED_UTF_8;
   }
 
   public AxionConfiguration lock() {
@@ -176,30 +176,7 @@ public class AxionConfiguration implements Cloneable {
   public AxionConfiguration setCharacterEncodingType(final CharacterEncodingType newCharacterEncodingType) {
     assertUnlocked();
     assertMutable();
-    switch (newCharacterEncodingType) {
-    case ISO_8859_1:
-      characterEncoder = CharacterEncoder.ISO_8859_1;
-      break;
-    case US_ASCII:
-      characterEncoder = CharacterEncoder.US_ASCII;
-      break;
-    case UTF_16:
-      characterEncoder = CharacterEncoder.UTF_16;
-      break;
-    case UTF_16BE:
-      characterEncoder = CharacterEncoder.UTF_16BE;
-      break;
-    case UTF_16LE:
-      characterEncoder = CharacterEncoder.UTF_16LE;
-      break;
-    case UTF_8:
-      characterEncoder = CharacterEncoder.UTF_8;
-      break;
-    default:
-    case MODIFIED_UTF_8:
-      characterEncoder = CharacterEncoder.MODIFIED_UTF_8;
-      break;
-    }
+    characterEncodingType = newCharacterEncodingType;
     return this;
   }
 
@@ -265,20 +242,12 @@ public class AxionConfiguration implements Cloneable {
     return converters.convertToTag(name, value, axion);
   }
 
-  protected String readString(final DataInputStream dataInputStream) throws IOException {
-    return characterEncoder.read(dataInputStream);
+  protected AxionInputStream wrap(final InputStream inputStream) throws IOException {
+    return new AxionInputStream(streamCompressionWrapper.wrap(inputStream), CharacterEncoderFactory.create(characterEncodingType));
   }
 
-  protected void writeString(final DataOutputStream dataOutputStream, final String data) throws IOException {
-    characterEncoder.write(dataOutputStream, data);
-  }
-
-  protected InputStream wrap(final InputStream inputStream) throws IOException {
-    return streamCompressionWrapper.wrap(inputStream);
-  }
-
-  protected OutputStream wrap(final OutputStream outputStream) throws IOException {
-    return streamCompressionWrapper.wrap(outputStream);
+  protected AxionOutputStream wrap(final OutputStream outputStream) throws IOException {
+    return new AxionOutputStream(streamCompressionWrapper.wrap(outputStream), CharacterEncoderFactory.create(characterEncodingType));
   }
 
   @Override

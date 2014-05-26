@@ -1,7 +1,5 @@
 package com.sudoplay.axion.adapter;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 
 import com.sudoplay.axion.Axion;
@@ -24,12 +22,14 @@ import com.sudoplay.axion.spec.adapter.TagLongAdapter;
 import com.sudoplay.axion.spec.adapter.TagShortAdapter;
 import com.sudoplay.axion.spec.adapter.TagStringAdapter;
 import com.sudoplay.axion.spec.tag.Tag;
+import com.sudoplay.axion.stream.AxionInputStream;
+import com.sudoplay.axion.stream.AxionOutputStream;
 
 public interface TagAdapter<T extends Tag> {
 
-  public T read(final Tag parent, final DataInputStream in, final Axion axion) throws IOException;
+  public T read(final Tag parent, final AxionInputStream in, final Axion axion) throws IOException;
 
-  public void write(final T tag, final DataOutputStream out, final Axion axion) throws IOException;
+  public void write(final T tag, final AxionOutputStream out, final Axion axion) throws IOException;
 
   public static final TagByteAdapter BYTE = new TagByteAdapter();
   public static final TagByteArrayAdapter BYTE_ARRAY = new TagByteArrayAdapter();
