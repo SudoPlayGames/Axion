@@ -22,16 +22,16 @@ public class Axion {
 
   private static final Logger LOG = LoggerFactory.getLogger(Axion.class);
 
-  private static final String DEFAULT_INSTANCE_NAME = "AXION_DEFAULT";
-  private static final String ORIGINAL_SPEC_INSTANCE_NAME = "AXION_ORIGINAL_SPEC";
-  private static final Axion DEFAULT_INSTANCE = new Axion(AxionConfiguration.DEFAULT_CONFIGURATION);
-  private static final Axion ORIGINAL_SPEC_INSTANCE = new Axion(AxionConfiguration.ORIGINAL_SPEC_CONFIGURATION);
+  private static final String EXT_INSTANCE_NAME = "AXION_EXT";
+  private static final String SPEC_INSTANCE_NAME = "AXION_SPEC";
+  private static final Axion EXT_INSTANCE = new Axion(AxionConfiguration.EXT_CONFIGURATION);
+  private static final Axion SPEC_INSTANCE = new Axion(AxionConfiguration.SPEC_CONFIGURATION);
 
   @SuppressWarnings("serial")
   private static final Map<String, Axion> INSTANCES = new HashMap<String, Axion>() {
     {
-      put(DEFAULT_INSTANCE_NAME, DEFAULT_INSTANCE);
-      put(ORIGINAL_SPEC_INSTANCE_NAME, ORIGINAL_SPEC_INSTANCE);
+      put(EXT_INSTANCE_NAME, EXT_INSTANCE);
+      put(SPEC_INSTANCE_NAME, SPEC_INSTANCE);
     }
   };
 
@@ -72,11 +72,11 @@ public class Axion {
   }
 
   public static Axion getDefault() {
-    return INSTANCES.get(DEFAULT_INSTANCE_NAME);
+    return INSTANCES.get(EXT_INSTANCE_NAME);
   }
 
   public static Axion getOriginal() {
-    return INSTANCES.get(ORIGINAL_SPEC_INSTANCE_NAME);
+    return INSTANCES.get(SPEC_INSTANCE_NAME);
   }
 
   public static Map<String, Axion> getInstances() {

@@ -12,29 +12,12 @@ import com.sudoplay.axion.adapter.TagAdapter;
 import com.sudoplay.axion.adapter.TagAdapterRegistry;
 import com.sudoplay.axion.converter.TagConverter;
 import com.sudoplay.axion.converter.TagConverterRegistry;
-import com.sudoplay.axion.ext.converter.TagBooleanConverter;
-import com.sudoplay.axion.ext.converter.TagDoubleArrayConverter;
-import com.sudoplay.axion.ext.converter.TagFloatArrayConverter;
-import com.sudoplay.axion.ext.converter.TagLongArrayConverter;
-import com.sudoplay.axion.ext.converter.TagShortArrayConverter;
-import com.sudoplay.axion.ext.converter.TagStringArrayConverter;
 import com.sudoplay.axion.ext.tag.TagBoolean;
 import com.sudoplay.axion.ext.tag.TagDoubleArray;
 import com.sudoplay.axion.ext.tag.TagFloatArray;
 import com.sudoplay.axion.ext.tag.TagLongArray;
 import com.sudoplay.axion.ext.tag.TagShortArray;
 import com.sudoplay.axion.ext.tag.TagStringArray;
-import com.sudoplay.axion.spec.converter.TagByteArrayConverter;
-import com.sudoplay.axion.spec.converter.TagByteConverter;
-import com.sudoplay.axion.spec.converter.TagCompoundConverter;
-import com.sudoplay.axion.spec.converter.TagDoubleConverter;
-import com.sudoplay.axion.spec.converter.TagFloatConverter;
-import com.sudoplay.axion.spec.converter.TagIntArrayConverter;
-import com.sudoplay.axion.spec.converter.TagIntConverter;
-import com.sudoplay.axion.spec.converter.TagListConverter;
-import com.sudoplay.axion.spec.converter.TagLongConverter;
-import com.sudoplay.axion.spec.converter.TagShortConverter;
-import com.sudoplay.axion.spec.converter.TagStringConverter;
 import com.sudoplay.axion.spec.tag.Tag;
 import com.sudoplay.axion.spec.tag.TagByte;
 import com.sudoplay.axion.spec.tag.TagByteArray;
@@ -52,7 +35,7 @@ import com.sudoplay.axion.stream.StreamCompressionWrapper;
 
 public class AxionConfiguration implements Cloneable {
 
-  protected static final AxionConfiguration DEFAULT_CONFIGURATION = new AxionConfiguration() {
+  protected static final AxionConfiguration SPEC_CONFIGURATION = new AxionConfiguration() {
     {
       registerTagAdapter(1, TagByte.class, TagAdapter.BYTE);
       registerTagAdapter(2, TagShort.class, TagAdapter.SHORT);
@@ -66,31 +49,17 @@ public class AxionConfiguration implements Cloneable {
       registerTagAdapter(10, TagCompound.class, TagAdapter.COMPOUND);
       registerTagAdapter(11, TagIntArray.class, TagAdapter.INT_ARRAY);
 
-      registerTagAdapter(80, TagBoolean.class, TagAdapter.BOOLEAN);
-      registerTagAdapter(81, TagDoubleArray.class, TagAdapter.DOUBLE_ARRAY);
-      registerTagAdapter(82, TagFloatArray.class, TagAdapter.FLOAT_ARRAY);
-      registerTagAdapter(83, TagLongArray.class, TagAdapter.LONG_ARRAY);
-      registerTagAdapter(84, TagShortArray.class, TagAdapter.SHORT_ARRAY);
-      registerTagAdapter(85, TagStringArray.class, TagAdapter.STRING_ARRAY);
-
-      registerTagConverter(TagByte.class, Byte.class, new TagByteConverter());
-      registerTagConverter(TagShort.class, Short.class, new TagShortConverter());
-      registerTagConverter(TagInt.class, Integer.class, new TagIntConverter());
-      registerTagConverter(TagLong.class, Long.class, new TagLongConverter());
-      registerTagConverter(TagFloat.class, Float.class, new TagFloatConverter());
-      registerTagConverter(TagDouble.class, Double.class, new TagDoubleConverter());
-      registerTagConverter(TagByteArray.class, byte[].class, new TagByteArrayConverter());
-      registerTagConverter(TagString.class, String.class, new TagStringConverter());
-      registerTagConverter(TagList.class, List.class, new TagListConverter());
-      registerTagConverter(TagCompound.class, Map.class, new TagCompoundConverter());
-      registerTagConverter(TagIntArray.class, int[].class, new TagIntArrayConverter());
-
-      registerTagConverter(TagBoolean.class, Boolean.class, new TagBooleanConverter());
-      registerTagConverter(TagDoubleArray.class, double[].class, new TagDoubleArrayConverter());
-      registerTagConverter(TagFloatArray.class, float[].class, new TagFloatArrayConverter());
-      registerTagConverter(TagLongArray.class, long[].class, new TagLongArrayConverter());
-      registerTagConverter(TagShortArray.class, short[].class, new TagShortArrayConverter());
-      registerTagConverter(TagStringArray.class, String[].class, new TagStringArrayConverter());
+      registerTagConverter(TagByte.class, Byte.class, TagConverter.BYTE);
+      registerTagConverter(TagShort.class, Short.class, TagConverter.SHORT);
+      registerTagConverter(TagInt.class, Integer.class, TagConverter.INT);
+      registerTagConverter(TagLong.class, Long.class, TagConverter.LONG);
+      registerTagConverter(TagFloat.class, Float.class, TagConverter.FLOAT);
+      registerTagConverter(TagDouble.class, Double.class, TagConverter.DOUBLE);
+      registerTagConverter(TagByteArray.class, byte[].class, TagConverter.BYTE_ARRAY);
+      registerTagConverter(TagString.class, String.class, TagConverter.STRING);
+      registerTagConverter(TagList.class, List.class, TagConverter.LIST);
+      registerTagConverter(TagCompound.class, Map.class, TagConverter.COMPOUND);
+      registerTagConverter(TagIntArray.class, int[].class, TagConverter.INT_ARRAY);
 
       setCharacterEncodingType(CharacterEncodingType.MODIFIED_UTF_8);
       setCompressionType(CompressionType.GZip);
@@ -98,31 +67,21 @@ public class AxionConfiguration implements Cloneable {
     }
   };
 
-  protected static final AxionConfiguration ORIGINAL_SPEC_CONFIGURATION = new AxionConfiguration() {
+  protected static final AxionConfiguration EXT_CONFIGURATION = new AxionConfiguration(SPEC_CONFIGURATION) {
     {
-      registerTagAdapter(1, TagByte.class, TagAdapter.BYTE);
-      registerTagAdapter(2, TagShort.class, TagAdapter.SHORT);
-      registerTagAdapter(3, TagInt.class, TagAdapter.INT);
-      registerTagAdapter(4, TagLong.class, TagAdapter.LONG);
-      registerTagAdapter(5, TagFloat.class, TagAdapter.FLOAT);
-      registerTagAdapter(6, TagDouble.class, TagAdapter.DOUBLE);
-      registerTagAdapter(7, TagByteArray.class, TagAdapter.BYTE_ARRAY);
-      registerTagAdapter(8, TagString.class, TagAdapter.STRING);
-      registerTagAdapter(9, TagList.class, TagAdapter.LIST);
-      registerTagAdapter(10, TagCompound.class, TagAdapter.COMPOUND);
-      registerTagAdapter(11, TagIntArray.class, TagAdapter.INT_ARRAY);
+      registerTagAdapter(80, TagBoolean.class, TagAdapter.BOOLEAN);
+      registerTagAdapter(81, TagDoubleArray.class, TagAdapter.DOUBLE_ARRAY);
+      registerTagAdapter(82, TagFloatArray.class, TagAdapter.FLOAT_ARRAY);
+      registerTagAdapter(83, TagLongArray.class, TagAdapter.LONG_ARRAY);
+      registerTagAdapter(84, TagShortArray.class, TagAdapter.SHORT_ARRAY);
+      registerTagAdapter(85, TagStringArray.class, TagAdapter.STRING_ARRAY);
 
-      registerTagConverter(TagByte.class, Byte.class, new TagByteConverter());
-      registerTagConverter(TagShort.class, Short.class, new TagShortConverter());
-      registerTagConverter(TagInt.class, Integer.class, new TagIntConverter());
-      registerTagConverter(TagLong.class, Long.class, new TagLongConverter());
-      registerTagConverter(TagFloat.class, Float.class, new TagFloatConverter());
-      registerTagConverter(TagDouble.class, Double.class, new TagDoubleConverter());
-      registerTagConverter(TagByteArray.class, byte[].class, new TagByteArrayConverter());
-      registerTagConverter(TagString.class, String.class, new TagStringConverter());
-      registerTagConverter(TagList.class, List.class, new TagListConverter());
-      registerTagConverter(TagCompound.class, Map.class, new TagCompoundConverter());
-      registerTagConverter(TagIntArray.class, int[].class, new TagIntArrayConverter());
+      registerTagConverter(TagBoolean.class, Boolean.class, TagConverter.BOOLEAN);
+      registerTagConverter(TagDoubleArray.class, double[].class, TagConverter.DOUBLE_ARRAY);
+      registerTagConverter(TagFloatArray.class, float[].class, TagConverter.FLOAT_ARRAY);
+      registerTagConverter(TagLongArray.class, long[].class, TagConverter.LONG_ARRAY);
+      registerTagConverter(TagShortArray.class, short[].class, TagConverter.SHORT_ARRAY);
+      registerTagConverter(TagStringArray.class, String[].class, TagConverter.STRING_ARRAY);
 
       setCharacterEncodingType(CharacterEncodingType.MODIFIED_UTF_8);
       setCompressionType(CompressionType.GZip);
