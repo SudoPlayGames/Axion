@@ -1,5 +1,9 @@
 package com.sudoplay.axion;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -121,6 +125,19 @@ public class Axion {
 
   public <V, T extends Tag> T convertToTag(final String name, final V value) {
     return configuration.convertToTag(name, value, this);
+  }
+
+  public TagCompound read(final File file) throws FileNotFoundException, IOException {
+    FileInputStream fileInputStream = new FileInputStream(file);
+    TagCompound result = read(fileInputStream);
+    fileInputStream.close();
+    return result;
+  }
+
+  public void write(final TagCompound tagCompound, final File file) throws IOException {
+    FileOutputStream fileOutputStream = new FileOutputStream(file);
+    write(tagCompound, file);
+    fileOutputStream.close();
   }
 
   public TagCompound read(final InputStream inputStream) throws IOException {
