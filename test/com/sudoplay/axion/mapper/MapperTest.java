@@ -2,6 +2,7 @@ package com.sudoplay.axion.mapper;
 
 import static org.junit.Assert.assertEquals;
 
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -16,6 +17,11 @@ public class MapperTest {
   public static void before() {
     Axion.createFrom(Axion.getDefault(), "vectorTest");
     Axion.get("vectorTest").getConfiguration().registerNBTObjectMapper(Vector3f.class, new Vector3fMapper());
+  }
+  
+  @AfterClass
+  public static void after() {
+    Axion.destroy("vectorTest");
   }
 
   @Test
