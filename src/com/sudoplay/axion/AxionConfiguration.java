@@ -5,16 +5,147 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.List;
+import java.util.Map;
 
 import com.sudoplay.axion.adapter.TagAdapter;
 import com.sudoplay.axion.adapter.TagAdapterRegistry;
 import com.sudoplay.axion.converter.TagConverter;
 import com.sudoplay.axion.converter.TagConverterRegistry;
+import com.sudoplay.axion.ext.adapter.TagBooleanAdapter;
+import com.sudoplay.axion.ext.adapter.TagDoubleArrayAdapter;
+import com.sudoplay.axion.ext.adapter.TagFloatArrayAdapter;
+import com.sudoplay.axion.ext.adapter.TagLongArrayAdapter;
+import com.sudoplay.axion.ext.adapter.TagShortArrayAdapter;
+import com.sudoplay.axion.ext.adapter.TagStringArrayAdapter;
+import com.sudoplay.axion.ext.converter.TagBooleanConverter;
+import com.sudoplay.axion.ext.converter.TagDoubleArrayConverter;
+import com.sudoplay.axion.ext.converter.TagFloatArrayConverter;
+import com.sudoplay.axion.ext.converter.TagLongArrayConverter;
+import com.sudoplay.axion.ext.converter.TagShortArrayConverter;
+import com.sudoplay.axion.ext.converter.TagStringArrayConverter;
+import com.sudoplay.axion.ext.tag.TagBoolean;
+import com.sudoplay.axion.ext.tag.TagDoubleArray;
+import com.sudoplay.axion.ext.tag.TagFloatArray;
+import com.sudoplay.axion.ext.tag.TagLongArray;
+import com.sudoplay.axion.ext.tag.TagShortArray;
+import com.sudoplay.axion.ext.tag.TagStringArray;
+import com.sudoplay.axion.spec.adapter.TagByteAdapter;
+import com.sudoplay.axion.spec.adapter.TagByteArrayAdapter;
+import com.sudoplay.axion.spec.adapter.TagCompoundAdapter;
+import com.sudoplay.axion.spec.adapter.TagDoubleAdapter;
+import com.sudoplay.axion.spec.adapter.TagFloatAdapter;
+import com.sudoplay.axion.spec.adapter.TagIntAdapter;
+import com.sudoplay.axion.spec.adapter.TagIntArrayAdapter;
+import com.sudoplay.axion.spec.adapter.TagListAdapter;
+import com.sudoplay.axion.spec.adapter.TagLongAdapter;
+import com.sudoplay.axion.spec.adapter.TagShortAdapter;
+import com.sudoplay.axion.spec.adapter.TagStringAdapter;
+import com.sudoplay.axion.spec.converter.TagByteArrayConverter;
+import com.sudoplay.axion.spec.converter.TagByteConverter;
+import com.sudoplay.axion.spec.converter.TagCompoundConverter;
+import com.sudoplay.axion.spec.converter.TagDoubleConverter;
+import com.sudoplay.axion.spec.converter.TagFloatConverter;
+import com.sudoplay.axion.spec.converter.TagIntArrayConverter;
+import com.sudoplay.axion.spec.converter.TagIntConverter;
+import com.sudoplay.axion.spec.converter.TagListConverter;
+import com.sudoplay.axion.spec.converter.TagLongConverter;
+import com.sudoplay.axion.spec.converter.TagShortConverter;
+import com.sudoplay.axion.spec.converter.TagStringConverter;
 import com.sudoplay.axion.spec.tag.Tag;
+import com.sudoplay.axion.spec.tag.TagByte;
+import com.sudoplay.axion.spec.tag.TagByteArray;
+import com.sudoplay.axion.spec.tag.TagCompound;
+import com.sudoplay.axion.spec.tag.TagDouble;
+import com.sudoplay.axion.spec.tag.TagFloat;
+import com.sudoplay.axion.spec.tag.TagInt;
+import com.sudoplay.axion.spec.tag.TagIntArray;
+import com.sudoplay.axion.spec.tag.TagList;
+import com.sudoplay.axion.spec.tag.TagLong;
+import com.sudoplay.axion.spec.tag.TagShort;
+import com.sudoplay.axion.spec.tag.TagString;
 import com.sudoplay.axion.stream.CharacterEncoder;
 import com.sudoplay.axion.stream.StreamCompressionWrapper;
 
-public class AxionConfiguration {
+public class AxionConfiguration implements Cloneable {
+
+  protected static final AxionConfiguration DEFAULT_CONFIGURATION = new AxionConfiguration() {
+    {
+      registerTagAdapter(1, TagByte.class, new TagByteAdapter());
+      registerTagAdapter(2, TagShort.class, new TagShortAdapter());
+      registerTagAdapter(3, TagInt.class, new TagIntAdapter());
+      registerTagAdapter(4, TagLong.class, new TagLongAdapter());
+      registerTagAdapter(5, TagFloat.class, new TagFloatAdapter());
+      registerTagAdapter(6, TagDouble.class, new TagDoubleAdapter());
+      registerTagAdapter(7, TagByteArray.class, new TagByteArrayAdapter());
+      registerTagAdapter(8, TagString.class, new TagStringAdapter());
+      registerTagAdapter(9, TagList.class, new TagListAdapter());
+      registerTagAdapter(10, TagCompound.class, new TagCompoundAdapter());
+      registerTagAdapter(11, TagIntArray.class, new TagIntArrayAdapter());
+
+      registerTagAdapter(80, TagBoolean.class, new TagBooleanAdapter());
+      registerTagAdapter(81, TagDoubleArray.class, new TagDoubleArrayAdapter());
+      registerTagAdapter(82, TagFloatArray.class, new TagFloatArrayAdapter());
+      registerTagAdapter(83, TagLongArray.class, new TagLongArrayAdapter());
+      registerTagAdapter(84, TagShortArray.class, new TagShortArrayAdapter());
+      registerTagAdapter(85, TagStringArray.class, new TagStringArrayAdapter());
+
+      registerTagConverter(TagByte.class, Byte.class, new TagByteConverter());
+      registerTagConverter(TagShort.class, Short.class, new TagShortConverter());
+      registerTagConverter(TagInt.class, Integer.class, new TagIntConverter());
+      registerTagConverter(TagLong.class, Long.class, new TagLongConverter());
+      registerTagConverter(TagFloat.class, Float.class, new TagFloatConverter());
+      registerTagConverter(TagDouble.class, Double.class, new TagDoubleConverter());
+      registerTagConverter(TagByteArray.class, byte[].class, new TagByteArrayConverter());
+      registerTagConverter(TagString.class, String.class, new TagStringConverter());
+      registerTagConverter(TagList.class, List.class, new TagListConverter());
+      registerTagConverter(TagCompound.class, Map.class, new TagCompoundConverter());
+      registerTagConverter(TagIntArray.class, int[].class, new TagIntArrayConverter());
+
+      registerTagConverter(TagBoolean.class, Boolean.class, new TagBooleanConverter());
+      registerTagConverter(TagDoubleArray.class, double[].class, new TagDoubleArrayConverter());
+      registerTagConverter(TagFloatArray.class, float[].class, new TagFloatArrayConverter());
+      registerTagConverter(TagLongArray.class, long[].class, new TagLongArrayConverter());
+      registerTagConverter(TagShortArray.class, short[].class, new TagShortArrayConverter());
+      registerTagConverter(TagStringArray.class, String[].class, new TagStringArrayConverter());
+
+      setCharacterEncodingType(CharacterEncodingType.MODIFIED_UTF_8);
+      setCompressionType(CompressionType.GZip);
+      setConfigurationImmutable();
+    }
+  };
+
+  protected static final AxionConfiguration ORIGINAL_SPEC_CONFIGURATION = new AxionConfiguration() {
+    {
+      registerTagAdapter(1, TagByte.class, new TagByteAdapter());
+      registerTagAdapter(2, TagShort.class, new TagShortAdapter());
+      registerTagAdapter(3, TagInt.class, new TagIntAdapter());
+      registerTagAdapter(4, TagLong.class, new TagLongAdapter());
+      registerTagAdapter(5, TagFloat.class, new TagFloatAdapter());
+      registerTagAdapter(6, TagDouble.class, new TagDoubleAdapter());
+      registerTagAdapter(7, TagByteArray.class, new TagByteArrayAdapter());
+      registerTagAdapter(8, TagString.class, new TagStringAdapter());
+      registerTagAdapter(9, TagList.class, new TagListAdapter());
+      registerTagAdapter(10, TagCompound.class, new TagCompoundAdapter());
+      registerTagAdapter(11, TagIntArray.class, new TagIntArrayAdapter());
+
+      registerTagConverter(TagByte.class, Byte.class, new TagByteConverter());
+      registerTagConverter(TagShort.class, Short.class, new TagShortConverter());
+      registerTagConverter(TagInt.class, Integer.class, new TagIntConverter());
+      registerTagConverter(TagLong.class, Long.class, new TagLongConverter());
+      registerTagConverter(TagFloat.class, Float.class, new TagFloatConverter());
+      registerTagConverter(TagDouble.class, Double.class, new TagDoubleConverter());
+      registerTagConverter(TagByteArray.class, byte[].class, new TagByteArrayConverter());
+      registerTagConverter(TagString.class, String.class, new TagStringConverter());
+      registerTagConverter(TagList.class, List.class, new TagListConverter());
+      registerTagConverter(TagCompound.class, Map.class, new TagCompoundConverter());
+      registerTagConverter(TagIntArray.class, int[].class, new TagIntArrayConverter());
+
+      setCharacterEncodingType(CharacterEncodingType.MODIFIED_UTF_8);
+      setCompressionType(CompressionType.GZip);
+      setConfigurationImmutable();
+    }
+  };
 
   public static enum CompressionType {
     GZip, Deflater, None
@@ -28,8 +159,8 @@ public class AxionConfiguration {
     Unlocked, Locked, Immutable
   }
 
-  private final TagAdapterRegistry adapters = new TagAdapterRegistry();
-  private final TagConverterRegistry converters = new TagConverterRegistry();
+  private final TagAdapterRegistry adapters;
+  private final TagConverterRegistry converters;
   private StreamCompressionWrapper streamCompressionWrapper;
   private CharacterEncoder characterEncoder;
   private ProtectionMode configurationProtectionMode;
@@ -38,7 +169,17 @@ public class AxionConfiguration {
     this(ProtectionMode.Unlocked);
   }
 
+  protected AxionConfiguration(final AxionConfiguration toCopy) {
+    adapters = toCopy.adapters.clone();
+    converters = toCopy.converters.clone();
+    configurationProtectionMode = ProtectionMode.Unlocked;
+    streamCompressionWrapper = toCopy.streamCompressionWrapper;
+    characterEncoder = toCopy.characterEncoder;
+  }
+
   protected AxionConfiguration(final ProtectionMode newProtectionMode) {
+    adapters = new TagAdapterRegistry();
+    converters = new TagConverterRegistry();
     configurationProtectionMode = newProtectionMode;
     streamCompressionWrapper = StreamCompressionWrapper.GZIP_STREAM_COMPRESSION_WRAPPER;
     characterEncoder = CharacterEncoder.MODIFIED_UTF_8;
@@ -56,6 +197,18 @@ public class AxionConfiguration {
 
   public void setConfigurationImmutable() {
     configurationProtectionMode = ProtectionMode.Immutable;
+  }
+
+  public boolean isLocked() {
+    return configurationProtectionMode == ProtectionMode.Locked;
+  }
+
+  public boolean isUnlocked() {
+    return configurationProtectionMode == ProtectionMode.Unlocked;
+  }
+
+  public boolean isImmutable() {
+    return configurationProtectionMode == ProtectionMode.Immutable;
   }
 
   protected void assertUnlocked() {
@@ -172,6 +325,11 @@ public class AxionConfiguration {
 
   protected OutputStream wrap(final OutputStream outputStream) throws IOException {
     return streamCompressionWrapper.wrap(outputStream);
+  }
+
+  @Override
+  protected AxionConfiguration clone() {
+    return new AxionConfiguration(this);
   }
 
 }

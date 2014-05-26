@@ -7,10 +7,19 @@ import com.sudoplay.axion.Axion;
 import com.sudoplay.axion.spec.tag.Tag;
 import com.sudoplay.axion.util.TypeUtil;
 
-public class TagConverterRegistry {
+public class TagConverterRegistry implements Cloneable {
 
   private final Map<Class<? extends Tag>, TagConverter<? extends Tag, ?>> classToConverter = new HashMap<Class<? extends Tag>, TagConverter<? extends Tag, ?>>();
   private final Map<Class<?>, TagConverter<? extends Tag, ?>> typeToConverter = new HashMap<Class<?>, TagConverter<? extends Tag, ?>>();
+
+  public TagConverterRegistry() {
+    //
+  }
+
+  protected TagConverterRegistry(final TagConverterRegistry toCopy) {
+    classToConverter.putAll(toCopy.classToConverter);
+    typeToConverter.putAll(toCopy.typeToConverter);
+  }
 
   public <T extends Tag, V> void register(final Class<T> tagClass, final Class<V> type, final TagConverter<T, V> converter) {
     if (classToConverter.containsKey(tagClass)) {
@@ -55,6 +64,11 @@ public class TagConverterRegistry {
       throw new IllegalArgumentException("No converter registered for type: " + value.getClass().getSimpleName());
     }
     return converter.convert(name, value, axion);
+  }
+
+  @Override
+  public TagConverterRegistry clone() {
+    return new TagConverterRegistry(this);
   }
 
 }

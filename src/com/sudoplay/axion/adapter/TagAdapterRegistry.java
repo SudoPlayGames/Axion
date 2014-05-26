@@ -6,12 +6,23 @@ import java.util.Map;
 
 import com.sudoplay.axion.spec.tag.Tag;
 
-public class TagAdapterRegistry {
+public class TagAdapterRegistry implements Cloneable {
 
   private final Map<Class<? extends Tag>, Integer> classToId = new HashMap<Class<? extends Tag>, Integer>();
   private final Map<Integer, Class<? extends Tag>> idToClass = new HashMap<Integer, Class<? extends Tag>>();
   private final Map<Class<? extends Tag>, TagAdapter<? extends Tag>> classToAdapter = new HashMap<Class<? extends Tag>, TagAdapter<? extends Tag>>();
   private final Map<Integer, TagAdapter<? extends Tag>> idToAdapter = new HashMap<Integer, TagAdapter<? extends Tag>>();
+
+  public TagAdapterRegistry() {
+    //
+  }
+
+  protected TagAdapterRegistry(final TagAdapterRegistry toCopy) {
+    classToId.putAll(toCopy.classToId);
+    idToClass.putAll(toCopy.idToClass);
+    classToAdapter.putAll(toCopy.classToAdapter);
+    idToAdapter.putAll(toCopy.idToAdapter);
+  }
 
   public <T extends Tag> void register(final int id, final Class<T> tagClass, final TagAdapter<T> adapter) {
     if (classToAdapter.containsKey(tagClass) || classToId.containsKey(tagClass)) {
@@ -71,6 +82,11 @@ public class TagAdapterRegistry {
     } catch (Exception e) {
       throw new RuntimeException("Failed to create instance for tag " + tagClass.getSimpleName(), e);
     }
+  }
+
+  @Override
+  public TagAdapterRegistry clone() {
+    return new TagAdapterRegistry(this);
   }
 
 }
