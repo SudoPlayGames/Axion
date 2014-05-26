@@ -133,7 +133,7 @@ public class TagCompound extends Tag implements Iterable<Tag> {
   }
 
   @Override
-  protected void onNameChange(final String oldName, final String newName) throws AxionIllegalNameChangeException {
+  protected void onChildNameChange(final String oldName, final String newName) throws AxionIllegalNameChangeException {
     if (newName == null || newName.isEmpty()) {
       throw new AxionIllegalNameChangeException("Tag belongs to [" + this.toString() + "] and can not have an empty or null name");
     }

@@ -1,11 +1,12 @@
 package com.sudoplay.axion.api;
 
+import com.sudoplay.axion.Axion;
 import com.sudoplay.axion.spec.tag.Tag;
 
 public interface AxionWriteable<T extends Tag> {
 
-  public T write();
+  public T write(final Axion axion);
 
-  public void read(T tag);
+  public void read(T tag, final Axion axion);
 
 }

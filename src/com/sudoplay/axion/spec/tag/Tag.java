@@ -11,7 +11,7 @@ public abstract class Tag implements Cloneable {
 
   public void setName(final String newName) {
     if (parent != null) {
-      parent.onNameChange(name, newName);
+      parent.onChildNameChange(name, newName);
     }
     name = (newName == null) ? "" : newName;
   }
@@ -33,13 +33,10 @@ public abstract class Tag implements Cloneable {
   }
 
   public void removeFromParent() {
-    if (parent instanceof TagList) {
-      ((TagList) parent).remove(this);
-      parent = null;
-    } else if (parent instanceof TagCompound) {
-      ((TagCompound) parent).remove(getName());
-      parent = null;
+    if (parent != null) {
+      parent.onChildRemoval(this);
     }
+    parent = null;
   }
 
   @Override
@@ -76,7 +73,11 @@ public abstract class Tag implements Cloneable {
     }
   }
 
-  protected void onNameChange(final String oldName, final String newName) {
+  protected void onChildNameChange(final String oldName, final String newName) {
+    // override
+  }
+  
+  protected void onChildRemoval(final Tag tag) {
     // override
   }
 
