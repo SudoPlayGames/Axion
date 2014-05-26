@@ -1,4 +1,4 @@
-package com.sudoplay.axion.converter;
+package com.sudoplay.axion.mapper;
 
 import static org.junit.Assert.assertEquals;
 
@@ -10,7 +10,7 @@ import com.sudoplay.axion.mapper.NBTObjectMapper;
 import com.sudoplay.axion.spec.tag.TagFloat;
 import com.sudoplay.axion.spec.tag.TagList;
 
-public class CustomConverterTest {
+public class MapperTest {
 
   @BeforeClass
   public static void before() {
