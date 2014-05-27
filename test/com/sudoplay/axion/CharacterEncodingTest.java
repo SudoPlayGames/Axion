@@ -22,12 +22,12 @@ public class CharacterEncodingTest {
 
   @BeforeClass
   public static void before() {
-    Axion.createFrom(Axion.getExt(), "CharacterEncodingTest");
+    Axion.createInstanceFrom(Axion.getExtInstance(), "CharacterEncodingTest");
   }
 
   @AfterClass
   public static void after() {
-    Axion.destroy("CharacterEncodingTest");
+    Axion.deleteInstance("CharacterEncodingTest");
   }
 
   @Test
@@ -40,7 +40,7 @@ public class CharacterEncodingTest {
             + "ΤΥΦΧΨΩΪΫάέήίΰαβγδεζηθικλμνξοπρςστυφχψωϊϋόύώϏϐϑϒϓϔϕϖϗϘϙϚϛϜϝϞϟϠϡϢϣϤϥϦϧϨϩϪϫϬϭϮϯϰϱϲϳϴϵ϶ϷϸϹϺϻϼϽϾϿЀЁЂЃЄЅІЇЈЉЊЋЌЍЎЏАБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдежзийклмнопрстуфхцчшщъыьэюяѐёђѓєѕіїјљњћќѝўџѠѡѢѣѤѥѦѧѨѩѪѫѬѭѮѯѰѱѲѳѴѵ"
             + "ѵѶѷѸѹѺѻѼѽѾѿҀҁ҂҃҄҅҆҇҈҉ҊҋҌҍҎҏҐґҒғҔҕҖҗҘҙҚқҜҝҞҟҠҡҢңҤҥҦҧҨҩҪҫҬҭҮүҰұҲҳҴҵҶҷҸҹҺһҼҽҾҿӀӁӂӃӄӅӆӇӈӉӊӋӌӍӎӏӐӑӒӓӔӕӖӗӘәӚӛӜӝӞӟӠӡӢӣӤӥӦӧӨөӪӫӬӭӮӯӰӱӲӳӴӵӶӷӸӹӺӻӼӽӾӿԀԁԂԃԄԅԆԇԈԉԊԋԌԍԎԏԐԑԒԓԔԕԖԗԘԙԚԛԜԝԞԟԠԡԢԣԤԥԦԧԨԩԪԫԬԭԮԯ԰ԱԲԳԴԵԶԷԸԹԺԻԼԽԾԿՀՁՂՃՄՅՆՇՈՉՊՋՌՍՎՏՐՑՒՓՔՕՖ՗՘ՙ՚՛՜՝՞՟ՠաբգդեզէըթժիլխծկհձղճմյնշոչպջռսվտրցւփքօֆևֈ։֊֋֌֍֎֏֐"
             + "־ֿ׀ׁׂ׃ׅׄ׆ׇ׈׉׊׋׌׍׎׏אבגדהוזחטיךכלםמןנסעףפץצקרשת׫׬׭׮ׯװױײ׳״׵׶׷׸׹׺׻׼׽׾׿؀؁؂؃؄؅؆؇؈؉؊؋،؍؎؏ؘؙؚؐؑؒؓؔؕؖؗ؛؜؝؞؟ؠءآأؤإئابةتثجحخدذرزسشصضطظعغػؼؽؾؿـفقكلمنهوىيًٌٍَُِّْٕٖٜٟٓٔٗ٘ٙٚٛٝٞ٠١٢٣٤٥٦٧٨٩٪٫٬٭ٮٯٰٱٲٳٴٵٶٷٸٹٺٻټٽپٿڀځڂڃڄڅچڇڈډڊڋڌڍڎڏڐڑڒړڔڕږڗژڙښڛڜڝڞڟڠڡڢڣڤڥڦڧڨکڪګڬڭڮگ");
-    Axion.get("CharacterEncodingTest").getConfiguration().setCharacterEncodingType(CharacterEncodingType.MODIFIED_UTF_8);
+    Axion.getInstance("CharacterEncodingTest").getConfiguration().setCharacterEncodingType(CharacterEncodingType.MODIFIED_UTF_8);
     assertEquals(tag, serialize(tag));
   }
 
@@ -54,7 +54,7 @@ public class CharacterEncodingTest {
             + "ΤΥΦΧΨΩΪΫάέήίΰαβγδεζηθικλμνξοπρςστυφχψωϊϋόύώϏϐϑϒϓϔϕϖϗϘϙϚϛϜϝϞϟϠϡϢϣϤϥϦϧϨϩϪϫϬϭϮϯϰϱϲϳϴϵ϶ϷϸϹϺϻϼϽϾϿЀЁЂЃЄЅІЇЈЉЊЋЌЍЎЏАБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдежзийклмнопрстуфхцчшщъыьэюяѐёђѓєѕіїјљњћќѝўџѠѡѢѣѤѥѦѧѨѩѪѫѬѭѮѯѰѱѲѳѴѵ"
             + "ѵѶѷѸѹѺѻѼѽѾѿҀҁ҂҃҄҅҆҇҈҉ҊҋҌҍҎҏҐґҒғҔҕҖҗҘҙҚқҜҝҞҟҠҡҢңҤҥҦҧҨҩҪҫҬҭҮүҰұҲҳҴҵҶҷҸҹҺһҼҽҾҿӀӁӂӃӄӅӆӇӈӉӊӋӌӍӎӏӐӑӒӓӔӕӖӗӘәӚӛӜӝӞӟӠӡӢӣӤӥӦӧӨөӪӫӬӭӮӯӰӱӲӳӴӵӶӷӸӹӺӻӼӽӾӿԀԁԂԃԄԅԆԇԈԉԊԋԌԍԎԏԐԑԒԓԔԕԖԗԘԙԚԛԜԝԞԟԠԡԢԣԤԥԦԧԨԩԪԫԬԭԮԯ԰ԱԲԳԴԵԶԷԸԹԺԻԼԽԾԿՀՁՂՃՄՅՆՇՈՉՊՋՌՍՎՏՐՑՒՓՔՕՖ՗՘ՙ՚՛՜՝՞՟ՠաբգդեզէըթժիլխծկհձղճմյնշոչպջռսվտրցւփքօֆևֈ։֊֋֌֍֎֏֐"
             + "־ֿ׀ׁׂ׃ׅׄ׆ׇ׈׉׊׋׌׍׎׏אבגדהוזחטיךכלםמןנסעףפץצקרשת׫׬׭׮ׯװױײ׳״׵׶׷׸׹׺׻׼׽׾׿؀؁؂؃؄؅؆؇؈؉؊؋،؍؎؏ؘؙؚؐؑؒؓؔؕؖؗ؛؜؝؞؟ؠءآأؤإئابةتثجحخدذرزسشصضطظعغػؼؽؾؿـفقكلمنهوىيًٌٍَُِّْٕٖٜٟٓٔٗ٘ٙٚٛٝٞ٠١٢٣٤٥٦٧٨٩٪٫٬٭ٮٯٰٱٲٳٴٵٶٷٸٹٺٻټٽپٿڀځڂڃڄڅچڇڈډڊڋڌڍڎڏڐڑڒړڔڕږڗژڙښڛڜڝڞڟڠڡڢڣڤڥڦڧڨکڪګڬڭڮگ");
-    Axion.get("CharacterEncodingTest").getConfiguration().setCharacterEncodingType(CharacterEncodingType.UTF_8);
+    Axion.getInstance("CharacterEncodingTest").getConfiguration().setCharacterEncodingType(CharacterEncodingType.UTF_8);
     assertEquals(tag, serialize(tag));
   }
 
@@ -63,7 +63,7 @@ public class CharacterEncodingTest {
     TagString tag = new TagString(
         "tagString",
         "!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ");
-    Axion.get("CharacterEncodingTest").getConfiguration().setCharacterEncodingType(CharacterEncodingType.ISO_8859_1);
+    Axion.getInstance("CharacterEncodingTest").getConfiguration().setCharacterEncodingType(CharacterEncodingType.ISO_8859_1);
     assertEquals(tag, serialize(tag));
   }
 
@@ -75,7 +75,7 @@ public class CharacterEncodingTest {
       sb.append((char) i);
     }
     TagString tag = new TagString("tagString", sb.toString());
-    Axion.get("CharacterEncodingTest").getConfiguration().setCharacterEncodingType(CharacterEncodingType.US_ASCII);
+    Axion.getInstance("CharacterEncodingTest").getConfiguration().setCharacterEncodingType(CharacterEncodingType.US_ASCII);
     assertEquals(tag, serialize(tag));
   }
 
@@ -84,11 +84,11 @@ public class CharacterEncodingTest {
   private Tag serialize(Tag start) throws IOException {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     AxionOutputStream out = new AxionOutputStream(baos, CharacterEncoderFactory.create(CharacterEncodingType.MODIFIED_UTF_8));
-    Axion.get("CharacterEncodingTest").writeTag(start, out);
+    Axion.getInstance("CharacterEncodingTest").writeTag(start, out);
 
     ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
     AxionInputStream in = new AxionInputStream(bais, CharacterEncoderFactory.create(CharacterEncodingType.MODIFIED_UTF_8));
-    return Axion.get("CharacterEncodingTest").readTag(null, in);
+    return Axion.getInstance("CharacterEncodingTest").readTag(null, in);
   }
 
 }

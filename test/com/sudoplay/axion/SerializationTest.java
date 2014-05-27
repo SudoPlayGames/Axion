@@ -73,11 +73,11 @@ public class SerializationTest {
   private Tag serialize(Tag start) throws IOException {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     AxionOutputStream out = new AxionOutputStream(baos, CharacterEncoderFactory.create(CharacterEncodingType.MODIFIED_UTF_8));
-    Axion.getExt().writeTag(start, out);
+    Axion.getExtInstance().writeTag(start, out);
 
     ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
     AxionInputStream in = new AxionInputStream(bais, CharacterEncoderFactory.create(CharacterEncodingType.MODIFIED_UTF_8));
-    return Axion.getExt().readTag(null, in);
+    return Axion.getExtInstance().readTag(null, in);
   }
 
 }

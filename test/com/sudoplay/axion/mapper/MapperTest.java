@@ -15,19 +15,19 @@ public class MapperTest {
 
   @BeforeClass
   public static void before() {
-    Axion.createFrom(Axion.getExt(), "vectorTest");
-    Axion.get("vectorTest").getConfiguration().registerNBTObjectMapper(Vector3f.class, new Vector3fMapper());
+    Axion.createInstanceFrom(Axion.getExtInstance(), "vectorTest");
+    Axion.getInstance("vectorTest").getConfiguration().registerNBTObjectMapper(Vector3f.class, new Vector3fMapper());
   }
   
   @AfterClass
   public static void after() {
-    Axion.destroy("vectorTest");
+    Axion.deleteInstance("vectorTest");
   }
 
   @Test
   public void test() {
 
-    Axion axion = Axion.get("vectorTest");
+    Axion axion = Axion.getInstance("vectorTest");
 
     Vector3f position = new Vector3f(16f, 2.5f, 65f);
     TagList tagList = axion.createTagFrom("vec1", position);
