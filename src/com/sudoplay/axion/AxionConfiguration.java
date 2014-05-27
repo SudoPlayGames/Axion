@@ -112,18 +112,46 @@ public class AxionConfiguration implements Cloneable {
     characterEncodingType = CharacterEncodingType.MODIFIED_UTF_8;
   }
 
+  /**
+   * Changes this configuration's protection mode to <b>Locked</b>. Any attempt
+   * to change this configuration while it is locked will result in an
+   * exception. Use {@link #unlock()} to unlock.
+   * <p>
+   * Can't use when <b>Immutable</b>.
+   * 
+   * @return this {@link AxionConfiguration}
+   * @see #unlock()
+   * @see #setImmutable()
+   */
   public AxionConfiguration lock() {
     assertMutable();
     configurationProtectionMode = ProtectionMode.Locked;
     return this;
   }
 
+  /**
+   * Changes this configuration's protection mode to <b>Unlocked</b>.
+   * <p>
+   * Can't use when <b>Immutable</b>.
+   * 
+   * @return this {@link AxionConfiguration}
+   * @see #lock()
+   * @see #setImmutable()
+   */
   public AxionConfiguration unlock() {
     assertMutable();
     configurationProtectionMode = ProtectionMode.Unlocked;
     return this;
   }
 
+  /**
+   * Changes this configuration's protection mode to <b>Immutable</b>. Once this
+   * mode is set, it can't be undone.
+   * 
+   * @return this {@link AxionConfiguration}
+   * @see #lock()
+   * @see #unlock()
+   */
   public AxionConfiguration setImmutable() {
     assertUnlocked();
     assertMutable();
@@ -131,30 +159,56 @@ public class AxionConfiguration implements Cloneable {
     return this;
   }
 
+  /**
+   * @return true if protection mode is <b>Locked</b>
+   */
   public boolean isLocked() {
     return configurationProtectionMode == ProtectionMode.Locked;
   }
 
+  /**
+   * @return true if protection mode is <b>Unlocked</b>
+   */
   public boolean isUnlocked() {
     return configurationProtectionMode == ProtectionMode.Unlocked;
   }
 
+  /**
+   * @return true if protection mode is <b>Immutable</b>
+   */
   public boolean isImmutable() {
     return configurationProtectionMode == ProtectionMode.Immutable;
   }
 
-  protected void assertUnlocked() {
+  /**
+   * @throws AxionConfigurationException
+   *           if protection mode is <b>Locked</b>
+   */
+  protected void assertUnlocked() throws AxionConfigurationException {
     if (configurationProtectionMode == ProtectionMode.Locked) {
-      throw new IllegalStateException(Axion.class.getSimpleName() + " instance has been locked and can't be modified");
+      throw new AxionConfigurationException(Axion.class.getSimpleName() + " instance has been locked and can't be modified");
     }
   }
 
-  protected void assertMutable() {
+  /**
+   * @throws AxionConfigurationException
+   *           if protection mode is <b>Immutable</b>
+   */
+  protected void assertMutable() throws AxionConfigurationException {
     if (configurationProtectionMode == ProtectionMode.Immutable) {
-      throw new IllegalStateException(Axion.class.getSimpleName() + " instance is immutable and can't be modified");
+      throw new AxionConfigurationException(Axion.class.getSimpleName() + " instance is immutable and can't be modified");
     }
   }
 
+  /**
+   * Sets the {@link CharacterEncodingType}.
+   * <p>
+   * Can't use when <b>Locked</b> or <b>Immutable</b>.
+   * 
+   * @param newCharacterEncodingType
+   *          the new encoding type
+   * @return this {@link AxionConfiguration}
+   */
   public AxionConfiguration setCharacterEncodingType(final CharacterEncodingType newCharacterEncodingType) {
     assertUnlocked();
     assertMutable();
@@ -162,12 +216,44 @@ public class AxionConfiguration implements Cloneable {
     return this;
   }
 
+  /**
+   * Register a {@link TagAdapter<Tag>} as the base tag adapter.
+   * <p>
+   * Can't use when <b>Locked</b> or <b>Immutable</b>.
+   * 
+   * @param newBaseTagAdapter
+   *          the new base tag adapter
+   * @see #getBaseTagAdapter()
+   */
   public void registerBaseTagAdapter(final TagAdapter<Tag> newBaseTagAdapter) {
     assertUnlocked();
     assertMutable();
     tagRegistry.registerBaseTagAdapter(newBaseTagAdapter);
   }
 
+  /**
+   * Registers the relationships for a tag.
+   * <p>
+   * Can't use when <b>Locked</b> or <b>Immutable</b>.
+   * 
+   * @param id
+   *          the id of the tag
+   * @param tagClass
+   *          the class of the tag
+   * @param type
+   *          the class of the type
+   * @param adapter
+   *          {@link TagAdapter} for the tag
+   * @param converter
+   *          {@link TagConverter} for the tag
+   * @return this {@link AxionConfiguration}
+   * @see #getAdapterFor(Class)
+   * @see #getAdapterFor(int)
+   * @see #getClassFor(int)
+   * @see #getConverterFor(Tag)
+   * @see #getConverterFor(Object)
+   * @see #getIdFor(Class)
+   */
   public <T extends Tag, V> AxionConfiguration registerTag(final int id, final Class<T> tagClass, final Class<V> type, final TagAdapter<T> adapter,
       final TagConverter<T, V> converter) {
     assertUnlocked();
@@ -176,6 +262,15 @@ public class AxionConfiguration implements Cloneable {
     return this;
   }
 
+  /**
+   * Registers a {@link NBTObjectMapper} for the class type given.
+   * 
+   * @param type
+   *          the type of the object
+   * @param mapper
+   *          the mapper
+   * @return this {@link AxionConfiguration}
+   */
   public <T extends Tag, O> AxionConfiguration registerNBTObjectMapper(final Class<O> type, final NBTObjectMapper<T, O> mapper) {
     assertUnlocked();
     assertMutable();

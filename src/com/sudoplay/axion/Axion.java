@@ -164,14 +164,19 @@ public class Axion {
   }
 
   /**
-   * Returns an unmodifiable map of all the Axion instances.
+   * Returns an unmodifiable map of all the {@link Axion} instances.
    * 
-   * @return an unmodifiable map of all the Axion instances
+   * @return an unmodifiable map of all the {@link Axion} instances
    */
   public static Map<String, Axion> getInstances() {
     return Collections.unmodifiableMap(INSTANCES);
   }
 
+  /**
+   * Returns the {@link AxionConfiguration} for this {@link Axion} instance.
+   * 
+   * @return the {@link AxionConfiguration} for this {@link Axion} instance
+   */
   public AxionConfiguration configuration() {
     return configuration;
   }
