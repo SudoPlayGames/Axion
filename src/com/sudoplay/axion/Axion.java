@@ -116,7 +116,7 @@ public class Axion {
     if (INSTANCES.containsKey(newName)) {
       throw new AxionInstanceCreationException(Axion.class.getSimpleName() + " instance alread exists with name: " + newName);
     }
-    Axion instance = new Axion(axion.getConfiguration().clone());
+    Axion instance = new Axion(axion.configuration().clone());
     INSTANCES.put(newName, instance);
     return instance;
   }
@@ -172,7 +172,7 @@ public class Axion {
     return Collections.unmodifiableMap(INSTANCES);
   }
 
-  public AxionConfiguration getConfiguration() {
+  public AxionConfiguration configuration() {
     return configuration;
   }
 

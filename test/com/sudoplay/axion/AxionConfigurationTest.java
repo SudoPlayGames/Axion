@@ -16,7 +16,7 @@ public class AxionConfigurationTest {
   public void testLocking() {
 
     Axion axion = Axion.createInstanceFrom(Axion.getExtInstance(), "ConfigurationTest");
-    AxionConfiguration config = axion.getConfiguration();
+    AxionConfiguration config = axion.configuration();
 
     config.lock();
     assertTrue(config.isLocked());
