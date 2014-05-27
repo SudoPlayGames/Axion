@@ -68,7 +68,7 @@ public class TagFloatArray extends Tag {
   }
 
   @Override
-  public Tag clone() {
+  public TagFloatArray clone() {
     return new TagFloatArray(getName(), data);
   }
 

@@ -68,7 +68,7 @@ public class TagDoubleArray extends Tag {
   }
 
   @Override
-  public Tag clone() {
+  public TagDoubleArray clone() {
     return new TagDoubleArray(getName(), data);
   }
 

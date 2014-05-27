@@ -69,7 +69,7 @@ public class TagBooleanArray extends Tag {
   }
 
   @Override
-  public Tag clone() {
+  public TagBooleanArray clone() {
     return new TagBooleanArray(getName(), data);
   }
 

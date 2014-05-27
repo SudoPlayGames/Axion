@@ -68,7 +68,7 @@ public class TagStringArray extends Tag {
   }
 
   @Override
-  public Tag clone() {
+  public TagStringArray clone() {
     return new TagStringArray(getName(), data);
   }
 

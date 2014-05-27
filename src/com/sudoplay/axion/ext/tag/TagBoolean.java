@@ -62,7 +62,7 @@ public class TagBoolean extends Tag {
   }
 
   @Override
-  public Tag clone() {
+  public TagBoolean clone() {
     return new TagBoolean(getName(), data);
   }
 
