@@ -3,7 +3,7 @@ package com.sudoplay.axion.api;
 import com.sudoplay.axion.Axion;
 import com.sudoplay.axion.tag.Tag;
 
-public interface AxionWriteable<T extends Tag> {
+public interface AxionWritable<T extends Tag> {
 
   public T write(final Axion axion);
 

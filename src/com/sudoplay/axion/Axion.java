@@ -13,7 +13,7 @@ import java.util.Map;
 import com.sudoplay.axion.AxionConfiguration.ProtectionMode;
 import com.sudoplay.axion.adapter.TagAdapter;
 import com.sudoplay.axion.adapter.TagConverter;
-import com.sudoplay.axion.api.AxionWriteable;
+import com.sudoplay.axion.api.AxionWritable;
 import com.sudoplay.axion.spec.tag.TagCompound;
 import com.sudoplay.axion.stream.AxionInputStream;
 import com.sudoplay.axion.stream.AxionOutputStream;
@@ -303,31 +303,31 @@ public class Axion {
   }
 
   /**
-   * Reads a file into the {@link AxionWriteable} given.
+   * Reads a file into the {@link AxionWritable} given.
    * 
    * @param file
    *          the file to read from
-   * @param axionWriteable
-   *          the {@link AxionWriteable} to write to
-   * @return the {@link AxionWriteable} written to
+   * @param axionWritable
+   *          the {@link AxionWritable} to write to
+   * @return the {@link AxionWritable} written to
    * @throws IOException
    */
-  public <T extends AxionWriteable<TagCompound>> T read(final File file, final T axionWriteable) throws IOException {
-    axionWriteable.read(read(file), this);
-    return axionWriteable;
+  public <T extends AxionWritable<TagCompound>> T read(final File file, final T axionWritable) throws IOException {
+    axionWritable.read(read(file), this);
+    return axionWritable;
   }
 
   /**
-   * Writes an {@link AxionWriteable} to the {@link File} given.
+   * Writes an {@link AxionWritable} to the {@link File} given.
    * 
-   * @param axionWriteable
-   *          the {@link AxionWriteable} to write to file
+   * @param axionWritable
+   *          the {@link AxionWritable} to write to file
    * @param file
    *          file to write to
    * @throws IOException
    */
-  public void write(final AxionWriteable<TagCompound> axionWriteable, final File file) throws IOException {
-    write(axionWriteable.write(this), file);
+  public void write(final AxionWritable<TagCompound> axionWritable, final File file) throws IOException {
+    write(axionWritable.write(this), file);
   }
 
   /**
@@ -361,32 +361,32 @@ public class Axion {
   }
 
   /**
-   * Reads and returns an {@link AxionWriteable} from the {@link InputStream}
+   * Reads and returns an {@link AxionWritable} from the {@link InputStream}
    * given.
    * 
    * @param inputStream
    *          stream to read from
-   * @param axionWriteable
-   *          writeable to write to
-   * @return the {@link AxionWriteable} written to
+   * @param axionWritable
+   *          writable to write to
+   * @return the {@link AxionWritable} written to
    * @throws IOException
    */
-  public <T extends AxionWriteable<TagCompound>> T read(final InputStream inputStream, final T axionWriteable) throws IOException {
-    axionWriteable.read(read(inputStream), this);
-    return axionWriteable;
+  public <T extends AxionWritable<TagCompound>> T read(final InputStream inputStream, final T axionWritable) throws IOException {
+    axionWritable.read(read(inputStream), this);
+    return axionWritable;
   }
 
   /**
-   * Writes the {@link AxionWriteable} given to the {@link OutputStream} given.
+   * Writes the {@link AxionWritable} given to the {@link OutputStream} given.
    * 
-   * @param axionWriteable
-   *          {@link AxionWriteable} to write
+   * @param axionWritable
+   *          {@link AxionWritable} to write
    * @param outputStream
    *          stream to write to
    * @throws IOException
    */
-  public void write(final AxionWriteable<TagCompound> axionWriteable, final OutputStream outputStream) throws IOException {
-    write(axionWriteable.write(this), outputStream);
+  public void write(final AxionWritable<TagCompound> axionWritable, final OutputStream outputStream) throws IOException {
+    write(axionWritable.write(this), outputStream);
   }
 
   /**
