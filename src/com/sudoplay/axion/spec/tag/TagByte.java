@@ -1,5 +1,7 @@
 package com.sudoplay.axion.spec.tag;
 
+import com.sudoplay.axion.tag.Tag;
+
 /**
  * @tag.type 1
  * 

@@ -1,30 +1,39 @@
-package com.sudoplay.axion.spec.tag;
+package com.sudoplay.axion.tag;
 
 public abstract class Tag implements Cloneable {
 
   private String name;
-  private Tag parent;
+  private ContainerTag parent;
 
   public Tag(final String newName) {
     setName(newName);
   }
 
-  public void setName(final String newName) {
+  public Tag setName(final String newName) {
     if (parent != null) {
       parent.onChildNameChange(name, newName);
     }
     name = (newName == null) ? "" : newName;
+    return this;
   }
 
   public String getName() {
     return (name == null) ? "" : name;
   }
 
-  protected void setParent(final Tag newParent) {
+  public Tag addTo(final ContainerTag newParent) {
+    if (newParent == null) {
+      throw new AxionInvalidTagException("Can't set parent tag to null; use removeFromParent() to remove this tag from its parent");
+    } else if (parent != null) {
+      throw new AxionIllegalTagStateException("Tag [" + this.toString() + "] already has parent [" + parent.toString()
+          + "]; use removeFromParent() to remove this tag from its parent before assigning a new parent");
+    }
     parent = newParent;
+    parent.onChildAddition(this);
+    return this;
   }
 
-  public Tag getParent() {
+  public ContainerTag getParent() {
     return parent;
   }
 
@@ -32,11 +41,12 @@ public abstract class Tag implements Cloneable {
     return parent != null;
   }
 
-  public void removeFromParent() {
+  public Tag removeFromParent() {
     if (parent != null) {
       parent.onChildRemoval(this);
     }
     parent = null;
+    return this;
   }
 
   @Override
@@ -71,14 +81,6 @@ public abstract class Tag implements Cloneable {
     } else {
       return this.getClass().getSimpleName();
     }
-  }
-
-  protected void onChildNameChange(final String oldName, final String newName) {
-    // override
-  }
-  
-  protected void onChildRemoval(final Tag tag) {
-    // override
   }
 
   @Override

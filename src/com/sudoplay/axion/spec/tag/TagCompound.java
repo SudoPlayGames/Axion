@@ -1,13 +1,17 @@
 package com.sudoplay.axion.spec.tag;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.sudoplay.axion.tag.AxionIllegalNameChangeException;
+import com.sudoplay.axion.tag.AxionIllegalTagNameException;
 import com.sudoplay.axion.tag.AxionInvalidTagException;
+import com.sudoplay.axion.tag.ContainerTag;
+import com.sudoplay.axion.tag.Tag;
 
 /**
  * @tag.type 10
@@ -27,7 +31,7 @@ import com.sudoplay.axion.tag.AxionInvalidTagException;
  * @author Jason Taylor
  * 
  */
-public class TagCompound extends Tag implements Iterable<Tag> {
+public class TagCompound extends ContainerTag {
 
   private final Map<String, Tag> data;
 
@@ -47,25 +51,39 @@ public class TagCompound extends Tag implements Iterable<Tag> {
       data = newMap;
       Iterator<Entry<String, Tag>> it = data.entrySet().iterator();
       while (it.hasNext()) {
-        assertValidTag(it.next().getValue());
+        assertValid(it.next().getValue());
       }
     }
   }
 
-  public Map<String, Tag> getAsMap() {
-    return Collections.unmodifiableMap(data);
-  }
-
+  @Override
   public Iterator<Tag> iterator() {
     return Collections.unmodifiableCollection(data.values()).iterator();
   }
 
+  @Override
   public void clear() {
-    data.clear();
+    List<Tag> toRemove = new ArrayList<Tag>(data.values());
+    for (Tag child : toRemove) {
+      child.removeFromParent();
+    }
   }
 
+  @Override
   public int size() {
     return data.size();
+  }
+
+  @Override
+  public boolean contains(final Tag tag) {
+    if (tag == null) {
+      return false;
+    }
+    return data.values().contains(tag);
+  }
+
+  public Map<String, Tag> getAsMap() {
+    return Collections.unmodifiableMap(data);
   }
 
   public boolean containsKey(final String name) {
@@ -73,10 +91,11 @@ public class TagCompound extends Tag implements Iterable<Tag> {
   }
 
   public Tag remove(final String name) {
-    Tag result = data.remove(name);
-    if (result != null) {
-      result.setParent(null);
+    Tag result = data.get(name);
+    if (result == null) {
+      return null;
     }
+    result.removeFromParent();
     return result;
   }
 
@@ -86,20 +105,26 @@ public class TagCompound extends Tag implements Iterable<Tag> {
   }
 
   public void put(final Tag tag) {
-    assertValidTag(tag);
-    tag.setParent(this);
+    assertValid(tag).addTo(this);
+  }
+
+  @Override
+  protected void onChildAddition(Tag tag) {
     data.put(tag.getName(), tag);
   }
 
-  protected void assertValidTag(final Tag tag) throws AxionInvalidTagException {
+  @Override
+  protected void onChildRemoval(Tag tag) {
+    data.remove(tag.getName());
+  }
+
+  protected Tag assertValid(final Tag tag) throws AxionInvalidTagException {
     if (tag == null) {
       throw new AxionInvalidTagException(this.toString() + " does not support null tags");
-    } else if (tag.hasParent()) {
-      throw new AxionInvalidTagException("Tag [" + tag.toString() + "] can not be added to tag [" + this.toString() + "] because it already has parent tag ["
-          + tag.getParent().toString() + "]");
-    } else if (tag.getName().equals("")) {
+    } else if ("".equals(tag.getName())) {
       throw new AxionInvalidTagException(this.toString() + " does not support unnamed tags");
     }
+    return tag;
   }
 
   @Override
@@ -133,9 +158,9 @@ public class TagCompound extends Tag implements Iterable<Tag> {
   }
 
   @Override
-  protected void onChildNameChange(final String oldName, final String newName) throws AxionIllegalNameChangeException {
+  protected void onChildNameChange(final String oldName, final String newName) throws AxionIllegalTagNameException {
     if (newName == null || newName.isEmpty()) {
-      throw new AxionIllegalNameChangeException("Tag belongs to [" + this.toString() + "] and can not have an empty or null name");
+      throw new AxionIllegalTagNameException("Tag belongs to [" + this.toString() + "] and can not have an empty or null name");
     }
     data.put(newName, data.remove(oldName));
   }

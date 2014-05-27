@@ -14,7 +14,6 @@ import org.junit.Test;
 import com.sudoplay.axion.Axion;
 import com.sudoplay.axion.TestUtil;
 import com.sudoplay.axion.ext.tag.TagBoolean;
-import com.sudoplay.axion.spec.tag.Tag;
 import com.sudoplay.axion.spec.tag.TagByte;
 import com.sudoplay.axion.spec.tag.TagByteArray;
 import com.sudoplay.axion.spec.tag.TagCompound;
@@ -26,6 +25,7 @@ import com.sudoplay.axion.spec.tag.TagList;
 import com.sudoplay.axion.spec.tag.TagLong;
 import com.sudoplay.axion.spec.tag.TagShort;
 import com.sudoplay.axion.spec.tag.TagString;
+import com.sudoplay.axion.tag.Tag;
 
 public class TagConverterTest {
 
@@ -114,9 +114,9 @@ public class TagConverterTest {
     value.add(9813);
     value.add(72138);
     TagList tag = new TagList(TagInt.class, "name");
-    tag.addInt(648);
-    tag.addInt(9813);
-    tag.addInt(72138);
+    tag.add(new TagInt("", 648));
+    tag.add(new TagInt("", 9813));
+    tag.add(new TagInt("", 72138));
     assertEquals(value, Axion.getDefault().convertToValue(tag));
     assertEquals(tag, Axion.getDefault().convertToTag("name", value));
   }

@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.sudoplay.axion.Axion;
-import com.sudoplay.axion.spec.tag.Tag;
+import com.sudoplay.axion.tag.Tag;
 import com.sudoplay.axion.util.TypeResolver;
 
 public class NBTObjectMapperRegistry implements Cloneable {

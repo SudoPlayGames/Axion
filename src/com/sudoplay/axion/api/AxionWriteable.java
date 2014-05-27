@@ -1,7 +1,7 @@
 package com.sudoplay.axion.api;
 
 import com.sudoplay.axion.Axion;
-import com.sudoplay.axion.spec.tag.Tag;
+import com.sudoplay.axion.tag.Tag;
 
 public interface AxionWriteable<T extends Tag> {
 

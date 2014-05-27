@@ -2,7 +2,7 @@ package com.sudoplay.axion.ext.tag;
 
 import java.util.Arrays;
 
-import com.sudoplay.axion.spec.tag.Tag;
+import com.sudoplay.axion.tag.Tag;
 
 /**
  * @tag.type 85

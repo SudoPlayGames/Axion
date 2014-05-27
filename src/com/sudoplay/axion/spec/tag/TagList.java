@@ -5,8 +5,10 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import com.sudoplay.axion.tag.AxionIllegalNameChangeException;
+import com.sudoplay.axion.tag.AxionIllegalTagNameException;
 import com.sudoplay.axion.tag.AxionInvalidTagException;
+import com.sudoplay.axion.tag.ContainerTag;
+import com.sudoplay.axion.tag.Tag;
 
 /**
  * @tag.type 9
@@ -24,7 +26,7 @@ import com.sudoplay.axion.tag.AxionInvalidTagException;
  * @author Jason Taylor
  * 
  */
-public class TagList extends Tag implements Iterable<Tag> {
+public class TagList extends ContainerTag {
 
   private final List<Tag> data;
 
@@ -49,18 +51,9 @@ public class TagList extends Tag implements Iterable<Tag> {
     } else {
       data = new ArrayList<Tag>(newList);
       for (Tag tag : data) {
-        assertValidTag(tag);
+        assertValid(tag);
+        tag.setName("");
       }
-    }
-  }
-
-  private void assertValidTag(final Tag tag) throws AxionInvalidTagException {
-    if (tag == null) {
-      throw new AxionInvalidTagException(this.toString() + " can't contain null tags");
-    } else if (type != tag.getClass()) {
-      throw new AxionInvalidTagException("Can't add tag of type [" + tag.getClass().getSimpleName() + "] to " + this.toString());
-    } else if (tag.hasParent()) {
-      throw new AxionInvalidTagException("Tag can't be added to more than one collection tag");
     }
   }
 
@@ -71,66 +64,62 @@ public class TagList extends Tag implements Iterable<Tag> {
    * @param tag
    */
   public void add(final Tag tag) {
-    assertValidTag(tag);
-    tag.setName(null);
-    tag.setParent(this);
-    data.add(tag);
+    assertValid(tag).addTo(this);
   }
 
   public boolean remove(final Tag tag) {
-    if (data.remove(tag)) {
-      tag.setParent(null);
+    if (contains(tag)) {
+      tag.removeFromParent();
       return true;
     }
     return false;
   }
 
   public Tag remove(final int index) {
-    return data.remove(index);
+    Tag removed = data.get(index);
+    removed.removeFromParent();
+    return removed;
   }
 
-  public void addByte(final byte newByte) {
-    add(new TagByte(null, newByte));
+  /**
+   * Checks if this {@link TagList} contains the {@link Tag} passed in.
+   * <p>
+   * Since names are stripped of tags in lists, this method compares values
+   * only; tags with different names and identical values will match.
+   * 
+   * @param tag
+   *          tag whose presence in this list is to be tested
+   * 
+   * @return true if this list contains a tag with a matching value
+   */
+  @Override
+  public boolean contains(final Tag tag) {
+    if (tag == null || !tag.getClass().isAssignableFrom(type)) {
+      return false;
+    }
+    /*
+     * If we don't strip off its name here, it will not satisfy equals(). We
+     * also clone it because we don't want to alter the original.
+     */
+    return data.contains(tag.clone().setName(""));
   }
 
-  public void addByteArray(final byte[] newByteArray) {
-    add(new TagByteArray(null, newByteArray));
+  @Override
+  public Iterator<Tag> iterator() {
+    return Collections.unmodifiableList(data).iterator();
   }
 
-  public void addCompound(final TagCompound newTagCompound) {
-    add(newTagCompound);
+  @Override
+  public int size() {
+    return data.size();
   }
 
-  public void addDouble(final double newDouble) {
-    add(new TagDouble(null, newDouble));
-  }
-
-  public void addFloat(final float newFloat) {
-    add(new TagFloat(null, newFloat));
-  }
-
-  public void addInt(final int newInt) {
-    add(new TagInt(null, newInt));
-  }
-
-  public void addIntArray(final int[] newIntArray) {
-    add(new TagIntArray(null, newIntArray));
-  }
-
-  public void addList(final TagList newTagList) {
-    add(newTagList);
-  }
-
-  public void addLong(final long newLong) {
-    add(new TagLong(null, newLong));
-  }
-
-  public void addShort(final short newShort) {
-    add(new TagShort(null, newShort));
-  }
-
-  public void addString(final String newString) {
-    add(new TagString(null, newString));
+  @Override
+  public void clear() {
+    List<Tag> toRemove = new ArrayList<Tag>(data);
+    for (Tag child : toRemove) {
+      child.removeFromParent();
+    }
   }
 
   public Class<? extends Tag> getType() {
@@ -147,16 +136,14 @@ public class TagList extends Tag implements Iterable<Tag> {
   }
 
   @Override
-  public Iterator<Tag> iterator() {
-    return Collections.unmodifiableList(data).iterator();
+  protected void onChildAddition(Tag tag) {
+    tag.setName(null);
+    data.add(tag);
   }
 
-  public int size() {
-    return data.size();
-  }
-
-  public void clear() {
-    data.clear();
+  @Override
+  protected void onChildRemoval(Tag tag) {
+    data.remove(tag);
   }
 
   @Override
@@ -196,9 +183,9 @@ public class TagList extends Tag implements Iterable<Tag> {
   }
 
   @Override
-  protected void onChildNameChange(final String oldName, final String newName) throws AxionIllegalNameChangeException {
+  protected void onChildNameChange(final String oldName, final String newName) throws AxionIllegalTagNameException {
     if (newName != null && !newName.isEmpty()) {
-      throw new AxionIllegalNameChangeException("Tag belongs to a " + TagList.class.getSimpleName() + " and can not be named");
+      throw new AxionIllegalTagNameException("Tag belongs to a " + TagList.class.getSimpleName() + " and can not be named");
     }
   }
 
@@ -213,6 +200,15 @@ public class TagList extends Tag implements Iterable<Tag> {
       }
       return new TagList(type, getName(), newList);
     }
+  }
+
+  protected Tag assertValid(final Tag tag) throws AxionInvalidTagException {
+    if (tag == null) {
+      throw new AxionInvalidTagException(this.toString() + " can't contain null tags");
+    } else if (type != tag.getClass()) {
+      throw new AxionInvalidTagException("Can't add tag of type [" + tag.getClass().getSimpleName() + "] to " + this.toString());
+    }
+    return tag;
   }
 
 }

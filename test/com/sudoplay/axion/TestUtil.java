@@ -2,6 +2,7 @@ package com.sudoplay.axion;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -23,11 +24,78 @@ import com.sudoplay.axion.spec.tag.TagList;
 import com.sudoplay.axion.spec.tag.TagLong;
 import com.sudoplay.axion.spec.tag.TagShort;
 import com.sudoplay.axion.spec.tag.TagString;
+import com.sudoplay.axion.tag.ContainerTag;
+import com.sudoplay.axion.tag.Tag;
 
 public class TestUtil {
 
   private TestUtil() {
     //
+  }
+
+  public static final double DOUBLE_DELTA = 1e-15;
+  public static final float FLOAT_DELTA = 1e-15f;
+
+  public static class AbstractTagTestClass extends Tag {
+
+    public AbstractTagTestClass(String newName) {
+      super(newName);
+    }
+
+    @Override
+    public AbstractTagTestClass clone() {
+      return new AbstractTagTestClass(getName());
+    }
+
+  }
+
+  public static class AbstractContainerTagTestClass extends ContainerTag {
+
+    private List<Tag> children = new ArrayList<Tag>();
+
+    public AbstractContainerTagTestClass(String newName) {
+      super(newName);
+    }
+
+    @Override
+    protected void onChildNameChange(String oldName, String newName) {
+      throw new RuntimeException();
+    }
+
+    @Override
+    protected void onChildAddition(Tag tag) {
+      children.add(tag);
+    }
+
+    @Override
+    protected void onChildRemoval(Tag tag) {
+      children.remove(tag);
+    }
+
+    @Override
+    public boolean contains(Tag tag) {
+      return children.contains(tag);
+    }
+
+    public int size() {
+      return children.size();
+    }
+
+    @Override
+    public AbstractContainerTagTestClass clone() {
+      return new AbstractContainerTagTestClass(getName());
+    }
+
+    @Override
+    public Iterator<Tag> iterator() {
+      return children.iterator();
+    }
+
+    @Override
+    public void clear() {
+      children.clear();
+    }
+
   }
 
   public static TagBoolean getTagBoolean() {
@@ -102,4 +170,12 @@ public class TestUtil {
     return map;
   }
 
+  public static TagList getTagList() {
+    TagList tag = new TagList(TagInt.class, "newList");
+    tag.add(new TagInt("newName1", 42));
+    tag.add(new TagInt("newName2", 54));
+    tag.add(new TagInt("newName3", 12));
+    tag.add(new TagInt("newName4", 83));
+    return tag;
+  }
 }

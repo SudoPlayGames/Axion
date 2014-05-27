@@ -94,9 +94,9 @@ public class MapperTest {
     @Override
     public TagList createTagFrom(String name, Vector3f value, Axion axion) {
       TagList list = new TagList(TagFloat.class, name);
-      list.addFloat(value.x);
-      list.addFloat(value.y);
-      list.addFloat(value.z);
+      list.add(new TagFloat("", value.x));
+      list.add(new TagFloat("", value.y));
+      list.add(new TagFloat("", value.z));
       return list;
     }
 

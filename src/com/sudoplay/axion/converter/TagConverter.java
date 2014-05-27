@@ -19,7 +19,7 @@ import com.sudoplay.axion.spec.converter.TagListConverter;
 import com.sudoplay.axion.spec.converter.TagLongConverter;
 import com.sudoplay.axion.spec.converter.TagShortConverter;
 import com.sudoplay.axion.spec.converter.TagStringConverter;
-import com.sudoplay.axion.spec.tag.Tag;
+import com.sudoplay.axion.tag.Tag;
 
 public interface TagConverter<T extends Tag, V> {
 

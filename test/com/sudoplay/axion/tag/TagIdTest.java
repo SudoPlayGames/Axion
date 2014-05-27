@@ -6,7 +6,6 @@ import org.junit.Test;
 
 import com.sudoplay.axion.Axion;
 import com.sudoplay.axion.TestUtil;
-import com.sudoplay.axion.spec.tag.Tag;
 import com.sudoplay.axion.spec.tag.TagByte;
 import com.sudoplay.axion.spec.tag.TagByteArray;
 import com.sudoplay.axion.spec.tag.TagCompound;

@@ -19,7 +19,6 @@ import com.sudoplay.axion.ext.tag.TagShortArray;
 import com.sudoplay.axion.ext.tag.TagStringArray;
 import com.sudoplay.axion.mapper.NBTObjectMapper;
 import com.sudoplay.axion.mapper.NBTObjectMapperRegistry;
-import com.sudoplay.axion.spec.tag.Tag;
 import com.sudoplay.axion.spec.tag.TagByte;
 import com.sudoplay.axion.spec.tag.TagByteArray;
 import com.sudoplay.axion.spec.tag.TagCompound;
@@ -35,6 +34,7 @@ import com.sudoplay.axion.stream.AxionInputStream;
 import com.sudoplay.axion.stream.AxionOutputStream;
 import com.sudoplay.axion.stream.CharacterEncoderFactory;
 import com.sudoplay.axion.stream.StreamCompressionWrapper;
+import com.sudoplay.axion.tag.Tag;
 
 public class AxionConfiguration implements Cloneable {
 

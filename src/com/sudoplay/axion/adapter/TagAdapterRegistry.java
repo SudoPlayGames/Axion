@@ -3,7 +3,7 @@ package com.sudoplay.axion.adapter;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.sudoplay.axion.spec.tag.Tag;
+import com.sudoplay.axion.tag.Tag;
 
 public class TagAdapterRegistry implements Cloneable {
 

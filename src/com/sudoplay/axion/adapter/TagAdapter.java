@@ -21,9 +21,9 @@ import com.sudoplay.axion.spec.adapter.TagListAdapter;
 import com.sudoplay.axion.spec.adapter.TagLongAdapter;
 import com.sudoplay.axion.spec.adapter.TagShortAdapter;
 import com.sudoplay.axion.spec.adapter.TagStringAdapter;
-import com.sudoplay.axion.spec.tag.Tag;
 import com.sudoplay.axion.stream.AxionInputStream;
 import com.sudoplay.axion.stream.AxionOutputStream;
+import com.sudoplay.axion.tag.Tag;
 
 public interface TagAdapter<T extends Tag> {
 

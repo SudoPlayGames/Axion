@@ -1,7 +1,7 @@
 package com.sudoplay.axion.mapper;
 
 import com.sudoplay.axion.Axion;
-import com.sudoplay.axion.spec.tag.Tag;
+import com.sudoplay.axion.tag.Tag;
 
 public interface NBTObjectMapper<T extends Tag, O> {
 

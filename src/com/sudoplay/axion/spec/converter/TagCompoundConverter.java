@@ -5,8 +5,8 @@ import java.util.Map;
 
 import com.sudoplay.axion.Axion;
 import com.sudoplay.axion.converter.TagConverter;
-import com.sudoplay.axion.spec.tag.Tag;
 import com.sudoplay.axion.spec.tag.TagCompound;
+import com.sudoplay.axion.tag.Tag;
 
 @SuppressWarnings("rawtypes")
 public class TagCompoundConverter implements TagConverter<TagCompound, Map> {

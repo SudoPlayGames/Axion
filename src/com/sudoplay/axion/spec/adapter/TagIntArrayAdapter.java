@@ -4,11 +4,11 @@ import java.io.IOException;
 
 import com.sudoplay.axion.Axion;
 import com.sudoplay.axion.adapter.TagAdapter;
-import com.sudoplay.axion.spec.tag.Tag;
 import com.sudoplay.axion.spec.tag.TagIntArray;
 import com.sudoplay.axion.spec.tag.TagList;
 import com.sudoplay.axion.stream.AxionInputStream;
 import com.sudoplay.axion.stream.AxionOutputStream;
+import com.sudoplay.axion.tag.Tag;
 
 public class TagIntArrayAdapter implements TagAdapter<TagIntArray> {
 
