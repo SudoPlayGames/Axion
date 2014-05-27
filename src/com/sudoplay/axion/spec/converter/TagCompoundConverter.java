@@ -3,31 +3,30 @@ package com.sudoplay.axion.spec.converter;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.sudoplay.axion.Axion;
-import com.sudoplay.axion.converter.TagConverter;
+import com.sudoplay.axion.adapter.TagConverter;
 import com.sudoplay.axion.spec.tag.TagCompound;
 import com.sudoplay.axion.tag.Tag;
 
 @SuppressWarnings("rawtypes")
-public class TagCompoundConverter implements TagConverter<TagCompound, Map> {
+public class TagCompoundConverter extends TagConverter<TagCompound, Map> {
 
   @Override
-  public TagCompound convert(final String name, final Map value, final Axion axion) {
+  public TagCompound convert(final String name, final Map value) {
     Map<String, Tag> tags = new HashMap<String, Tag>();
     for (Object o : value.keySet()) {
       String n = (String) o;
-      tags.put(n, axion.convertToTag(n, value.get(n)));
+      tags.put(n, convertToTag(n, value.get(n)));
     }
     return new TagCompound(name, tags);
   }
 
   @Override
-  public Map convert(final TagCompound tag, final Axion axion) {
+  public Map convert(final TagCompound tag) {
     Map<String, Object> map = new HashMap<String, Object>();
     Map<String, Tag> tags = tag.getAsMap();
     for (String name : tags.keySet()) {
       Tag t = tags.get(name);
-      map.put(t.getName(), axion.convertToValue(t));
+      map.put(t.getName(), convertToValue(t));
     }
     return map;
   }

@@ -1,4 +1,4 @@
-package com.sudoplay.axion.tag;
+package com.sudoplay.axion;
 
 import static org.junit.Assert.assertEquals;
 
@@ -16,12 +16,13 @@ import com.sudoplay.axion.spec.tag.TagString;
 import com.sudoplay.axion.stream.AxionInputStream;
 import com.sudoplay.axion.stream.AxionOutputStream;
 import com.sudoplay.axion.stream.CharacterEncoderFactory;
+import com.sudoplay.axion.tag.Tag;
 
 public class CharacterEncodingTest {
 
   @BeforeClass
   public static void before() {
-    Axion.createFrom(Axion.getDefault(), "CharacterEncodingTest");
+    Axion.createFrom(Axion.getExt(), "CharacterEncodingTest");
   }
 
   @AfterClass

@@ -10,20 +10,15 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.sudoplay.axion.AxionConfiguration.ProtectionMode;
 import com.sudoplay.axion.adapter.TagAdapter;
+import com.sudoplay.axion.adapter.TagConverter;
 import com.sudoplay.axion.spec.tag.TagCompound;
-import com.sudoplay.axion.spec.tag.TagList;
 import com.sudoplay.axion.stream.AxionInputStream;
 import com.sudoplay.axion.stream.AxionOutputStream;
 import com.sudoplay.axion.tag.Tag;
 
 public class Axion {
-
-  private static final Logger LOG = LoggerFactory.getLogger(Axion.class);
 
   private static final String EXT_INSTANCE_NAME = "AXION_EXT";
   private static final String SPEC_INSTANCE_NAME = "AXION_SPEC";
@@ -74,11 +69,11 @@ public class Axion {
     return INSTANCES.get(name);
   }
 
-  public static Axion getDefault() {
+  public static Axion getExt() {
     return INSTANCES.get(EXT_INSTANCE_NAME);
   }
 
-  public static Axion getOriginal() {
+  public static Axion getSpec() {
     return INSTANCES.get(SPEC_INSTANCE_NAME);
   }
 
@@ -110,12 +105,22 @@ public class Axion {
     return configuration.getAdapterFor(tagClass);
   }
 
-  public <T extends Tag, V> V convertToValue(final T tag) {
-    return configuration.convertToValue(tag, this);
+  public <T extends Tag, V> TagConverter<T, V> getConverterFor(final T tag) {
+    return configuration.getConverterFor(tag);
   }
 
-  public <V, T extends Tag> T convertToTag(final String name, final V value) {
-    return configuration.convertToTag(name, value, this);
+  public <T extends Tag, V> TagConverter<T, V> getConverterFor(final V value) {
+    return configuration.getConverterFor(value);
+  }
+
+  @SuppressWarnings("unchecked")
+  public <T extends Tag, V> V convertToValue(final T tag) {
+    return (V) configuration.getConverterFor(tag).convert(tag);
+  }
+
+  @SuppressWarnings("unchecked")
+  public <T extends Tag, V> T convertToTag(final String name, final V value) {
+    return (T) configuration.getConverterFor(value).convert(name, value);
   }
 
   public <T extends Tag, O> O createObjectFrom(final T tag, final Class<O> type) {
@@ -151,29 +156,12 @@ public class Axion {
     writeTag(tagCompound, configuration.wrap(outputStream));
   }
 
-  public Tag readTag(final Tag parent, final AxionInputStream in) throws IOException {
-    int id = in.readUnsignedByte();
-    if (id == 0) {
-      return null;
-    } else {
-      LOG.trace("reading [{}]", configuration.getClassFor(id).getSimpleName());
-      Tag tag = configuration.getAdapterFor(id).read(parent, in, this);
-      LOG.trace("finished reading [{}]", tag);
-      return tag;
-    }
+  protected Tag readTag(final Tag parent, final AxionInputStream in) throws IOException {
+    return configuration.getBaseTagAdapter().read(parent, in);
   }
 
-  public void writeTag(final Tag tag, final AxionOutputStream out) throws IOException {
-    LOG.trace("writing [{}]", tag);
-    int id = configuration.getIdFor(tag.getClass());
-    out.writeByte(id);
-    if (id != 0) {
-      if (!(tag.getParent() instanceof TagList)) {
-        out.writeString(tag.getName());
-      }
-      configuration.getAdapterFor(id).write(tag, out, this);
-    }
-    LOG.trace("finished writing [{}]", tag);
+  protected void writeTag(final Tag tag, final AxionOutputStream out) throws IOException {
+    configuration.getBaseTagAdapter().write(tag, out);
   }
 
 }

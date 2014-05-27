@@ -1,18 +1,17 @@
 package com.sudoplay.axion.spec.converter;
 
-import com.sudoplay.axion.Axion;
-import com.sudoplay.axion.converter.TagConverter;
+import com.sudoplay.axion.adapter.TagConverter;
 import com.sudoplay.axion.spec.tag.TagShort;
 
-public class TagShortConverter implements TagConverter<TagShort, Short> {
+public class TagShortConverter extends TagConverter<TagShort, Short> {
 
   @Override
-  public TagShort convert(final String name, final Short value, final Axion axion) {
+  public TagShort convert(final String name, final Short value) {
     return new TagShort(name, value);
   }
 
   @Override
-  public Short convert(final TagShort tag, final Axion axion) {
+  public Short convert(final TagShort tag) {
     return tag.get();
   }
 

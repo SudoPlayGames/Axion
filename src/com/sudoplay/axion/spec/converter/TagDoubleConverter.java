@@ -1,18 +1,17 @@
 package com.sudoplay.axion.spec.converter;
 
-import com.sudoplay.axion.Axion;
-import com.sudoplay.axion.converter.TagConverter;
+import com.sudoplay.axion.adapter.TagConverter;
 import com.sudoplay.axion.spec.tag.TagDouble;
 
-public class TagDoubleConverter implements TagConverter<TagDouble, Double> {
+public class TagDoubleConverter extends TagConverter<TagDouble, Double> {
 
   @Override
-  public TagDouble convert(final String name, final Double value, final Axion axion) {
+  public TagDouble convert(final String name, final Double value) {
     return new TagDouble(name, value);
   }
 
   @Override
-  public Double convert(final TagDouble tag, final Axion axion) {
+  public Double convert(final TagDouble tag) {
     return tag.get();
   }
 

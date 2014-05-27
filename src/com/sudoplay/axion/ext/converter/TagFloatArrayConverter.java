@@ -1,18 +1,17 @@
 package com.sudoplay.axion.ext.converter;
 
-import com.sudoplay.axion.Axion;
-import com.sudoplay.axion.converter.TagConverter;
+import com.sudoplay.axion.adapter.TagConverter;
 import com.sudoplay.axion.ext.tag.TagFloatArray;
 
-public class TagFloatArrayConverter implements TagConverter<TagFloatArray, float[]> {
+public class TagFloatArrayConverter extends TagConverter<TagFloatArray, float[]> {
 
   @Override
-  public float[] convert(TagFloatArray tag, Axion axion) {
+  public float[] convert(final TagFloatArray tag) {
     return tag.get();
   }
 
   @Override
-  public TagFloatArray convert(String name, float[] value, Axion axion) {
+  public TagFloatArray convert(final String name, final float[] value) {
     return new TagFloatArray(name, value);
   }
 

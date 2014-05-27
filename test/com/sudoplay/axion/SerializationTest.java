@@ -1,4 +1,4 @@
-package com.sudoplay.axion.tag;
+package com.sudoplay.axion;
 
 import static org.junit.Assert.assertEquals;
 
@@ -10,7 +10,6 @@ import org.junit.Test;
 
 import com.sudoplay.axion.Axion;
 import com.sudoplay.axion.AxionConfiguration.CharacterEncodingType;
-import com.sudoplay.axion.TestUtil;
 import com.sudoplay.axion.spec.tag.TagByte;
 import com.sudoplay.axion.spec.tag.TagByteArray;
 import com.sudoplay.axion.spec.tag.TagCompound;
@@ -25,6 +24,7 @@ import com.sudoplay.axion.spec.tag.TagString;
 import com.sudoplay.axion.stream.AxionInputStream;
 import com.sudoplay.axion.stream.AxionOutputStream;
 import com.sudoplay.axion.stream.CharacterEncoderFactory;
+import com.sudoplay.axion.tag.Tag;
 
 public class SerializationTest {
 
@@ -73,11 +73,11 @@ public class SerializationTest {
   private Tag serialize(Tag start) throws IOException {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     AxionOutputStream out = new AxionOutputStream(baos, CharacterEncoderFactory.create(CharacterEncodingType.MODIFIED_UTF_8));
-    Axion.getDefault().writeTag(start, out);
+    Axion.getExt().writeTag(start, out);
 
     ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
     AxionInputStream in = new AxionInputStream(bais, CharacterEncoderFactory.create(CharacterEncodingType.MODIFIED_UTF_8));
-    return Axion.getDefault().readTag(null, in);
+    return Axion.getExt().readTag(null, in);
   }
 
 }

@@ -15,7 +15,7 @@ public class MapperTest {
 
   @BeforeClass
   public static void before() {
-    Axion.createFrom(Axion.getDefault(), "vectorTest");
+    Axion.createFrom(Axion.getExt(), "vectorTest");
     Axion.get("vectorTest").getConfiguration().registerNBTObjectMapper(Vector3f.class, new Vector3fMapper());
   }
   

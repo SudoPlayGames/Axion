@@ -1,18 +1,17 @@
 package com.sudoplay.axion.ext.converter;
 
-import com.sudoplay.axion.Axion;
-import com.sudoplay.axion.converter.TagConverter;
+import com.sudoplay.axion.adapter.TagConverter;
 import com.sudoplay.axion.ext.tag.TagBoolean;
 
-public class TagBooleanConverter implements TagConverter<TagBoolean, Boolean> {
+public class TagBooleanConverter extends TagConverter<TagBoolean, Boolean> {
 
   @Override
-  public Boolean convert(final TagBoolean tag, final Axion axion) {
+  public Boolean convert(final TagBoolean tag) {
     return tag.get();
   }
 
   @Override
-  public TagBoolean convert(final String name, final Boolean value, final Axion axion) {
+  public TagBoolean convert(final String name, final Boolean value) {
     return new TagBoolean(name, value);
   }
 
