@@ -33,12 +33,10 @@ public class BaseTagAdapter extends TagAdapter<Tag> {
     LOG.trace("writing [{}]", tag);
     int id = getIdFor(tag.getClass());
     out.writeByte(id);
-    if (id != 0) {
-      if (!(tag.getParent() instanceof TagList)) {
-        out.writeString(tag.getName());
-      }
-      getAdapterFor(id).write(tag, out);
+    if (!(tag.getParent() instanceof TagList)) {
+      out.writeString(tag.getName());
     }
+    getAdapterFor(id).write(tag, out);
     LOG.trace("finished writing [{}]", tag);
   }
 

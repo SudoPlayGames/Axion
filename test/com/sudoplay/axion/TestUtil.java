@@ -1,11 +1,15 @@
 package com.sudoplay.axion;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.sudoplay.axion.adapter.TagAdapter;
+import com.sudoplay.axion.adapter.TagConverter;
+import com.sudoplay.axion.adapter.TagRegistry;
 import com.sudoplay.axion.ext.tag.TagBoolean;
 import com.sudoplay.axion.ext.tag.TagBooleanArray;
 import com.sudoplay.axion.ext.tag.TagDoubleArray;
@@ -24,6 +28,8 @@ import com.sudoplay.axion.spec.tag.TagList;
 import com.sudoplay.axion.spec.tag.TagLong;
 import com.sudoplay.axion.spec.tag.TagShort;
 import com.sudoplay.axion.spec.tag.TagString;
+import com.sudoplay.axion.stream.AxionInputStream;
+import com.sudoplay.axion.stream.AxionOutputStream;
 import com.sudoplay.axion.tag.ContainerTag;
 import com.sudoplay.axion.tag.Tag;
 
@@ -178,4 +184,69 @@ public class TestUtil {
     tag.add(new TagInt("newName4", 83));
     return tag;
   }
+
+  public static class Null {
+    public static final Null INSTANCE = new Null();
+  }
+
+  public static class TagNull extends Tag {
+
+    public TagNull(final String newName) {
+      super(newName);
+    }
+
+    @Override
+    public TagNull clone() {
+      return new TagNull(getName());
+    }
+
+  }
+
+  public static class TagNullConverter extends TagConverter<TagNull, Null> {
+
+    @Override
+    public Null convert(TagNull tag) {
+      return Null.INSTANCE;
+    }
+
+    @Override
+    public TagNull convert(String name, Null value) {
+      return new TagNull(name);
+    }
+
+  }
+
+  public static class TagNullAdapter extends TagAdapter<TagNull> {
+
+    @Override
+    public TagNull read(Tag parent, AxionInputStream in) throws IOException {
+      return new TagNull(parent instanceof TagList ? null : in.readString());
+    }
+
+    @Override
+    public void write(TagNull tag, AxionOutputStream out) throws IOException {
+      // no payload
+    }
+
+  }
+
+  public static final TagRegistry SPEC_REGISTRY = new TagRegistry() {
+    {
+      registerBaseTagAdapter(TagAdapter.Spec.BASE);
+      register(1, TagByte.class, Byte.class, TagAdapter.Spec.BYTE, TagConverter.Spec.BYTE);
+      register(2, TagShort.class, Short.class, TagAdapter.Spec.SHORT, TagConverter.Spec.SHORT);
+      register(3, TagInt.class, Integer.class, TagAdapter.Spec.INT, TagConverter.Spec.INT);
+      register(4, TagLong.class, Long.class, TagAdapter.Spec.LONG, TagConverter.Spec.LONG);
+      register(5, TagFloat.class, Float.class, TagAdapter.Spec.FLOAT, TagConverter.Spec.FLOAT);
+      register(6, TagDouble.class, Double.class, TagAdapter.Spec.DOUBLE, TagConverter.Spec.DOUBLE);
+      register(7, TagByteArray.class, byte[].class, TagAdapter.Spec.BYTE_ARRAY, TagConverter.Spec.BYTE_ARRAY);
+      register(8, TagString.class, String.class, TagAdapter.Spec.STRING, TagConverter.Spec.STRING);
+      register(9, TagList.class, List.class, TagAdapter.Spec.LIST, TagConverter.Spec.LIST);
+      register(10, TagCompound.class, Map.class, TagAdapter.Spec.COMPOUND, TagConverter.Spec.COMPOUND);
+      register(11, TagIntArray.class, int[].class, TagAdapter.Spec.INT_ARRAY, TagConverter.Spec.INT_ARRAY);
+
+      register(12, TagNull.class, Null.class, new TagNullAdapter(), new TagNullConverter());
+    }
+  };
+
 }

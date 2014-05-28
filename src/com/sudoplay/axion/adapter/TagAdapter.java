@@ -64,7 +64,7 @@ public abstract class TagAdapter<T extends Tag> extends RegistryAccessor {
       newInstance.setRegistry(newTagRegistry);
       return newInstance;
     } catch (Exception e) {
-      throw new AxionInstanceCreationException("Unable to instantiate new adapter of type " + this.getClass().getSimpleName(), e);
+      throw new AxionInstanceCreationException("Unable to instantiate new adapter of type [" + this.getClass().getSimpleName() + "]", e);
     }
   }
 
