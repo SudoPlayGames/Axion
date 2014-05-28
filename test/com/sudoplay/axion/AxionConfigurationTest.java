@@ -8,6 +8,7 @@ import com.sudoplay.axion.AxionConfiguration.CharacterEncodingType;
 import com.sudoplay.axion.AxionConfiguration.CompressionType;
 import com.sudoplay.axion.adapter.TagAdapter;
 import com.sudoplay.axion.adapter.TagConverter;
+import com.sudoplay.axion.mapper.NBTObjectMapper;
 import com.sudoplay.axion.spec.tag.TagByte;
 
 public class AxionConfigurationTest {
@@ -23,7 +24,7 @@ public class AxionConfigurationTest {
     assertFalse(config.isUnlocked());
 
     // New, copied configurations should always be unlocked.
-    config.clone().assertUnlocked();
+    assertTrue(config.clone().isUnlocked());
 
     check(config);
 
@@ -37,8 +38,8 @@ public class AxionConfigurationTest {
      */
     try {
       config.unlock();
-      fail("Expected IllegalStateException");
-    } catch (IllegalStateException e) {
+      fail("Expected AxionConfigurationException");
+    } catch (AxionConfigurationException e) {
       // expected
     }
 
@@ -50,8 +51,8 @@ public class AxionConfigurationTest {
      */
     try {
       config.setCharacterEncodingType(CharacterEncodingType.ISO_8859_1);
-      fail("Expected IllegalStateException");
-    } catch (IllegalStateException e) {
+      fail("Expected AxionConfigurationException");
+    } catch (AxionConfigurationException e) {
       // expected
     }
 
@@ -60,8 +61,8 @@ public class AxionConfigurationTest {
      */
     try {
       config.setCompressionType(CompressionType.Deflater);
-      fail("Expected IllegalStateException");
-    } catch (IllegalStateException e) {
+      fail("Expected AxionConfigurationException");
+    } catch (AxionConfigurationException e) {
       // expected
     }
 
@@ -70,8 +71,8 @@ public class AxionConfigurationTest {
      */
     try {
       config.setImmutable();
-      fail("Expected IllegalStateException");
-    } catch (IllegalStateException e) {
+      fail("Expected AxionConfigurationException");
+    } catch (AxionConfigurationException e) {
       // expected
     }
 
@@ -80,11 +81,43 @@ public class AxionConfigurationTest {
      */
     try {
       config.registerTag(1, TagByte.class, Byte.class, TagAdapter.Spec.BYTE, TagConverter.Spec.BYTE);
-      fail("Expected IllegalStateException");
-    } catch (IllegalStateException e) {
+      fail("Expected AxionConfigurationException");
+    } catch (AxionConfigurationException e) {
+      // expected
+    }
+
+    /*
+     * Must be unlocked and mutable to register base adapter.
+     */
+    try {
+      config.registerBaseTagAdapter(TagAdapter.Spec.BASE);
+      fail("Expected AxionConfigurationException");
+    } catch (AxionConfigurationException e) {
+      // expected
+    }
+
+    /*
+     * Must be unlocked and mutable to register mapper.
+     */
+    try {
+      config.registerNBTObjectMapper(Byte.class, new NBTObjectMapper<TagByte, Byte>() {
+
+        @Override
+        public TagByte createTagFrom(String name, Byte object, Axion axion) {
+          // test
+          return null;
+        }
+
+        @Override
+        public Byte createObjectFrom(TagByte tag, Axion axion) {
+          // test
+          return null;
+        }
+      });
+      fail("Expected AxionConfigurationException");
+    } catch (AxionConfigurationException e) {
       // expected
     }
 
   }
-
 }

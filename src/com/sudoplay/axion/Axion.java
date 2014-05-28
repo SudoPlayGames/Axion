@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.sudoplay.axion.AxionConfiguration.ProtectionMode;
+import com.sudoplay.axion.AxionConfigurationProtection.ProtectionMode;
 import com.sudoplay.axion.adapter.TagAdapter;
 import com.sudoplay.axion.adapter.TagConverter;
 import com.sudoplay.axion.api.AxionWritable;
