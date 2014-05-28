@@ -96,7 +96,6 @@ public class AxionConfigurationProtection {
    */
   protected void setImmutable() {
     assertUnlocked();
-    assertMutable();
     configurationProtectionMode = ProtectionMode.Immutable;
   }
 
