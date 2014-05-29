@@ -15,6 +15,8 @@ import com.sudoplay.axion.adapter.AxionTagRegistrationException;
 import com.sudoplay.axion.adapter.TagAdapter;
 import com.sudoplay.axion.adapter.TagConverter;
 import com.sudoplay.axion.api.AxionWritable;
+import com.sudoplay.axion.mapper.AxionMapperRegistrationException;
+import com.sudoplay.axion.mapper.NBTObjectMapper;
 import com.sudoplay.axion.spec.tag.TagCompound;
 import com.sudoplay.axion.stream.AxionInputStream;
 import com.sudoplay.axion.stream.AxionOutputStream;
@@ -194,8 +196,9 @@ public class Axion {
    * @param tagClass
    *          tag class to get the id for
    * @return the registered id for the {@link Tag} class given
+   * @throws AxionTagRegistrationException
    */
-  public int getIdFor(final Class<? extends Tag> tagClass) {
+  public int getIdFor(final Class<? extends Tag> tagClass) throws AxionTagRegistrationException {
     return configuration.getIdFor(tagClass);
   }
 
@@ -215,12 +218,14 @@ public class Axion {
 
   /**
    * Returns the registered {@link TagAdapter} for the id given.
+   * <p>
+   * If no adapter is found, an exception is thrown.
    * 
    * @param id
    *          id to get the adapter for
    * @return the registered {@link TagAdapter} for the id given
    */
-  public <T extends Tag> TagAdapter<T> getAdapterFor(final int id) {
+  public <T extends Tag> TagAdapter<T> getAdapterFor(final int id) throws AxionTagRegistrationException {
     return configuration.getAdapterFor(id);
   }
 
@@ -301,31 +306,53 @@ public class Axion {
   }
 
   /**
-   * Creates an object from a tag using the mapper registered for the class
-   * given as type.
+   * Returns the {@link NBTObjectMapper} registered for the class type given.
+   * <p>
+   * If no mapper is found, an exception is thrown.
+   * 
+   * @param type
+   *          class type to get the {@link NBTObjectMapper} for
+   * @return the {@link NBTObjectMapper} registered for the class type given
+   * @throws AxionMapperRegistrationException
+   */
+  public <T extends Tag, O> NBTObjectMapper<T, O> getMapperFor(final Class<O> type) throws AxionMapperRegistrationException {
+    return configuration.getMapperFor(type);
+  }
+
+  /**
+   * Creates an object from a tag using the {@link NBTObjectMapper} registered
+   * for the class given as type.
+   * <p>
+   * If no mapper is found, an exception is thrown.
    * 
    * @param tag
    *          tag to create the object from
    * @param type
    *          class used to lookup registered mapper
    * @return a new object mapped from the tag given
+   * @throws AxionMapperRegistrationException
    */
-  public <T extends Tag, O> O createObjectFrom(final T tag, final Class<O> type) {
-    return configuration.createObjectFrom(tag, type, this);
+  public <T extends Tag, O> O createObjectFrom(final T tag, final Class<O> type) throws AxionMapperRegistrationException {
+    return configuration.getMapperFor(type).createObjectFrom(tag, this);
   }
 
   /**
-   * Creates a tag from an object using the mapper registered for the object's
-   * class.
+   * Creates a tag from an object using the {@link NBTObjectMapper} registered
+   * for the object's class.
+   * <p>
+   * If no mapper is found, an exception is thrown.
    * 
    * @param name
    *          name of the new tag
    * @param object
    *          object to convert
    * @return a new tag mapped from the object given
+   * @throws AxionMapperRegistrationException
    */
-  public <T extends Tag, O> T createTagFrom(final String name, final O object) {
-    return configuration.createTagFrom(name, object, this);
+  public <T extends Tag, O> T createTagFrom(final String name, final O object) throws AxionMapperRegistrationException {
+    @SuppressWarnings("unchecked")
+    NBTObjectMapper<T, O> mapper = (NBTObjectMapper<T, O>) configuration.getMapperFor(object.getClass());
+    return mapper.createTagFrom(name, object, this);
   }
 
   /**

@@ -18,6 +18,7 @@ import com.sudoplay.axion.ext.tag.TagFloatArray;
 import com.sudoplay.axion.ext.tag.TagLongArray;
 import com.sudoplay.axion.ext.tag.TagShortArray;
 import com.sudoplay.axion.ext.tag.TagStringArray;
+import com.sudoplay.axion.mapper.AxionMapperRegistrationException;
 import com.sudoplay.axion.mapper.NBTObjectMapper;
 import com.sudoplay.axion.mapper.NBTObjectMapperRegistry;
 import com.sudoplay.axion.spec.tag.TagByte;
@@ -371,12 +372,15 @@ public class AxionConfiguration implements Cloneable {
 
   /**
    * Returns the {@link TagAdapter} for the int id given.
+   * <p>
+   * If no adapter is found, an exception is thrown.
    * 
    * @param id
    *          the id to get the {@link TagAdapter} for
    * @return the {@link TagAdapter} for the int id given
+   * @throws AxionTagRegistrationException
    */
-  protected <T extends Tag> TagAdapter<T> getAdapterFor(final int id) {
+  protected <T extends Tag> TagAdapter<T> getAdapterFor(final int id) throws AxionTagRegistrationException {
     return tagRegistry.getAdapterFor(id);
   }
 
@@ -425,38 +429,15 @@ public class AxionConfiguration implements Cloneable {
   }
 
   /**
-   * Creates and returns a new object of the type given from the {@link Tag}
-   * given. Uses the {@link NBTObjectMapper} registered for the {@link Tag} and
-   * object type.
+   * Returns the {@link NBTObjectMapper} registered for the class type provided.
    * 
-   * @param tag
-   *          {@link Tag} to create the object from
    * @param type
-   *          the type of the object to create
-   * @param axion
-   *          {@link Axion} instance
-   * @return a new object of the type given from the {@link Tag} given
-   * @see #registerNBTObjectMapper(Class, NBTObjectMapper)
+   *          class type to get the {@link NBTObjectMapper} for
+   * @return the {@link NBTObjectMapper} registered for the class type provided
+   * @throws AxionMapperRegistrationException
    */
-  protected <T extends Tag, O> O createObjectFrom(final T tag, final Class<O> type, final Axion axion) {
-    return mappers.createObjectFrom(tag, type, axion);
-  }
-
-  /**
-   * Creates and returns a {@link Tag} with the given name from the given
-   * object. Uses the {@link NBTObjectMapper} registered for the object type.
-   * 
-   * @param name
-   *          the name for the new {@link Tag}
-   * @param object
-   *          the object to create the {@link Tag} from
-   * @param axion
-   *          {@link Axion} instance
-   * @return a {@link Tag} with the given name from the given object
-   * @see #registerNBTObjectMapper(Class, NBTObjectMapper)
-   */
-  protected <T extends Tag, O> T createTagFrom(final String name, final O object, final Axion axion) {
-    return mappers.createTagFrom(name, object, axion);
+  protected <T extends Tag, O> NBTObjectMapper<T, O> getMapperFor(final Class<O> type) throws AxionMapperRegistrationException {
+    return mappers.getMapperFor(type);
   }
 
   /**
