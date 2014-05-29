@@ -9,6 +9,13 @@ import com.sudoplay.axion.stream.AxionInputStream;
 import com.sudoplay.axion.stream.AxionOutputStream;
 import com.sudoplay.axion.tag.Tag;
 
+/**
+ * The {@link TagAdapter} used to read and write a {@link TagShortArray}.
+ * <p>
+ * Part of the extended, custom specification.
+ * 
+ * @author Jason Taylor
+ */
 public class TagShortArrayAdapter extends TagAdapter<TagShortArray> {
 
   @Override
