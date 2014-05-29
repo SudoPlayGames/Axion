@@ -7,6 +7,13 @@ import com.sudoplay.axion.adapter.TagConverter;
 import com.sudoplay.axion.spec.tag.TagCompound;
 import com.sudoplay.axion.tag.Tag;
 
+/**
+ * The {@link TagConverter} used to convert to and from a {@link TagCompound}.
+ * <p>
+ * Part of the original specification.
+ * 
+ * @author Jason Taylor
+ */
 @SuppressWarnings("rawtypes")
 public class TagCompoundConverter extends TagConverter<TagCompound, Map> {
 

@@ -3,6 +3,13 @@ package com.sudoplay.axion.spec.converter;
 import com.sudoplay.axion.adapter.TagConverter;
 import com.sudoplay.axion.spec.tag.TagFloat;
 
+/**
+ * The {@link TagConverter} used to convert to and from a {@link TagFloat}.
+ * <p>
+ * Part of the original specification.
+ * 
+ * @author Jason Taylor
+ */
 public class TagFloatConverter extends TagConverter<TagFloat, Float> {
 
   @Override

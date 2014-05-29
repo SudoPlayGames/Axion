@@ -7,6 +7,13 @@ import com.sudoplay.axion.adapter.TagConverter;
 import com.sudoplay.axion.spec.tag.TagList;
 import com.sudoplay.axion.tag.Tag;
 
+/**
+ * The {@link TagConverter} used to convert to and from a {@link TagList}.
+ * <p>
+ * Part of the original specification.
+ * 
+ * @author Jason Taylor
+ */
 @SuppressWarnings("rawtypes")
 public class TagListConverter extends TagConverter<TagList, List> {
 

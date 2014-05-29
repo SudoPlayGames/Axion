@@ -3,6 +3,13 @@ package com.sudoplay.axion.spec.converter;
 import com.sudoplay.axion.adapter.TagConverter;
 import com.sudoplay.axion.spec.tag.TagIntArray;
 
+/**
+ * The {@link TagConverter} used to convert to and from a {@link TagIntArray}.
+ * <p>
+ * Part of the original specification.
+ * 
+ * @author Jason Taylor
+ */
 public class TagIntArrayConverter extends TagConverter<TagIntArray, int[]> {
 
   @Override

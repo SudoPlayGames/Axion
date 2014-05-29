@@ -11,6 +11,14 @@ import com.sudoplay.axion.stream.AxionInputStream;
 import com.sudoplay.axion.stream.AxionOutputStream;
 import com.sudoplay.axion.tag.Tag;
 
+/**
+ * The {@link TagAdapter} used to as the entry point to read and write a tag
+ * hierarchy.
+ * <p>
+ * Part of the original specification.
+ * 
+ * @author Jason Taylor
+ */
 public class BaseTagAdapter extends TagAdapter<Tag> {
 
   private static final Logger LOG = LoggerFactory.getLogger(BaseTagAdapter.class);
