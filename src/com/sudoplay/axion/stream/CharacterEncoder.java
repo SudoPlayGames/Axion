@@ -11,7 +11,7 @@ public class CharacterEncoder {
     charset = newCharset;
   }
 
-  public void write(final AxionOutputStream out, final String data) throws IOException {
+  protected void write(final AxionOutputStream out, final String data) throws IOException {
     byte[] bytes = data.getBytes(charset);
     if (bytes.length > 65535) {
       throw new AxionCharacterEncodingException("encoded string too long: " + bytes.length + " bytes");
@@ -20,7 +20,7 @@ public class CharacterEncoder {
     out.write(bytes);
   }
 
-  public String read(final AxionInputStream in) throws IOException {
+  protected String read(final AxionInputStream in) throws IOException {
     byte[] bytes = new byte[in.readUnsignedShort()];
     in.readFully(bytes);
     return new String(bytes, charset);

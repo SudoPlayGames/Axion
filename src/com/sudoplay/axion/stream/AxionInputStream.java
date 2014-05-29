@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * Modified from {@link DataInputStream}
+ * Modified version of {@link DataInputStream}.
  */
 public class AxionInputStream {
 

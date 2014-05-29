@@ -3,22 +3,46 @@ package com.sudoplay.axion.tag;
 import java.util.Iterator;
 
 /**
- * A {@link ContainerTag} can hold other tags.
+ * A {@link ContainerTag} can hold other {@link Tag}s.
  * 
  * @author Jason Taylor
  */
 public abstract class ContainerTag extends Tag implements Iterable<Tag> {
 
+  /**
+   * Creates a new {@link ContainerTag} with the name given.
+   * 
+   * @param newName
+   *          the name of the new {@link Tag}
+   */
   public ContainerTag(String newName) {
     super(newName);
   }
 
+  /**
+   * Returns the number of {@link Tag}s that belong to this container.
+   * 
+   * @return the number of {@link Tag}s that belong to this container
+   */
   public abstract int size();
 
+  /**
+   * Returns an {@link Iterator} for this container.
+   */
   public abstract Iterator<Tag> iterator();
 
+  /**
+   * Returns <code>true</code> if this container contains the {@link Tag} given.
+   * 
+   * @param tag
+   *          the tag to look for
+   * @return <code>true</code> if this container contains the {@link Tag} given
+   */
   public abstract boolean contains(final Tag tag);
 
+  /**
+   * Removes all {@link Tag}s from this container.
+   */
   public abstract void clear();
 
   /**
