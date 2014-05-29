@@ -100,9 +100,10 @@ public abstract class TagAdapter<T extends Tag> extends RegistryAccessor {
    * @param newTagRegistry
    *          the {@link TagRegistry} to assign to the new instance
    * @return a new instance of this {@link TagAdapter}
+   * @throws AxionInstanceCreationException
    */
   @SuppressWarnings("unchecked")
-  protected <A extends Tag> TagAdapter<A> newInstance(final TagRegistry newTagRegistry) {
+  protected <A extends Tag> TagAdapter<A> newInstance(final TagRegistry newTagRegistry) throws AxionInstanceCreationException {
     try {
       TagAdapter<A> newInstance = this.getClass().newInstance();
       newInstance.setRegistry(newTagRegistry);

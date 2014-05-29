@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.sudoplay.axion.AxionConfigurationProtection.ProtectionMode;
+import com.sudoplay.axion.adapter.AxionTagRegistrationException;
 import com.sudoplay.axion.adapter.TagAdapter;
 import com.sudoplay.axion.adapter.TagConverter;
 import com.sudoplay.axion.api.AxionWritable;
@@ -187,6 +188,8 @@ public class Axion {
 
   /**
    * Returns the registered id for the {@link Tag} class given.
+   * <p>
+   * If no id is found, an exception is thrown.
    * 
    * @param tagClass
    *          tag class to get the id for
@@ -198,12 +201,15 @@ public class Axion {
 
   /**
    * Returns the registered {@link Tag} class for the id given.
+   * <p>
+   * If no class is found, an exception is thrown.
    * 
    * @param id
    *          id to get the tag class for
    * @return the registered {@link Tag} class for the id given
+   * @throws AxionTagRegistrationException
    */
-  public Class<? extends Tag> getClassFor(final int id) {
+  public Class<? extends Tag> getClassFor(final int id) throws AxionTagRegistrationException {
     return configuration.getClassFor(id);
   }
 
@@ -220,62 +226,77 @@ public class Axion {
 
   /**
    * Returns the registered {@link TagAdapter} for the tag class given.
+   * <p>
+   * If no adapter is found, an exception is thrown.
    * 
    * @param tagClass
    *          tag class to get the adapter for
    * @return the registered {@link TagAdapter} for the tag class given
+   * @throws AxionTagRegistrationException
    */
-  public <T extends Tag> TagAdapter<T> getAdapterFor(final Class<T> tagClass) {
+  public <T extends Tag> TagAdapter<T> getAdapterFor(final Class<T> tagClass) throws AxionTagRegistrationException {
     return configuration.getAdapterFor(tagClass);
   }
 
   /**
    * Returns the registered {@link TagConverter} for the tag given.
+   * <p>
+   * If no converter is found, an exception is thrown.
    * 
    * @param tag
    *          tag to get the tag converter for
    * @return the registered {@link TagConverter} for the tag given
+   * @throws AxionTagRegistrationException
    */
-  public <T extends Tag, V> TagConverter<T, V> getConverterFor(final T tag) {
+  public <T extends Tag, V> TagConverter<T, V> getConverterFor(final T tag) throws AxionTagRegistrationException {
     return configuration.getConverterFor(tag);
   }
 
   /**
    * Returns the registered {@link TagConverter} for the value given.
+   * <p>
+   * If no converter is found, an exception is thrown.
    * 
    * @param value
    *          value to get the tag converter for
    * @return the registered {@link TagConverter} for the value given
+   * @throws AxionTagRegistrationException
    */
-  public <T extends Tag, V> TagConverter<T, V> getConverterFor(final V value) {
+  public <T extends Tag, V> TagConverter<T, V> getConverterFor(final V value) throws AxionTagRegistrationException {
     return configuration.getConverterFor(value);
   }
 
   /**
-   * Converts the given tag into its value using the converter registered for
-   * the tag's class.
+   * Converts the given tag into its value using the {@link TagConverter}
+   * registered for the tag's class.
+   * <p>
+   * If no converter is found, an exception is thrown.
    * 
    * @param tag
    *          tag to convert
    * @return the tag's converted value
+   * @throws AxionTagRegistrationException
    */
   @SuppressWarnings("unchecked")
-  public <T extends Tag, V> V convertToValue(final T tag) {
+  public <T extends Tag, V> V convertToValue(final T tag) throws AxionTagRegistrationException {
     return (V) configuration.getConverterFor(tag).convert(tag);
   }
 
   /**
    * Converts the given value into its tag using the converter registered for
    * the value's class.
+   * <p>
+   * If no converter is found, an exception is thrown.
    * 
    * @param name
    *          name of the new tag
    * @param value
    *          value to convert
    * @return the value's converted tag
+   * @throws AxionTagRegistrationException
    */
   @SuppressWarnings("unchecked")
-  public <T extends Tag, V> T convertToTag(final String name, final V value) {
+  public <T extends Tag, V> T convertToTag(final String name, final V value) throws AxionTagRegistrationException {
     return (T) configuration.getConverterFor(value).convert(name, value);
   }
 
@@ -309,6 +330,8 @@ public class Axion {
 
   /**
    * Reads a file into the {@link AxionWritable} given.
+   * <p>
+   * If no base tag adapter has been registered, an exception is thrown.
    * 
    * @param file
    *          the file to read from
@@ -317,7 +340,7 @@ public class Axion {
    * @return the {@link AxionWritable} written to
    * @throws IOException
    */
-  public <T extends AxionWritable<TagCompound>> T read(final File file, final T axionWritable) throws IOException {
+  public <T extends AxionWritable<TagCompound>> T read(final File file, final T axionWritable) throws IOException, AxionTagRegistrationException {
     axionWritable.read(read(file), this);
     return axionWritable;
   }
@@ -337,13 +360,15 @@ public class Axion {
 
   /**
    * Reads and returns a {@link TagCompound} from the {@link File} given.
+   * <p>
+   * If no base tag adapter has been registered, an exception is thrown.
    * 
    * @param file
    *          file to read
    * @return a {@link TagCompound}
    * @throws IOException
    */
-  public TagCompound read(final File file) throws IOException {
+  public TagCompound read(final File file) throws IOException, AxionTagRegistrationException {
     FileInputStream fileInputStream = new FileInputStream(file);
     TagCompound result = read(fileInputStream);
     fileInputStream.close();
@@ -383,6 +408,8 @@ public class Axion {
 
   /**
    * Writes the {@link AxionWritable} given to the {@link OutputStream} given.
+   * <p>
+   * If no base tag adapter has been registered, an exception is thrown.
    * 
    * @param axionWritable
    *          {@link AxionWritable} to write
@@ -390,19 +417,21 @@ public class Axion {
    *          stream to write to
    * @throws IOException
    */
-  public void write(final AxionWritable<TagCompound> axionWritable, final OutputStream outputStream) throws IOException {
+  public void write(final AxionWritable<TagCompound> axionWritable, final OutputStream outputStream) throws IOException, AxionTagRegistrationException {
     write(axionWritable.write(this), outputStream);
   }
 
   /**
    * Reads and returns a {@link TagCompound} from the {@link InputStream} given.
+   * <p>
+   * If no base tag adapter has been registered, an exception is thrown.
    * 
    * @param inputStream
    *          the stream to read from
    * @return the {@link TagCompound} read
    * @throws IOException
    */
-  public TagCompound read(final InputStream inputStream) throws IOException {
+  public TagCompound read(final InputStream inputStream) throws IOException, AxionTagRegistrationException {
     Tag result = readTag(null, configuration.wrap(inputStream));
     if (!(result instanceof TagCompound)) {
       throw new AxionReadException("Root tag not of type " + TagCompound.class.getSimpleName());
@@ -412,6 +441,8 @@ public class Axion {
 
   /**
    * Writes the {@link TagCompound} given to the {@link OutputStream} given.
+   * <p>
+   * If no base tag adapter has been registered, an exception is thrown.
    * 
    * @param tagCompound
    *          the tag to write
@@ -419,12 +450,14 @@ public class Axion {
    *          the stream to write to
    * @throws IOException
    */
-  public void write(final TagCompound tagCompound, final OutputStream outputStream) throws IOException {
+  public void write(final TagCompound tagCompound, final OutputStream outputStream) throws IOException, AxionTagRegistrationException {
     writeTag(tagCompound, configuration.wrap(outputStream));
   }
 
   /**
    * Reads and returns a {@link Tag} from the {@link AxionInputStream} given.
+   * <p>
+   * If no base tag adapter has been registered, an exception is thrown.
    * 
    * @param parent
    *          the tag requesting the read
@@ -433,12 +466,14 @@ public class Axion {
    * @return the {@link Tag} read
    * @throws IOException
    */
-  protected Tag readTag(final Tag parent, final AxionInputStream in) throws IOException {
+  protected Tag readTag(final Tag parent, final AxionInputStream in) throws IOException, AxionTagRegistrationException {
     return configuration.getBaseTagAdapter().read(parent, in);
   }
 
   /**
    * Writes the {@link Tag} given to the {@link AxionOutputStream} given.
+   * <p>
+   * If no base tag adapter has been registered, an exception is thrown.
    * 
    * @param tag
    *          the tag to write
@@ -446,7 +481,7 @@ public class Axion {
    *          the stream to write to
    * @throws IOException
    */
-  protected void writeTag(final Tag tag, final AxionOutputStream out) throws IOException {
+  protected void writeTag(final Tag tag, final AxionOutputStream out) throws IOException, AxionTagRegistrationException {
     configuration.getBaseTagAdapter().write(tag, out);
   }
 

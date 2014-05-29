@@ -5,24 +5,73 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.sudoplay.axion.AxionInstanceCreationException;
 import com.sudoplay.axion.tag.Tag;
 import com.sudoplay.axion.util.TypeResolver;
 
+/**
+ * The {@link TagRegistry} class is responsible for maintaining relationships
+ * between integer ids, {@link Tag} classes, {@link Tag} value classes,
+ * {@link TagAdapter}s, and {@link TagConverter}s and providing lookup methods
+ * to access the data via its relationships.
+ * 
+ * @author Jason Taylor
+ */
 public class TagRegistry implements Cloneable {
 
+  /**
+   * Maps {@link Tag} classes to their respective integer ids.
+   */
   private final Map<Class<? extends Tag>, Integer> classToId = new HashMap<Class<? extends Tag>, Integer>();
+
+  /**
+   * Maps integer ids to their respective {@link Tag} classes.
+   */
   private final Map<Integer, Class<? extends Tag>> idToClass = new HashMap<Integer, Class<? extends Tag>>();
+
+  /**
+   * Maps {@link Tag} classes the their respective {@link TagAdapter}s.
+   */
   private final Map<Class<? extends Tag>, TagAdapter<? extends Tag>> classToAdapter = new HashMap<Class<? extends Tag>, TagAdapter<? extends Tag>>();
+
+  /**
+   * Maps integer ids to their respective {@link TagAdapter}s.
+   */
   private final Map<Integer, TagAdapter<? extends Tag>> idToAdapter = new HashMap<Integer, TagAdapter<? extends Tag>>();
+
+  /**
+   * Maps {@link Tag} classes to their respective {@link TagConverter}s.
+   */
   private final Map<Class<? extends Tag>, TagConverter<? extends Tag, ?>> classToConverter = new HashMap<Class<? extends Tag>, TagConverter<? extends Tag, ?>>();
+
+  /**
+   * Maps value classes to their respective {@link TagConverter}s.
+   */
   private final Map<Class<?>, TagConverter<? extends Tag, ?>> typeToConverter = new HashMap<Class<?>, TagConverter<? extends Tag, ?>>();
+
+  /**
+   * The base {@link TagAdapter}; used as an entry point when reading and
+   * writing a {@link Tag} hierarchy.
+   */
   private TagAdapter<Tag> baseTagAdapter;
 
+  /**
+   * Creates a new, empty {@link TagRegistry}.
+   */
   public TagRegistry() {
     //
   }
 
-  protected TagRegistry(final TagRegistry toCopy) {
+  /**
+   * Creates a new {@link TagRegistry} by copying the registry given.
+   * <p>
+   * All {@link TagAdapter}s and {@link TagConverter}s are duplicated and
+   * assigned a reference to this registry.
+   * 
+   * @param toCopy
+   * @throws AxionInstanceCreationException
+   */
+  protected TagRegistry(final TagRegistry toCopy) throws AxionInstanceCreationException {
     classToId.putAll(toCopy.classToId);
     idToClass.putAll(toCopy.idToClass);
     Iterator<Entry<Class<? extends Tag>, TagAdapter<? extends Tag>>> it1 = toCopy.classToAdapter.entrySet().iterator();
@@ -48,12 +97,39 @@ public class TagRegistry implements Cloneable {
     baseTagAdapter = toCopy.baseTagAdapter.newInstance(this);
   }
 
-  public void registerBaseTagAdapter(final TagAdapter<Tag> newBaseTagAdapter) {
+  /**
+   * Registers a {@link TagAdapter} as the base tag adapter. The base tag
+   * adapter is the entry point for reading and writing a tag hierarchy.
+   * 
+   * @param newBaseTagAdapter
+   * @throws AxionInstanceCreationException
+   */
+  public void registerBaseTagAdapter(final TagAdapter<Tag> newBaseTagAdapter) throws AxionInstanceCreationException {
     baseTagAdapter = newBaseTagAdapter.newInstance(this);
   }
 
+  /**
+   * Registers a {@link TagAdapter} and {@link TagConverter} with an id, tag
+   * class, and value class. Tags must be registered to be recognized by the
+   * system.
+   * <p>
+   * An exception is thrown if a duplicate id, tag class, or value class is
+   * registered.
+   * 
+   * @param id
+   *          the int id of the {@link Tag}
+   * @param tagClass
+   *          the class of the {@link Tag}
+   * @param type
+   *          the class of the value represented by the tag
+   * @param adapter
+   *          the {@link TagAdapter} for the {@link Tag}
+   * @param converter
+   *          the {@link TagConverter} for the {@link Tag}
+   * @throws AxionTagRegistrationException
+   */
   public <T extends Tag, V> void register(final int id, final Class<T> tagClass, final Class<V> type, final TagAdapter<T> adapter,
-      final TagConverter<T, V> converter) throws AxionTagRegistrationException {
+      final TagConverter<T, V> converter) throws AxionTagRegistrationException, AxionInstanceCreationException {
 
     if (classToAdapter.containsKey(tagClass) || classToId.containsKey(tagClass)) {
       throw new AxionTagRegistrationException("Tag class already registered: " + tagClass.getSimpleName());
@@ -77,10 +153,30 @@ public class TagRegistry implements Cloneable {
     typeToConverter.put(type, newConverterInstance);
   }
 
-  public TagAdapter<Tag> getBaseTagAdapter() {
+  /**
+   * Returns the {@link TagAdapter} registered as the base tag adapter.
+   * <p>
+   * If no base tag adapter has been registered, an exception is thrown.
+   * 
+   * @return the {@link TagAdapter} registered as the base tag adapter
+   */
+  public TagAdapter<Tag> getBaseTagAdapter() throws AxionTagRegistrationException {
+    if (baseTagAdapter == null) {
+      throw new AxionTagRegistrationException("No base tag adapter registered; use registerBaseTagAdapter() to register an adapter as the base tag adapater");
+    }
     return baseTagAdapter;
   }
 
+  /**
+   * Returns the {@link TagAdapter} registered for the int id given.
+   * <p>
+   * If no adapter is found, an exception is thrown.
+   * 
+   * @param id
+   *          the int id to get the {@link TagAdapter} for
+   * @return the {@link TagAdapter} registered for the int id given
+   * @throws AxionTagRegistrationException
+   */
   @SuppressWarnings("unchecked")
   public <T extends Tag> TagAdapter<T> getAdapterFor(final int id) throws AxionTagRegistrationException {
     TagAdapter<T> result;
@@ -90,6 +186,16 @@ public class TagRegistry implements Cloneable {
     return result;
   }
 
+  /**
+   * Returns the {@link TagAdapter} registered for the {@link Tag} class given.
+   * <p>
+   * If no adapter is found, an exception is thrown.
+   * 
+   * @param tagClass
+   *          the {@link Tag} class to get the {@link TagAdapter} for
+   * @return the {@link TagAdapter} registered for the {@link Tag} class given
+   * @throws AxionTagRegistrationException
+   */
   @SuppressWarnings("unchecked")
   public <T extends Tag> TagAdapter<T> getAdapterFor(final Class<T> tagClass) throws AxionTagRegistrationException {
     TagAdapter<T> result;
@@ -99,7 +205,17 @@ public class TagRegistry implements Cloneable {
     return result;
   }
 
-  public Integer getIdFor(final Class<? extends Tag> tagClass) throws AxionTagRegistrationException {
+  /**
+   * Returns the int id registered for the {@link Tag} class given.
+   * <p>
+   * If no id is found, an exception is thrown.
+   * 
+   * @param tagClass
+   *          the {@link Tag} class to get the int id for
+   * @return the int id registered for the {@link Tag} class given
+   * @throws AxionTagRegistrationException
+   */
+  public int getIdFor(final Class<? extends Tag> tagClass) throws AxionTagRegistrationException {
     Integer result;
     if ((result = classToId.get(tagClass)) == null) {
       throw new AxionTagRegistrationException("No id registered for tag class: " + tagClass.getSimpleName());
@@ -107,6 +223,16 @@ public class TagRegistry implements Cloneable {
     return result;
   }
 
+  /**
+   * Returns the {@link Tag} class registered for the int id given.
+   * <p>
+   * If no class is found, an exception is thrown.
+   * 
+   * @param id
+   *          the int id to get the {@link Tag} class for
+   * @return the {@link Tag} class registered for the int id given
+   * @throws AxionTagRegistrationException
+   */
   public Class<? extends Tag> getClassFor(final int id) throws AxionTagRegistrationException {
     Class<? extends Tag> result;
     if ((result = idToClass.get(id)) == null) {
@@ -115,8 +241,19 @@ public class TagRegistry implements Cloneable {
     return result;
   }
 
+  /**
+   * Returns the {@link TagConverter} registered to handle the {@link Tag} class
+   * given.
+   * <p>
+   * If no converter is found, an exception is thrown.
+   * 
+   * @param tagClass
+   *          the class of the tag to get the converter for
+   * @return the {@link TagConverter} registered to handle the tag class given
+   * @throws AxionTagRegistrationException
+   */
   @SuppressWarnings("unchecked")
-  public <T extends Tag, V> TagConverter<T, V> getConverterForTag(final Class<T> tagClass) {
+  public <T extends Tag, V> TagConverter<T, V> getConverterForTag(final Class<T> tagClass) throws AxionTagRegistrationException {
     if (tagClass == null) {
       return null;
     } else if (!classToConverter.containsKey(tagClass)) {
@@ -125,8 +262,19 @@ public class TagRegistry implements Cloneable {
     return (TagConverter<T, V>) classToConverter.get(tagClass);
   }
 
+  /**
+   * Returns the {@link TagConverter} registered to handle the value class
+   * given.
+   * <p>
+   * If no converter is found, an exception is thrown.
+   * 
+   * @param valueClass
+   *          the class of the value to get the converter for
+   * @return the {@link TagConverter} registered to handle the value class given
+   * @throws AxionTagRegistrationException
+   */
   @SuppressWarnings("unchecked")
-  public <T extends Tag, V> TagConverter<T, V> getConverterForValue(final Class<V> valueClass) {
+  public <T extends Tag, V> TagConverter<T, V> getConverterForValue(final Class<V> valueClass) throws AxionTagRegistrationException {
     if (valueClass == null) {
       return null;
     }
@@ -149,6 +297,10 @@ public class TagRegistry implements Cloneable {
     return converter;
   }
 
+  /**
+   * Creates a duplicate of this {@link TagRegistry} via the copy constructor
+   * {@link #TagRegistry(TagRegistry)}.
+   */
   @Override
   public TagRegistry clone() {
     return new TagRegistry(this);

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.sudoplay.axion.AxionConfigurationProtection.ProtectionMode;
+import com.sudoplay.axion.adapter.AxionTagRegistrationException;
 import com.sudoplay.axion.adapter.TagAdapter;
 import com.sudoplay.axion.adapter.TagConverter;
 import com.sudoplay.axion.adapter.TagRegistry;
@@ -246,9 +247,11 @@ public class AxionConfiguration implements Cloneable {
    * 
    * @param newBaseTagAdapter
    *          the new base tag adapter
+   * @throws AxionConfigurationException
+   * @throws AxionInstanceCreationException
    * @see #getBaseTagAdapter()
    */
-  public void registerBaseTagAdapter(final TagAdapter<Tag> newBaseTagAdapter) {
+  public void registerBaseTagAdapter(final TagAdapter<Tag> newBaseTagAdapter) throws AxionConfigurationException, AxionInstanceCreationException {
     configurationProtection.assertUnlocked();
     configurationProtection.assertMutable();
     tagRegistry.registerBaseTagAdapter(newBaseTagAdapter);
@@ -270,6 +273,8 @@ public class AxionConfiguration implements Cloneable {
    * @param converter
    *          {@link TagConverter} for the tag
    * @return this {@link AxionConfiguration}
+   * @throws AxionTagRegistrationException
+   * @throws AxionInstanceCreationException
    * @see #getAdapterFor(Class)
    * @see #getAdapterFor(int)
    * @see #getClassFor(int)
@@ -278,7 +283,7 @@ public class AxionConfiguration implements Cloneable {
    * @see #getIdFor(Class)
    */
   public <T extends Tag, V> AxionConfiguration registerTag(final int id, final Class<T> tagClass, final Class<V> type, final TagAdapter<T> adapter,
-      final TagConverter<T, V> converter) {
+      final TagConverter<T, V> converter) throws AxionTagRegistrationException, AxionInstanceCreationException {
     configurationProtection.assertUnlocked();
     configurationProtection.assertMutable();
     tagRegistry.register(id, tagClass, type, adapter, converter);
@@ -329,9 +334,13 @@ public class AxionConfiguration implements Cloneable {
   }
 
   /**
+   * Returns the {@link TagAdapter} registered as the base tag adapter.
+   * <p>
+   * If no base tag adapter has been registered, an exception is thrown.
+   * 
    * @return the base {@link TagAdapter}
    */
-  protected TagAdapter<Tag> getBaseTagAdapter() {
+  protected TagAdapter<Tag> getBaseTagAdapter() throws AxionTagRegistrationException {
     return tagRegistry.getBaseTagAdapter();
   }
 
@@ -348,12 +357,15 @@ public class AxionConfiguration implements Cloneable {
 
   /**
    * Returns the {@link Tag} class for the int id given.
+   * <p>
+   * If no class is found, an exception is thrown.
    * 
    * @param id
    *          the id to get the class for
    * @return the {@link Tag} class for the int id given
+   * @throws AxionTagRegistrationException
    */
-  protected Class<? extends Tag> getClassFor(final int id) {
+  protected Class<? extends Tag> getClassFor(final int id) throws AxionTagRegistrationException {
     return tagRegistry.getClassFor(id);
   }
 
@@ -370,36 +382,45 @@ public class AxionConfiguration implements Cloneable {
 
   /**
    * Returns the {@link TagAdapter} for the {@link Tag} class given.
+   * <p>
+   * If no adapter is found, an exception is thrown.
    * 
    * @param tagClass
    *          {@link Tag} class to get the {@link TagAdapter} for
    * @return the {@link TagAdapter} for the {@link Tag} class given
+   * @throws AxionTagRegistrationException
    */
-  protected <T extends Tag> TagAdapter<T> getAdapterFor(final Class<T> tagClass) {
+  protected <T extends Tag> TagAdapter<T> getAdapterFor(final Class<T> tagClass) throws AxionTagRegistrationException {
     return tagRegistry.getAdapterFor(tagClass);
   }
 
   /**
    * Returns the {@link TagConverter} for the {@link Tag} given.
+   * <p>
+   * If no converter is found, an exception is thrown.
    * 
    * @param tag
    *          {@link Tag} to get the {@link TagConverter} for
    * @return the {@link TagConverter} for the {@link Tag} given
+   * @throws AxionTagRegistrationException
    */
   @SuppressWarnings("unchecked")
-  protected <T extends Tag, V> TagConverter<T, V> getConverterFor(final T tag) {
+  protected <T extends Tag, V> TagConverter<T, V> getConverterFor(final T tag) throws AxionTagRegistrationException {
     return (TagConverter<T, V>) tagRegistry.getConverterForTag(tag.getClass());
   }
 
   /**
    * Returns the {@link TagConverter} for the value given.
+   * <p>
+   * If no converter is found, an exception is thrown.
    * 
    * @param value
    *          value to get the {@link TagConverter} for
    * @return the {@link TagConverter} for the value given
+   * @throws AxionTagRegistrationException
    */
   @SuppressWarnings("unchecked")
-  protected <T extends Tag, V> TagConverter<T, V> getConverterFor(final V value) {
+  protected <T extends Tag, V> TagConverter<T, V> getConverterFor(final V value) throws AxionTagRegistrationException {
     return (TagConverter<T, V>) tagRegistry.getConverterForValue(value.getClass());
   }
 
