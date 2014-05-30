@@ -16,9 +16,9 @@ public class MapperTest {
   @BeforeClass
   public static void before() {
     Axion.createInstanceFrom(Axion.getExtInstance(), "vectorTest");
-    Axion.getInstance("vectorTest").configuration().registerNBTObjectMapper(Vector3f.class, new Vector3fMapper());
+    Axion.getInstance("vectorTest").registerNBTObjectMapper(Vector3f.class, new Vector3fMapper());
   }
-  
+
   @AfterClass
   public static void after() {
     Axion.deleteInstance("vectorTest");

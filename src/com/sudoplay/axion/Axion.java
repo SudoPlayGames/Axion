@@ -10,6 +10,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.sudoplay.axion.AxionConfiguration.CharacterEncodingType;
+import com.sudoplay.axion.AxionConfiguration.CompressionType;
 import com.sudoplay.axion.AxionConfigurationProtection.ProtectionMode;
 import com.sudoplay.axion.adapter.AxionTagRegistrationException;
 import com.sudoplay.axion.adapter.TagAdapter;
@@ -119,7 +121,7 @@ public class Axion {
     if (INSTANCES.containsKey(newName)) {
       throw new AxionInstanceCreationException(Axion.class.getSimpleName() + " instance alread exists with name: " + newName);
     }
-    Axion instance = new Axion(axion.configuration().clone());
+    Axion instance = new Axion(axion.configuration.clone());
     INSTANCES.put(newName, instance);
     return instance;
   }
@@ -184,8 +186,47 @@ public class Axion {
     return configuration;
   }
 
-  public String getNameFor(final Tag tag) {
-    return tag.getClass().getSimpleName();
+  /**
+   * Changes protection mode to <b>Locked</b>. Any attempt to change the
+   * configuration while it is locked will result in an exception. Use
+   * {@link #unlock()} to unlock.
+   * <p>
+   * Can't use when <b>Immutable</b>.
+   * 
+   * @return this {@link Axion} instance
+   * @see #unlock()
+   * @see #setImmutable()
+   */
+  public Axion lock() {
+    configuration.lock();
+    return this;
+  }
+
+  /**
+   * Changes protection mode to <b>Unlocked</b>.
+   * <p>
+   * Can't use when <b>Immutable</b>.
+   * 
+   * @return this {@link Axion} instance
+   * @see #lock()
+   * @see #setImmutable()
+   */
+  public Axion unlock() {
+    configuration.unlock();
+    return this;
+  }
+
+  /**
+   * Changes protection mode to <b>Immutable</b>. Once this mode is set, it
+   * can't be undone.
+   * 
+   * @return this {@link Axion} instance
+   * @see #lock()
+   * @see #unlock()
+   */
+  public Axion setImmutable() {
+    configuration.setImmutable();
+    return this;
   }
 
   /**
@@ -200,6 +241,130 @@ public class Axion {
    */
   public int getIdFor(final Class<? extends Tag> tagClass) throws AxionTagRegistrationException {
     return configuration.getIdFor(tagClass);
+  }
+
+  /**
+   * @return true if protection mode is <b>Locked</b>
+   */
+  public boolean isLocked() {
+    return configuration.isLocked();
+  }
+
+  /**
+   * @return true if protection mode is <b>Unlocked</b>
+   */
+  public boolean isUnlocked() {
+    return configuration.isUnlocked();
+  }
+
+  /**
+   * @return true if protection mode is <b>Immutable</b>
+   */
+  public boolean isImmutable() {
+    return configuration.isImmutable();
+  }
+
+  /**
+   * Sets the {@link CharacterEncodingType}.
+   * <p>
+   * Can't use when <b>Locked</b> or <b>Immutable</b>.
+   * 
+   * @param newCharacterEncodingType
+   *          the new encoding type
+   * @return this {@link Axion} instance
+   */
+  public Axion setCharacterEncodingType(final CharacterEncodingType newCharacterEncodingType) {
+    configuration.setCharacterEncodingType(newCharacterEncodingType);
+    return this;
+  }
+
+  /**
+   * Register a {@link TagAdapter<Tag>} as the base tag adapter.
+   * <p>
+   * Can't use when <b>Locked</b> or <b>Immutable</b>.
+   * 
+   * @param newBaseTagAdapter
+   *          the new base tag adapter
+   * @throws AxionConfigurationException
+   * @throws AxionInstanceCreationException
+   * @see #getBaseTagAdapter()
+   */
+  public Axion registerBaseTagAdapter(final TagAdapter<Tag> newBaseTagAdapter) throws AxionConfigurationException, AxionInstanceCreationException {
+    configuration.registerBaseTagAdapter(newBaseTagAdapter);
+    return this;
+  }
+
+  /**
+   * Registers the relationships for a tag.
+   * <p>
+   * Can't use when <b>Locked</b> or <b>Immutable</b>.
+   * 
+   * @param id
+   *          the id of the tag
+   * @param tagClass
+   *          the class of the tag
+   * @param type
+   *          the class of the type
+   * @param adapter
+   *          {@link TagAdapter} for the tag
+   * @param converter
+   *          {@link TagConverter} for the tag
+   * @return this {@link Axion} instance
+   * @throws AxionTagRegistrationException
+   * @throws AxionInstanceCreationException
+   * @see #getAdapterFor(Class)
+   * @see #getAdapterFor(int)
+   * @see #getClassFor(int)
+   * @see #getConverterFor(Tag)
+   * @see #getConverterFor(Object)
+   * @see #getIdFor(Class)
+   */
+  public <T extends Tag, V> Axion registerTag(final int id, final Class<T> tagClass, final Class<V> type, final TagAdapter<T> adapter,
+      final TagConverter<T, V> converter) throws AxionTagRegistrationException, AxionInstanceCreationException {
+    configuration.registerTag(id, tagClass, type, adapter, converter);
+    return this;
+  }
+
+  /**
+   * Registers a {@link NBTObjectMapper} for the class type given.
+   * <p>
+   * Can't use when <b>Locked</b> or <b>Immutable</b>.
+   * 
+   * @param type
+   *          the type of the object
+   * @param mapper
+   *          the mapper
+   * @return this {@link Axion} instance
+   */
+  public <T extends Tag, O> Axion registerNBTObjectMapper(final Class<O> type, final NBTObjectMapper<T, O> mapper) {
+    configuration.registerNBTObjectMapper(type, mapper);
+    return this;
+  }
+
+  /**
+   * Sets this {@link AxionConfiguration} to use the {@link CompressionType}
+   * given.
+   * <p>
+   * Can't use when <b>Locked</b> or <b>Immutable</b>.
+   * 
+   * @param newCompressionType
+   *          the compression type to use
+   * @return this {@link Axion} instance
+   */
+  public Axion setCompressionType(final CompressionType newCompressionType) {
+    configuration.setCompressionType(newCompressionType);
+    return this;
+  }
+
+  /**
+   * Returns the {@link TagAdapter} registered as the base tag adapter.
+   * <p>
+   * If no base tag adapter has been registered, an exception is thrown.
+   * 
+   * @return the base {@link TagAdapter}
+   */
+  protected TagAdapter<Tag> getBaseTagAdapter() throws AxionTagRegistrationException {
+    return configuration.getBaseTagAdapter();
   }
 
   /**
@@ -366,6 +531,7 @@ public class Axion {
    *          the {@link AxionWritable} to write to
    * @return the {@link AxionWritable} written to
    * @throws IOException
+   * @throws AxionTagRegistrationException
    */
   public <T extends AxionWritable<TagCompound>> T read(final File file, final T axionWritable) throws IOException, AxionTagRegistrationException {
     axionWritable.read(read(file), this);
@@ -443,6 +609,7 @@ public class Axion {
    * @param outputStream
    *          stream to write to
    * @throws IOException
+   * @throws AxionTagRegistrationException
    */
   public void write(final AxionWritable<TagCompound> axionWritable, final OutputStream outputStream) throws IOException, AxionTagRegistrationException {
     write(axionWritable.write(this), outputStream);
@@ -457,6 +624,7 @@ public class Axion {
    *          the stream to read from
    * @return the {@link TagCompound} read
    * @throws IOException
+   * @throws AxionTagRegistrationException
    */
   public TagCompound read(final InputStream inputStream) throws IOException, AxionTagRegistrationException {
     Tag result = readTag(null, configuration.wrap(inputStream));
@@ -476,6 +644,7 @@ public class Axion {
    * @param outputStream
    *          the stream to write to
    * @throws IOException
+   * @throws AxionTagRegistrationException
    */
   public void write(final TagCompound tagCompound, final OutputStream outputStream) throws IOException, AxionTagRegistrationException {
     writeTag(tagCompound, configuration.wrap(outputStream));
@@ -492,6 +661,7 @@ public class Axion {
    *          the stream to read from
    * @return the {@link Tag} read
    * @throws IOException
+   * @throws AxionTagRegistrationException
    */
   protected Tag readTag(final Tag parent, final AxionInputStream in) throws IOException, AxionTagRegistrationException {
     return configuration.getBaseTagAdapter().read(parent, in);
@@ -507,6 +677,7 @@ public class Axion {
    * @param out
    *          the stream to write to
    * @throws IOException
+   * @throws AxionTagRegistrationException
    */
   protected void writeTag(final Tag tag, final AxionOutputStream out) throws IOException, AxionTagRegistrationException {
     configuration.getBaseTagAdapter().write(tag, out);

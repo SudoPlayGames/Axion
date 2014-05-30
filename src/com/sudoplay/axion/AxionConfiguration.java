@@ -168,7 +168,7 @@ public class AxionConfiguration implements Cloneable {
    * @see #unlock()
    * @see #setImmutable()
    */
-  public AxionConfiguration lock() {
+  protected AxionConfiguration lock() {
     configurationProtection.assertMutable();
     configurationProtection.lock();
     return this;
@@ -183,7 +183,7 @@ public class AxionConfiguration implements Cloneable {
    * @see #lock()
    * @see #setImmutable()
    */
-  public AxionConfiguration unlock() {
+  protected AxionConfiguration unlock() {
     configurationProtection.assertMutable();
     configurationProtection.unlock();
     return this;
@@ -197,7 +197,7 @@ public class AxionConfiguration implements Cloneable {
    * @see #lock()
    * @see #unlock()
    */
-  public AxionConfiguration setImmutable() {
+  protected AxionConfiguration setImmutable() {
     configurationProtection.assertUnlocked();
     configurationProtection.assertMutable();
     configurationProtection.setImmutable();
@@ -207,21 +207,21 @@ public class AxionConfiguration implements Cloneable {
   /**
    * @return true if protection mode is <b>Locked</b>
    */
-  public boolean isLocked() {
+  protected boolean isLocked() {
     return configurationProtection.isLocked();
   }
 
   /**
    * @return true if protection mode is <b>Unlocked</b>
    */
-  public boolean isUnlocked() {
+  protected boolean isUnlocked() {
     return configurationProtection.isUnlocked();
   }
 
   /**
    * @return true if protection mode is <b>Immutable</b>
    */
-  public boolean isImmutable() {
+  protected boolean isImmutable() {
     return configurationProtection.isImmutable();
   }
 
@@ -234,7 +234,7 @@ public class AxionConfiguration implements Cloneable {
    *          the new encoding type
    * @return this {@link AxionConfiguration}
    */
-  public AxionConfiguration setCharacterEncodingType(final CharacterEncodingType newCharacterEncodingType) {
+  protected AxionConfiguration setCharacterEncodingType(final CharacterEncodingType newCharacterEncodingType) {
     configurationProtection.assertUnlocked();
     configurationProtection.assertMutable();
     characterEncodingType = newCharacterEncodingType;
@@ -252,7 +252,7 @@ public class AxionConfiguration implements Cloneable {
    * @throws AxionInstanceCreationException
    * @see #getBaseTagAdapter()
    */
-  public void registerBaseTagAdapter(final TagAdapter<Tag> newBaseTagAdapter) throws AxionConfigurationException, AxionInstanceCreationException {
+  protected void registerBaseTagAdapter(final TagAdapter<Tag> newBaseTagAdapter) throws AxionConfigurationException, AxionInstanceCreationException {
     configurationProtection.assertUnlocked();
     configurationProtection.assertMutable();
     tagRegistry.registerBaseTagAdapter(newBaseTagAdapter);
@@ -283,7 +283,7 @@ public class AxionConfiguration implements Cloneable {
    * @see #getConverterFor(Object)
    * @see #getIdFor(Class)
    */
-  public <T extends Tag, V> AxionConfiguration registerTag(final int id, final Class<T> tagClass, final Class<V> type, final TagAdapter<T> adapter,
+  protected <T extends Tag, V> AxionConfiguration registerTag(final int id, final Class<T> tagClass, final Class<V> type, final TagAdapter<T> adapter,
       final TagConverter<T, V> converter) throws AxionTagRegistrationException, AxionInstanceCreationException {
     configurationProtection.assertUnlocked();
     configurationProtection.assertMutable();
@@ -302,7 +302,7 @@ public class AxionConfiguration implements Cloneable {
    *          the mapper
    * @return this {@link AxionConfiguration}
    */
-  public <T extends Tag, O> AxionConfiguration registerNBTObjectMapper(final Class<O> type, final NBTObjectMapper<T, O> mapper) {
+  protected <T extends Tag, O> AxionConfiguration registerNBTObjectMapper(final Class<O> type, final NBTObjectMapper<T, O> mapper) {
     configurationProtection.assertUnlocked();
     configurationProtection.assertMutable();
     mappers.register(type, mapper);
@@ -319,7 +319,7 @@ public class AxionConfiguration implements Cloneable {
    *          the compression type to use
    * @return this {@link AxionConfiguration}
    */
-  public AxionConfiguration setCompressionType(final CompressionType newCompressionType) {
+  protected AxionConfiguration setCompressionType(final CompressionType newCompressionType) {
     configurationProtection.assertUnlocked();
     configurationProtection.assertMutable();
     switch (newCompressionType) {
