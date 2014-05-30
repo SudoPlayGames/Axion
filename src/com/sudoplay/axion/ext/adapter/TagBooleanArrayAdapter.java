@@ -24,8 +24,8 @@ public class TagBooleanArrayAdapter extends TagAdapter<TagBooleanArray> {
   @Override
   public TagBooleanArray read(Tag parent, AxionInputStream in) throws IOException {
     String name = (parent instanceof TagList) ? null : in.readString();
-    int byteLen = in.readInt();
     int boolLen = in.readInt();
+    int byteLen = (boolLen + 7) / 8;
     byte[] bytes = new byte[byteLen];
     in.readFully(bytes);
     boolean[] bool = new boolean[boolLen];
@@ -45,7 +45,6 @@ public class TagBooleanArrayAdapter extends TagAdapter<TagBooleanArray> {
         bytes[bytes.length - i / 8 - 1] |= 1 << (i % 8);
       }
     }
-    out.writeInt(bytes.length);
     out.writeInt(len);
     out.write(bytes);
   }
