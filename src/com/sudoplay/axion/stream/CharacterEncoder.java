@@ -1,5 +1,6 @@
 package com.sudoplay.axion.stream;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.nio.charset.Charset;
 
@@ -11,7 +12,7 @@ public class CharacterEncoder {
     charset = newCharset;
   }
 
-  protected void write(final AxionOutputStream out, final String data) throws IOException {
+  protected void write(final AxionOutputStream out, final String data) throws IOException, EOFException {
     byte[] bytes = data.getBytes(charset);
     if (bytes.length > 65535) {
       throw new AxionCharacterEncodingException("encoded string too long: " + bytes.length + " bytes");
@@ -20,7 +21,7 @@ public class CharacterEncoder {
     out.write(bytes);
   }
 
-  protected String read(final AxionInputStream in) throws IOException {
+  protected String read(final AxionInputStream in) throws IOException, EOFException {
     byte[] bytes = new byte[in.readUnsignedShort()];
     in.readFully(bytes);
     return new String(bytes, charset);
