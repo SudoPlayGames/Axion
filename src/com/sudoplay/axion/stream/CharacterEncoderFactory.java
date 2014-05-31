@@ -4,12 +4,26 @@ import java.nio.charset.Charset;
 
 import com.sudoplay.axion.AxionConfiguration.CharacterEncodingType;
 
+/**
+ * The {@link CharacterEncoderFactory} is responsible for providing new
+ * instances of the {@link CharacterEncoder}.
+ * 
+ * @author Jason Taylor
+ */
 public class CharacterEncoderFactory {
 
   private CharacterEncoderFactory() {
     //
   }
 
+  /**
+   * Creates and returns a new {@link CharacterEncoder} instance from the given
+   * {@link CharacterEncodingType}.
+   * 
+   * @param type
+   *          the type of converter to create
+   * @return a new {@link CharacterEncoder} instance
+   */
   public static final CharacterEncoder create(final CharacterEncodingType type) {
     switch (type) {
     case ISO_8859_1:
