@@ -133,8 +133,12 @@ public class Axion {
    * @param name
    *          name of the configuration to remove
    * @return the removed configuration, null if it doesn't exist
+   * @throws AxionInstanceException
    */
-  public static Axion deleteInstance(final String name) {
+  public static Axion deleteInstance(final String name) throws AxionInstanceException {
+    if (SPEC_INSTANCE_NAME.equals(name) || EXT_INSTANCE_NAME.equals(name)) {
+      throw new AxionInstanceException("Can't delete built-in instance: " + name);
+    }
     return INSTANCES.remove(name);
   }
 
