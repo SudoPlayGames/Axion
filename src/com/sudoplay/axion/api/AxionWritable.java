@@ -34,6 +34,6 @@ public interface AxionWritable<T extends Tag> {
    * @param axion
    *          the {@link Axion} instance
    */
-  public void read(T tag, final Axion axion);
+  public void read(final T tag, final Axion axion);
 
 }
