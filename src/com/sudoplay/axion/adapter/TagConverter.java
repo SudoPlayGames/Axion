@@ -1,6 +1,6 @@
 package com.sudoplay.axion.adapter;
 
-import com.sudoplay.axion.AxionInstanceCreationException;
+import com.sudoplay.axion.AxionInstanceException;
 import com.sudoplay.axion.ext.converter.TagBooleanArrayConverter;
 import com.sudoplay.axion.ext.converter.TagBooleanConverter;
 import com.sudoplay.axion.ext.converter.TagDoubleArrayConverter;
@@ -101,7 +101,7 @@ public abstract class TagConverter<T extends Tag, V> extends RegistryAccessor {
       newInstance.setRegistry(newTagRegistry);
       return newInstance;
     } catch (Exception e) {
-      throw new AxionInstanceCreationException("Unable to instantiate new converter of type " + this.getClass().getSimpleName(), e);
+      throw new AxionInstanceException("Unable to instantiate new converter of type " + this.getClass().getSimpleName(), e);
     }
   }
 

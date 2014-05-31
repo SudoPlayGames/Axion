@@ -78,11 +78,11 @@ public class Axion {
    * @param newName
    *          name of the new configuration
    * @return
-   * @throws AxionInstanceCreationException
+   * @throws AxionInstanceException
    */
-  public static Axion createInstance(final String newName) throws AxionInstanceCreationException {
+  public static Axion createInstance(final String newName) throws AxionInstanceException {
     if (INSTANCES.containsKey(newName)) {
-      throw new AxionInstanceCreationException(Axion.class.getSimpleName() + " instance alread exists with name: " + newName);
+      throw new AxionInstanceException(Axion.class.getSimpleName() + " instance alread exists with name: " + newName);
     }
     Axion instance = new Axion();
     INSTANCES.put(newName, instance);
@@ -99,9 +99,9 @@ public class Axion {
    * @param newName
    *          name of the new configuration
    * @return a new configuration
-   * @throws AxionInstanceCreationException
+   * @throws AxionInstanceException
    */
-  public static Axion createInstanceFrom(final String name, final String newName) throws AxionInstanceCreationException {
+  public static Axion createInstanceFrom(final String name, final String newName) throws AxionInstanceException {
     return createInstanceFrom(Axion.getInstance(name), newName);
   }
 
@@ -115,11 +115,11 @@ public class Axion {
    * @param newName
    *          name of the new configuration
    * @return a new configuration
-   * @throws AxionInstanceCreationException
+   * @throws AxionInstanceException
    */
-  public static Axion createInstanceFrom(final Axion axion, final String newName) throws AxionInstanceCreationException {
+  public static Axion createInstanceFrom(final Axion axion, final String newName) throws AxionInstanceException {
     if (INSTANCES.containsKey(newName)) {
-      throw new AxionInstanceCreationException(Axion.class.getSimpleName() + " instance alread exists with name: " + newName);
+      throw new AxionInstanceException(Axion.class.getSimpleName() + " instance alread exists with name: " + newName);
     }
     Axion instance = new Axion(axion.configuration.clone());
     INSTANCES.put(newName, instance);
@@ -286,10 +286,10 @@ public class Axion {
    * @param newBaseTagAdapter
    *          the new base tag adapter
    * @throws AxionConfigurationException
-   * @throws AxionInstanceCreationException
+   * @throws AxionInstanceException
    * @see #getBaseTagAdapter()
    */
-  public Axion registerBaseTagAdapter(final TagAdapter<Tag> newBaseTagAdapter) throws AxionConfigurationException, AxionInstanceCreationException {
+  public Axion registerBaseTagAdapter(final TagAdapter<Tag> newBaseTagAdapter) throws AxionConfigurationException, AxionInstanceException {
     configuration.registerBaseTagAdapter(newBaseTagAdapter);
     return this;
   }
@@ -311,7 +311,7 @@ public class Axion {
    *          {@link TagConverter} for the tag
    * @return this {@link Axion} instance
    * @throws AxionTagRegistrationException
-   * @throws AxionInstanceCreationException
+   * @throws AxionInstanceException
    * @see #getAdapterFor(Class)
    * @see #getAdapterFor(int)
    * @see #getClassFor(int)
@@ -320,7 +320,7 @@ public class Axion {
    * @see #getIdFor(Class)
    */
   public <T extends Tag, V> Axion registerTag(final int id, final Class<T> tagClass, final Class<V> type, final TagAdapter<T> adapter,
-      final TagConverter<T, V> converter) throws AxionTagRegistrationException, AxionInstanceCreationException {
+      final TagConverter<T, V> converter) throws AxionTagRegistrationException, AxionInstanceException {
     configuration.registerTag(id, tagClass, type, adapter, converter);
     return this;
   }

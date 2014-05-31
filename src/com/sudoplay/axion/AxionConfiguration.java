@@ -249,10 +249,10 @@ public class AxionConfiguration implements Cloneable {
    * @param newBaseTagAdapter
    *          the new base tag adapter
    * @throws AxionConfigurationException
-   * @throws AxionInstanceCreationException
+   * @throws AxionInstanceException
    * @see #getBaseTagAdapter()
    */
-  protected void registerBaseTagAdapter(final TagAdapter<Tag> newBaseTagAdapter) throws AxionConfigurationException, AxionInstanceCreationException {
+  protected void registerBaseTagAdapter(final TagAdapter<Tag> newBaseTagAdapter) throws AxionConfigurationException, AxionInstanceException {
     configurationProtection.assertUnlocked();
     configurationProtection.assertMutable();
     tagRegistry.registerBaseTagAdapter(newBaseTagAdapter);
@@ -275,7 +275,7 @@ public class AxionConfiguration implements Cloneable {
    *          {@link TagConverter} for the tag
    * @return this {@link AxionConfiguration}
    * @throws AxionTagRegistrationException
-   * @throws AxionInstanceCreationException
+   * @throws AxionInstanceException
    * @see #getAdapterFor(Class)
    * @see #getAdapterFor(int)
    * @see #getClassFor(int)
@@ -284,7 +284,7 @@ public class AxionConfiguration implements Cloneable {
    * @see #getIdFor(Class)
    */
   protected <T extends Tag, V> AxionConfiguration registerTag(final int id, final Class<T> tagClass, final Class<V> type, final TagAdapter<T> adapter,
-      final TagConverter<T, V> converter) throws AxionTagRegistrationException, AxionInstanceCreationException {
+      final TagConverter<T, V> converter) throws AxionTagRegistrationException, AxionInstanceException {
     configurationProtection.assertUnlocked();
     configurationProtection.assertMutable();
     tagRegistry.register(id, tagClass, type, adapter, converter);

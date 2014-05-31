@@ -2,7 +2,7 @@ package com.sudoplay.axion.adapter;
 
 import java.io.IOException;
 
-import com.sudoplay.axion.AxionInstanceCreationException;
+import com.sudoplay.axion.AxionInstanceException;
 import com.sudoplay.axion.ext.adapter.TagBooleanAdapter;
 import com.sudoplay.axion.ext.adapter.TagBooleanArrayAdapter;
 import com.sudoplay.axion.ext.adapter.TagDoubleArrayAdapter;
@@ -100,16 +100,16 @@ public abstract class TagAdapter<T extends Tag> extends RegistryAccessor {
    * @param newTagRegistry
    *          the {@link TagRegistry} to assign to the new instance
    * @return a new instance of this {@link TagAdapter}
-   * @throws AxionInstanceCreationException
+   * @throws AxionInstanceException
    */
   @SuppressWarnings("unchecked")
-  protected <A extends Tag> TagAdapter<A> newInstance(final TagRegistry newTagRegistry) throws AxionInstanceCreationException {
+  protected <A extends Tag> TagAdapter<A> newInstance(final TagRegistry newTagRegistry) throws AxionInstanceException {
     try {
       TagAdapter<A> newInstance = this.getClass().newInstance();
       newInstance.setRegistry(newTagRegistry);
       return newInstance;
     } catch (Exception e) {
-      throw new AxionInstanceCreationException("Unable to instantiate new adapter of type [" + this.getClass().getSimpleName() + "]", e);
+      throw new AxionInstanceException("Unable to instantiate new adapter of type [" + this.getClass().getSimpleName() + "]", e);
     }
   }
 

@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.sudoplay.axion.AxionInstanceCreationException;
+import com.sudoplay.axion.AxionInstanceException;
 import com.sudoplay.axion.tag.Tag;
 import com.sudoplay.axion.util.TypeResolver;
 
@@ -69,9 +69,9 @@ public class TagRegistry implements Cloneable {
    * assigned a reference to this registry.
    * 
    * @param toCopy
-   * @throws AxionInstanceCreationException
+   * @throws AxionInstanceException
    */
-  protected TagRegistry(final TagRegistry toCopy) throws AxionInstanceCreationException {
+  protected TagRegistry(final TagRegistry toCopy) throws AxionInstanceException {
     classToId.putAll(toCopy.classToId);
     idToClass.putAll(toCopy.idToClass);
     Iterator<Entry<Class<? extends Tag>, TagAdapter<? extends Tag>>> it1 = toCopy.classToAdapter.entrySet().iterator();
@@ -102,9 +102,9 @@ public class TagRegistry implements Cloneable {
    * adapter is the entry point for reading and writing a tag hierarchy.
    * 
    * @param newBaseTagAdapter
-   * @throws AxionInstanceCreationException
+   * @throws AxionInstanceException
    */
-  public void registerBaseTagAdapter(final TagAdapter<Tag> newBaseTagAdapter) throws AxionInstanceCreationException {
+  public void registerBaseTagAdapter(final TagAdapter<Tag> newBaseTagAdapter) throws AxionInstanceException {
     baseTagAdapter = newBaseTagAdapter.newInstance(this);
   }
 
@@ -129,7 +129,7 @@ public class TagRegistry implements Cloneable {
    * @throws AxionTagRegistrationException
    */
   public <T extends Tag, V> void register(final int id, final Class<T> tagClass, final Class<V> type, final TagAdapter<T> adapter,
-      final TagConverter<T, V> converter) throws AxionTagRegistrationException, AxionInstanceCreationException {
+      final TagConverter<T, V> converter) throws AxionTagRegistrationException, AxionInstanceException {
 
     if (classToAdapter.containsKey(tagClass) || classToId.containsKey(tagClass)) {
       throw new AxionTagRegistrationException("Tag class already registered: " + tagClass.getSimpleName());
