@@ -9,5 +9,6 @@ com.sudoplay.axion.spec.adapter
 com.sudoplay.axion.spec.converter
 com.sudoplay.axion.spec.tag
 com.sudoplay.axion.stream
+com.sudoplay.axion.string.adapter
 com.sudoplay.axion.tag
 com.sudoplay.axion.util
