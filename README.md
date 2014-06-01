@@ -1,6 +1,6 @@
-# Axion
-### Another Extensible Implementation of NBT
-A tool for working with the NBT spec.
+Axion is dependent on [SLF4J](http://www.slf4j.org/) for logging.
+
+Looking for the [JavaDoc for v1.0.0](http://codetaylor.github.io/Axion/doc/1.0.0/)?
 ## Quick Start
 ### Get an Axion Instance
 Axion instances can be set up with different configurations. The two built-in configurations are for the original and extended specification.
