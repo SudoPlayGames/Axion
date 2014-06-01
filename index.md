@@ -1,9 +1,6 @@
 ---
 layout: index
 ---
-# Axion
-### Another Extensible Implementation of NBT
-A tool for working with the NBT spec.
 ## Quick Start
 ### Get an Axion Instance
 Axion instances can be set up with different configurations. The two built-in configurations are for the original and extended specification.
