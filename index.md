@@ -1,19 +1,22 @@
 ---
 layout: index
 ---
+# Axion
+### Another Extensible Implementation of NBT
+A tool for working with the NBT spec.
 ## Quick Start
 ### Get an Axion Instance
 Axion instances can be set up with different configurations. The two built-in configurations are for the original and extended specification.
-```java
+{% highlight java %}
 // Get the built-in, original specification
 Axion axion = Axion.getSpecInstance();
 
 // Get the built-in, extended specification
 Axion axion = Axion.getExtInstance();
-```
+{% endhighlight %}
 ### Read NBT
 NBT data can be read from a file or a stream and returned as a `TagCompound`. The data can also be read directly into any class that implements the `AxionWritable<TagCompound>` interface.
-```java
+{% highlight java %}
 // Read a TagCompound from a file
 TagCompound tag = axion.read(file);
 
@@ -25,10 +28,10 @@ AxionWritable<TagCompound> result = axion.read(file, writable);
 
 // Read an InputStream into an AxionWritable
 AxionWritable<TagCompound> result = axion.read(inputStream, writable);
-```
+{% endhighlight %}
 ### Write NBT
 NBT data can be written to a file or a stream. The data can be written from a `TagCompound` or directly from any class that implements the `AxionWritable<TagCompound>` interface.
-```java
+{% highlight java %}
 // Write a TagCompound to a file
 axion.write(tag, file);
 
@@ -40,7 +43,7 @@ axion.write(writable, file);
 
 // Write an AxionWritable to an OutputStream
 axion.write(writable, outputStream);
-```
+{% endhighlight %}
 ## Customization
 ### Custom Configurations
 Axion configurations specify how an instance reads and writes the NBT data.
@@ -56,7 +59,7 @@ Configurations consist of:
 
 #### Create
 Axion allows custom configurations to be created either from scratch or by duplicating an existing configuration. The built-in configurations can't be changed directly, but they can be duplicated and the duplicates can be altered.
-```java
+{% highlight java %}
 // Create a new, empty configuration
 Axion.createInstance("new-instance-name");
 
@@ -65,26 +68,26 @@ Axion.createInstanceFrom(axionInstance, "new-instance-name");
 
 // Duplicate an existing configuration by name
 Axion.createInstanceFrom("existing-instnace-name", "new-instance-name");
-```
+{% endhighlight %}
 #### Get
 Axion instances are retrieved via the `String` id given during creation.
-```java
+{% highlight java %}
 // Get a custom configuration
 Axion.getInstance("instance-name");
-```
+{% endhighlight %}
 #### Delete
 Instances are deleted also via the `String` id given during creation. Attempting to delete a built-in instance will result in an exception.
-```java
+{% highlight java %}
 // Delete a custom configuration
 Axion.deleteInstance("instance-to-delete");
-```
+{% endhighlight %}
 
 ---
 ### Custom Base Tag Adapter
 The base tag adapter, registered using a different method than the other adapters, is used by Axion as the entry point for reading all tags. The default base tag adapter is responsible for handling most of the common logic involved in reading and writing tags.
 
 Here is the default base tag adapter used by Axion:
-```java
+{% highlight java %}
 public class BaseTagAdapter extends TagAdapter<Tag> {
 
   @Override
@@ -104,25 +107,25 @@ public class BaseTagAdapter extends TagAdapter<Tag> {
   }
 
 }
-```
+{% endhighlight %}
 The base tag adapter is registered using:
-```java
+{% highlight java %}
 axion.registerBaseTagAdapter(new BaseTagAdapter());
-```
+{% endhighlight %}
 
 ---
 ### Custom Tags
 Custom tags are created by extending the abstract `Tag` class and are registered with an Axion configuration instance along with an id, data type, adapter, and converter.
 
 For example, this is how you might register the `TagByte`:
-```java
+{% highlight java %}
 axion.registerTag(1, TagByte.class, Byte.class, new TagByteAdapter(), new TagByteConverter());
-```
+{% endhighlight %}
 #### Adapters
 Adapters tell Axion how to read and write the tags. An adapter can be any class that extends the abstract `TagAdapter` class. Due to the way Axion works internally, adapters *should not contain state*. Any adapters that contain state may not behave as expected in multi-threaded situations.
 
 For example, this is the adapter registered for the `TagByte`:
-```java
+{% highlight java %}
 public class TagByteAdapter extends TagAdapter<TagByte> {
 
   @Override
@@ -136,13 +139,13 @@ public class TagByteAdapter extends TagAdapter<TagByte> {
   }
 
 }
-```
+{% endhighlight %}
 This adapter simply writes the payload of the tag as a single byte. When reading a byte tag it reads a name only if the tag is not a child of a list, then reads a single byte.
 #### Converters
 Converters tell Axion how to convert data to and from tags. A converter can be any class that extends the abstract `TagConverter` class. Due to the way Axion works internally, converters *should not contain state*. Any converters that contain state may not behave as expected in multi-threaded situations.
 
 For example, this is the converter registered for the `TagByte`:
-```java
+{% highlight java %}
 public class TagByteConverter extends TagConverter<TagByte, Byte> {
 
   @Override
@@ -156,7 +159,7 @@ public class TagByteConverter extends TagConverter<TagByte, Byte> {
   }
 
 }
-```
+{% endhighlight %}
 The `TagByteConverter` class is fairly simple and self-explanatory.
 
 ---
@@ -164,7 +167,7 @@ The `TagByteConverter` class is fairly simple and self-explanatory.
 Mappers are simply utility classes that you can register with an Axion configuration instance to assist in converting objects to and from NBT tags. Mappers are useful when you don't have access to the objects source or otherwise can't implement the `AxionWritable` interface.
 
 For example, let's say you had a 3rd-party class that looked like this:
-```java
+{% highlight java %}
 public class Vector3f {
 
   public float x, y, z;
@@ -180,9 +183,9 @@ public class Vector3f {
   }
 
 }
-```
+{% endhighlight %}
 You could write a mapper to convert a `Vector3f` object into a `TagList` of `TagFloat` like:
-```java
+{% highlight java %}
 public class Vector3fMapper implements NBTObjectMapper<TagList, Vector3f> {
 
   @Override
@@ -204,13 +207,13 @@ public class Vector3fMapper implements NBTObjectMapper<TagList, Vector3f> {
   }
 
 }
-```
+{% endhighlight %}
 Then register the mapper like so:
-```java
+{% highlight java %}
 axion.registerNBTObjectMapper(Vector3f.class, new Vector3fMapper());
-```
+{% endhighlight %}
 Finally, use the mapper:
-```java
+{% highlight java %}
 Vector3f position = new Vector3f(16f, 2.5f, 65f);
 
 // Convert the Vector3f into a TagList
@@ -218,11 +221,11 @@ TagList tagList = axion.createTagFrom("vec1", position);
 
 // Convert the TagList back into a Vector3f
 Vector3f result = axion.createObjectFrom(tagList, Vector3f.class);
-```
+{% endhighlight %}
 ---
 ### Compression Type
 Both built-in configurations use GZip as the default compression type. This is consistent with the original specification of NBT. If you wish to change this, however, Axion configurations can use GZip, Deflater, or no compression.
-```java
+{% highlight java %}
 // GZip compression
 axion.setCompressionType(CompressionType.GZip);
 
@@ -231,24 +234,24 @@ axion.setCompressionType(CompressionType.Deflater);
 
 // No compression
 axion.setCompressionType(CompressionType.None);
-```
+{% endhighlight %}
 ---
 ### Character Encoding Type
 Both built-in configurations use a modified UTF-8 character encoding for reading and writing all strings. This is consistent with the `DataInputStream#readUTF()` and `DataOutputStream#writeUTF(String string)` provided by Java. If you wish to change this, however, Axion supports the following character encoding types:
-```java
+{% highlight java %}
 public static enum CharacterEncodingType {
   MODIFIED_UTF_8, US_ASCII, ISO_8859_1, UTF_8, UTF_16BE, UTF_16LE, UTF_16
 }
-```
+{% endhighlight %}
 This can be changed using:
-```java
+{% highlight java %}
 axion.setCharacterEncodingType(CharacterEncodingType.US_ASCII);
-```
+{% endhighlight %}
 ## AxionWritable Interface
 The `AxionWritable` provides an interface for easily creating classes that can be read and written by Axion.
 
 For example, extending the `Vector3f` example used above:
-```java
+{% highlight java %}
 public class Vector3f implements AxionWritable<TagList> {
 
   public float x, y, z;
@@ -280,7 +283,7 @@ public class Vector3f implements AxionWritable<TagList> {
   }
 
 }
-```
+{% endhighlight %}
 ##License
 
 Copyright (C) 2014 Jason Taylor. Released as open-source under [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.html).
