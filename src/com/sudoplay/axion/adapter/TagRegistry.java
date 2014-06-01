@@ -148,9 +148,11 @@ public class TagRegistry implements Cloneable {
     classToAdapter.put(tagClass, newAdapterInstance);
     idToAdapter.put(id, newAdapterInstance);
 
-    TagConverter<T, V> newConverterInstance = converter.newInstance(this);
-    classToConverter.put(tagClass, newConverterInstance);
-    typeToConverter.put(type, newConverterInstance);
+    if (converter != null) {
+      TagConverter<T, V> newConverterInstance = converter.newInstance(this);
+      classToConverter.put(tagClass, newConverterInstance);
+      typeToConverter.put(type, newConverterInstance);
+    }
   }
 
   /**

@@ -122,7 +122,7 @@ public class AxionOutputStream extends FilterOutputStream {
 
   /**
    * Writes a string using the {@link CharacterEncoder} set in the constructor,
-   * {@link #AxionOutputStream(InputStream, CharacterEncoder)}.
+   * {@link #AxionOutputStream(OutputStream, CharacterEncoder)}.
    * 
    * @param v
    * @throws IOException

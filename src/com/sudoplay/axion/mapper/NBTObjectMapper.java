@@ -3,6 +3,7 @@ package com.sudoplay.axion.mapper;
 import com.sudoplay.axion.Axion;
 import com.sudoplay.axion.ext.tag.TagFloatArray;
 import com.sudoplay.axion.spec.tag.TagCompound;
+import com.sudoplay.axion.spec.tag.TagFloat;
 import com.sudoplay.axion.spec.tag.TagList;
 import com.sudoplay.axion.tag.Tag;
 
@@ -41,7 +42,7 @@ public interface NBTObjectMapper<T extends Tag, O> {
    *          the object to convert
    * @param axion
    *          the {@link Axion} instance
-   * @returna new {@link Tag} from the name and object given
+   * @return new {@link Tag} from the name and object given
    */
   public T createTagFrom(final String name, final O object, final Axion axion);
 

@@ -8,7 +8,6 @@ import java.io.InputStream;
 import org.junit.Test;
 
 import com.sudoplay.axion.spec.tag.TagCompound;
-import com.sudoplay.axion.util.TagToStringUtil;
 
 public class AxionTest {
 
@@ -16,7 +15,7 @@ public class AxionTest {
   public void test() throws IOException {
     InputStream inputStream = this.getClass().getResourceAsStream("bigtest.nbt");
     TagCompound tagCompound = (TagCompound) Axion.getExtInstance().read(inputStream);
-    assertEquals(getTestString(), TagToStringUtil.getString(tagCompound));
+    assertEquals(getTestString(), Axion.toString(tagCompound));
   }
 
   private String getTestString() {

@@ -1,5 +1,6 @@
 package com.sudoplay.axion;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -77,7 +78,7 @@ public class Axion {
    * 
    * @param newName
    *          name of the new configuration
-   * @return
+   * @return a new configuration
    * @throws AxionInstanceException
    */
   public static Axion createInstance(final String newName) throws AxionInstanceException {
@@ -283,7 +284,7 @@ public class Axion {
   }
 
   /**
-   * Register a {@link TagAdapter<Tag>} as the base tag adapter.
+   * Register a {@link TagAdapter} as the base tag adapter.
    * <p>
    * Can't use when <b>Locked</b> or <b>Immutable</b>.
    * 
@@ -522,6 +523,12 @@ public class Axion {
     @SuppressWarnings("unchecked")
     NBTObjectMapper<T, O> mapper = (NBTObjectMapper<T, O>) configuration.getMapperFor(object.getClass());
     return mapper.createTagFrom(name, object, this);
+  }
+
+  public static String toString(final Tag tag) throws AxionTagRegistrationException, IOException {
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    AxionConfiguration.TO_STRING_CONFIGURATION.getBaseTagAdapter().write(tag, AxionConfiguration.TO_STRING_CONFIGURATION.wrap(baos));
+    return baos.toString("UTF-8");
   }
 
   /**
