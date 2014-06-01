@@ -1,0 +1,13 @@
+com.sudoplay.axion
+com.sudoplay.axion.adapter
+com.sudoplay.axion.api
+com.sudoplay.axion.ext.adapter
+com.sudoplay.axion.ext.converter
+com.sudoplay.axion.ext.tag
+com.sudoplay.axion.mapper
+com.sudoplay.axion.spec.adapter
+com.sudoplay.axion.spec.converter
+com.sudoplay.axion.spec.tag
+com.sudoplay.axion.stream
+com.sudoplay.axion.tag
+com.sudoplay.axion.util
