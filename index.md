@@ -357,7 +357,7 @@ axion.toString(tagToPrint);
 
 This will return a string in the following format:
 
-{% endhighlight %}
+{% highlight java %}
 TagCompound("Level"): 11 entries
 {
   TagShort("shortTest"): 32767
