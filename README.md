@@ -201,7 +201,7 @@ The `TagByteConverter` class is fairly simple and self-explanatory.
 
 ### Mappers
 
-Mappers are simply utility classes that you can register with an Axion configuration instance to assist in converting objects to and from NBT tags. Mappers are useful when you don't have access to the objects source or otherwise can't implement the `AxionWritable` interface.
+Mappers are simply utility classes that you can register with an Axion configuration instance to assist in converting objects to and from NBT tags. Mappers are useful when you don't have access to an object's source or otherwise can't implement the `AxionWritable` interface.
 
 For example, let's say you had a 3rd-party class that looked like this:
 
