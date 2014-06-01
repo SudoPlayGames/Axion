@@ -15,7 +15,7 @@ public class AxionTest {
   public void test() throws IOException {
     InputStream inputStream = this.getClass().getResourceAsStream("bigtest.nbt");
     TagCompound tagCompound = (TagCompound) Axion.getExtInstance().read(inputStream);
-    assertEquals(getTestString(), Axion.toString(tagCompound));
+    assertEquals(getTestString(), Axion.getExtInstance().toString(tagCompound));
   }
 
   private String getTestString() {

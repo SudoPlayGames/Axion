@@ -36,10 +36,6 @@ import com.sudoplay.axion.stream.AxionInputStream;
 import com.sudoplay.axion.stream.AxionOutputStream;
 import com.sudoplay.axion.stream.CharacterEncoderFactory;
 import com.sudoplay.axion.stream.StreamCompressionWrapper;
-import com.sudoplay.axion.string.adapter.BaseTagStringAdapter;
-import com.sudoplay.axion.string.adapter.CompoundTagStringAdapter;
-import com.sudoplay.axion.string.adapter.DefaultTagStringAdapter;
-import com.sudoplay.axion.string.adapter.ListTagStringAdapter;
 import com.sudoplay.axion.tag.Tag;
 
 /**
@@ -91,38 +87,6 @@ public class AxionConfiguration implements Cloneable {
 
       setCharacterEncodingType(CharacterEncodingType.MODIFIED_UTF_8);
       setCompressionType(CompressionType.GZip);
-      setImmutable();
-    }
-  };
-
-  /**
-   * An {@link AxionConfiguration} instance used to write tag data to a string.
-   */
-  protected static final AxionConfiguration TO_STRING_CONFIGURATION = new AxionConfiguration() {
-    {
-      registerBaseTagAdapter(new BaseTagStringAdapter<Tag>());
-      registerTag(1, TagByte.class, Byte.class, new DefaultTagStringAdapter<TagByte>(), null);
-      registerTag(2, TagShort.class, Short.class, new DefaultTagStringAdapter<TagShort>(), null);
-      registerTag(3, TagInt.class, Integer.class, new DefaultTagStringAdapter<TagInt>(), null);
-      registerTag(4, TagLong.class, Long.class, new DefaultTagStringAdapter<TagLong>(), null);
-      registerTag(5, TagFloat.class, Float.class, new DefaultTagStringAdapter<TagFloat>(), null);
-      registerTag(6, TagDouble.class, Double.class, new DefaultTagStringAdapter<TagDouble>(), null);
-      registerTag(7, TagByteArray.class, byte[].class, new DefaultTagStringAdapter<TagByteArray>(), null);
-      registerTag(8, TagString.class, String.class, new DefaultTagStringAdapter<TagString>(), null);
-      registerTag(9, TagList.class, List.class, new ListTagStringAdapter(), null);
-      registerTag(10, TagCompound.class, Map.class, new CompoundTagStringAdapter(), null);
-      registerTag(11, TagIntArray.class, int[].class, new DefaultTagStringAdapter<TagIntArray>(), null);
-
-      registerTag(80, TagBoolean.class, Boolean.class, new DefaultTagStringAdapter<TagBoolean>(), null);
-      registerTag(81, TagDoubleArray.class, double[].class, new DefaultTagStringAdapter<TagDoubleArray>(), null);
-      registerTag(82, TagFloatArray.class, float[].class, new DefaultTagStringAdapter<TagFloatArray>(), null);
-      registerTag(83, TagLongArray.class, long[].class, new DefaultTagStringAdapter<TagLongArray>(), null);
-      registerTag(84, TagShortArray.class, short[].class, new DefaultTagStringAdapter<TagShortArray>(), null);
-      registerTag(85, TagStringArray.class, String[].class, new DefaultTagStringAdapter<TagStringArray>(), null);
-      registerTag(86, TagBooleanArray.class, boolean[].class, new DefaultTagStringAdapter<TagBooleanArray>(), null);
-
-      setCharacterEncodingType(CharacterEncodingType.UTF_8);
-      setCompressionType(CompressionType.None);
       setImmutable();
     }
   };

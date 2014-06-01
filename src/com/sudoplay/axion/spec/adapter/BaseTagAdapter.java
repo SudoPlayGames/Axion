@@ -24,7 +24,7 @@ public class BaseTagAdapter extends TagAdapter<Tag> {
   private static final Logger LOG = LoggerFactory.getLogger(BaseTagAdapter.class);
 
   @Override
-  public Tag read(Tag parent, AxionInputStream in) throws IOException {
+  public Tag read(final Tag parent, final AxionInputStream in) throws IOException {
     int id = in.readUnsignedByte();
     if (id == 0) {
       return null;
@@ -37,7 +37,7 @@ public class BaseTagAdapter extends TagAdapter<Tag> {
   }
 
   @Override
-  public void write(Tag tag, AxionOutputStream out) throws IOException {
+  public void write(final Tag tag, final AxionOutputStream out) throws IOException {
     LOG.trace("writing [{}]", tag);
     int id = getIdFor(tag.getClass());
     out.writeByte(id);
@@ -46,6 +46,11 @@ public class BaseTagAdapter extends TagAdapter<Tag> {
     }
     getAdapterFor(id).write(tag, out);
     LOG.trace("finished writing [{}]", tag);
+  }
+
+  @Override
+  public StringBuilder toString(final Tag tag, final StringBuilder out) {
+    return getAdapterFor(tag.getClass()).toString(tag, out);
   }
 
 }

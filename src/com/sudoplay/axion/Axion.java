@@ -1,6 +1,5 @@
 package com.sudoplay.axion;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -525,10 +524,33 @@ public class Axion {
     return mapper.createTagFrom(name, object, this);
   }
 
-  public static String toString(final Tag tag) throws AxionTagRegistrationException, IOException {
-    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    AxionConfiguration.TO_STRING_CONFIGURATION.getBaseTagAdapter().write(tag, AxionConfiguration.TO_STRING_CONFIGURATION.wrap(baos));
-    return baos.toString("UTF-8");
+  /**
+   * Appends a string version of the {@link Tag} given to the
+   * {@link StringBuilder} given.
+   * 
+   * @param tag
+   *          the {@link Tag} to append
+   * @param out
+   *          the {@link StringBuilder} to append to
+   * @return the {@link StringBuilder} given
+   * @throws AxionTagRegistrationException
+   */
+  public StringBuilder toString(final Tag tag, final StringBuilder out) throws AxionTagRegistrationException {
+    return configuration.getBaseTagAdapter().toString(tag, out);
+  }
+
+  /**
+   * Converts a {@link Tag} to a string and returns the result.
+   * 
+   * @param tag
+   *          the {@link Tag} to convert
+   * @return the {@link Tag} string
+   * @throws AxionTagRegistrationException
+   */
+  public String toString(final Tag tag) throws AxionTagRegistrationException {
+    StringBuilder out = new StringBuilder();
+    configuration.getBaseTagAdapter().toString(tag, out);
+    return out.toString();
   }
 
   /**

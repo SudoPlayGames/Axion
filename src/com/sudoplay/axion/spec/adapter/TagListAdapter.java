@@ -2,6 +2,7 @@ package com.sudoplay.axion.spec.adapter;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,4 +56,17 @@ public class TagListAdapter extends TagAdapter<TagList> {
     }
     return tagList;
   }
+
+  @Override
+  public StringBuilder toString(final Tag tag, final StringBuilder out) {
+    super.toString(tag, out);
+    applyIndent(tag, out).append(OPEN).append(SEP);
+    List<Tag> list = ((TagList) tag).getAsList();
+    for (Tag t : list) {
+      getBaseTagAdapter().toString(t, out);
+    }
+    applyIndent(tag, out).append(CLOSE).append(SEP);
+    return out;
+  }
+
 }

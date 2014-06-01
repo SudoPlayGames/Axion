@@ -22,6 +22,8 @@ import com.sudoplay.axion.spec.adapter.TagListAdapter;
 import com.sudoplay.axion.spec.adapter.TagLongAdapter;
 import com.sudoplay.axion.spec.adapter.TagShortAdapter;
 import com.sudoplay.axion.spec.adapter.TagStringAdapter;
+import com.sudoplay.axion.spec.tag.TagCompound;
+import com.sudoplay.axion.spec.tag.TagList;
 import com.sudoplay.axion.stream.AxionInputStream;
 import com.sudoplay.axion.stream.AxionOutputStream;
 import com.sudoplay.axion.tag.Tag;
@@ -70,6 +72,11 @@ public abstract class TagAdapter<T extends Tag> extends RegistryAccessor {
     public static final TagBooleanArrayAdapter BOOLEAN_ARRAY = new TagBooleanArrayAdapter();
   }
 
+  protected static final String INDENT = "  ";
+  protected static final String OPEN = "{";
+  protected static final String CLOSE = "}";
+  protected static final String SEP = System.lineSeparator();
+
   /**
    * Reads a {@link Tag} from the {@link AxionInputStream}.
    * 
@@ -92,6 +99,40 @@ public abstract class TagAdapter<T extends Tag> extends RegistryAccessor {
    * @throws IOException
    */
   public abstract void write(final T tag, final AxionOutputStream out) throws IOException;
+
+  /**
+   * Appends the {@link Tag} string to the {@link StringBuilder} given. This is
+   * the default behavior and is overridden in special cases, such as the
+   * {@link TagList} and {@link TagCompound}.
+   * 
+   * @param tag
+   *          the {@link Tag} to write
+   * @param out
+   *          the {@link StringBuilder} to append to
+   * @return the {@link StringBuilder} given
+   */
+  public StringBuilder toString(final Tag tag, final StringBuilder out) {
+    return applyIndent(tag, out).append(tag.toString()).append(SEP);
+  }
+
+  /**
+   * Appends a two-space indent to the {@link StringBuilder} given, once for
+   * each non-null parent of the {@link Tag} given.
+   * 
+   * @param tag
+   *          the {@link Tag}
+   * @param out
+   *          the {@link StringBuilder} to append to
+   * @return the {@link StringBuilder} given
+   */
+  protected StringBuilder applyIndent(final Tag tag, final StringBuilder out) {
+    Tag parent = tag.getParent();
+    if (parent != null) {
+      out.append(INDENT);
+      applyIndent(parent, out);
+    }
+    return out;
+  }
 
   /**
    * Creates a new instance of this {@link TagAdapter} and assigns a reference

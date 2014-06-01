@@ -1,6 +1,7 @@
 package com.sudoplay.axion.spec.adapter;
 
 import java.io.IOException;
+import java.util.Collection;
 
 import com.sudoplay.axion.adapter.TagAdapter;
 import com.sudoplay.axion.spec.tag.TagCompound;
@@ -34,6 +35,18 @@ public class TagCompoundAdapter extends TagAdapter<TagCompound> {
       tag.put(child);
     }
     return tag;
+  }
+
+  @Override
+  public StringBuilder toString(Tag tag, StringBuilder out) {
+    super.toString(tag, out);
+    applyIndent(tag, out).append(OPEN).append(SEP);
+    Collection<Tag> collection = ((TagCompound) tag).getAsMap().values();
+    for (Tag t : collection) {
+      getBaseTagAdapter().toString(t, out);
+    }
+    applyIndent(tag, out).append(CLOSE).append(SEP);
+    return out;
   }
 
 }
