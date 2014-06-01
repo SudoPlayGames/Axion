@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html">
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Axion : Another Extensible Implementation of NBT" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/font-awesome.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/github-style.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/github.css">
+
+    <title>Axion - Another Extensible Implementation of NBT</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/codetaylor/axion">View on GitHub</a>
+
+          <h1 id="project_title">Axion</h1>
+          <h2 id="project_tagline">Another Extensible Implementation of NBT</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="#files">Download Axion</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+          
+
+<h2>
+<a name="user-content-quick-start" class="anchor" href="#quick-start"><span class="octicon octicon-link"></span></a>Quick Start</h2>
+
+<h3>
+<a name="user-content-get-an-axion-instance" class="anchor" href="#get-an-axion-instance"><span class="octicon octicon-link"></span></a>Get an Axion Instance</h3>
+
+<p>Axion instances can be set up with different configurations. The two built-in configurations are for the original and extended specification.</p>
+
+<div class="highlight highlight-java"><pre><span class="c1">// Get the built-in, original specification</span>
+<span class="n">Axion</span> <span class="n">axion</span> <span class="o">=</span> <span class="n">Axion</span><span class="o">.</span><span class="na">getSpecInstance</span><span class="o">();</span>
+
+<span class="c1">// Get the built-in, extended specification</span>
+<span class="n">Axion</span> <span class="n">axion</span> <span class="o">=</span> <span class="n">Axion</span><span class="o">.</span><span class="na">getExtInstance</span><span class="o">();</span>
+</pre></div>
+
+<h3>
+<a name="user-content-read-nbt" class="anchor" href="#read-nbt"><span class="octicon octicon-link"></span></a>Read NBT</h3>
+
+<p>NBT data can be read from a file or a stream and returned as a <code>TagCompound</code>. The data can also be read directly into any class that implements the <code>AxionWritable&lt;TagCompound&gt;</code> interface.</p>
+
+<div class="highlight highlight-java"><pre><span class="c1">// Read a TagCompound from a file</span>
+<span class="n">TagCompound</span> <span class="n">tag</span> <span class="o">=</span> <span class="n">axion</span><span class="o">.</span><span class="na">read</span><span class="o">(</span><span class="n">file</span><span class="o">);</span>
+
+<span class="c1">// Read a TagCompound from an InputStream</span>
+<span class="n">TagCompound</span> <span class="n">tag</span> <span class="o">=</span> <span class="n">axion</span><span class="o">.</span><span class="na">read</span><span class="o">(</span><span class="n">inputStream</span><span class="o">);</span>
+
+<span class="c1">// Read a file into an AxionWritable</span>
+<span class="n">AxionWritable</span><span class="o">&lt;</span><span class="n">TagCompound</span><span class="o">&gt;</span> <span class="n">result</span> <span class="o">=</span> <span class="n">axion</span><span class="o">.</span><span class="na">read</span><span class="o">(</span><span class="n">file</span><span class="o">,</span> <span class="n">writable</span><span class="o">);</span>
+
+<span class="c1">// Read an InputStream into an AxionWritable</span>
+<span class="n">AxionWritable</span><span class="o">&lt;</span><span class="n">TagCompound</span><span class="o">&gt;</span> <span class="n">result</span> <span class="o">=</span> <span class="n">axion</span><span class="o">.</span><span class="na">read</span><span class="o">(</span><span class="n">inputStream</span><span class="o">,</span> <span class="n">writable</span><span class="o">);</span>
+</pre></div>
+
+<h3>
+<a name="user-content-write-nbt" class="anchor" href="#write-nbt"><span class="octicon octicon-link"></span></a>Write NBT</h3>
+
+<p>NBT data can be written to a file or a stream. The data can be written from a <code>TagCompound</code> or directly from any class that implements the <code>AxionWritable&lt;TagCompound&gt;</code> interface.</p>
+
+<div class="highlight highlight-java"><pre><span class="c1">// Write a TagCompound to a file</span>
+<span class="n">axion</span><span class="o">.</span><span class="na">write</span><span class="o">(</span><span class="n">tag</span><span class="o">,</span> <span class="n">file</span><span class="o">);</span>
+
+<span class="c1">// Write a TagCompound to an OutputStream</span>
+<span class="n">axion</span><span class="o">.</span><span class="na">write</span><span class="o">(</span><span class="n">tag</span><span class="o">,</span> <span class="n">outputStream</span><span class="o">);</span>
+
+<span class="c1">// Write an AxionWritable to a file</span>
+<span class="n">axion</span><span class="o">.</span><span class="na">write</span><span class="o">(</span><span class="n">writable</span><span class="o">,</span> <span class="n">file</span><span class="o">);</span>
+
+<span class="c1">// Write an AxionWritable to an OutputStream</span>
+<span class="n">axion</span><span class="o">.</span><span class="na">write</span><span class="o">(</span><span class="n">writable</span><span class="o">,</span> <span class="n">outputStream</span><span class="o">);</span>
+</pre></div>
+
+<h2>
+<a name="user-content-customization" class="anchor" href="#customization"><span class="octicon octicon-link"></span></a>Customization</h2>
+
+<h3>
+<a name="user-content-custom-configurations" class="anchor" href="#custom-configurations"><span class="octicon octicon-link"></span></a>Custom Configurations</h3>
+
+<p>Axion configurations specify how an instance reads and writes the NBT data.</p>
+
+<p>Configurations consist of:</p>
+
+<ul>
+<li>a base tag adapter</li>
+<li>tags</li>
+<li>adapters</li>
+<li>converters</li>
+<li>mappers</li>
+<li>a compression type</li>
+<li>a character encoding type</li>
+</ul><h4>
+<a name="user-content-create" class="anchor" href="#create"><span class="octicon octicon-link"></span></a>Create</h4>
+
+<p>Axion allows custom configurations to be created either from scratch or by duplicating an existing configuration. The built-in configurations can't be changed directly, but they can be duplicated and the duplicates can be altered.</p>
+
+<div class="highlight highlight-java"><pre><span class="c1">// Create a new, empty configuration</span>
+<span class="n">Axion</span><span class="o">.</span><span class="na">createInstance</span><span class="o">(</span><span class="s">"new-instance-name"</span><span class="o">);</span>
+
+<span class="c1">// Duplicate an existing configuration</span>
+<span class="n">Axion</span><span class="o">.</span><span class="na">createInstanceFrom</span><span class="o">(</span><span class="n">axionInstance</span><span class="o">,</span> <span class="s">"new-instance-name"</span><span class="o">);</span>
+
+<span class="c1">// Duplicate an existing configuration by name</span>
+<span class="n">Axion</span><span class="o">.</span><span class="na">createInstanceFrom</span><span class="o">(</span><span class="s">"existing-instnace-name"</span><span class="o">,</span> <span class="s">"new-instance-name"</span><span class="o">);</span>
+</pre></div>
+
+<h4>
+<a name="user-content-get" class="anchor" href="#get"><span class="octicon octicon-link"></span></a>Get</h4>
+
+<p>Axion instances are retrieved via the <code>String</code> id given during creation.</p>
+
+<div class="highlight highlight-java"><pre><span class="c1">// Get a custom configuration</span>
+<span class="n">Axion</span><span class="o">.</span><span class="na">getInstance</span><span class="o">(</span><span class="s">"instance-name"</span><span class="o">);</span>
+</pre></div>
+
+<h4>
+<a name="user-content-delete" class="anchor" href="#delete"><span class="octicon octicon-link"></span></a>Delete</h4>
+
+<p>Instances are deleted also via the <code>String</code> id given during creation. Attempting to delete a built-in instance will result in an exception.</p>
+
+<div class="highlight highlight-java"><pre><span class="c1">// Delete a custom configuration</span>
+<span class="n">Axion</span><span class="o">.</span><span class="na">deleteInstance</span><span class="o">(</span><span class="s">"instance-to-delete"</span><span class="o">);</span>
+</pre></div>
+
+<hr><h3>
+<a name="user-content-custom-base-tag-adapter" class="anchor" href="#custom-base-tag-adapter"><span class="octicon octicon-link"></span></a>Custom Base Tag Adapter</h3>
+
+<p>The base tag adapter, registered using a different method than the other adapters, is used by Axion as the entry point for reading all tags. The default base tag adapter is responsible for handling most of the common logic involved in reading and writing tags.</p>
+
+<p>Here is the default base tag adapter used by Axion:</p>
+
+<div class="highlight highlight-java"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">BaseTagAdapter</span> <span class="kd">extends</span> <span class="n">TagAdapter</span><span class="o">&lt;</span><span class="n">Tag</span><span class="o">&gt;</span> <span class="o">{</span>
+
+  <span class="nd">@Override</span>
+  <span class="kd">public</span> <span class="n">Tag</span> <span class="nf">read</span><span class="o">(</span><span class="n">Tag</span> <span class="n">parent</span><span class="o">,</span> <span class="n">AxionInputStream</span> <span class="n">in</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="o">{</span>
+    <span class="kt">int</span> <span class="n">id</span> <span class="o">=</span> <span class="n">in</span><span class="o">.</span><span class="na">readUnsignedByte</span><span class="o">();</span>
+    <span class="k">return</span> <span class="o">(</span><span class="n">id</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="o">?</span> <span class="kc">null</span> <span class="o">:</span> <span class="n">getAdapterFor</span><span class="o">(</span><span class="n">id</span><span class="o">).</span><span class="na">read</span><span class="o">(</span><span class="n">parent</span><span class="o">,</span> <span class="n">in</span><span class="o">);</span>
+  <span class="o">}</span>
+
+  <span class="nd">@Override</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">write</span><span class="o">(</span><span class="n">Tag</span> <span class="n">tag</span><span class="o">,</span> <span class="n">AxionOutputStream</span> <span class="n">out</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="o">{</span>
+    <span class="kt">int</span> <span class="n">id</span> <span class="o">=</span> <span class="n">getIdFor</span><span class="o">(</span><span class="n">tag</span><span class="o">.</span><span class="na">getClass</span><span class="o">());</span>
+    <span class="n">out</span><span class="o">.</span><span class="na">writeByte</span><span class="o">(</span><span class="n">id</span><span class="o">);</span>
+    <span class="k">if</span> <span class="o">(!(</span><span class="n">tag</span><span class="o">.</span><span class="na">getParent</span><span class="o">()</span> <span class="k">instanceof</span> <span class="n">TagList</span><span class="o">))</span> <span class="o">{</span>
+      <span class="n">out</span><span class="o">.</span><span class="na">writeString</span><span class="o">(</span><span class="n">tag</span><span class="o">.</span><span class="na">getName</span><span class="o">());</span>
+    <span class="o">}</span>
+    <span class="n">getAdapterFor</span><span class="o">(</span><span class="n">id</span><span class="o">).</span><span class="na">write</span><span class="o">(</span><span class="n">tag</span><span class="o">,</span> <span class="n">out</span><span class="o">);</span>
+  <span class="o">}</span>
+
+<span class="o">}</span>
+</pre></div>
+
+<p>The base tag adapter is registered using:</p>
+
+<div class="highlight highlight-java"><pre><span class="n">axion</span><span class="o">.</span><span class="na">registerBaseTagAdapter</span><span class="o">(</span><span class="k">new</span> <span class="n">BaseTagAdapter</span><span class="o">());</span>
+
+</pre></div>
+
+<hr><h3>
+<a name="user-content-custom-tags" class="anchor" href="#custom-tags"><span class="octicon octicon-link"></span></a>Custom Tags</h3>
+
+<p>Custom tags are created by extending the abstract <code>Tag</code> class and are registered with an Axion configuration instance along with an id, data type, adapter, and converter.</p>
+
+<p>For example, this is how you might register the <code>TagByte</code>:</p>
+
+<div class="highlight highlight-java"><pre><span class="n">axion</span><span class="o">.</span><span class="na">registerTag</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="n">TagByte</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="n">Byte</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="k">new</span> <span class="n">TagByteAdapter</span><span class="o">(),</span> <span class="k">new</span> <span class="n">TagByteConverter</span><span class="o">());</span>
+</pre></div>
+
+<h4>
+<a name="user-content-adapters" class="anchor" href="#adapters"><span class="octicon octicon-link"></span></a>Adapters</h4>
+
+<p>Adapters tell Axion how to read and write the tags. An adapter can be any class that extends the abstract <code>TagAdapter</code> class. Due to the way Axion works internally, adapters <em>should not contain state</em>. Any adapters that contain state may not behave as expected in multi-threaded situations.</p>
+
+<p>For example, this is the adapter registered for the <code>TagByte</code>:</p>
+
+<div class="highlight highlight-java"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">TagByteAdapter</span> <span class="kd">extends</span> <span class="n">TagAdapter</span><span class="o">&lt;</span><span class="n">TagByte</span><span class="o">&gt;</span> <span class="o">{</span>
+
+  <span class="nd">@Override</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">write</span><span class="o">(</span><span class="n">TagByte</span> <span class="n">tag</span><span class="o">,</span> <span class="n">AxionOutputStream</span> <span class="n">out</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="o">{</span>
+    <span class="n">out</span><span class="o">.</span><span class="na">writeByte</span><span class="o">(</span><span class="n">tag</span><span class="o">.</span><span class="na">get</span><span class="o">());</span>
+  <span class="o">}</span>
+
+  <span class="nd">@Override</span>
+  <span class="kd">public</span> <span class="n">TagByte</span> <span class="nf">read</span><span class="o">(</span><span class="kd">final</span> <span class="n">Tag</span> <span class="n">parent</span><span class="o">,</span> <span class="kd">final</span> <span class="n">AxionInputStream</span> <span class="n">in</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="nf">convertToTag</span><span class="o">((</span><span class="n">parent</span> <span class="k">instanceof</span> <span class="n">TagList</span><span class="o">)</span> <span class="o">?</span> <span class="kc">null</span> <span class="o">:</span> <span class="n">in</span><span class="o">.</span><span class="na">readString</span><span class="o">(),</span> <span class="n">in</span><span class="o">.</span><span class="na">readByte</span><span class="o">());</span>
+  <span class="o">}</span>
+
+<span class="o">}</span>
+</pre></div>
+
+<p>This adapter simply writes the payload of the tag as a single byte. When reading a byte tag it reads a name only if the tag is not a child of a list, then reads a single byte.</p>
+
+<h4>
+<a name="user-content-converters" class="anchor" href="#converters"><span class="octicon octicon-link"></span></a>Converters</h4>
+
+<p>Converters tell Axion how to convert data to and from tags. A converter can be any class that extends the abstract <code>TagConverter</code> class. Due to the way Axion works internally, converters <em>should not contain state</em>. Any converters that contain state may not behave as expected in multi-threaded situations.</p>
+
+<p>For example, this is the converter registered for the <code>TagByte</code>:</p>
+
+<div class="highlight highlight-java"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">TagByteConverter</span> <span class="kd">extends</span> <span class="n">TagConverter</span><span class="o">&lt;</span><span class="n">TagByte</span><span class="o">,</span> <span class="n">Byte</span><span class="o">&gt;</span> <span class="o">{</span>
+
+  <span class="nd">@Override</span>
+  <span class="kd">public</span> <span class="n">TagByte</span> <span class="nf">convert</span><span class="o">(</span><span class="kd">final</span> <span class="n">String</span> <span class="n">name</span><span class="o">,</span> <span class="kd">final</span> <span class="n">Byte</span> <span class="n">value</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nf">TagByte</span><span class="o">(</span><span class="n">name</span><span class="o">,</span> <span class="n">value</span><span class="o">);</span>
+  <span class="o">}</span>
+
+  <span class="nd">@Override</span>
+  <span class="kd">public</span> <span class="n">Byte</span> <span class="nf">convert</span><span class="o">(</span><span class="kd">final</span> <span class="n">TagByte</span> <span class="n">tag</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="n">tag</span><span class="o">.</span><span class="na">get</span><span class="o">();</span>
+  <span class="o">}</span>
+
+<span class="o">}</span>
+</pre></div>
+
+<p>The <code>TagByteConverter</code> class is fairly simple and self-explanatory.</p>
+
+<hr><h3>
+<a name="user-content-mappers" class="anchor" href="#mappers"><span class="octicon octicon-link"></span></a>Mappers</h3>
+
+<p>Mappers are simply utility classes that you can register with an Axion configuration instance to assist in converting objects to and from NBT tags. Mappers are useful when you don't have access to the objects source or otherwise can't implement the <code>AxionWritable</code> interface.</p>
+
+<p>For example, let's say you had a 3rd-party class that looked like this:</p>
+
+<div class="highlight highlight-java"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Vector3f</span> <span class="o">{</span>
+
+  <span class="kd">public</span> <span class="kt">float</span> <span class="n">x</span><span class="o">,</span> <span class="n">y</span><span class="o">,</span> <span class="n">z</span><span class="o">;</span>
+
+  <span class="kd">public</span> <span class="nf">Vector3f</span><span class="o">()</span> <span class="o">{</span>
+    <span class="c1">//</span>
+  <span class="o">}</span>
+
+  <span class="kd">public</span> <span class="nf">Vector3f</span><span class="o">(</span><span class="kd">final</span> <span class="kt">float</span> <span class="n">x</span><span class="o">,</span> <span class="kd">final</span> <span class="kt">float</span> <span class="n">y</span><span class="o">,</span> <span class="kd">final</span> <span class="kt">float</span> <span class="n">z</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">this</span><span class="o">.</span><span class="na">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">;</span>
+    <span class="k">this</span><span class="o">.</span><span class="na">y</span> <span class="o">=</span> <span class="n">y</span><span class="o">;</span>
+    <span class="k">this</span><span class="o">.</span><span class="na">z</span> <span class="o">=</span> <span class="n">z</span><span class="o">;</span>
+  <span class="o">}</span>
+
+<span class="o">}</span>
+</pre></div>
+
+<p>You could write a mapper to convert a <code>Vector3f</code> object into a <code>TagList</code> of <code>TagFloat</code> like:</p>
+
+<div class="highlight highlight-java"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Vector3fMapper</span> <span class="kd">implements</span> <span class="n">NBTObjectMapper</span><span class="o">&lt;</span><span class="n">TagList</span><span class="o">,</span> <span class="n">Vector3f</span><span class="o">&gt;</span> <span class="o">{</span>
+
+  <span class="nd">@Override</span>
+  <span class="kd">public</span> <span class="n">Vector3f</span> <span class="nf">createObjectFrom</span><span class="o">(</span><span class="n">TagList</span> <span class="n">tag</span><span class="o">,</span> <span class="n">Axion</span> <span class="n">axion</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">Vector3f</span> <span class="n">v</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Vector3f</span><span class="o">();</span>
+    <span class="n">v</span><span class="o">.</span><span class="na">x</span> <span class="o">=</span> <span class="o">((</span><span class="n">TagFloat</span><span class="o">)</span> <span class="n">tag</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="mi">0</span><span class="o">)).</span><span class="na">get</span><span class="o">();</span>
+    <span class="n">v</span><span class="o">.</span><span class="na">y</span> <span class="o">=</span> <span class="o">((</span><span class="n">TagFloat</span><span class="o">)</span> <span class="n">tag</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="mi">1</span><span class="o">)).</span><span class="na">get</span><span class="o">();</span>
+    <span class="n">v</span><span class="o">.</span><span class="na">z</span> <span class="o">=</span> <span class="o">((</span><span class="n">TagFloat</span><span class="o">)</span> <span class="n">tag</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="mi">2</span><span class="o">)).</span><span class="na">get</span><span class="o">();</span>
+    <span class="k">return</span> <span class="n">v</span><span class="o">;</span>
+  <span class="o">}</span>
+
+  <span class="nd">@Override</span>
+  <span class="kd">public</span> <span class="n">TagList</span> <span class="nf">createTagFrom</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">,</span> <span class="n">Vector3f</span> <span class="n">value</span><span class="o">,</span> <span class="n">Axion</span> <span class="n">axion</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">TagList</span> <span class="n">list</span> <span class="o">=</span> <span class="k">new</span> <span class="n">TagList</span><span class="o">(</span><span class="n">TagFloat</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="n">name</span><span class="o">);</span>
+    <span class="n">list</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="n">TagFloat</span><span class="o">(</span><span class="s">""</span><span class="o">,</span> <span class="n">value</span><span class="o">.</span><span class="na">x</span><span class="o">));</span>
+    <span class="n">list</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="n">TagFloat</span><span class="o">(</span><span class="s">""</span><span class="o">,</span> <span class="n">value</span><span class="o">.</span><span class="na">y</span><span class="o">));</span>
+    <span class="n">list</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="n">TagFloat</span><span class="o">(</span><span class="s">""</span><span class="o">,</span> <span class="n">value</span><span class="o">.</span><span class="na">z</span><span class="o">));</span>
+    <span class="k">return</span> <span class="n">list</span><span class="o">;</span>
+  <span class="o">}</span>
+
+<span class="o">}</span>
+</pre></div>
+
+<p>Then register the mapper like so:</p>
+
+<div class="highlight highlight-java"><pre><span class="n">axion</span><span class="o">.</span><span class="na">registerNBTObjectMapper</span><span class="o">(</span><span class="n">Vector3f</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="k">new</span> <span class="n">Vector3fMapper</span><span class="o">());</span>
+</pre></div>
+
+<p>Finally, use the mapper:</p>
+
+<div class="highlight highlight-java"><pre><span class="n">Vector3f</span> <span class="n">position</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Vector3f</span><span class="o">(</span><span class="mi">16</span><span class="n">f</span><span class="o">,</span> <span class="mf">2.5f</span><span class="o">,</span> <span class="mi">65</span><span class="n">f</span><span class="o">);</span>
+
+<span class="c1">// Convert the Vector3f into a TagList</span>
+<span class="n">TagList</span> <span class="n">tagList</span> <span class="o">=</span> <span class="n">axion</span><span class="o">.</span><span class="na">createTagFrom</span><span class="o">(</span><span class="s">"vec1"</span><span class="o">,</span> <span class="n">position</span><span class="o">);</span>
+
+<span class="c1">// Convert the TagList back into a Vector3f</span>
+<span class="n">Vector3f</span> <span class="n">result</span> <span class="o">=</span> <span class="n">axion</span><span class="o">.</span><span class="na">createObjectFrom</span><span class="o">(</span><span class="n">tagList</span><span class="o">,</span> <span class="n">Vector3f</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+</pre></div>
+
+<hr><h3>
+<a name="user-content-compression-type" class="anchor" href="#compression-type"><span class="octicon octicon-link"></span></a>Compression Type</h3>
+
+<p>Both built-in configurations use GZip as the default compression type. This is consistent with the original specification of NBT. If you wish to change this, however, Axion configurations can use GZip, Deflater, or no compression.</p>
+
+<div class="highlight highlight-java"><pre><span class="c1">// GZip compression</span>
+<span class="n">axion</span><span class="o">.</span><span class="na">setCompressionType</span><span class="o">(</span><span class="n">CompressionType</span><span class="o">.</span><span class="na">GZip</span><span class="o">);</span>
+
+<span class="c1">// Deflater compression</span>
+<span class="n">axion</span><span class="o">.</span><span class="na">setCompressionType</span><span class="o">(</span><span class="n">CompressionType</span><span class="o">.</span><span class="na">Deflater</span><span class="o">);</span>
+
+<span class="c1">// No compression</span>
+<span class="n">axion</span><span class="o">.</span><span class="na">setCompressionType</span><span class="o">(</span><span class="n">CompressionType</span><span class="o">.</span><span class="na">None</span><span class="o">);</span>
+</pre></div>
+
+<hr><h3>
+<a name="user-content-character-encoding-type" class="anchor" href="#character-encoding-type"><span class="octicon octicon-link"></span></a>Character Encoding Type</h3>
+
+<p>Both built-in configurations use a modified UTF-8 character encoding for reading and writing all strings. This is consistent with the <code>DataInputStream#readUTF()</code> and <code>DataOutputStream#writeUTF(String string)</code> provided by Java. If you wish to change this, however, Axion supports the following character encoding types:</p>
+
+<div class="highlight highlight-java"><pre><span class="kd">public</span> <span class="kd">static</span> <span class="kd">enum</span> <span class="n">CharacterEncodingType</span> <span class="o">{</span>
+  <span class="n">MODIFIED_UTF_8</span><span class="o">,</span> <span class="n">US_ASCII</span><span class="o">,</span> <span class="n">ISO_8859_1</span><span class="o">,</span> <span class="n">UTF_8</span><span class="o">,</span> <span class="n">UTF_16BE</span><span class="o">,</span> <span class="n">UTF_16LE</span><span class="o">,</span> <span class="n">UTF_16</span>
+<span class="o">}</span>
+</pre></div>
+
+<p>This can be changed using:</p>
+
+<div class="highlight highlight-java"><pre><span class="n">axion</span><span class="o">.</span><span class="na">setCharacterEncodingType</span><span class="o">(</span><span class="n">CharacterEncodingType</span><span class="o">.</span><span class="na">US_ASCII</span><span class="o">);</span>
+</pre></div>
+
+<h2>
+<a name="user-content-axionwritable-interface" class="anchor" href="#axionwritable-interface"><span class="octicon octicon-link"></span></a>AxionWritable Interface</h2>
+
+<p>The <code>AxionWritable</code> provides an interface for easily creating classes that can be read and written by Axion.</p>
+
+<p>For example, extending the <code>Vector3f</code> example used above:</p>
+
+<div class="highlight highlight-java"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Vector3f</span> <span class="kd">implements</span> <span class="n">AxionWritable</span><span class="o">&lt;</span><span class="n">TagList</span><span class="o">&gt;</span> <span class="o">{</span>
+
+  <span class="kd">public</span> <span class="kt">float</span> <span class="n">x</span><span class="o">,</span> <span class="n">y</span><span class="o">,</span> <span class="n">z</span><span class="o">;</span>
+
+  <span class="kd">public</span> <span class="nf">Vector3f</span><span class="o">()</span> <span class="o">{</span>
+    <span class="c1">//</span>
+  <span class="o">}</span>
+
+  <span class="kd">public</span> <span class="nf">Vector3f</span><span class="o">(</span><span class="kd">final</span> <span class="kt">float</span> <span class="n">x</span><span class="o">,</span> <span class="kd">final</span> <span class="kt">float</span> <span class="n">y</span><span class="o">,</span> <span class="kd">final</span> <span class="kt">float</span> <span class="n">z</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">this</span><span class="o">.</span><span class="na">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">;</span>
+    <span class="k">this</span><span class="o">.</span><span class="na">y</span> <span class="o">=</span> <span class="n">y</span><span class="o">;</span>
+    <span class="k">this</span><span class="o">.</span><span class="na">z</span> <span class="o">=</span> <span class="n">z</span><span class="o">;</span>
+  <span class="o">}</span>
+
+  <span class="nd">@Override</span>
+  <span class="kd">public</span> <span class="n">TagList</span> <span class="nf">write</span><span class="o">(</span><span class="kd">final</span> <span class="n">Axion</span> <span class="n">axion</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">TagList</span> <span class="n">out</span> <span class="o">=</span> <span class="k">new</span> <span class="n">TagList</span><span class="o">(</span><span class="n">TagFloat</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+    <span class="n">list</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="n">TagFloat</span><span class="o">(</span><span class="s">""</span><span class="o">,</span> <span class="n">x</span><span class="o">));</span>
+    <span class="n">list</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="n">TagFloat</span><span class="o">(</span><span class="s">""</span><span class="o">,</span> <span class="n">y</span><span class="o">));</span>
+    <span class="n">list</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="n">TagFloat</span><span class="o">(</span><span class="s">""</span><span class="o">,</span> <span class="n">z</span><span class="o">));</span>
+    <span class="k">return</span> <span class="n">out</span><span class="o">;</span>
+  <span class="o">}</span>
+
+  <span class="nd">@Override</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">read</span><span class="o">(</span><span class="kd">final</span> <span class="n">TagList</span> <span class="n">in</span><span class="o">,</span> <span class="kd">final</span> <span class="n">Axion</span> <span class="n">axion</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="o">((</span><span class="n">TagFloat</span><span class="o">)</span> <span class="n">in</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="mi">0</span><span class="o">)).</span><span class="na">get</span><span class="o">();</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="o">((</span><span class="n">TagFloat</span><span class="o">)</span> <span class="n">in</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="mi">1</span><span class="o">)).</span><span class="na">get</span><span class="o">();</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="o">((</span><span class="n">TagFloat</span><span class="o">)</span> <span class="n">in</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="mi">2</span><span class="o">)).</span><span class="na">get</span><span class="o">();</span>
+  <span class="o">}</span>
+
+<span class="o">}</span>
+</pre></div>
+
+<h2>
+<a name="user-content-license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h2>
+
+<p>Copyright (C) 2014 Jason Taylor. Released as open-source under <a href="http://www.apache.org/licenses/LICENSE-2.0.html">Apache License, Version 2.0</a>.</p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Axion maintained by <a href="https://github.com/codetaylor">Jason Taylor</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
