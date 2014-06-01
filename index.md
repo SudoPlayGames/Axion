@@ -345,6 +345,66 @@ public class Vector3f implements AxionWritable<TagList> {
 }
 {% endhighlight %}
 
-##License
+## Debugging
+
+Axion uses [SLF4J](http://www.slf4j.org/) for logging. Setting the logging level to `TRACE` can help when debugging.
+
+Another useful tool in debugging your NBT is the `toString(Tag tag)` method:
+
+{% highlight java %}
+axion.toString(tagToPrint);
+{% endhighlight %}
+
+This will return a string in the following format:
+
+{% endhighlight %}
+TagCompound("Level"): 11 entries
+{
+  TagShort("shortTest"): 32767
+  TagLong("longTest"): 9223372036854775807
+  TagFloat("floatTest"): 0.49823147
+  TagString("stringTest"): HELLO WORLD THIS IS A TEST STRING ÅÄÖ!
+  TagInt("intTest"): 2147483647
+  TagCompound("nested compound test"): 2 entries
+  {
+    TagCompound("ham"): 2 entries
+    {
+      TagString("name"): Hampus
+      TagFloat("value"): 0.75
+    }
+    TagCompound("egg"): 2 entries
+    {
+      TagString("name"): Eggbert
+      TagFloat("value"): 0.5
+    }
+  }
+  TagList("listTest (long)"): 5 entries of type TagLong
+  {
+    TagLong: 11
+    TagLong: 12
+    TagLong: 13
+    TagLong: 14
+    TagLong: 15
+  }
+  TagByte("byteTest"): 127
+  TagList("listTest (compound)"): 2 entries of type TagCompound
+  {
+    TagCompound: 2 entries
+    {
+      TagString("name"): Compound tag #0
+      TagLong("created-on"): 1264099775885
+    }
+    TagCompound: 2 entries
+    {
+      TagString("name"): Compound tag #1
+      TagLong("created-on"): 1264099775885
+    }
+  }
+  TagByteArray("byteArrayTest (the first 1000 values of (n*n*255+n*7)%100, starting with n=0 (0, 62, 34, 16, 8, ...))"): [1000 bytes]
+  TagDouble("doubleTest"): 0.4931287132182315
+}
+{% endhighlight %}
+
+## License
 
 Copyright (C) 2014 Jason Taylor. Released as open-source under [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.html).
