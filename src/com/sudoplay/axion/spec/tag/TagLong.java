@@ -16,19 +16,54 @@ public class TagLong extends Tag {
 
   private long data;
 
+  /**
+   * Creates a new {@link TagLong} with the given name.
+   * 
+   * @param newName
+   *          the {@link Tag} name
+   */
   public TagLong(final String newName) {
     super(newName);
   }
 
+  /**
+   * Creates a new {@link TagLong} with no name and the given value.
+   * 
+   * @param newLong
+   *          the {@link Long} value
+   */
+  public TagLong(final long newLong) {
+    this(null, newLong);
+  }
+
+  /**
+   * Creates a new {@link TagLong} with the given name and value.
+   * 
+   * @param newName
+   *          the {@link Tag} name
+   * @param newLong
+   *          the {@link Long} value
+   */
   public TagLong(final String newName, final long newLong) {
     super(newName);
     data = newLong;
   }
 
+  /**
+   * Sets the value of this {@link TagLong} to the given value.
+   * 
+   * @param newLong
+   *          the {@link Long} value
+   */
   public void set(final long newLong) {
     data = newLong;
   }
 
+  /**
+   * Returns the value of this {@link TagLong}.
+   * 
+   * @return the value of this {@link TagLong}
+   */
   public long get() {
     return data;
   }

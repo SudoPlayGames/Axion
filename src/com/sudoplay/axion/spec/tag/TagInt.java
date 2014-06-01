@@ -16,19 +16,54 @@ public class TagInt extends Tag {
 
   private int data;
 
+  /**
+   * Creates a new {@link TagInt} with the given name.
+   * 
+   * @param newName
+   *          the {@link Tag} name
+   */
   public TagInt(final String newName) {
     super(newName);
   }
 
+  /**
+   * Creates a new {@link TagInt} with no name and the given value.
+   * 
+   * @param newInt
+   *          the {@link Integer} value
+   */
+  public TagInt(final int newInt) {
+    this(null, newInt);
+  }
+
+  /**
+   * Creates a new {@link TagInt} with the given name and value.
+   * 
+   * @param newName
+   *          the {@link Tag} name
+   * @param newInt
+   *          the {@link Integer} value
+   */
   public TagInt(final String newName, final int newInt) {
     super(newName);
     data = newInt;
   }
 
+  /**
+   * Sets the value of this {@link TagInt} to the given value.
+   * 
+   * @param newInt
+   *          the {@link Integer} value
+   */
   public void set(final int newInt) {
     data = newInt;
   }
 
+  /**
+   * Returns the value of this {@link TagInt}.
+   * 
+   * @return the value of this {@link TagInt}
+   */
   public int get() {
     return data;
   }

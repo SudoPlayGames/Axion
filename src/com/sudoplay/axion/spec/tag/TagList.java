@@ -35,14 +35,54 @@ public class TagList extends ContainerTag {
    */
   private final Class<? extends Tag> type;
 
+  /**
+   * Creates a new {@link TagList} of the given type with no name and an empty
+   * backing list.
+   * 
+   * @param tagClass
+   *          the list type
+   */
   public TagList(final Class<? extends Tag> tagClass) {
-    this(tagClass, "", new ArrayList<Tag>());
+    this(tagClass, null, new ArrayList<Tag>());
   }
 
+  /**
+   * Creates a new {@link TagList} of the given type with no name and a copy of
+   * the given list as the backing list.
+   * 
+   * @param tagClass
+   *          the list type
+   * @param newList
+   *          the list
+   */
+  public TagList(final Class<? extends Tag> tagClass, final List<Tag> newList) {
+    this(tagClass, null, newList);
+  }
+
+  /**
+   * Creates a new {@link TagList} of the given type with the given name and an
+   * empty backing list.
+   * 
+   * @param tagClass
+   *          the list type
+   * @param newName
+   *          the {@link Tag} name
+   */
   public TagList(final Class<? extends Tag> tagClass, final String newName) {
     this(tagClass, newName, new ArrayList<Tag>());
   }
 
+  /**
+   * Creates a new {@link TagList} of the given type with the given name and a
+   * copy of the given list as the backing list.
+   * 
+   * @param tagClass
+   *          the list type
+   * @param newName
+   *          the {@link Tag} name
+   * @param newList
+   *          the list
+   */
   public TagList(final Class<? extends Tag> tagClass, final String newName, final List<Tag> newList) {
     super(newName);
     type = tagClass;
@@ -58,15 +98,23 @@ public class TagList extends ContainerTag {
   }
 
   /**
-   * Add tag to the end of the list. If the tag to be added does not match this
+   * Adds tag to the end of the list. If the tag to be added does not match this
    * list's type, an exception is thrown.
    * 
    * @param tag
+   *          the {@link Tag} to add
    */
   public void add(final Tag tag) {
     assertValid(tag).addTo(this);
   }
 
+  /**
+   * Removes a {@link Tag} from this list.
+   * 
+   * @param tag
+   *          the {@link Tag} to remove
+   * @return true if the given {@link Tag} was found and removed
+   */
   public boolean remove(final Tag tag) {
     if (contains(tag)) {
       tag.removeFromParent();
@@ -75,6 +123,13 @@ public class TagList extends ContainerTag {
     return false;
   }
 
+  /**
+   * Removes a {@link Tag} from this list via its index.
+   * 
+   * @param index
+   *          the index of the {@link Tag} to remove
+   * @return the {@link Tag} removed
+   */
   public Tag remove(final int index) {
     Tag removed = data.get(index);
     removed.removeFromParent();
@@ -122,14 +177,31 @@ public class TagList extends ContainerTag {
     }
   }
 
+  /**
+   * Returns the type of this {@link TagList}.
+   * 
+   * @return the type of this {@link TagList}
+   */
   public Class<? extends Tag> getType() {
     return type;
   }
 
+  /**
+   * Returns an unmodifiable view of the backing list.
+   * 
+   * @return an unmodifiable view of the backing list
+   */
   public List<Tag> getAsList() {
     return Collections.unmodifiableList(data);
   }
 
+  /**
+   * Returns a {@link Tag} from the backing list at the index given.
+   * 
+   * @param index
+   *          the index of the {@link Tag} to get
+   * @return a {@link Tag} from the backing list at the index given
+   */
   @SuppressWarnings("unchecked")
   public <T extends Tag> T get(final int index) {
     return (T) data.get(index);
@@ -202,6 +274,14 @@ public class TagList extends ContainerTag {
     }
   }
 
+  /**
+   * Checks if the {@link Tag} given is not null and of this list's type.
+   * 
+   * @param tag
+   *          the {@link Tag} to check
+   * @return the {@link Tag} given
+   * @throws AxionInvalidTagException
+   */
   protected Tag assertValid(final Tag tag) throws AxionInvalidTagException {
     if (tag == null) {
       throw new AxionInvalidTagException(this.toString() + " can't contain null tags");

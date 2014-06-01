@@ -35,20 +35,50 @@ public class TagCompound extends ContainerTag {
 
   private final Map<String, Tag> data;
 
+  /**
+   * Creates a new {@link TagCompound} with no name and an empty backing map.
+   */
   public TagCompound() {
     this(null, null);
   }
 
+  /**
+   * Creates a new {@link TagCompound} with no name and a copy of the map given
+   * as the backing map.
+   * 
+   * @param newMap
+   *          the {@link Map} value
+   */
+  public TagCompound(final Map<String, Tag> newMap) {
+    this(null, newMap);
+  }
+
+  /**
+   * Creates a new {@link TagCompound} with the given name and an empty backing
+   * map.
+   * 
+   * @param newName
+   *          the {@link Tag} name
+   */
   public TagCompound(final String newName) {
     this(newName, null);
   }
 
+  /**
+   * Creates a new {@link TagCompound} with the given name and a copy of the map
+   * given as the backing map.
+   * 
+   * @param newName
+   *          the {@link Tag} name
+   * @param newMap
+   *          the {@link Map} value
+   */
   public TagCompound(final String newName, final Map<String, Tag> newMap) {
     super(newName);
     if (newMap == null) {
       data = new HashMap<String, Tag>();
     } else {
-      data = newMap;
+      data = new HashMap<String, Tag>(newMap);
       Iterator<Entry<String, Tag>> it = data.entrySet().iterator();
       while (it.hasNext()) {
         assertValid(it.next().getValue());
@@ -56,6 +86,11 @@ public class TagCompound extends ContainerTag {
     }
   }
 
+  /**
+   * Returns an unmodifiable {@link Iterator} for the backing map's values.
+   * 
+   * @return an unmodifiable {@link Iterator} for the backing map's values
+   */
   @Override
   public Iterator<Tag> iterator() {
     return Collections.unmodifiableCollection(data.values()).iterator();
@@ -82,15 +117,37 @@ public class TagCompound extends ContainerTag {
     return data.values().contains(tag);
   }
 
+  /**
+   * Returns an unmodifiable view of this {@link TagCompound}'s backing map.
+   * 
+   * @return an unmodifiable view of this {@link TagCompound}'s backing map
+   */
   public Map<String, Tag> getAsMap() {
     return Collections.unmodifiableMap(data);
   }
 
+  /**
+   * Returns true if the backing map contains the key given.
+   * 
+   * @param name
+   *          the name of the {@link Tag} to look for
+   * @return true if the backing map contains the key given
+   */
   public boolean containsKey(final String name) {
     return data.containsKey(name);
   }
 
+  /**
+   * Removes and returns the tag with the name given.
+   * 
+   * @param name
+   *          the name of the {@link Tag} to remove
+   * @return the tag with the name given
+   */
   public Tag remove(final String name) {
+    if (name == null || "".equals(name)) {
+      return null;
+    }
     Tag result = data.get(name);
     if (result == null) {
       return null;
@@ -99,13 +156,30 @@ public class TagCompound extends ContainerTag {
     return result;
   }
 
+  /**
+   * Returns the {@link Tag} with the name given.
+   * 
+   * @param name
+   *          the name of the {@link Tag} to get
+   * @return the {@link Tag} with the name given
+   */
   @SuppressWarnings("unchecked")
   public <T extends Tag> T get(final String name) {
     return (T) data.get(name);
   }
 
+  /**
+   * Add a {@link Tag} to this {@link TagCompound}. If a tag exists in this
+   * compound with the same name as the given tag, the old tag will be replaced
+   * by the new tag.
+   * 
+   * @param tag
+   *          the {@link Tag} to add
+   */
   public void put(final Tag tag) {
-    assertValid(tag).addTo(this);
+    assertValid(tag);
+    remove(tag.getName());
+    tag.addTo(this);
   }
 
   @Override
@@ -118,6 +192,14 @@ public class TagCompound extends ContainerTag {
     data.remove(tag.getName());
   }
 
+  /**
+   * Checks if the {@link Tag} given is not null and has a name.
+   * 
+   * @param tag
+   *          the {@link Tag} to check
+   * @return the {@link Tag} given
+   * @throws AxionInvalidTagException
+   */
   protected Tag assertValid(final Tag tag) throws AxionInvalidTagException {
     if (tag == null) {
       throw new AxionInvalidTagException(this.toString() + " does not support null tags");

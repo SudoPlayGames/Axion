@@ -20,15 +20,45 @@ public class TagByteArray extends Tag {
 
   private byte[] data;
 
+  /**
+   * Creates a new {@link TagByteArray} with the given name.
+   * 
+   * @param newName
+   *          the {@link Tag} name
+   */
   public TagByteArray(final String newName) {
     this(newName, new byte[0]);
   }
 
+  /**
+   * Creates a new {@link TagByteArray} with no name and the given value.
+   * 
+   * @param newByteArray
+   *          the {@link Byte} array value
+   */
+  public TagByteArray(final byte[] newByteArray) {
+    this(null, newByteArray);
+  }
+
+  /**
+   * Creates a new {@link TagByteArray} with the given name and value.
+   * 
+   * @param newName
+   *          the {@link Tag} name
+   * @param newByteArray
+   *          the {@link Byte} array value
+   */
   public TagByteArray(final String newName, final byte[] newByteArray) {
     super(newName);
     set(newByteArray);
   }
 
+  /**
+   * Sets the value of this {@link TagByteArray} to a copy of the given value.
+   * 
+   * @param newByteArray
+   *          the {@link Byte} array value
+   */
   public void set(final byte[] newByteArray) {
     if (newByteArray == null) {
       throw new IllegalArgumentException(this.toString() + " doesn't support null payload");
@@ -36,6 +66,11 @@ public class TagByteArray extends Tag {
     data = newByteArray.clone();
   }
 
+  /**
+   * Returns a copy of the value of this {@link TagByteArray}.
+   * 
+   * @return a copy of the value of this {@link TagByteArray}
+   */
   public byte[] get() {
     return data.clone();
   }

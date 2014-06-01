@@ -20,15 +20,35 @@ public class TagString extends Tag {
 
   private String data = EMPTY;
 
+  /**
+   * Creates a new {@link TagString} with the given name.
+   * 
+   * @param newName
+   *          the {@link Tag} name
+   */
   public TagString(final String newName) {
     super(newName);
   }
 
+  /**
+   * Creates a new {@link TagString} with the given name and value.
+   * 
+   * @param newName
+   *          the {@link Tag} name
+   * @param newString
+   *          the {@link String} value
+   */
   public TagString(final String newName, final String newString) {
     super(newName);
     set(newString);
   }
 
+  /**
+   * Sets the value of this {@link TagString} to the given value.
+   * 
+   * @param newString
+   *          the {@link String} value
+   */
   public void set(final String newString) {
     if (newString == null) {
       data = EMPTY;
@@ -37,6 +57,11 @@ public class TagString extends Tag {
     }
   }
 
+  /**
+   * Returns the value of this {@link TagString}.
+   * 
+   * @return the value of this {@link TagString}
+   */
   public String get() {
     return data;
   }

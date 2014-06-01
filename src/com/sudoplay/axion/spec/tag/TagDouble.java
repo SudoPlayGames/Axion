@@ -17,19 +17,54 @@ public class TagDouble extends Tag {
 
   private double data;
 
+  /**
+   * Creates a new {@link TagDouble} with the given name.
+   * 
+   * @param newName
+   *          the {@link Tag} name
+   */
   public TagDouble(final String newName) {
     super(newName);
   }
 
+  /**
+   * Creates a new {@link TagDouble} with no name and the given value.
+   * 
+   * @param newDouble
+   *          the {@link Double} value
+   */
+  public TagDouble(final double newDouble) {
+    this(null, newDouble);
+  }
+
+  /**
+   * Creates the {@link TagDouble} with the given name and value.
+   * 
+   * @param newName
+   *          the {@link Tag} name
+   * @param newDouble
+   *          the {@link Double} value
+   */
   public TagDouble(final String newName, final double newDouble) {
     super(newName);
     data = newDouble;
   }
 
+  /**
+   * Sets the value of this {@link TagDouble} to the given value.
+   * 
+   * @param newDouble
+   *          the {@link Double} value
+   */
   public void set(final double newDouble) {
     data = newDouble;
   }
 
+  /**
+   * Returns the value of this {@link TagDouble}.
+   * 
+   * @return the value of this {@link TagDouble}
+   */
   public double get() {
     return data;
   }
