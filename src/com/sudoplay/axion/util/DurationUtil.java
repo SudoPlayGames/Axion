@@ -21,34 +21,12 @@ public class DurationUtil {
     int hours = 0;
     int minutes = 0;
     int seconds = 0;
-    int milliseconds = 0;
-    
-    years = (int) (durationMillis / MILLIS_PER_YEAR);
-    durationMillis -= years * MILLIS_PER_YEAR;
-    
-    weeks = (int) (durationMillis / MILLIS_PER_WEEK);
-    durationMillis -= weeks * MILLIS_PER_WEEK;
-
-    days = (int) (durationMillis / MILLIS_PER_DAY);
-    durationMillis -= days * MILLIS_PER_DAY;
-
-    hours = (int) (durationMillis / MILLIS_PER_HOUR);
-    durationMillis -= hours * MILLIS_PER_HOUR;
-
-    minutes = (int) (durationMillis / MILLIS_PER_MINUTE);
-    durationMillis -= minutes * MILLIS_PER_MINUTE;
-
-    seconds = (int) (durationMillis / MILLIS_PER_SECOND);
-    durationMillis -= seconds * MILLIS_PER_SECOND;
-    
-    milliseconds = (int) durationMillis;
 
     StringBuilder out = new StringBuilder();
 
-    if (years > 0) {
-      if (out.length() > 0) {
-        out.append(" ");
-      }
+    if (durationMillis >= MILLIS_PER_YEAR) {
+      years = (int) (durationMillis / MILLIS_PER_YEAR);
+      durationMillis -= years * MILLIS_PER_YEAR;
       out.append(years);
       out.append(" year");
       if (years > 1) {
@@ -56,7 +34,7 @@ public class DurationUtil {
       }
     }
 
-    if (weeks > 0) {
+    if (durationMillis >= MILLIS_PER_WEEK) {
       if (out.length() > 0) {
         out.append(" ");
       }
@@ -65,9 +43,13 @@ public class DurationUtil {
       if (weeks > 1) {
         out.append("s");
       }
+      weeks = (int) (durationMillis / MILLIS_PER_WEEK);
+      durationMillis -= weeks * MILLIS_PER_WEEK;
     }
 
-    if (days > 0) {
+    if (durationMillis >= MILLIS_PER_DAY) {
+      days = (int) (durationMillis / MILLIS_PER_DAY);
+      durationMillis -= days * MILLIS_PER_DAY;
       if (out.length() > 0) {
         out.append(" ");
       }
@@ -78,7 +60,9 @@ public class DurationUtil {
       }
     }
 
-    if (hours > 0) {
+    if (durationMillis >= MILLIS_PER_HOUR) {
+      hours = (int) (durationMillis / MILLIS_PER_HOUR);
+      durationMillis -= hours * MILLIS_PER_HOUR;
       if (out.length() > 0) {
         out.append(" ");
       }
@@ -89,7 +73,9 @@ public class DurationUtil {
       }
     }
 
-    if (minutes > 0) {
+    if (durationMillis >= MILLIS_PER_MINUTE) {
+      minutes = (int) (durationMillis / MILLIS_PER_MINUTE);
+      durationMillis -= minutes * MILLIS_PER_MINUTE;
       if (out.length() > 0) {
         out.append(" ");
       }
@@ -100,7 +86,9 @@ public class DurationUtil {
       }
     }
 
-    if (seconds > 0) {
+    if (durationMillis >= MILLIS_PER_SECOND) {
+      seconds = (int) (durationMillis / MILLIS_PER_SECOND);
+      durationMillis -= seconds * MILLIS_PER_SECOND;
       if (out.length() > 0) {
         out.append(" ");
       }
@@ -111,13 +99,13 @@ public class DurationUtil {
       }
     }
 
-    if (milliseconds > 0) {
+    if (durationMillis > 0) {
       if (out.length() > 0) {
         out.append(" ");
       }
-      out.append(milliseconds);
+      out.append(durationMillis);
       out.append(" millisecond");
-      if (milliseconds > 1) {
+      if (durationMillis > 1) {
         out.append("s");
       }
     }
