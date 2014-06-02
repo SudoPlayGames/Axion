@@ -131,7 +131,15 @@ public class TagRegistry implements Cloneable {
   public <T extends Tag, V> void register(final int id, final Class<T> tagClass, final Class<V> type, final TagAdapter<T> adapter,
       final TagConverter<T, V> converter) throws AxionTagRegistrationException, AxionInstanceException {
 
-    if (classToAdapter.containsKey(tagClass) || classToId.containsKey(tagClass)) {
+    if (tagClass == null) {
+      throw new AxionTagRegistrationException("Can't register a null tag class");
+    } else if (type == null) {
+      throw new AxionTagRegistrationException("Can't register a null tag type");
+    } else if (adapter == null) {
+      throw new AxionTagRegistrationException("Can't register a null tag adapter");
+    } else if (converter == null) {
+      throw new AxionTagRegistrationException("Can't register a null tag converter");
+    } else if (classToAdapter.containsKey(tagClass) || classToId.containsKey(tagClass)) {
       throw new AxionTagRegistrationException("Tag class already registered: " + tagClass.getSimpleName());
     } else if (idToAdapter.containsKey(id) || idToClass.containsKey(id)) {
       throw new AxionTagRegistrationException("Tag id already registered: " + id);
@@ -148,11 +156,9 @@ public class TagRegistry implements Cloneable {
     classToAdapter.put(tagClass, newAdapterInstance);
     idToAdapter.put(id, newAdapterInstance);
 
-    if (converter != null) {
-      TagConverter<T, V> newConverterInstance = converter.newInstance(this);
-      classToConverter.put(tagClass, newConverterInstance);
-      typeToConverter.put(type, newConverterInstance);
-    }
+    TagConverter<T, V> newConverterInstance = converter.newInstance(this);
+    classToConverter.put(tagClass, newConverterInstance);
+    typeToConverter.put(type, newConverterInstance);
   }
 
   /**
