@@ -26,6 +26,7 @@ public class TagListAdapter extends TagAdapter<TagList> {
 
   @Override
   public void write(final TagList tag, final AxionOutputStream out) throws IOException {
+    LOG.debug("Entering write(tag=[{}], out=[{}])", tag, out);
     int size = tag.size();
     int type = getIdFor(tag.getType());
     out.writeByte(type);
@@ -33,15 +34,15 @@ public class TagListAdapter extends TagAdapter<TagList> {
     TagAdapter<Tag> adapter = getAdapterFor(type);
     Tag child;
     for (int i = 0; i < size; i++) {
-      LOG.trace("writing #[{}]", i);
       child = tag.get(i);
       adapter.write(child, out);
-      LOG.trace("finished writing [{}]", child);
     }
+    LOG.debug("Leaving write()");
   }
 
   @Override
   public TagList read(final Tag parent, final AxionInputStream in) throws IOException {
+    LOG.debug("Entering read(parent=[{}], in=[{}])", parent, in);
     String name = (parent instanceof TagList) ? null : in.readString();
     Class<? extends Tag> type = getClassFor(in.readUnsignedByte());
     int size = in.readInt();
@@ -49,11 +50,10 @@ public class TagListAdapter extends TagAdapter<TagList> {
     TagAdapter<? extends Tag> adapter = getAdapterFor(type);
     Tag child;
     for (int i = 0; i < size; i++) {
-      LOG.trace("reading #[{}]", i);
       child = adapter.read(tagList, in);
       tagList.add(child);
-      LOG.trace("finished reading [{}]", child);
     }
+    LOG.debug("Leaving read(): [{}]", tagList);
     return tagList;
   }
 

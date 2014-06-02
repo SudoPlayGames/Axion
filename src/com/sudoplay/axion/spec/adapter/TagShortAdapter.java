@@ -2,6 +2,9 @@ package com.sudoplay.axion.spec.adapter;
 
 import java.io.IOException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.sudoplay.axion.registry.TagAdapter;
 import com.sudoplay.axion.spec.tag.TagList;
 import com.sudoplay.axion.spec.tag.TagShort;
@@ -18,14 +21,21 @@ import com.sudoplay.axion.tag.Tag;
  */
 public class TagShortAdapter extends TagAdapter<TagShort> {
 
+  private static final Logger LOG = LoggerFactory.getLogger(TagShortAdapter.class);
+
   @Override
   public void write(final TagShort tag, final AxionOutputStream out) throws IOException {
+    LOG.trace("Entering write(tag=[{}], out=[{}])", tag, out);
     out.writeShort(tag.get());
+    LOG.trace("Leaving write()");
   }
 
   @Override
   public TagShort read(final Tag parent, final AxionInputStream in) throws IOException {
-    return convertToTag((parent instanceof TagList) ? null : in.readString(), in.readShort());
+    LOG.trace("Entering read(parent=[{}], in=[{}])", parent, in);
+    TagShort result = convertToTag((parent instanceof TagList) ? null : in.readString(), in.readShort());
+    LOG.trace("Leaving read(): [{}]", result);
+    return result;
   }
 
 }

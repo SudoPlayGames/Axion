@@ -154,4 +154,9 @@ public abstract class TagAdapter<T extends Tag> extends RegistryAccessor {
     }
   }
 
+  @Override
+  public String toString() {
+    return this.getClass().toString();
+  }
+
 }

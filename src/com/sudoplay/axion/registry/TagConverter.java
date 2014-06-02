@@ -105,4 +105,9 @@ public abstract class TagConverter<T extends Tag, V> extends RegistryAccessor {
     }
   }
 
+  @Override
+  public String toString() {
+    return this.getClass().toString();
+  }
+
 }

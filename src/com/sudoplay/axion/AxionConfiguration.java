@@ -6,6 +6,9 @@ import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.sudoplay.axion.AxionConfigurationProtection.ProtectionMode;
 import com.sudoplay.axion.ext.tag.TagBoolean;
 import com.sudoplay.axion.ext.tag.TagBooleanArray;
@@ -45,6 +48,8 @@ import com.sudoplay.axion.tag.Tag;
  * @author Jason Taylor
  */
 public class AxionConfiguration implements Cloneable {
+
+  private static final Logger LOG = LoggerFactory.getLogger(AxionConfiguration.class);
 
   /**
    * An {@link AxionConfiguration} instance configured to read and write NBT
@@ -136,11 +141,13 @@ public class AxionConfiguration implements Cloneable {
    *          the {@link AxionConfiguration} to duplicate
    */
   protected AxionConfiguration(final AxionConfiguration toCopy) {
+    LOG.debug("Entering AxionConfiguration(toCopy=[{}])", toCopy);
     tagRegistry = toCopy.tagRegistry.clone();
     mappers = toCopy.mappers.clone();
     configurationProtection = new AxionConfigurationProtection(ProtectionMode.Unlocked);
     streamCompressionWrapper = toCopy.streamCompressionWrapper;
     characterEncodingType = toCopy.characterEncodingType;
+    LOG.debug("Leaving AxionConfiguration(): [{}]", this);
   }
 
   /**
@@ -150,11 +157,13 @@ public class AxionConfiguration implements Cloneable {
    * @param newProtectionMode
    */
   protected AxionConfiguration(final ProtectionMode newProtectionMode) {
+    LOG.debug("Entering AxionConfiguration(newProtectionMode=[{}])", newProtectionMode);
     tagRegistry = new TagRegistry();
     mappers = new NBTObjectMapperRegistry();
     configurationProtection = new AxionConfigurationProtection(newProtectionMode);
     streamCompressionWrapper = StreamCompressionWrapper.GZIP_STREAM_COMPRESSION_WRAPPER;
     characterEncodingType = CharacterEncodingType.MODIFIED_UTF_8;
+    LOG.debug("Leaving AxionConfiguration(): [{}]", this);
   }
 
   /**
@@ -169,8 +178,10 @@ public class AxionConfiguration implements Cloneable {
    * @see #setImmutable()
    */
   protected AxionConfiguration lock() {
+    LOG.debug("[{}] lock()", this);
     configurationProtection.assertMutable();
     configurationProtection.lock();
+    LOG.debug("Configuration [{}] locked", this);
     return this;
   }
 
@@ -184,6 +195,7 @@ public class AxionConfiguration implements Cloneable {
    * @see #setImmutable()
    */
   protected AxionConfiguration unlock() {
+    LOG.debug("[{}] unlock()", this);
     configurationProtection.assertMutable();
     configurationProtection.unlock();
     return this;
@@ -198,6 +210,7 @@ public class AxionConfiguration implements Cloneable {
    * @see #unlock()
    */
   protected AxionConfiguration setImmutable() {
+    LOG.debug("[{}] setImmutable()", this);
     configurationProtection.assertUnlocked();
     configurationProtection.assertMutable();
     configurationProtection.setImmutable();
@@ -235,6 +248,7 @@ public class AxionConfiguration implements Cloneable {
    * @return this {@link AxionConfiguration}
    */
   protected AxionConfiguration setCharacterEncodingType(final CharacterEncodingType newCharacterEncodingType) {
+    LOG.debug("[{}] setCharacterEncodingType(newCharacterEncodingType=[{}])", this, newCharacterEncodingType);
     configurationProtection.assertUnlocked();
     configurationProtection.assertMutable();
     characterEncodingType = newCharacterEncodingType;
@@ -320,6 +334,7 @@ public class AxionConfiguration implements Cloneable {
    * @return this {@link AxionConfiguration}
    */
   protected AxionConfiguration setCompressionType(final CompressionType newCompressionType) {
+    LOG.debug("setCompressionType(newCompressionType=[{}])", newCompressionType);
     configurationProtection.assertUnlocked();
     configurationProtection.assertMutable();
     switch (newCompressionType) {

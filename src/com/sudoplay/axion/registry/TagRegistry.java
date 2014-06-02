@@ -5,6 +5,9 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.sudoplay.axion.AxionInstanceException;
 import com.sudoplay.axion.tag.Tag;
 import com.sudoplay.axion.util.TypeResolver;
@@ -18,6 +21,8 @@ import com.sudoplay.axion.util.TypeResolver;
  * @author Jason Taylor
  */
 public class TagRegistry implements Cloneable {
+
+  private static final Logger LOG = LoggerFactory.getLogger(TagRegistry.class);
 
   /**
    * Maps {@link Tag} classes to their respective integer ids.
@@ -59,7 +64,7 @@ public class TagRegistry implements Cloneable {
    * Creates a new, empty {@link TagRegistry}.
    */
   public TagRegistry() {
-    //
+    LOG.debug("Created empty TagRegistry [{}]", this);
   }
 
   /**
@@ -72,6 +77,7 @@ public class TagRegistry implements Cloneable {
    * @throws AxionInstanceException
    */
   protected TagRegistry(final TagRegistry toCopy) throws AxionInstanceException {
+    LOG.debug("Entering TagRegistry(toCopy=[{}])", toCopy);
     classToId.putAll(toCopy.classToId);
     idToClass.putAll(toCopy.idToClass);
     Iterator<Entry<Class<? extends Tag>, TagAdapter<? extends Tag>>> it1 = toCopy.classToAdapter.entrySet().iterator();
@@ -95,6 +101,7 @@ public class TagRegistry implements Cloneable {
       typeToConverter.put(entry.getKey(), entry.getValue().newInstance(this));
     }
     baseTagAdapter = toCopy.baseTagAdapter.newInstance(this);
+    LOG.debug("Leaving TagRegistry(): [{}]", this);
   }
 
   /**
@@ -105,7 +112,9 @@ public class TagRegistry implements Cloneable {
    * @throws AxionInstanceException
    */
   public void registerBaseTagAdapter(final TagAdapter<Tag> newBaseTagAdapter) throws AxionInstanceException {
+    LOG.debug("Entering registerBaseTagAdapter(newBaseTagAdapter=[{}])", newBaseTagAdapter);
     baseTagAdapter = newBaseTagAdapter.newInstance(this);
+    LOG.debug("Leaving registerBaseTagAdapter()");
   }
 
   /**
@@ -131,22 +140,32 @@ public class TagRegistry implements Cloneable {
   public <T extends Tag, V> void register(final int id, final Class<T> tagClass, final Class<V> type, final TagAdapter<T> adapter,
       final TagConverter<T, V> converter) throws AxionTagRegistrationException, AxionInstanceException {
 
+    LOG.debug("Entering register(id=[{}], tagClass=[{}], type=[{}], adapter=[{}], converter=[{}])", id, tagClass, type, adapter, converter);
+
     if (tagClass == null) {
+      LOG.error("Can't register a null tag class");
       throw new AxionTagRegistrationException("Can't register a null tag class");
     } else if (type == null) {
+      LOG.error("Can't register a null tag type");
       throw new AxionTagRegistrationException("Can't register a null tag type");
     } else if (adapter == null) {
+      LOG.error("Can't register a null tag adapter");
       throw new AxionTagRegistrationException("Can't register a null tag adapter");
     } else if (converter == null) {
+      LOG.error("Can't register a null tag converter");
       throw new AxionTagRegistrationException("Can't register a null tag converter");
     } else if (classToAdapter.containsKey(tagClass) || classToId.containsKey(tagClass)) {
-      throw new AxionTagRegistrationException("Tag class already registered: " + tagClass.getSimpleName());
+      LOG.error("Tag class [{}] already registered", tagClass);
+      throw new AxionTagRegistrationException("Tag class already registered: " + tagClass);
     } else if (idToAdapter.containsKey(id) || idToClass.containsKey(id)) {
+      LOG.error("Tag id [{}] already registered", id);
       throw new AxionTagRegistrationException("Tag id already registered: " + id);
     } else if (classToConverter.containsKey(tagClass)) {
-      throw new AxionTagRegistrationException("Converter already registered for class: " + tagClass.getSimpleName());
+      LOG.error("Converter already registered for class [{}]", tagClass);
+      throw new AxionTagRegistrationException("Converter already registered for class: " + tagClass);
     } else if (typeToConverter.containsKey(type)) {
-      throw new AxionTagRegistrationException("Converter already registered for type: " + type.getSimpleName());
+      LOG.error("Converter already registered for type [{}]", type);
+      throw new AxionTagRegistrationException("Converter already registered for type: " + type);
     }
 
     classToId.put(tagClass, id);
@@ -159,6 +178,8 @@ public class TagRegistry implements Cloneable {
     TagConverter<T, V> newConverterInstance = converter.newInstance(this);
     classToConverter.put(tagClass, newConverterInstance);
     typeToConverter.put(type, newConverterInstance);
+
+    LOG.debug("Leaving register()");
   }
 
   /**
@@ -170,6 +191,7 @@ public class TagRegistry implements Cloneable {
    */
   public TagAdapter<Tag> getBaseTagAdapter() throws AxionTagRegistrationException {
     if (baseTagAdapter == null) {
+      LOG.error("No base tag adapter registered; use registerBaseTagAdapter() to register an adapter as the base tag adapater");
       throw new AxionTagRegistrationException("No base tag adapter registered; use registerBaseTagAdapter() to register an adapter as the base tag adapater");
     }
     return baseTagAdapter;
@@ -187,10 +209,13 @@ public class TagRegistry implements Cloneable {
    */
   @SuppressWarnings("unchecked")
   public <T extends Tag> TagAdapter<T> getAdapterFor(final int id) throws AxionTagRegistrationException {
+    LOG.trace("Entering getAdapterFor(id=[{}])", id);
     TagAdapter<T> result;
     if ((result = (TagAdapter<T>) idToAdapter.get(id)) == null) {
+      LOG.error("No adapter registered for id [{}]", id);
       throw new AxionTagRegistrationException("No adapter registered for id: " + id);
     }
+    LOG.trace("Leaving getAdapterFor(): [{}]", result);
     return result;
   }
 
@@ -206,10 +231,13 @@ public class TagRegistry implements Cloneable {
    */
   @SuppressWarnings("unchecked")
   public <T extends Tag> TagAdapter<T> getAdapterFor(final Class<T> tagClass) throws AxionTagRegistrationException {
+    LOG.trace("Entering getAdapterFor(tagClass=[{}])", tagClass);
     TagAdapter<T> result;
     if ((result = (TagAdapter<T>) classToAdapter.get(tagClass)) == null) {
-      throw new AxionTagRegistrationException("No adapter registered for class: " + tagClass.getSimpleName());
+      LOG.error("No adapter registered for class [{}]", tagClass);
+      throw new AxionTagRegistrationException("No adapter registered for class: " + tagClass);
     }
+    LOG.trace("Leaving getAdapterFor(): [{}]", result);
     return result;
   }
 
@@ -224,10 +252,12 @@ public class TagRegistry implements Cloneable {
    * @throws AxionTagRegistrationException
    */
   public int getIdFor(final Class<? extends Tag> tagClass) throws AxionTagRegistrationException {
+    LOG.trace("Entering getIdFor(tagClass=[{}])", tagClass);
     Integer result;
     if ((result = classToId.get(tagClass)) == null) {
       throw new AxionTagRegistrationException("No id registered for tag class: " + tagClass.getSimpleName());
     }
+    LOG.trace("Leaving getIdFor(): [{}]", result);
     return result;
   }
 
@@ -242,10 +272,13 @@ public class TagRegistry implements Cloneable {
    * @throws AxionTagRegistrationException
    */
   public Class<? extends Tag> getClassFor(final int id) throws AxionTagRegistrationException {
+    LOG.trace("Entering getClassFor(id=[{}])", id);
     Class<? extends Tag> result;
     if ((result = idToClass.get(id)) == null) {
+      LOG.error("No class registered for tag id [{}]", id);
       throw new AxionTagRegistrationException("No class registered for tag id: " + id);
     }
+    LOG.trace("Leaving getClassFor(): [{}]", result);
     return result;
   }
 
@@ -262,12 +295,15 @@ public class TagRegistry implements Cloneable {
    */
   @SuppressWarnings("unchecked")
   public <T extends Tag, V> TagConverter<T, V> getConverterForTag(final Class<T> tagClass) throws AxionTagRegistrationException {
+    LOG.trace("Entering getConverterForTag(tagClass=[{}])", tagClass);
     if (tagClass == null) {
       return null;
     } else if (!classToConverter.containsKey(tagClass)) {
       throw new AxionTagRegistrationException("No converter registered for tag class: " + tagClass);
     }
-    return (TagConverter<T, V>) classToConverter.get(tagClass);
+    TagConverter<T, V> result = (TagConverter<T, V>) classToConverter.get(tagClass);
+    LOG.trace("Leaving getConverterForTag(): [{}]", result);
+    return result;
   }
 
   /**
@@ -283,25 +319,28 @@ public class TagRegistry implements Cloneable {
    */
   @SuppressWarnings("unchecked")
   public <T extends Tag, V> TagConverter<T, V> getConverterForValue(final Class<V> valueClass) throws AxionTagRegistrationException {
-    if (valueClass == null) {
-      return null;
-    }
-    TagConverter<T, V> converter = (TagConverter<T, V>) typeToConverter.get(valueClass);
-    if (converter == null) {
-      for (Class<?> c : TypeResolver.getAllClasses(valueClass)) {
-        if (typeToConverter.containsKey(c)) {
-          try {
-            converter = (TagConverter<T, V>) typeToConverter.get(c);
-            break;
-          } catch (ClassCastException e) {
-            //
+    LOG.trace("Entering getConverterForValue(valueClass=[{}])", valueClass);
+    TagConverter<T, V> converter = null;
+    if (valueClass != null) {
+      converter = (TagConverter<T, V>) typeToConverter.get(valueClass);
+      if (converter == null) {
+        for (Class<?> c : TypeResolver.getAllClasses(valueClass)) {
+          if (typeToConverter.containsKey(c)) {
+            try {
+              converter = (TagConverter<T, V>) typeToConverter.get(c);
+              break;
+            } catch (ClassCastException e) {
+              //
+            }
           }
         }
       }
+      if (converter == null) {
+        LOG.error("No converter registered for type [{}]", valueClass);
+        throw new AxionTagRegistrationException("No converter registered for type: " + valueClass);
+      }
     }
-    if (converter == null) {
-      throw new AxionTagRegistrationException("No converter registered for type: " + valueClass.getSimpleName());
-    }
+    LOG.trace("Leaving getConverterForValue(): [{}]", converter);
     return converter;
   }
 
@@ -311,7 +350,10 @@ public class TagRegistry implements Cloneable {
    */
   @Override
   public TagRegistry clone() {
-    return new TagRegistry(this);
+    LOG.debug("Entering clone()");
+    TagRegistry clone = new TagRegistry(this);
+    LOG.debug("Leaving clone(): [{}]", clone);
+    return clone;
   }
 
 }

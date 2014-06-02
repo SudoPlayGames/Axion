@@ -10,6 +10,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.sudoplay.axion.AxionConfiguration.CharacterEncodingType;
 import com.sudoplay.axion.AxionConfiguration.CompressionType;
 import com.sudoplay.axion.AxionConfigurationProtection.ProtectionMode;
@@ -23,6 +26,7 @@ import com.sudoplay.axion.spec.tag.TagCompound;
 import com.sudoplay.axion.stream.AxionInputStream;
 import com.sudoplay.axion.stream.AxionOutputStream;
 import com.sudoplay.axion.tag.Tag;
+import com.sudoplay.axion.util.DurationUtil;
 
 /**
  * This is the main class for {@link Axion}, a tool for working with NBT.
@@ -30,6 +34,8 @@ import com.sudoplay.axion.tag.Tag;
  * @author Jason Taylor
  */
 public class Axion {
+
+  private static final Logger LOG = LoggerFactory.getLogger(Axion.class);
 
   private static final String EXT_INSTANCE_NAME = "AXION_EXT";
   private static final String SPEC_INSTANCE_NAME = "AXION_SPEC";
@@ -81,11 +87,14 @@ public class Axion {
    * @throws AxionInstanceException
    */
   public static Axion createInstance(final String newName) throws AxionInstanceException {
+    LOG.debug("Entering createInstance(newName=[{}])", newName);
     if (INSTANCES.containsKey(newName)) {
-      throw new AxionInstanceException(Axion.class.getSimpleName() + " instance alread exists with name: " + newName);
+      LOG.error("Instance already exists with name [{}]", newName);
+      throw new AxionInstanceException("Instance already exists with name: " + newName);
     }
     Axion instance = new Axion();
     INSTANCES.put(newName, instance);
+    LOG.debug("Leaving createInstance(): [{}]", instance);
     return instance;
   }
 
@@ -118,11 +127,14 @@ public class Axion {
    * @throws AxionInstanceException
    */
   public static Axion createInstanceFrom(final Axion axion, final String newName) throws AxionInstanceException {
+    LOG.debug("Entering createInstanceFrom(axion=[{}], newName=[{}])", axion, newName);
     if (INSTANCES.containsKey(newName)) {
-      throw new AxionInstanceException(Axion.class.getSimpleName() + " instance alread exists with name: " + newName);
+      LOG.error("Instance already exists with name [{}]", newName);
+      throw new AxionInstanceException("Instance alread exists with name: " + newName);
     }
     Axion instance = new Axion(axion.configuration.clone());
     INSTANCES.put(newName, instance);
+    LOG.debug("Leaving createInstanceFrom(): [{}]", instance);
     return instance;
   }
 
@@ -136,10 +148,14 @@ public class Axion {
    * @throws AxionInstanceException
    */
   public static Axion deleteInstance(final String name) throws AxionInstanceException {
+    LOG.debug("Entering deleteInstance(name=[{}])", name);
     if (SPEC_INSTANCE_NAME.equals(name) || EXT_INSTANCE_NAME.equals(name)) {
+      LOG.error("Can't delete built-in instance [{}]", name);
       throw new AxionInstanceException("Can't delete built-in instance: " + name);
     }
-    return INSTANCES.remove(name);
+    Axion removed = INSTANCES.remove(name);
+    LOG.debug("Leaving deleteInstance(): [{}]", removed);
+    return removed;
   }
 
   /**
@@ -567,7 +583,11 @@ public class Axion {
    * @throws AxionTagRegistrationException
    */
   public <T extends AxionWritable<TagCompound>> T read(final File file, final T axionWritable) throws IOException, AxionTagRegistrationException {
+    LOG.debug("Entering read(file=[{}], axionWritable=[{}])", file, axionWritable);
+    long start = System.currentTimeMillis();
     axionWritable.read(read(file), this);
+    LOG.info("Read of file [{}] into [{}] completed in [{}]", file, axionWritable, DurationUtil.formatDurationWords(System.currentTimeMillis() - start));
+    LOG.debug("Leaving read(): [{}]", axionWritable);
     return axionWritable;
   }
 
@@ -581,7 +601,11 @@ public class Axion {
    * @throws IOException
    */
   public void write(final AxionWritable<TagCompound> axionWritable, final File file) throws IOException {
+    LOG.debug("Entering write(axionWritable=[{}], file=[{}])", axionWritable, file);
+    long start = System.currentTimeMillis();
     write(axionWritable.write(this), file);
+    LOG.info("Write of [{}] to file [{}] completed in [{}]", axionWritable, file, DurationUtil.formatDurationWords(System.currentTimeMillis() - start));
+    LOG.debug("Leaving write()");
   }
 
   /**
@@ -595,9 +619,13 @@ public class Axion {
    * @throws IOException
    */
   public TagCompound read(final File file) throws IOException, AxionTagRegistrationException {
+    LOG.debug("Entering read(file=[{}])", file);
+    long start = System.currentTimeMillis();
     FileInputStream fileInputStream = new FileInputStream(file);
     TagCompound result = read(fileInputStream);
     fileInputStream.close();
+    LOG.info("Read of file [{}] completed in [{}]", file, DurationUtil.formatDurationWords(System.currentTimeMillis() - start));
+    LOG.debug("Leaving read(): [{}]", result);
     return result;
   }
 
@@ -611,9 +639,13 @@ public class Axion {
    * @throws IOException
    */
   public void write(final TagCompound tagCompound, final File file) throws IOException {
+    LOG.debug("Entering write(tagCompound=[{}], file=[{}])", tagCompound, file);
+    long start = System.currentTimeMillis();
     FileOutputStream fileOutputStream = new FileOutputStream(file);
     write(tagCompound, file);
     fileOutputStream.close();
+    LOG.info("Write of tag [{}] to file [{}] completed in [{}]", tagCompound, file, DurationUtil.formatDurationWords(System.currentTimeMillis() - start));
+    LOG.debug("Leaving write()");
   }
 
   /**
@@ -628,7 +660,11 @@ public class Axion {
    * @throws IOException
    */
   public <T extends AxionWritable<TagCompound>> T read(final InputStream inputStream, final T axionWritable) throws IOException {
+    LOG.debug("Entering read(inputStream=[{}], axionWritable=[{}])", inputStream, axionWritable);
+    long start = System.currentTimeMillis();
     axionWritable.read(read(inputStream), this);
+    LOG.info("Read into [{}] completed in [{}]", axionWritable, DurationUtil.formatDurationWords(System.currentTimeMillis() - start));
+    LOG.debug("Leaving read(): [{}]", axionWritable);
     return axionWritable;
   }
 
@@ -645,7 +681,11 @@ public class Axion {
    * @throws AxionTagRegistrationException
    */
   public void write(final AxionWritable<TagCompound> axionWritable, final OutputStream outputStream) throws IOException, AxionTagRegistrationException {
+    LOG.debug("Entering write(axionWritable=[{}], outputStream=[{}])", axionWritable, outputStream);
+    long start = System.currentTimeMillis();
     write(axionWritable.write(this), outputStream);
+    LOG.info("Write completed in [{}]", DurationUtil.formatDurationWords(System.currentTimeMillis() - start));
+    LOG.debug("Leaving write()");
   }
 
   /**
@@ -660,10 +700,14 @@ public class Axion {
    * @throws AxionTagRegistrationException
    */
   public TagCompound read(final InputStream inputStream) throws IOException, AxionTagRegistrationException {
+    LOG.debug("Entering read(inputStream=[{}])", inputStream);
+    long start = System.currentTimeMillis();
     Tag result = readTag(null, configuration.wrap(inputStream));
     if (!(result instanceof TagCompound)) {
       throw new AxionReadException("Root tag not of type " + TagCompound.class.getSimpleName());
     }
+    LOG.info("Read of [{}] completed in [{}]", result, DurationUtil.formatDurationWords(System.currentTimeMillis() - start));
+    LOG.debug("Leaving read(): [{}]", result);
     return (TagCompound) result;
   }
 
@@ -680,7 +724,11 @@ public class Axion {
    * @throws AxionTagRegistrationException
    */
   public void write(final TagCompound tagCompound, final OutputStream outputStream) throws IOException, AxionTagRegistrationException {
+    LOG.debug("Entering write(tagCompound=[{}], outputStream=[{}])", tagCompound, outputStream);
+    long start = System.currentTimeMillis();
     writeTag(tagCompound, configuration.wrap(outputStream));
+    LOG.info("Write completed in [{}]", DurationUtil.formatDurationWords(System.currentTimeMillis() - start));
+    LOG.debug("Leaving write()");
   }
 
   /**
