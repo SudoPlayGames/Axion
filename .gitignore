@@ -3,3 +3,4 @@
 debug.log
 bin/
 libs/
+src/logback-test.xml
