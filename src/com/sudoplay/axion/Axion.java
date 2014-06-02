@@ -704,6 +704,7 @@ public class Axion {
     long start = System.currentTimeMillis();
     Tag result = readTag(null, configuration.wrap(inputStream));
     if (!(result instanceof TagCompound)) {
+      LOG.error("Root tag not of type [{}]", TagCompound.class.getSimpleName());
       throw new AxionReadException("Root tag not of type " + TagCompound.class.getSimpleName());
     }
     LOG.info("Read of [{}] completed in [{}]", result, DurationUtil.formatDurationWords(System.currentTimeMillis() - start));

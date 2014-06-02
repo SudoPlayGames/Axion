@@ -1,5 +1,8 @@
 package com.sudoplay.axion;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * The {@link AxionConfigurationProtection} class manages the protection level
  * of the {@link AxionConfiguration} it belongs to.
@@ -7,6 +10,8 @@ package com.sudoplay.axion;
  * @author Jason Taylor
  */
 public class AxionConfigurationProtection {
+
+  private static final Logger LOG = LoggerFactory.getLogger(AxionConfigurationProtection.class);
 
   /**
    * The current protection mode.
@@ -126,7 +131,8 @@ public class AxionConfigurationProtection {
    */
   protected void assertUnlocked() throws AxionConfigurationException {
     if (configurationProtectionMode == ProtectionMode.Locked) {
-      throw new AxionConfigurationException(Axion.class.getSimpleName() + " instance has been locked and can't be modified");
+      LOG.error("Instance has been locked and can't be modified");
+      throw new AxionConfigurationException("Instance has been locked and can't be modified");
     }
   }
 
@@ -136,7 +142,8 @@ public class AxionConfigurationProtection {
    */
   protected void assertMutable() throws AxionConfigurationException {
     if (configurationProtectionMode == ProtectionMode.Immutable) {
-      throw new AxionConfigurationException(Axion.class.getSimpleName() + " instance is immutable and can't be modified");
+      LOG.error("Instance is immutable and can't be modified");
+      throw new AxionConfigurationException("Instance is immutable and can't be modified");
     }
   }
 
