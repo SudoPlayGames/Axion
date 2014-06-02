@@ -20,15 +20,45 @@ public class TagFloatArray extends Tag {
 
   private float[] data;
 
+  /**
+   * Creates a new {@link TagFloatArray} with the given name.
+   * 
+   * @param newName
+   *          the {@link Tag} name
+   */
   public TagFloatArray(final String newName) {
     this(newName, new float[0]);
   }
 
+  /**
+   * Creates a new {@link TagFloatArray} with no name and the given value.
+   * 
+   * @param newFloatArray
+   *          the {@link Float} array value
+   */
+  public TagFloatArray(final float[] newFloatArray) {
+    this(null, newFloatArray);
+  }
+
+  /**
+   * Creates a new {@link TagFloatArray} with the given name and value.
+   * 
+   * @param newName
+   *          the {@link Tag} name
+   * @param newFloatArray
+   *          the {@link Float} array value
+   */
   public TagFloatArray(final String newName, final float[] newFloatArray) {
     super(newName);
     set(newFloatArray);
   }
 
+  /**
+   * Sets the value of this {@link TagFloatArray} to the given value.
+   * 
+   * @param newFloatArray
+   *          the {@link Float} array value
+   */
   public void set(final float[] newFloatArray) {
     if (newFloatArray == null) {
       throw new IllegalArgumentException(this.toString() + " doesn't support null payload");
@@ -36,6 +66,11 @@ public class TagFloatArray extends Tag {
     data = newFloatArray.clone();
   }
 
+  /**
+   * Returns the value of this {@link TagFloatArray}.
+   * 
+   * @return the value of this {@link TagFloatArray}
+   */
   public float[] get() {
     return data.clone();
   }

@@ -20,15 +20,45 @@ public class TagDoubleArray extends Tag {
 
   private double[] data;
 
+  /**
+   * Creates a new {@link TagDoubleArray} with the given name.
+   * 
+   * @param newName
+   *          the {@link Tag} name
+   */
   public TagDoubleArray(final String newName) {
     this(newName, new double[0]);
   }
 
+  /**
+   * Creates a new {@link TagDoubleArray} with no name and the given value.
+   * 
+   * @param newDoubleArray
+   *          the {@link Double} array value
+   */
+  public TagDoubleArray(final double[] newDoubleArray) {
+    this(null, newDoubleArray);
+  }
+
+  /**
+   * Creates a new {@link TagDoubleArray} with the given name and value.
+   * 
+   * @param newName
+   *          the {@link Tag} name
+   * @param newDoubleArray
+   *          the {@link Double} array value
+   */
   public TagDoubleArray(final String newName, final double[] newDoubleArray) {
     super(newName);
     set(newDoubleArray);
   }
 
+  /**
+   * Sets the value of this {@link TagDoubleArray} to the given value.
+   * 
+   * @param newDoubleArray
+   *          the {@link Double} array value
+   */
   public void set(final double[] newDoubleArray) {
     if (newDoubleArray == null) {
       throw new IllegalArgumentException(this.toString() + " doesn't support null payload");
@@ -36,6 +66,11 @@ public class TagDoubleArray extends Tag {
     data = newDoubleArray.clone();
   }
 
+  /**
+   * Returns the value of this {@link TagDoubleArray}.
+   * 
+   * @return the value of this {@link TagDoubleArray}
+   */
   public double[] get() {
     return data.clone();
   }

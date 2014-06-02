@@ -20,15 +20,45 @@ public class TagShortArray extends Tag {
 
   private short[] data;
 
+  /**
+   * Creates a new {@link TagShortArray} with the given name.
+   * 
+   * @param newName
+   *          the {@link Tag} name
+   */
   public TagShortArray(final String newName) {
     this(newName, new short[0]);
   }
 
+  /**
+   * Creates a new {@link TagShortArray} with no name and the given value.
+   * 
+   * @param newShortArray
+   *          the {@link Short} array value
+   */
+  public TagShortArray(final short[] newShortArray) {
+    this(null, newShortArray);
+  }
+
+  /**
+   * Creates a new {@link TagShortArray} with the given name and value.
+   * 
+   * @param newName
+   *          the {@link Tag} name
+   * @param newShortArray
+   *          the {@link Short} array value
+   */
   public TagShortArray(final String newName, final short[] newShortArray) {
     super(newName);
     set(newShortArray);
   }
 
+  /**
+   * Sets the value of this {@link TagShortArray} to the given value.
+   * 
+   * @param newShortArray
+   *          the {@link Short} array value
+   */
   public void set(final short[] newShortArray) {
     if (newShortArray == null) {
       throw new IllegalArgumentException(this.toString() + " doesn't support null payload");
@@ -36,6 +66,11 @@ public class TagShortArray extends Tag {
     data = newShortArray.clone();
   }
 
+  /**
+   * Returns the value of this {@link TagShortArray}.
+   * 
+   * @return the value of this {@link TagShortArray}
+   */
   public short[] get() {
     return data.clone();
   }

@@ -20,15 +20,45 @@ public class TagLongArray extends Tag {
 
   private long[] data;
 
+  /**
+   * Creates a new {@link TagLongArray} with the given name.
+   * 
+   * @param newName
+   *          the {@link Tag} name
+   */
   public TagLongArray(final String newName) {
     this(newName, new long[0]);
   }
 
+  /**
+   * Creates a new {@link TagLongArray} with no name and the given value.
+   * 
+   * @param newLongArray
+   *          the {@link Long} array value
+   */
+  public TagLongArray(final long[] newLongArray) {
+    this(null, newLongArray);
+  }
+
+  /**
+   * Creates a new {@link TagLongArray} with the given name and value.
+   * 
+   * @param newName
+   *          the {@link Tag} name
+   * @param newLongArray
+   *          the {@link Long} array value
+   */
   public TagLongArray(final String newName, final long[] newLongArray) {
     super(newName);
     set(newLongArray);
   }
 
+  /**
+   * Sets the value of this {@link TagLongArray} to the given value.
+   * 
+   * @param newLongArray
+   *          the {@link Long} array value
+   */
   public void set(final long[] newLongArray) {
     if (newLongArray == null) {
       throw new IllegalArgumentException(this.toString() + " doesn't support null payload");
@@ -36,6 +66,11 @@ public class TagLongArray extends Tag {
     data = newLongArray.clone();
   }
 
+  /**
+   * Returns the value of this {@link TagLongArray}.
+   * 
+   * @return the value of this {@link TagLongArray}
+   */
   public long[] get() {
     return data.clone();
   }

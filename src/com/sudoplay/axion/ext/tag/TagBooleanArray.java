@@ -21,15 +21,45 @@ public class TagBooleanArray extends Tag {
 
   private boolean[] data;
 
+  /**
+   * Creates a new {@link TagBooleanArray} with the given name.
+   * 
+   * @param newName
+   *          the {@link Tag} name
+   */
   public TagBooleanArray(final String newName) {
     this(newName, new boolean[0]);
   }
 
+  /**
+   * Creates a new {@link TagBooleanArray} with no name and the given value.
+   * 
+   * @param newBooleanArray
+   *          the {@link Boolean} array value
+   */
+  public TagBooleanArray(final boolean[] newBooleanArray) {
+    this(null, newBooleanArray);
+  }
+
+  /**
+   * Creates a new {@link TagBooleanArray} with the given name and value.
+   * 
+   * @param newName
+   *          the {@link Tag} name
+   * @param newBooleanArray
+   *          the {@link Boolean} array value
+   */
   public TagBooleanArray(final String newName, final boolean[] newBooleanArray) {
     super(newName);
     set(newBooleanArray);
   }
 
+  /**
+   * Sets the value of this {@link TagBooleanArray} to the given value.
+   * 
+   * @param newBooleanArray
+   *          the {@link Boolean} array value
+   */
   public void set(final boolean[] newBooleanArray) {
     if (newBooleanArray == null) {
       throw new IllegalArgumentException(this.toString() + " doesn't support null payload");
@@ -37,6 +67,11 @@ public class TagBooleanArray extends Tag {
     data = newBooleanArray.clone();
   }
 
+  /**
+   * Returns the value of this {@link TagBooleanArray}.
+   * 
+   * @return the value of this {@link TagBooleanArray}
+   */
   public boolean[] get() {
     return data.clone();
   }
