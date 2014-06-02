@@ -5,6 +5,7 @@ Axion is dependent on [SLF4J](http://www.slf4j.org/) for logging.
 
 Looking for the JavaDoc?
 
+ * [version 1.0.2](http://codetaylor.github.io/Axion/doc/1.0.2/)
  * [version 1.0.1](http://codetaylor.github.io/Axion/doc/1.0.1/)
  * [version 1.0.0](http://codetaylor.github.io/Axion/doc/1.0.0/)
 
