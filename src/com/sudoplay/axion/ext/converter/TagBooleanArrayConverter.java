@@ -1,7 +1,7 @@
 package com.sudoplay.axion.ext.converter;
 
-import com.sudoplay.axion.adapter.TagConverter;
 import com.sudoplay.axion.ext.tag.TagBooleanArray;
+import com.sudoplay.axion.registry.TagConverter;
 
 /**
  * The {@link TagConverter} used to convert to and from a

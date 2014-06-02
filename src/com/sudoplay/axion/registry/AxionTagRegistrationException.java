@@ -1,4 +1,4 @@
-package com.sudoplay.axion.adapter;
+package com.sudoplay.axion.registry;
 
 public class AxionTagRegistrationException extends RuntimeException {
 

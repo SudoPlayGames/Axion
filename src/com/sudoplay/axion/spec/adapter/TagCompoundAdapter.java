@@ -3,7 +3,7 @@ package com.sudoplay.axion.spec.adapter;
 import java.io.IOException;
 import java.util.Collection;
 
-import com.sudoplay.axion.adapter.TagAdapter;
+import com.sudoplay.axion.registry.TagAdapter;
 import com.sudoplay.axion.spec.tag.TagCompound;
 import com.sudoplay.axion.spec.tag.TagList;
 import com.sudoplay.axion.stream.AxionInputStream;

@@ -2,8 +2,8 @@ package com.sudoplay.axion.ext.adapter;
 
 import java.io.IOException;
 
-import com.sudoplay.axion.adapter.TagAdapter;
 import com.sudoplay.axion.ext.tag.TagStringArray;
+import com.sudoplay.axion.registry.TagAdapter;
 import com.sudoplay.axion.spec.tag.TagList;
 import com.sudoplay.axion.stream.AxionInputStream;
 import com.sudoplay.axion.stream.AxionOutputStream;

@@ -13,9 +13,9 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.sudoplay.axion.TestUtil;
-import com.sudoplay.axion.adapter.TagAdapter;
-import com.sudoplay.axion.adapter.TagConverter;
-import com.sudoplay.axion.adapter.TagRegistry;
+import com.sudoplay.axion.registry.TagAdapter;
+import com.sudoplay.axion.registry.TagConverter;
+import com.sudoplay.axion.registry.TagRegistry;
 import com.sudoplay.axion.spec.tag.TagByte;
 import com.sudoplay.axion.spec.tag.TagByteArray;
 import com.sudoplay.axion.spec.tag.TagCompound;

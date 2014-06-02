@@ -1,4 +1,4 @@
-package com.sudoplay.axion.adapter;
+package com.sudoplay.axion.registry;
 
 import com.sudoplay.axion.AxionInstanceException;
 import com.sudoplay.axion.ext.converter.TagBooleanArrayConverter;

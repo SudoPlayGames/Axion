@@ -1,6 +1,6 @@
 package com.sudoplay.axion.spec.converter;
 
-import com.sudoplay.axion.adapter.TagConverter;
+import com.sudoplay.axion.registry.TagConverter;
 import com.sudoplay.axion.spec.tag.TagShort;
 
 /**

@@ -8,7 +8,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.sudoplay.axion.TestUtil;
-import com.sudoplay.axion.adapter.TagConverter;
 import com.sudoplay.axion.ext.tag.TagBoolean;
 import com.sudoplay.axion.ext.tag.TagBooleanArray;
 import com.sudoplay.axion.ext.tag.TagDoubleArray;
@@ -16,6 +15,7 @@ import com.sudoplay.axion.ext.tag.TagFloatArray;
 import com.sudoplay.axion.ext.tag.TagLongArray;
 import com.sudoplay.axion.ext.tag.TagShortArray;
 import com.sudoplay.axion.ext.tag.TagStringArray;
+import com.sudoplay.axion.registry.TagConverter;
 
 public class TagConverterTest {
 

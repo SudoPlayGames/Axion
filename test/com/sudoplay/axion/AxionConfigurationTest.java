@@ -6,9 +6,9 @@ import org.junit.Test;
 
 import com.sudoplay.axion.AxionConfiguration.CharacterEncodingType;
 import com.sudoplay.axion.AxionConfiguration.CompressionType;
-import com.sudoplay.axion.adapter.TagAdapter;
-import com.sudoplay.axion.adapter.TagConverter;
 import com.sudoplay.axion.mapper.NBTObjectMapper;
+import com.sudoplay.axion.registry.TagAdapter;
+import com.sudoplay.axion.registry.TagConverter;
 import com.sudoplay.axion.spec.tag.TagByte;
 
 public class AxionConfigurationTest {

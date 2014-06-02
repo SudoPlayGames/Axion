@@ -1,4 +1,4 @@
-package com.sudoplay.axion.adapter;
+package com.sudoplay.axion.registry;
 
 import com.sudoplay.axion.tag.Tag;
 

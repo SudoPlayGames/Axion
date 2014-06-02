@@ -1,4 +1,4 @@
-package com.sudoplay.axion.adapter;
+package com.sudoplay.axion.registry;
 
 import java.io.IOException;
 

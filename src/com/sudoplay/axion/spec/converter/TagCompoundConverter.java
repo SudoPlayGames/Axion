@@ -3,7 +3,7 @@ package com.sudoplay.axion.spec.converter;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.sudoplay.axion.adapter.TagConverter;
+import com.sudoplay.axion.registry.TagConverter;
 import com.sudoplay.axion.spec.tag.TagCompound;
 import com.sudoplay.axion.tag.Tag;
 

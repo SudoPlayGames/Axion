@@ -3,7 +3,7 @@ package com.sudoplay.axion.spec.converter;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.sudoplay.axion.adapter.TagConverter;
+import com.sudoplay.axion.registry.TagConverter;
 import com.sudoplay.axion.spec.tag.TagList;
 import com.sudoplay.axion.tag.Tag;
 
