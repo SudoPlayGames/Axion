@@ -2,5 +2,6 @@
 .project
 debug.log
 bin/
+dist/
 libs/
 src/logback-test.xml
