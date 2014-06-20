@@ -9,7 +9,7 @@
 		<property name="build.dir" value="${basedir}/build" />
 		<property name="build.class.dir" value="${build.dir}/class" />
 		<property name="dist.dir" value="${basedir}/dist" />
-		<property name="dist.jarfile" value="${dist.dir}/Axion-1.1.0.jar" />
+		<property name="dist.jarfile" value="${dist.dir}/Axion-1.1.1.jar" />
 
 		<mkdir dir="${build.class.dir}" />
 		<mkdir dir="${dist.dir}" />
