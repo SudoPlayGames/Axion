@@ -5,3 +5,4 @@ bin/
 dist/
 libs/
 src/logback-test.xml
+.settings/
