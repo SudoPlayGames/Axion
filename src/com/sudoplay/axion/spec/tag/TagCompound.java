@@ -221,6 +221,54 @@ public class TagCompound extends ContainerTag {
     tag.addTo(this);
   }
 
+  /**
+   * Adds a {@link Tag} to this {@link TagCompound} with the name given.
+   * 
+   * @param name
+   *          name of the {@link Tag}
+   * @param tag
+   *          the {@link Tag} to add
+   */
+  public void put(final String name, final Tag tag) {
+    put(tag.setName(name));
+  }
+
+  /**
+   * Converts the value given into a tag using the {@link TagConverter}
+   * registered for the value's type and adds the new tag to this
+   * {@link TagCompound}.
+   * 
+   * @param name
+   *          name of the {@link Tag}
+   * @param value
+   *          the value to convert
+   * @param axion
+   *          an {@link Axion} instance
+   * @throws AxionTagRegistrationException
+   *           if no {@link TagConverter} is registered for the value's type
+   */
+  public <V> void putValue(final String name, final V value, final Axion axion) throws AxionTagRegistrationException {
+    put(axion.convertToTag(name, value));
+  }
+
+  /**
+   * Creates a tag from the mappable value given using the
+   * {@link NBTObjectMapper} registered for the value's type and adds the new
+   * tag to this {@link TagCompound}.
+   * 
+   * @param name
+   *          name of the {@link Tag}
+   * @param value
+   *          the value to map
+   * @param axion
+   *          an {@link Axion} instance
+   * @throws AxionMapperRegistrationException
+   *           if no {@link NBTObjectMapper} is registered for the value's type
+   */
+  public <V> void putMappableValue(final String name, final V value, final Axion axion) throws AxionMapperRegistrationException {
+    put(axion.createTagFrom(name, value));
+  }
+
   @Override
   protected void onChildAddition(Tag tag) {
     data.put(tag.getName(), tag);
