@@ -8,6 +8,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.sudoplay.axion.Axion;
+import com.sudoplay.axion.mapper.AxionMapperRegistrationException;
+import com.sudoplay.axion.mapper.NBTObjectMapper;
+import com.sudoplay.axion.registry.AxionTagRegistrationException;
+import com.sudoplay.axion.registry.TagConverter;
 import com.sudoplay.axion.tag.AxionIllegalTagNameException;
 import com.sudoplay.axion.tag.AxionInvalidTagException;
 import com.sudoplay.axion.tag.ContainerTag;
@@ -169,7 +174,41 @@ public class TagCompound extends ContainerTag {
   }
 
   /**
-   * Add a {@link Tag} to this {@link TagCompound}. If a tag exists in this
+   * Uses the registered {@link TagConverter} for the type of the tag requested
+   * and returns the converted value of the {@link Tag} with the name given.
+   * 
+   * @param name
+   *          the name of the {@link Tag} to get
+   * @param axion
+   *          an {@link Axion} instance
+   * @return the converted value of the {@link Tag} with the name given
+   * @throws AxionTagRegistrationException
+   *           if no {@link TagConverter} is registered for the tag requested
+   */
+  public <V> V getValue(final String name, final Axion axion) throws AxionTagRegistrationException {
+    return axion.convertToValue(data.get(name));
+  }
+
+  /**
+   * Uses the registered {@link NBTObjectMapper} for the type given to return a
+   * new object from the tag requested.
+   * 
+   * @param name
+   *          the name of the {@link Tag} to get
+   * @param type
+   *          the class of the object to return
+   * @param axion
+   *          an {@link Axion} instance
+   * @return a new object from the tag requested
+   * @throws AxionMapperRegistrationException
+   *           if no {@link NBTObjectMapper} is registered for the type given
+   */
+  public <V> V getValue(final String name, final Class<V> type, final Axion axion) throws AxionMapperRegistrationException {
+    return axion.createObjectFrom(data.get(name), type);
+  }
+
+  /**
+   * Adds a {@link Tag} to this {@link TagCompound}. If a tag exists in this
    * compound with the same name as the given tag, the old tag will be replaced
    * by the new tag.
    * 
@@ -219,18 +258,13 @@ public class TagCompound extends ContainerTag {
 
   @Override
   public boolean equals(Object obj) {
-    if (this == obj)
-      return true;
-    if (!super.equals(obj))
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
+    if (this == obj) return true;
+    if (!super.equals(obj)) return false;
+    if (getClass() != obj.getClass()) return false;
     TagCompound other = (TagCompound) obj;
     if (data == null) {
-      if (other.data != null)
-        return false;
-    } else if (!data.equals(other.data))
-      return false;
+      if (other.data != null) return false;
+    } else if (!data.equals(other.data)) return false;
     return true;
   }
 
