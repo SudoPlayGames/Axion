@@ -5,6 +5,11 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import com.sudoplay.axion.Axion;
+import com.sudoplay.axion.mapper.AxionMapperRegistrationException;
+import com.sudoplay.axion.mapper.NBTObjectMapper;
+import com.sudoplay.axion.registry.AxionTagRegistrationException;
+import com.sudoplay.axion.registry.TagConverter;
 import com.sudoplay.axion.tag.AxionIllegalTagNameException;
 import com.sudoplay.axion.tag.AxionInvalidTagException;
 import com.sudoplay.axion.tag.ContainerTag;
@@ -109,6 +114,54 @@ public class TagList extends ContainerTag {
   }
 
   /**
+   * Adds a {@link Tag} to this {@link TagList} with the name given.
+   * 
+   * @param name
+   *          name of the {@link Tag}
+   * @param tag
+   *          the {@link Tag} to add
+   */
+  public void add(final String name, final Tag tag) {
+    add(tag.setName(name));
+  }
+
+  /**
+   * Converts the value given into a tag using the {@link TagConverter}
+   * registered for the value's type and adds the new tag to this
+   * {@link TagList}.
+   * 
+   * @param name
+   *          name of the {@link Tag}
+   * @param value
+   *          the value to convert
+   * @param axion
+   *          an {@link Axion} instance
+   * @throws AxionTagRegistrationException
+   *           if no {@link TagConverter} is registered for the value's type
+   */
+  public <V> void putValue(final String name, final V value, final Axion axion) throws AxionTagRegistrationException {
+    add(axion.convertToTag(name, value));
+  }
+
+  /**
+   * Creates a tag from the mappable value given using the
+   * {@link NBTObjectMapper} registered for the value's type and adds the new
+   * tag to this {@link TagList}.
+   * 
+   * @param name
+   *          name of the {@link Tag}
+   * @param value
+   *          the value to map
+   * @param axion
+   *          an {@link Axion} instance
+   * @throws AxionMapperRegistrationException
+   *           if no {@link NBTObjectMapper} is registered for the value's type
+   */
+  public <V> void putMappableValue(final String name, final V value, final Axion axion) throws AxionMapperRegistrationException {
+    add(axion.createTagFrom(name, value));
+  }
+
+  /**
    * Removes a {@link Tag} from this list.
    * 
    * @param tag
@@ -207,6 +260,40 @@ public class TagList extends ContainerTag {
     return (T) data.get(index);
   }
 
+  /**
+   * Uses the registered {@link TagConverter} for the type of the tag requested
+   * and returns the converted value of the {@link Tag} with the index given.
+   * 
+   * @param index
+   *          the index of the {@link Tag} to get
+   * @param axion
+   *          an {@link Axion} instance
+   * @return the converted value of the {@link Tag} with the index given
+   * @throws AxionTagRegistrationException
+   *           if no {@link TagConverter} is registered for the tag requested
+   */
+  public <V> V getValue(final int index, final Axion axion) throws AxionTagRegistrationException {
+    return axion.convertToValue(data.get(index));
+  }
+
+  /**
+   * Uses the registered {@link NBTObjectMapper} for the type given to return a
+   * new object from the tag requested.
+   * 
+   * @param index
+   *          the index of the {@link Tag} to get
+   * @param type
+   *          the class of the object to return
+   * @param axion
+   *          an {@link Axion} instance
+   * @return a new object from the tag requested
+   * @throws AxionMapperRegistrationException
+   *           if no {@link NBTObjectMapper} is registered for the type given
+   */
+  public <V> V getValue(final int index, final Class<V> type, final Axion axion) throws AxionMapperRegistrationException {
+    return axion.createObjectFrom(data.get(index), type);
+  }
+
   @Override
   protected void onChildAddition(Tag tag) {
     tag.setName(null);
@@ -229,23 +316,16 @@ public class TagList extends ContainerTag {
 
   @Override
   public boolean equals(Object obj) {
-    if (this == obj)
-      return true;
-    if (!super.equals(obj))
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
+    if (this == obj) return true;
+    if (!super.equals(obj)) return false;
+    if (getClass() != obj.getClass()) return false;
     TagList other = (TagList) obj;
     if (data == null) {
-      if (other.data != null)
-        return false;
-    } else if (!data.equals(other.data))
-      return false;
+      if (other.data != null) return false;
+    } else if (!data.equals(other.data)) return false;
     if (type == null) {
-      if (other.type != null)
-        return false;
-    } else if (!type.equals(other.type))
-      return false;
+      if (other.type != null) return false;
+    } else if (!type.equals(other.type)) return false;
     return true;
   }
 
