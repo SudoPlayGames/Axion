@@ -6,6 +6,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,7 +32,7 @@ import com.sudoplay.axion.util.DurationUtil;
 
 /**
  * This is the main class for {@link Axion}, a tool for working with NBT.
- * 
+ *
  * @author Jason Taylor
  */
 public class Axion {
@@ -66,7 +68,7 @@ public class Axion {
   /**
    * Creates a new instance of {@link Axion} with the {@link AxionConfiguration}
    * given.
-   * 
+   *
    * @param newConfiguration
    *          the {@link AxionConfiguration} for the new instance
    */
@@ -80,7 +82,7 @@ public class Axion {
    * <p>
    * This new configuration will not have a base tag or any other tags
    * registered.
-   * 
+   *
    * @param newName
    *          name of the new configuration
    * @return a new configuration
@@ -102,7 +104,7 @@ public class Axion {
    * Create a new configuration by duplicating the configuration named with the
    * new name given. If a configuration already exists with the name provided,
    * an exception is thrown.
-   * 
+   *
    * @param name
    *          the name of the configuration to duplicate
    * @param newName
@@ -118,7 +120,7 @@ public class Axion {
    * Create a new configuration by duplicating the configuration given with the
    * new name given. If a configuration already exists with the name provided,
    * an exception is thrown.
-   * 
+   *
    * @param axion
    *          the configuration to duplicate
    * @param newName
@@ -141,7 +143,7 @@ public class Axion {
   /**
    * Removes and returns the configuration named or null if no configuration is
    * found with the given name.
-   * 
+   *
    * @param name
    *          name of the configuration to remove
    * @return the removed configuration, null if it doesn't exist
@@ -161,7 +163,7 @@ public class Axion {
   /**
    * Returns the Axion instance with the given name or null if no instance
    * exists with that name.
-   * 
+   *
    * @param name
    *          name of the instance to get
    * @return the named Axion instance
@@ -172,7 +174,7 @@ public class Axion {
 
   /**
    * Returns the built-in, extended Axion instance configuration.
-   * 
+   *
    * @return the extended Axion instance
    */
   public static Axion getExtInstance() {
@@ -181,7 +183,7 @@ public class Axion {
 
   /**
    * Returns the built-in, strict specification Axion instance configuration.
-   * 
+   *
    * @return the strict specification Axion instance
    */
   public static Axion getSpecInstance() {
@@ -190,7 +192,7 @@ public class Axion {
 
   /**
    * Returns an unmodifiable map of all the {@link Axion} instances.
-   * 
+   *
    * @return an unmodifiable map of all the {@link Axion} instances
    */
   public static Map<String, Axion> getInstances() {
@@ -199,7 +201,7 @@ public class Axion {
 
   /**
    * Returns the {@link AxionConfiguration} for this {@link Axion} instance.
-   * 
+   *
    * @return the {@link AxionConfiguration} for this {@link Axion} instance
    */
   public AxionConfiguration configuration() {
@@ -212,7 +214,7 @@ public class Axion {
    * {@link #unlock()} to unlock.
    * <p>
    * Can't use when <b>Immutable</b>.
-   * 
+   *
    * @return this {@link Axion} instance
    * @see #unlock()
    * @see #setImmutable()
@@ -226,7 +228,7 @@ public class Axion {
    * Changes protection mode to <b>Unlocked</b>.
    * <p>
    * Can't use when <b>Immutable</b>.
-   * 
+   *
    * @return this {@link Axion} instance
    * @see #lock()
    * @see #setImmutable()
@@ -239,7 +241,7 @@ public class Axion {
   /**
    * Changes protection mode to <b>Immutable</b>. Once this mode is set, it
    * can't be undone.
-   * 
+   *
    * @return this {@link Axion} instance
    * @see #lock()
    * @see #unlock()
@@ -253,7 +255,7 @@ public class Axion {
    * Returns the registered id for the {@link Tag} class given.
    * <p>
    * If no id is found, an exception is thrown.
-   * 
+   *
    * @param tagClass
    *          tag class to get the id for
    * @return the registered id for the {@link Tag} class given
@@ -288,7 +290,7 @@ public class Axion {
    * Sets the {@link CharacterEncodingType}.
    * <p>
    * Can't use when <b>Locked</b> or <b>Immutable</b>.
-   * 
+   *
    * @param newCharacterEncodingType
    *          the new encoding type
    * @return this {@link Axion} instance
@@ -302,7 +304,7 @@ public class Axion {
    * Register a {@link TagAdapter} as the base tag adapter.
    * <p>
    * Can't use when <b>Locked</b> or <b>Immutable</b>.
-   * 
+   *
    * @param newBaseTagAdapter
    *          the new base tag adapter
    * @throws AxionConfigurationException
@@ -318,7 +320,7 @@ public class Axion {
    * Registers the relationships for a tag.
    * <p>
    * Can't use when <b>Locked</b> or <b>Immutable</b>.
-   * 
+   *
    * @param id
    *          the id of the tag
    * @param tagClass
@@ -349,7 +351,7 @@ public class Axion {
    * Registers a {@link NBTObjectMapper} for the class type given.
    * <p>
    * Can't use when <b>Locked</b> or <b>Immutable</b>.
-   * 
+   *
    * @param type
    *          the type of the object
    * @param mapper
@@ -366,7 +368,7 @@ public class Axion {
    * given.
    * <p>
    * Can't use when <b>Locked</b> or <b>Immutable</b>.
-   * 
+   *
    * @param newCompressionType
    *          the compression type to use
    * @return this {@link Axion} instance
@@ -380,7 +382,7 @@ public class Axion {
    * Returns the {@link TagAdapter} registered as the base tag adapter.
    * <p>
    * If no base tag adapter has been registered, an exception is thrown.
-   * 
+   *
    * @return the base {@link TagAdapter}
    */
   protected TagAdapter<Tag> getBaseTagAdapter() throws AxionTagRegistrationException {
@@ -391,7 +393,7 @@ public class Axion {
    * Returns the registered {@link Tag} class for the id given.
    * <p>
    * If no class is found, an exception is thrown.
-   * 
+   *
    * @param id
    *          id to get the tag class for
    * @return the registered {@link Tag} class for the id given
@@ -405,7 +407,7 @@ public class Axion {
    * Returns the registered {@link TagAdapter} for the id given.
    * <p>
    * If no adapter is found, an exception is thrown.
-   * 
+   *
    * @param id
    *          id to get the adapter for
    * @return the registered {@link TagAdapter} for the id given
@@ -418,7 +420,7 @@ public class Axion {
    * Returns the registered {@link TagAdapter} for the tag class given.
    * <p>
    * If no adapter is found, an exception is thrown.
-   * 
+   *
    * @param tagClass
    *          tag class to get the adapter for
    * @return the registered {@link TagAdapter} for the tag class given
@@ -432,7 +434,7 @@ public class Axion {
    * Returns the registered {@link TagConverter} for the tag given.
    * <p>
    * If no converter is found, an exception is thrown.
-   * 
+   *
    * @param tag
    *          tag to get the tag converter for
    * @return the registered {@link TagConverter} for the tag given
@@ -446,7 +448,7 @@ public class Axion {
    * Returns the registered {@link TagConverter} for the value given.
    * <p>
    * If no converter is found, an exception is thrown.
-   * 
+   *
    * @param value
    *          value to get the tag converter for
    * @return the registered {@link TagConverter} for the value given
@@ -461,7 +463,7 @@ public class Axion {
    * registered for the tag's class.
    * <p>
    * If no converter is found, an exception is thrown.
-   * 
+   *
    * @param tag
    *          tag to convert
    * @return the tag's converted value
@@ -477,7 +479,7 @@ public class Axion {
    * the value's class.
    * <p>
    * If no converter is found, an exception is thrown.
-   * 
+   *
    * @param name
    *          name of the new tag
    * @param value
@@ -494,7 +496,7 @@ public class Axion {
    * Returns the {@link NBTObjectMapper} registered for the class type given.
    * <p>
    * If no mapper is found, an exception is thrown.
-   * 
+   *
    * @param type
    *          class type to get the {@link NBTObjectMapper} for
    * @return the {@link NBTObjectMapper} registered for the class type given
@@ -509,7 +511,7 @@ public class Axion {
    * for the class given as type.
    * <p>
    * If no mapper is found, an exception is thrown.
-   * 
+   *
    * @param tag
    *          tag to create the object from
    * @param type
@@ -526,7 +528,7 @@ public class Axion {
    * for the object's class.
    * <p>
    * If no mapper is found, an exception is thrown.
-   * 
+   *
    * @param name
    *          name of the new tag
    * @param object
@@ -543,7 +545,7 @@ public class Axion {
   /**
    * Appends a string version of the {@link Tag} given to the
    * {@link StringBuilder} given.
-   * 
+   *
    * @param tag
    *          the {@link Tag} to append
    * @param out
@@ -557,7 +559,7 @@ public class Axion {
 
   /**
    * Converts a {@link Tag} to a string and returns the result.
-   * 
+   *
    * @param tag
    *          the {@link Tag} to convert
    * @return the {@link Tag} string
@@ -570,10 +572,114 @@ public class Axion {
   }
 
   /**
+   * Converts a tag into an object by:
+   *
+   * <ol>
+   *   <li>first, checking if <code>objectClass</code> is an implementation of
+   *   AxionWritable, attempting to create a new instance with the nullary
+   *   constructor and calling <code>read(tag, axionInstance)</code></li>
+   *   <li>next, checking if there is a mapper registered for the object class</li>
+   *   <li>next, checking if there is a converter registered for the tag's class</li>
+   *   <li>finally, throwing an AxionReadException</li>
+   * </ol>
+   *
+   * @param in tag to read
+   * @param objectClass class of the object to return
+   * @param <O> object type
+   * @param <E> tag type
+   * @return O object
+   * @throws AxionReadException
+   */
+  @SuppressWarnings("unchecked")
+  public <O, E extends Tag> O read(E in, Class<O> objectClass) {
+    if (AxionWritable.class.isAssignableFrom(objectClass)) {
+      try {
+        Constructor<O> oConstructor = objectClass.getDeclaredConstructor();
+        oConstructor.setAccessible(true);
+        O oObject = oConstructor.newInstance();
+        ((AxionWritable<E>) oObject).read(in, this);
+        return oObject;
+      } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
+        String message = "Failed to find nullary constructor for class: " + objectClass.toString();
+        LOG.error(message, e);
+        throw new AxionReadException(message, e);
+      }
+    }
+
+    try {
+      return this.createObjectFrom(in, objectClass);
+    } catch (AxionMapperRegistrationException e) {
+      //
+    }
+
+    try {
+      return this.convertToValue(in);
+    } catch (AxionTagRegistrationException e) {
+      //
+    }
+
+    String message = "Class not assignable from AxionWritable, no converter registered, and no mapper registered: " + objectClass.toString();
+    LOG.error(message);
+    throw new AxionReadException(message);
+  }
+
+  /**
+   * Simply calls write(String, Object) with a null String, creating a tag with
+   * no name; handy for TagList elements.
+   *
+   * @param object the object to convert
+   * @param <E> tag type
+   * @return E tag
+   * @throws AxionWriteException
+   */
+  public <E extends Tag> E write(Object object) {
+    return this.write(null, object);
+  }
+
+  /**
+   * Converts an object to a tag by:
+   * <ol>
+   *   <li>first, checking if it is an implementation of AxionWritable and calling write()</li>
+   *   <li>next, checking if there is a mapper registered for the object's class</li>
+   *   <li>next, checking if there is a converter registered for the object</li>
+   *   <li>finally, throwing an AxionWriteException</li>
+   * </ol>
+   * @param name the name of the tag
+   * @param object the object to convert
+   * @param <E> tag type
+   * @return E tag
+   * @throws AxionWriteException
+   */
+  @SuppressWarnings("unchecked")
+  public <E extends Tag> E write(String name, Object object) {
+    if (AxionWritable.class.isAssignableFrom(object.getClass())) {
+      AxionWritable<E> savable = (AxionWritable<E>) object;
+      return savable.write(this);
+    }
+
+    try {
+      return this.createTagFrom(name, object);
+    } catch (AxionMapperRegistrationException e) {
+      //
+    }
+
+    try {
+      return this.convertToTag(name, object);
+    } catch (AxionTagRegistrationException e) {
+      //
+    }
+
+    String message = "Class not assignable from AxionWritable, no converter registered, and no mapper registered: " + object.getClass().toString();
+    LOG.error(message);
+    throw new AxionWriteException(message);
+
+  }
+
+  /**
    * Reads a file into the {@link AxionWritable} given.
    * <p>
    * If no base tag adapter has been registered, an exception is thrown.
-   * 
+   *
    * @param file
    *          the file to read from
    * @param axionWritable
@@ -593,7 +699,7 @@ public class Axion {
 
   /**
    * Writes an {@link AxionWritable} to the {@link File} given.
-   * 
+   *
    * @param axionWritable
    *          the {@link AxionWritable} to write to file
    * @param file
@@ -612,7 +718,7 @@ public class Axion {
    * Reads and returns a {@link TagCompound} from the {@link File} given.
    * <p>
    * If no base tag adapter has been registered, an exception is thrown.
-   * 
+   *
    * @param file
    *          file to read
    * @return a {@link TagCompound}
@@ -631,7 +737,7 @@ public class Axion {
 
   /**
    * Writes the {@link TagCompound} given to the {@link File} given.
-   * 
+   *
    * @param tagCompound
    *          the tag to write
    * @param file
@@ -651,7 +757,7 @@ public class Axion {
   /**
    * Reads and returns an {@link AxionWritable} from the {@link InputStream}
    * given.
-   * 
+   *
    * @param inputStream
    *          stream to read from
    * @param axionWritable
@@ -672,7 +778,7 @@ public class Axion {
    * Writes the {@link AxionWritable} given to the {@link OutputStream} given.
    * <p>
    * If no base tag adapter has been registered, an exception is thrown.
-   * 
+   *
    * @param axionWritable
    *          {@link AxionWritable} to write
    * @param outputStream
@@ -692,7 +798,7 @@ public class Axion {
    * Reads and returns a {@link TagCompound} from the {@link InputStream} given.
    * <p>
    * If no base tag adapter has been registered, an exception is thrown.
-   * 
+   *
    * @param inputStream
    *          the stream to read from
    * @return the {@link TagCompound} read
@@ -716,7 +822,7 @@ public class Axion {
    * Writes the {@link TagCompound} given to the {@link OutputStream} given.
    * <p>
    * If no base tag adapter has been registered, an exception is thrown.
-   * 
+   *
    * @param tagCompound
    *          the tag to write
    * @param outputStream
@@ -736,7 +842,7 @@ public class Axion {
    * Reads and returns a {@link Tag} from the {@link AxionInputStream} given.
    * <p>
    * If no base tag adapter has been registered, an exception is thrown.
-   * 
+   *
    * @param parent
    *          the tag requesting the read
    * @param in
@@ -753,7 +859,7 @@ public class Axion {
    * Writes the {@link Tag} given to the {@link AxionOutputStream} given.
    * <p>
    * If no base tag adapter has been registered, an exception is thrown.
-   * 
+   *
    * @param tag
    *          the tag to write
    * @param out

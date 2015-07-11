@@ -5,17 +5,132 @@ import static org.junit.Assert.assertEquals;
 import java.io.IOException;
 import java.io.InputStream;
 
+import com.sudoplay.axion.api.AxionWritable;
+import com.sudoplay.axion.ext.tag.TagBoolean;
+import com.sudoplay.axion.mapper.NBTObjectMapper;
+import com.sudoplay.axion.spec.tag.TagInt;
+import com.sudoplay.axion.spec.tag.TagList;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.sudoplay.axion.spec.tag.TagCompound;
 
 public class AxionTest {
 
+  private static Axion axion;
+
+  @BeforeClass
+  public static void before() {
+    axion = Axion.createInstanceFrom(Axion.getExtInstance(), "test");
+    axion.registerNBTObjectMapper(Vector.class, new VectorMapper());
+  }
+
   @Test
-  public void test() throws IOException {
-    InputStream inputStream = this.getClass().getResourceAsStream("bigtest.nbt");
-    TagCompound tagCompound = (TagCompound) Axion.getExtInstance().read(inputStream);
-    assertEquals(getTestString(), Axion.getExtInstance().toString(tagCompound));
+  public void test_writeObject_writesImplementationsOfAxionWritable() {
+    TestClassWithNullaryConstructor testClass = new TestClassWithNullaryConstructor();
+    testClass.aLong = 42;
+
+    TagCompound tagCompound = axion.write("testClass", testClass);
+    long actual = tagCompound.getValue("aLong", axion);
+    assertEquals(42L, actual);
+  }
+
+  @Test
+  public void test_readObject_readsImplementationOfAxionWritableWithNullaryConstructor() {
+    TestClassWithNullaryConstructor testClass = new TestClassWithNullaryConstructor();
+    testClass.aLong = 42;
+
+    TagCompound tagCompound = axion.write("testClass", testClass);
+    TestClassWithNullaryConstructor newTestClass = axion.read(tagCompound, TestClassWithNullaryConstructor.class);
+    assertEquals(testClass.aLong, newTestClass.aLong);
+  }
+
+  @Test
+  public void test_writeObject_writesConvertibleObjects() {
+    TagBoolean tag = axion.write("aBoolean", true);
+    assertEquals(true, tag.get());
+  }
+
+  @Test
+  public void test_readObject_readsConvertibleObjects() {
+    TagBoolean tag = axion.write("aBoolean", true);
+    boolean b = axion.read(tag, boolean.class);
+    assertEquals(true, b);
+  }
+
+  @Test
+  public void test_writeObject_writesMappableObjects() {
+    Vector v = new Vector();
+    v.x = 42;
+    v.y = 73;
+    v.z = 31415;
+
+    TagList list = axion.write(v);
+    assertEquals(42, ((TagInt)list.get(0)).get());
+    assertEquals(73, ((TagInt)list.get(1)).get());
+    assertEquals(31415, ((TagInt)list.get(2)).get());
+  }
+
+  @Test
+  public void test_readObject_readsMappableObjects() {
+    Vector v = new Vector();
+    v.x = 42;
+    v.y = 73;
+    v.z = 31415;
+
+    TagList list = axion.write(v);
+    Vector newV = axion.read(list, Vector.class);
+    assertEquals(v.x, newV.x);
+    assertEquals(v.y, newV.y);
+    assertEquals(v.z, newV.z);
+  }
+
+  public static class VectorMapper implements NBTObjectMapper<TagList, Vector> {
+    @Override
+    public TagList createTagFrom(String name, Vector object, Axion axion) {
+      TagList out = new TagList(TagInt.class);
+      out.add(new TagInt(object.x));
+      out.add(new TagInt(object.y));
+      out.add(new TagInt(object.z));
+      return out;
+    }
+
+    @Override
+    public Vector createObjectFrom(TagList tag, Axion axion) {
+      Vector object = new Vector();
+      object.x = ((TagInt) tag.get(0)).get();
+      object.y = ((TagInt) tag.get(1)).get();
+      object.z = ((TagInt) tag.get(2)).get();
+      return object;
+    }
+  }
+
+  public static class Vector {
+    public int x, y, z;
+  }
+
+  public static class TestClassWithNullaryConstructor implements AxionWritable<TagCompound> {
+
+    public boolean aBoolean;
+    public long aLong;
+
+    public TestClassWithNullaryConstructor() {
+      // must have nullary constructor or (Tag, Axion) constructor
+    }
+
+    @Override
+    public TagCompound write(Axion axion) {
+      TagCompound out = new TagCompound();
+      out.putValue("aBoolean", aBoolean, axion);
+      out.putValue("aLong", aLong, axion);
+      return out;
+    }
+
+    @Override
+    public void read(TagCompound in, Axion axion) {
+      aBoolean = in.getValue("aBoolean", axion);
+      aLong = in.getValue("aLong", axion);
+    }
   }
 
   private String getTestString() {
