@@ -447,6 +447,27 @@ public class AxionConfiguration implements Cloneable {
   }
 
   /**
+   * Returns true if the given value's class has a converter registered.
+   *
+   * @param value value
+   * @param <V> value type
+   * @return true if the give value's class has a converter registered
+   */
+  protected <V> boolean hasConverterFor(final V value) {
+    return tagRegistry.hasConverterForValue(value.getClass());
+  }
+
+  /**
+   * Returns true if the given tag's class has a converter registered.
+   * @param tag tag
+   * @param <T> tag type
+   * @return true if the given tag's class has a converter registered
+   */
+  protected <T extends Tag> boolean hasConverterFor(final T tag) {
+    return tagRegistry.hasConverterForTag(tag.getClass());
+  }
+
+  /**
    * Returns the {@link NBTObjectMapper} registered for the class type provided.
    * 
    * @param type

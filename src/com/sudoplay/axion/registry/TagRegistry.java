@@ -345,6 +345,25 @@ public class TagRegistry implements Cloneable {
   }
 
   /**
+   * Returns true if the given class has a converter registered.
+   *
+   * @param type class
+   * @return true if the given class has a converter registered
+   */
+  public boolean hasConverterForValue(Class<?> type) {
+    return typeToConverter.containsKey(type);
+  }
+
+  /**
+   * Returns true if the given class has a converter registered.
+   * @param tagClass class
+   * @return true if the given class has a converter registered
+   */
+  public boolean hasConverterForTag(Class<? extends Tag> tagClass) {
+    return classToConverter.containsKey(tagClass);
+  }
+
+  /**
    * Creates a duplicate of this {@link TagRegistry} via the copy constructor
    * {@link #TagRegistry(TagRegistry)}.
    */
