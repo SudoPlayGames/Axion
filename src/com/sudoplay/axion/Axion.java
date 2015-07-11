@@ -475,6 +475,28 @@ public class Axion {
   }
 
   /**
+   * Returns true if the given value's class has a converter registered.
+   *
+   * @param value value
+   * @param <V> value type
+   * @return true if the given value's class has a converter registered
+   */
+  public <V> boolean hasConverterFor(final V value) {
+    return configuration.hasConverterFor(value);
+  }
+
+  /**
+   * Returns true if the given tag's class has a converter registered.
+   *
+   * @param tag tag
+   * @param <T> tag type
+   * @return true if the given tag's class has a converter registered
+   */
+  public <T extends Tag> boolean hasConverterFor(final T tag) {
+    return configuration.hasConverterFor(tag);
+  }
+
+  /**
    * Converts the given value into its tag using the converter registered for
    * the value's class.
    * <p>
@@ -504,6 +526,16 @@ public class Axion {
    */
   public <T extends Tag, O> NBTObjectMapper<T, O> getMapperFor(final Class<O> type) throws AxionMapperRegistrationException {
     return configuration.getMapperFor(type);
+  }
+
+  /**
+   * Returns true if the given class has a mapper registered.
+   *
+   * @param type class
+   * @return true if the given class has a mapper registered
+   */
+  public boolean hasMapperFor(final Class<?> type) {
+    return configuration.hasMapperFor(type);
   }
 
   /**
@@ -567,8 +599,7 @@ public class Axion {
    */
   public String toString(final Tag tag) throws AxionTagRegistrationException {
     StringBuilder out = new StringBuilder();
-    configuration.getBaseTagAdapter().toString(tag, out);
-    return out.toString();
+    return configuration.getBaseTagAdapter().toString(tag, out).toString();
   }
 
   /**
@@ -604,18 +635,12 @@ public class Axion {
         LOG.error(message, e);
         throw new AxionReadException(message, e);
       }
-    }
 
-    try {
+    } else if (this.hasMapperFor(objectClass)) {
       return this.createObjectFrom(in, objectClass);
-    } catch (AxionMapperRegistrationException e) {
-      //
-    }
 
-    try {
+    } else if (this.hasConverterFor(in)) {
       return this.convertToValue(in);
-    } catch (AxionTagRegistrationException e) {
-      //
     }
 
     String message = "Class not assignable from AxionWritable, no converter registered, and no mapper registered: " + objectClass.toString();
@@ -652,27 +677,45 @@ public class Axion {
    */
   @SuppressWarnings("unchecked")
   public <E extends Tag> E write(String name, Object object) {
-    if (AxionWritable.class.isAssignableFrom(object.getClass())) {
-      AxionWritable<E> savable = (AxionWritable<E>) object;
-      return savable.write(this);
-    }
 
-    try {
+    if (this.hasMapperFor(object.getClass())) {
       return this.createTagFrom(name, object);
-    } catch (AxionMapperRegistrationException e) {
-      //
-    }
 
-    try {
+    } else if (this.hasConverterFor(object.getClass())) {
       return this.convertToTag(name, object);
-    } catch (AxionTagRegistrationException e) {
-      //
     }
 
     String message = "Class not assignable from AxionWritable, no converter registered, and no mapper registered: " + object.getClass().toString();
     LOG.error(message);
     throw new AxionWriteException(message);
+  }
 
+  /**
+   * Converts an AxionWritable into a Tag of type E by simply calling write(String, AxionWritable) with a null String,
+   * creating a null name tag.
+   *
+   * @param writable the AxionWritable to convert
+   * @param <E> tag type
+   * @return E tag
+   * @throws AxionWriteException
+   */
+  public <E extends Tag> E write(AxionWritable<E> writable) {
+    return this.write(null, writable);
+  }
+
+  /**
+   * Converts an AxionWritable into a Tag of type E with name.
+   *
+   * @param name name of the tag; null is ok
+   * @param writable the AxionWritable to convert
+   * @param <E> tag type
+   * @return E tag
+   * @throws AxionWriteException
+   */
+  public <E extends Tag> E write(String name, AxionWritable<E> writable) {
+    E e = writable.write(this);
+    e.setName(name);
+    return e;
   }
 
   /**

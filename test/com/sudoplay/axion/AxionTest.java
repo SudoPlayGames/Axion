@@ -1,15 +1,20 @@
 package com.sudoplay.axion;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Date;
 
 import com.sudoplay.axion.api.AxionWritable;
 import com.sudoplay.axion.ext.tag.TagBoolean;
 import com.sudoplay.axion.mapper.NBTObjectMapper;
 import com.sudoplay.axion.spec.tag.TagInt;
 import com.sudoplay.axion.spec.tag.TagList;
+import com.sudoplay.axion.spec.tag.TagLong;
+import com.sudoplay.axion.tag.Tag;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -23,6 +28,46 @@ public class AxionTest {
   public static void before() {
     axion = Axion.createInstanceFrom(Axion.getExtInstance(), "test");
     axion.registerNBTObjectMapper(Vector.class, new VectorMapper());
+  }
+
+  @Test
+  public void test_hasConverterForValueReturnsTrue_whenTrue() {
+    Long value = 42L;
+    assertTrue(axion.hasConverterFor(value));
+  }
+
+  @Test
+  public void test_hasConverterForValueReturnsFalse_whenFalse() {
+    Vector value = new Vector();
+    assertFalse(axion.hasConverterFor(value));
+  }
+
+  @Test
+  public void test_hasConverterForTagReturnsTrue_whenTrue() {
+    TagLong tag = new TagLong(42L);
+    assertTrue(axion.hasConverterFor(tag));
+  }
+
+  @Test
+  public void test_hasConverterForTagReturnsFalse_whenFalse() {
+    Tag tag = new Tag("tag") {
+      @SuppressWarnings("CloneDoesntCallSuperClone")
+      @Override
+      public Tag clone() {
+        return this;
+      }
+    };
+    assertFalse(axion.hasConverterFor(tag));
+  }
+
+  @Test
+  public void test_hasMapperForReturnsTrue_whenTrue() {
+    assertTrue(axion.hasMapperFor(Vector.class));
+  }
+
+  @Test
+  public void test_hasMapperForReturnsFalse_whenFalse() {
+    assertFalse(axion.hasMapperFor(Date.class));
   }
 
   @Test
