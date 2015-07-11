@@ -13,7 +13,7 @@ import com.sudoplay.axion.util.TypeResolver;
  * The {@link NBTObjectMapperRegistry} is responsible for storing the object
  * type to {@link NBTObjectMapper} relationship and providing a lookup method to
  * retrieve the mapper from its type.
- * 
+ *
  * @author Jason Taylor
  */
 public class NBTObjectMapperRegistry implements Cloneable {
@@ -34,7 +34,7 @@ public class NBTObjectMapperRegistry implements Cloneable {
    * <p>
    * Note that this duplicates the backing map, but doesn't actually duplicate
    * the mappers.
-   * 
+   *
    * @param toCopy
    */
   protected NBTObjectMapperRegistry(final NBTObjectMapperRegistry toCopy) {
@@ -48,7 +48,7 @@ public class NBTObjectMapperRegistry implements Cloneable {
    * <p>
    * If a mapper has already been registered for the type given, an exception is
    * thrown.
-   * 
+   *
    * @param type
    *          the class of the object to map
    * @param mapper
@@ -69,7 +69,7 @@ public class NBTObjectMapperRegistry implements Cloneable {
    * Returns the {@link NBTObjectMapper} registered for the type given.
    * <p>
    * If no mapper is found, an exception is thrown.
-   * 
+   *
    * @param type
    *          the type to get the {@link NBTObjectMapper} for
    * @return the {@link NBTObjectMapper} registered for the type given
@@ -105,7 +105,7 @@ public class NBTObjectMapperRegistry implements Cloneable {
   /**
    * Duplicates this {@link NBTObjectMapperRegistry} by using a copy
    * constructor.
-   * 
+   *
    * @see #NBTObjectMapperRegistry(NBTObjectMapperRegistry)
    */
   @Override
@@ -116,4 +116,13 @@ public class NBTObjectMapperRegistry implements Cloneable {
     return clone;
   }
 
+  /**
+   * Returns true if the registry has a mapper for the given class.
+   *
+   * @param type class
+   * @return true if the registry has a mapper for the given class
+   */
+  public boolean hasMapperFor(Class<?> type) {
+    return typeToMapper.containsKey(type);
+  }
 }

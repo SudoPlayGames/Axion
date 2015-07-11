@@ -459,6 +459,16 @@ public class AxionConfiguration implements Cloneable {
   }
 
   /**
+   * Returns true if the given class has a mapper registered.
+   *
+   * @param type class
+   * @return true if the given class has a mapper registered
+   */
+  protected boolean hasMapperFor(final Class<?> type) {
+    return mappers.hasMapperFor(type);
+  }
+
+  /**
    * Wraps an {@link InputStream} using the {@link StreamCompressionWrapper} set
    * with {@link #setCompressionType(CompressionType)}.
    * 
