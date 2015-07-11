@@ -17,7 +17,7 @@ public abstract class Tag implements Cloneable {
 
   /**
    * Sets the name of this {@link Tag}. If this tag belongs to a container tag,
-   * the {@link ContainerTag#onChildNameChange(String, String)} of the contianer
+   * the {@link ContainerTag#onChildNameChange(String, String)} of the container
    * tag is called.
    * 
    * @param newName
