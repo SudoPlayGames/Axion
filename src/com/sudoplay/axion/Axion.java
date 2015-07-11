@@ -642,7 +642,7 @@ public class Axion {
     LOG.debug("Entering write(tagCompound=[{}], file=[{}])", tagCompound, file);
     long start = System.currentTimeMillis();
     FileOutputStream fileOutputStream = new FileOutputStream(file);
-    write(tagCompound, file);
+    write(tagCompound, fileOutputStream);
     fileOutputStream.close();
     LOG.info("Write of tag [{}] to file [{}] completed in [{}]", tagCompound, file, DurationUtil.formatDurationWords(System.currentTimeMillis() - start));
     LOG.debug("Leaving write()");

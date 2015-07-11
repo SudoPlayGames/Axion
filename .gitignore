@@ -6,3 +6,4 @@ dist/
 libs/
 src/logback-test.xml
 .settings/
+*.iml
