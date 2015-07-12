@@ -134,8 +134,6 @@ public class TagList extends ContainerTag {
    * {@link NBTObjectMapper} registered for the value's type and adds the new
    * tag to this {@link TagList}.
    * 
-   * @param name
-   *          name of the {@link Tag}
    * @param value
    *          the value to map
    * @param axion
@@ -143,8 +141,8 @@ public class TagList extends ContainerTag {
    * @throws AxionMapperRegistrationException
    *           if no {@link NBTObjectMapper} is registered for the value's type
    */
-  public <V> void putMappableValue(final String name, final V value, final Axion axion) throws AxionMapperRegistrationException {
-    add(axion.createTagFrom(name, value));
+  public <V> void addMappableValue(final V value, final Axion axion) throws AxionMapperRegistrationException {
+    add(axion.createTagFrom(null, value));
   }
 
   /**
