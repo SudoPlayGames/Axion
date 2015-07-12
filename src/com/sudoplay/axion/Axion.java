@@ -676,12 +676,12 @@ public class Axion {
    * @throws AxionWriteException
    */
   @SuppressWarnings("unchecked")
-  public <E extends Tag> E write(String name, Object object) {
+  public <O, E extends Tag> E write(String name, O object) {
 
     if (this.hasMapperFor(object.getClass())) {
       return this.createTagFrom(name, object);
 
-    } else if (this.hasConverterFor(object.getClass())) {
+    } else if (this.hasConverterFor(object)) {
       return this.convertToTag(name, object);
     }
 

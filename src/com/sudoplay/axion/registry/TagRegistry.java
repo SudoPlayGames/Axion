@@ -350,7 +350,7 @@ public class TagRegistry implements Cloneable {
    * @param type class
    * @return true if the given class has a converter registered
    */
-  public boolean hasConverterForValue(Class<?> type) {
+  public <V> boolean hasConverterForValue(Class<V> type) {
     return typeToConverter.containsKey(type);
   }
 
