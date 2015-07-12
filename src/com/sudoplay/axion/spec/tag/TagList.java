@@ -114,24 +114,10 @@ public class TagList extends ContainerTag {
   }
 
   /**
-   * Adds a {@link Tag} to this {@link TagList} with the name given.
-   * 
-   * @param name
-   *          name of the {@link Tag}
-   * @param tag
-   *          the {@link Tag} to add
-   */
-  public void add(final String name, final Tag tag) {
-    add(tag.setName(name));
-  }
-
-  /**
    * Converts the value given into a tag using the {@link TagConverter}
    * registered for the value's type and adds the new tag to this
    * {@link TagList}.
    * 
-   * @param name
-   *          name of the {@link Tag}
    * @param value
    *          the value to convert
    * @param axion
@@ -139,8 +125,8 @@ public class TagList extends ContainerTag {
    * @throws AxionTagRegistrationException
    *           if no {@link TagConverter} is registered for the value's type
    */
-  public <V> void putValue(final String name, final V value, final Axion axion) throws AxionTagRegistrationException {
-    add(axion.convertToTag(name, value));
+  public <V> void addValue(final V value, final Axion axion) throws AxionTagRegistrationException {
+    add(axion.convertToTag(null, value));
   }
 
   /**
