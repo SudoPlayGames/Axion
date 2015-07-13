@@ -44,6 +44,11 @@ public class DefaultAxionReader implements AxionReader {
   }
 
   @Override
+  public <V> V read(String name, V defaultValue) {
+    return this.read(name, (Function<V, V>) value -> value == null ? defaultValue : value);
+  }
+
+  @Override
   public <V> V read(String name, Function<V, V> function) {
     return function.apply(this.read(name));
   }
@@ -57,6 +62,11 @@ public class DefaultAxionReader implements AxionReader {
   }
 
   @Override
+  public <V, T extends Tag> V read(T tag, V defaultValue) {
+    return this.read(tag, (Function<V, V>) value -> value == null ? defaultValue : value);
+  }
+
+  @Override
   public <V, T extends Tag> V read(T tag, Function<V, V> function) {
     return function.apply(read(tag));
   }
@@ -65,6 +75,11 @@ public class DefaultAxionReader implements AxionReader {
   public <V> V read(String name, Class<V> vClass) {
     Tag in = tagCompound.get(name);
     return this.read(in, vClass);
+  }
+
+  @Override
+  public <V> V read(String name, Class<V> vClass, V defaultValue) {
+    return this.read(name, vClass, (Function<V, V>) value -> value == null ? defaultValue : value);
   }
 
   @Override
@@ -95,6 +110,11 @@ public class DefaultAxionReader implements AxionReader {
   }
 
   @Override
+  public <V, T extends Tag> V read(T tag, Class<V> vClass, V defaultValue) {
+    return this.read(tag, vClass, (Function<V, V>) value -> value == null ? defaultValue : value);
+  }
+
+  @Override
   public <V, T extends Tag> V read(T tag, Class<V> vClass, Function<V, V> function) {
     return function.apply(this.read(tag, vClass));
   }
@@ -102,6 +122,11 @@ public class DefaultAxionReader implements AxionReader {
   @Override
   public <T extends Tag> T readAsTag(String name) {
     return tagCompound.get(name);
+  }
+
+  @Override
+  public <T extends Tag> T readAsTag(String name, T defaultTag) {
+    return readAsTag(name, (Function<T, T>) value -> value == null ? defaultTag : value);
   }
 
   @Override
