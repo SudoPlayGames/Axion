@@ -7,6 +7,7 @@ import com.sudoplay.axion.tag.Tag;
 
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * Interface for the AxionReader object that is passed into the AxionWritable methods.
@@ -22,13 +23,23 @@ public interface AxionReader {
 
   <V> V read(String name);
 
+  <V> V read(String name, Function<V, V> function);
+
   <V, T extends Tag> V read(T tag);
+
+  <V, T extends Tag> V read(T tag, Function<V, V> function);
 
   <V> V read(String name, Class<V> vClass);
 
+  <V> V read(String name, Class<V> vClass, Function<V, V> function);
+
   <V, T extends Tag> V read(T tag, Class<V> vClass);
 
+  <V, T extends Tag> V read(T tag, Class<V> vClass, Function<V, V> function);
+
   <T extends Tag> T readAsTag(String name);
+
+  <T extends Tag> T readAsTag(String name, Function<T, T> function);
 
   <K, V> void readMap(String name, Class<K> kClass, Class<V> vClass, BiConsumer<K, V> consumer);
 

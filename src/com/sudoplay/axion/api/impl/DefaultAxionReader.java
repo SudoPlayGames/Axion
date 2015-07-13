@@ -14,6 +14,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * Default implementation of the AxionReader interface.
@@ -43,6 +44,11 @@ public class DefaultAxionReader implements AxionReader {
   }
 
   @Override
+  public <V> V read(String name, Function<V, V> function) {
+    return function.apply(this.read(name));
+  }
+
+  @Override
   public <V, T extends Tag> V read(T tag) {
     if (axion.hasConverterFor(tag)) {
       return axion.convertToValue(tag);
@@ -51,9 +57,19 @@ public class DefaultAxionReader implements AxionReader {
   }
 
   @Override
+  public <V, T extends Tag> V read(T tag, Function<V, V> function) {
+    return function.apply(read(tag));
+  }
+
+  @Override
   public <V> V read(String name, Class<V> vClass) {
     Tag in = tagCompound.get(name);
     return this.read(in, vClass);
+  }
+
+  @Override
+  public <V> V read(String name, Class<V> vClass, Function<V, V> function) {
+    return function.apply(read(name, vClass));
   }
 
   @Override
@@ -79,8 +95,18 @@ public class DefaultAxionReader implements AxionReader {
   }
 
   @Override
+  public <V, T extends Tag> V read(T tag, Class<V> vClass, Function<V, V> function) {
+    return function.apply(this.read(tag, vClass));
+  }
+
+  @Override
   public <T extends Tag> T readAsTag(String name) {
     return tagCompound.get(name);
+  }
+
+  @Override
+  public <T extends Tag> T readAsTag(String name, Function<T, T> function) {
+    return function.apply(this.readAsTag(name));
   }
 
   @Override
