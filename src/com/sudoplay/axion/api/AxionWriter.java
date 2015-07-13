@@ -9,8 +9,13 @@ import java.util.Collection;
 import java.util.Map;
 
 /**
+ * Interface for the AxionWriter object that is passed into the AxionWritable methods.
+ * <p>
+ * Facilitates the conversion of Objects to Tags.
+ * <p>
  * Created by Jason Taylor on 7/12/2015.
  */
+@SuppressWarnings("unused")
 public interface AxionWriter {
 
   <S extends Tag> AxionWriter write(String name, S tag);

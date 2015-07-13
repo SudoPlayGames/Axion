@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author Jason Taylor
@@ -167,6 +168,10 @@ public class TagList extends ContainerTag {
   @Override
   public Iterator<Tag> iterator() {
     return Collections.unmodifiableList(data).iterator();
+  }
+
+  @SuppressWarnings("unchecked")
+  public <T extends Tag> Stream<T> stream() return (Stream<T>) data.stream();
   }
 
   @Override

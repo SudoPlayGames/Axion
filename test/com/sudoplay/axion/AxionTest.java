@@ -1,14 +1,11 @@
 package com.sudoplay.axion;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import java.util.Date;
-
+import com.sudoplay.axion.api.AxionReader;
 import com.sudoplay.axion.api.AxionWritable;
+import com.sudoplay.axion.api.AxionWriter;
 import com.sudoplay.axion.ext.tag.TagBoolean;
 import com.sudoplay.axion.mapper.NBTObjectMapper;
+import com.sudoplay.axion.spec.tag.TagCompound;
 import com.sudoplay.axion.spec.tag.TagInt;
 import com.sudoplay.axion.spec.tag.TagList;
 import com.sudoplay.axion.spec.tag.TagLong;
@@ -16,7 +13,9 @@ import com.sudoplay.axion.tag.Tag;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.sudoplay.axion.spec.tag.TagCompound;
+import java.util.Date;
+
+import static org.junit.Assert.*;
 
 public class AxionTest {
 
@@ -73,56 +72,56 @@ public class AxionTest {
     TestClassWithNullaryConstructor testClass = new TestClassWithNullaryConstructor();
     testClass.aLong = 42;
 
-    TagCompound tagCompound = axion.write("testClass", testClass);
+    TagCompound tagCompound = axion.createTagFrom("testClass", testClass);
     long actual = tagCompound.getValue("aLong", axion);
     assertEquals(42L, actual);
   }
 
   @Test
-  public void test_readObject_readsImplementationOfAxionWritableWithNullaryConstructor() {
+  public void test_createTagFrom_readsImplementationOfAxionWritableWithNullaryConstructor() {
     TestClassWithNullaryConstructor testClass = new TestClassWithNullaryConstructor();
     testClass.aLong = 42;
 
-    TagCompound tagCompound = axion.write("testClass", testClass);
+    TagCompound tagCompound = axion.createTagFrom("testClass", testClass);
     TestClassWithNullaryConstructor newTestClass = axion.createFromTag(tagCompound, TestClassWithNullaryConstructor
         .class);
     assertEquals(testClass.aLong, newTestClass.aLong);
   }
 
   @Test
-  public void test_writeObject_writesConvertibleObjects() {
-    TagBoolean tag = axion.createTag("aBoolean", true);
+  public void test_createTagFrom_writesConvertibleObjects() {
+    TagBoolean tag = axion.createTagFrom("aBoolean", true);
     assertEquals(true, tag.get());
   }
 
   @Test
-  public void test_readObject_readsConvertibleObjects() {
-    TagBoolean tag = axion.createTag("aBoolean", true);
+  public void test_createTagFrom_readsConvertibleObjects() {
+    TagBoolean tag = axion.createTagFrom("aBoolean", true);
     boolean b = axion.createFromTag(tag, boolean.class);
     assertEquals(true, b);
   }
 
   @Test
-  public void test_writeObject_writesMappableObjects() {
+  public void test_createTagFrom_writesMappableObjects() {
     Vector v = new Vector();
     v.x = 42;
     v.y = 73;
     v.z = 31415;
 
-    TagList list = axion.createTag(v);
-    assertEquals(42, ((TagInt)list.get(0)).get());
-    assertEquals(73, ((TagInt)list.get(1)).get());
-    assertEquals(31415, ((TagInt)list.get(2)).get());
+    TagList list = axion.createTagFrom(v);
+    assertEquals(42, ((TagInt) list.get(0)).get());
+    assertEquals(73, ((TagInt) list.get(1)).get());
+    assertEquals(31415, ((TagInt) list.get(2)).get());
   }
 
   @Test
-  public void test_readObject_readsMappableObjects() {
+  public void test_createTagFrom_readsMappableObjects() {
     Vector v = new Vector();
     v.x = 42;
     v.y = 73;
     v.z = 31415;
 
-    TagList list = axion.createTag(v);
+    TagList list = axion.createTagFrom(v);
     Vector newV = axion.createFromTag(list, Vector.class);
     assertEquals(v.x, newV.x);
     assertEquals(v.y, newV.y);
@@ -153,7 +152,7 @@ public class AxionTest {
     public int x, y, z;
   }
 
-  public static class TestClassWithNullaryConstructor implements AxionWritable<TagCompound> {
+  public static class TestClassWithNullaryConstructor implements AxionWritable {
 
     public boolean aBoolean;
     public long aLong;
@@ -163,22 +162,32 @@ public class AxionTest {
     }
 
     @Override
-    public TagCompound write(Axion axion) {
-      TagCompound out = new TagCompound();
-      out.putValue("aBoolean", aBoolean, axion);
-      out.putValue("aLong", aLong, axion);
-      return out;
+    public void write(AxionWriter out) {
+      out.write("aBoolean", aBoolean);
+      out.write("aLong", aLong);
     }
 
     @Override
-    public void read(TagCompound in, Axion axion) {
-      aBoolean = in.getValue("aBoolean", axion);
-      aLong = in.getValue("aLong", axion);
+    public void read(AxionReader in) {
+      aBoolean = in.read("aBoolean");
+      aLong = in.read("aLong");
     }
   }
 
   private String getTestString() {
-    return "TagCompound(\"Level\"): 11 entries\n{\n  TagShort(\"shortTest\"): 32767\n  TagLong(\"longTest\"): 9223372036854775807\n  TagFloat(\"floatTest\"): 0.49823147\n  TagString(\"stringTest\"): HELLO WORLD THIS IS A TEST STRING ÅÄÖ!\n  TagInt(\"intTest\"): 2147483647\n  TagCompound(\"nested compound test\"): 2 entries\n  {\n    TagCompound(\"ham\"): 2 entries\n    {\n      TagString(\"name\"): Hampus\n      TagFloat(\"value\"): 0.75\n    }\n    TagCompound(\"egg\"): 2 entries\n    {\n      TagString(\"name\"): Eggbert\n      TagFloat(\"value\"): 0.5\n    }\n  }\n  TagList(\"listTest (long)\"): 5 entries of type TagLong\n  {\n    TagLong: 11\n    TagLong: 12\n    TagLong: 13\n    TagLong: 14\n    TagLong: 15\n  }\n  TagByte(\"byteTest\"): 127\n  TagList(\"listTest (compound)\"): 2 entries of type TagCompound\n  {\n    TagCompound: 2 entries\n    {\n      TagString(\"name\"): Compound tag #0\n      TagLong(\"created-on\"): 1264099775885\n    }\n    TagCompound: 2 entries\n    {\n      TagString(\"name\"): Compound tag #1\n      TagLong(\"created-on\"): 1264099775885\n    }\n  }\n  TagByteArray(\"byteArrayTest (the first 1000 values of (n*n*255+n*7)%100, starting with n=0 (0, 62, 34, 16, 8, ...))\"): [1000 bytes]\n  TagDouble(\"doubleTest\"): 0.4931287132182315\n}\n";
+    return "TagCompound(\"Level\"): 11 entries\n{\n  TagShort(\"shortTest\"): 32767\n  TagLong(\"longTest\"): " +
+        "9223372036854775807\n  TagFloat(\"floatTest\"): 0.49823147\n  TagString(\"stringTest\"): HELLO WORLD THIS IS" +
+        " A TEST STRING ÅÄÖ!\n  TagInt(\"intTest\"): 2147483647\n  TagCompound(\"nested compound test\"): 2 entries\n" +
+        "  {\n    TagCompound(\"ham\"): 2 entries\n    {\n      TagString(\"name\"): Hampus\n      TagFloat" +
+        "(\"value\"): 0.75\n    }\n    TagCompound(\"egg\"): 2 entries\n    {\n      TagString(\"name\"): Eggbert\n  " +
+        "    TagFloat(\"value\"): 0.5\n    }\n  }\n  TagList(\"listTest (long)\"): 5 entries of type TagLong\n  {\n  " +
+        "  TagLong: 11\n    TagLong: 12\n    TagLong: 13\n    TagLong: 14\n    TagLong: 15\n  }\n  TagByte" +
+        "(\"byteTest\"): 127\n  TagList(\"listTest (compound)\"): 2 entries of type TagCompound\n  {\n    " +
+        "TagCompound: 2 entries\n    {\n      TagString(\"name\"): Compound tag #0\n      TagLong(\"created-on\"): " +
+        "1264099775885\n    }\n    TagCompound: 2 entries\n    {\n      TagString(\"name\"): Compound tag #1\n      " +
+        "TagLong(\"created-on\"): 1264099775885\n    }\n  }\n  TagByteArray(\"byteArrayTest (the first 1000 values of" +
+        " (n*n*255+n*7)%100, starting with n=0 (0, 62, 34, 16, 8, ...))\"): [1000 bytes]\n  TagDouble(\"doubleTest\")" +
+        ": 0.4931287132182315\n}\n";
   }
 
 }

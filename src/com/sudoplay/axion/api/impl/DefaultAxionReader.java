@@ -16,8 +16,11 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 /**
+ * Default implementation of the AxionReader interface.
+ * <p>
  * Created by Jason Taylor on 7/12/2015.
  */
+@SuppressWarnings("unused")
 public class DefaultAxionReader implements AxionReader {
 
   private TagCompound tagCompound;

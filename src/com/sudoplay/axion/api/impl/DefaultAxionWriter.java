@@ -11,8 +11,11 @@ import java.util.Collection;
 import java.util.Map;
 
 /**
+ * Default implementation of the AxionWriter interface.
+ * <p>
  * Created by Jason Taylor on 7/12/2015.
  */
+@SuppressWarnings("unused")
 public class DefaultAxionWriter implements AxionWriter {
 
   private TagCompound tagCompound;
@@ -35,7 +38,9 @@ public class DefaultAxionWriter implements AxionWriter {
 
   @Override
   public AxionWriter write(String name, AxionWritable axionWritable) {
-    tagCompound.put(name, axionWritable.write(new DefaultAxionWriter(axion)));
+    TagCompound tagCompound = new TagCompound();
+    axionWritable.write(new DefaultAxionWriter(tagCompound, axion));
+    tagCompound.put(name, tagCompound);
     return this;
   }
 

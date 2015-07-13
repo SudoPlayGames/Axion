@@ -9,8 +9,13 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 /**
- * Created by sk3lls on 7/12/2015.
+ * Interface for the AxionReader object that is passed into the AxionWritable methods.
+ * <p>
+ * Facilitates the conversion of Tags to Objects.
+ * <p>
+ * Created by Jason Taylor on 7/12/2015.
  */
+@SuppressWarnings("unused")
 public interface AxionReader {
 
   <V> V read(String name);

@@ -319,4 +319,14 @@ public class TagListTest {
     assertEquals("", list.get(0).getName());
   }
 
+  @Test
+  public void test_stream() {
+    TagList list = new TagList(TagInt.class);
+    list.add(new TagInt(0));
+    list.add(new TagInt(1));
+    list.add(new TagInt(2));
+    assertEquals(3, list.stream().count());
+    list.stream().anyMatch(tag -> tag.get() > 1);
+  }
+
 }
