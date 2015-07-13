@@ -1,27 +1,26 @@
 package com.sudoplay.axion.spec.tag;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
-import org.junit.Assert;
-import org.junit.Test;
-
+import com.sudoplay.axion.Axion;
 import com.sudoplay.axion.TestUtil;
 import com.sudoplay.axion.TestUtil.AbstractContainerTagTestClass;
 import com.sudoplay.axion.tag.AxionIllegalTagNameException;
 import com.sudoplay.axion.tag.AxionInvalidTagException;
 import com.sudoplay.axion.tag.Tag;
+import org.junit.Assert;
+import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+
+import static org.junit.Assert.*;
 
 public class TagListTest {
 
   /**
-   * Should have two constructors: a constructor to set name and a constructor
-   * to set name and value.
+   * Should have two constructors: a constructor to set name and a constructor to set name and value.
    */
   @Test
   public void test_constructors() {
@@ -92,8 +91,7 @@ public class TagListTest {
   }
 
   /**
-   * Should remove all tags from the list and remove all of the parent
-   * references in the tags removed.
+   * Should remove all tags from the list and remove all of the parent references in the tags removed.
    */
   @Test
   public void test_clear() {
@@ -180,8 +178,8 @@ public class TagListTest {
   }
 
   /**
-   * Should add the tag to the collection, set the tag's name to empty, set the
-   * tag's parent, and throw an exception on null tags.
+   * Should add the tag to the collection, set the tag's name to empty, set the tag's parent, and throw an exception on
+   * null tags.
    */
   @Test
   public void test_add() {
@@ -215,8 +213,7 @@ public class TagListTest {
   }
 
   /**
-   * Should remove the tag from the backing list, but not alter the tag's
-   * parent.
+   * Should remove the tag from the backing list, but not alter the tag's parent.
    */
   @Test
   public void test_onChildRemoval() {
@@ -261,8 +258,7 @@ public class TagListTest {
   }
 
   /**
-   * Should return a string that is a combination of the tag class' simple name,
-   * reference name, value and type.
+   * Should return a string that is a combination of the tag class' simple name, reference name, value and type.
    */
   @Test
   public void test_toString() {
@@ -325,8 +321,64 @@ public class TagListTest {
     list.add(new TagInt(0));
     list.add(new TagInt(1));
     list.add(new TagInt(2));
-    assertEquals(3, list.stream().count());
-    list.stream().anyMatch(tag -> tag.get() > 1);
+    assertEquals(3, list.stream(TagInt.class).count());
+    assertEquals(true, list.stream(TagInt.class).anyMatch(tag -> tag.get() > 1));
+
+    //noinspection unchecked
+    list
+        .stream(TagInt.class)
+        .filter(tagInt -> tagInt.get() < 2)
+        .map(TagInt::get)
+        .collect(Collectors.toCollection((Supplier<ArrayList>) ArrayList::new))
+        .forEach(System.out::println);
+
+    list.valueStream(
+        TagInt.class,
+        tag -> tag.get() < 2,
+        TagInt::get,
+        ArrayList::new
+    ).forEach(System.out::println);
+  }
+
+  @Test
+  public void test_valueStream() {
+    TagList list = new TagList(TagInt.class);
+    list.add(new TagInt(0));
+    list.add(new TagInt(1));
+    list.add(new TagInt(2));
+
+    //noinspection unchecked
+    list
+        .stream(TagInt.class)
+        .filter(tagInt -> tagInt.get() < 2)
+        .map(TagInt::get)
+        .collect(Collectors.toCollection((Supplier<ArrayList>) ArrayList::new))
+        .forEach(value -> assertTrue((int) value < 2));
+
+    list
+        .valueStream(
+            TagInt.class,
+            tag -> tag.get() < 2,
+            TagInt::get,
+            ArrayList::new
+        ).forEach(value -> assertTrue(value < 2));
+
+    list
+        .valueStream(
+            TagInt.class,
+            int.class,
+            Axion.getSpecInstance()
+        ).forEach(value -> assertTrue(value < 3));
+
+    assertEquals(
+        3,
+        list
+            .valueStream(
+                TagInt.class,
+                int.class,
+                Axion.getSpecInstance()
+            ).count()
+    );
   }
 
 }

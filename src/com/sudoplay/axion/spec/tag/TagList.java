@@ -14,6 +14,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -171,7 +174,40 @@ public class TagList extends ContainerTag {
   }
 
   @SuppressWarnings("unchecked")
-  public <T extends Tag> Stream<T> stream() return (Stream<T>) data.stream();
+  public <T extends Tag> Stream<T> stream(@SuppressWarnings("UnusedParameters") Class<T> tagClass) {
+    /*
+    TODO:
+    How can we ensure that stream lambda parameters are the proper type without having to provide the tag class in
+    the method call?
+     */
+    return (Stream<T>) data.stream();
+  }
+
+  public <V, T extends Tag> Stream<V> valueStream(
+      Class<T> tagClass,
+      Class<V> valueClass,
+      Axion axion
+  ) {
+    return this.valueStream(
+        tagClass,
+        tag -> true,
+        tag -> axion.createFromTag(tag, valueClass),
+        ArrayList::new
+    );
+  }
+
+  public <V, T extends Tag> Stream<V> valueStream(
+      Class<T> tagClass,
+      Predicate<T> filter,
+      Function<T, V> map,
+      Supplier<List<V>> listSupplier
+  ) {
+    return this
+        .stream(tagClass)
+        .filter(filter)
+        .map(map)
+        .collect(Collectors.toCollection((Supplier<List<V>>) listSupplier))
+        .stream();
   }
 
   @Override
