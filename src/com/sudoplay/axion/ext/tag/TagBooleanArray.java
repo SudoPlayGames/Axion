@@ -1,21 +1,15 @@
 package com.sudoplay.axion.ext.tag;
 
-import java.util.Arrays;
-
 import com.sudoplay.axion.tag.Tag;
 
+import java.util.Arrays;
+
 /**
- * @tag.type 86
- * 
- * @tag.name <code>TAG_Boolean_Array</code>
- * 
- * @tag.payload * <code>TAG_Int</code> length<br>
- *              * An array of booleans. The length of this array is
- *              <code>length</code> / 8 booleans. Each boolean is stored as a
- *              bit.
- * 
  * @author Jason Taylor
- * 
+ * @tag.type 86
+ * @tag.name <code>TAG_Boolean_Array</code>
+ * @tag.payload * <code>TAG_Int</code> length<br> * An array of booleans. The length of this array is
+ * <code>length</code> / 8 booleans. Each boolean is stored as a bit.
  */
 public class TagBooleanArray extends Tag {
 
@@ -23,9 +17,8 @@ public class TagBooleanArray extends Tag {
 
   /**
    * Creates a new {@link TagBooleanArray} with the given name.
-   * 
-   * @param newName
-   *          the {@link Tag} name
+   *
+   * @param newName the {@link Tag} name
    */
   public TagBooleanArray(final String newName) {
     this(newName, new boolean[0]);
@@ -33,9 +26,8 @@ public class TagBooleanArray extends Tag {
 
   /**
    * Creates a new {@link TagBooleanArray} with no name and the given value.
-   * 
-   * @param newBooleanArray
-   *          the {@link Boolean} array value
+   *
+   * @param newBooleanArray the {@link Boolean} array value
    */
   public TagBooleanArray(final boolean[] newBooleanArray) {
     this(null, newBooleanArray);
@@ -43,11 +35,9 @@ public class TagBooleanArray extends Tag {
 
   /**
    * Creates a new {@link TagBooleanArray} with the given name and value.
-   * 
-   * @param newName
-   *          the {@link Tag} name
-   * @param newBooleanArray
-   *          the {@link Boolean} array value
+   *
+   * @param newName         the {@link Tag} name
+   * @param newBooleanArray the {@link Boolean} array value
    */
   public TagBooleanArray(final String newName, final boolean[] newBooleanArray) {
     super(newName);
@@ -56,9 +46,8 @@ public class TagBooleanArray extends Tag {
 
   /**
    * Sets the value of this {@link TagBooleanArray} to the given value.
-   * 
-   * @param newBooleanArray
-   *          the {@link Boolean} array value
+   *
+   * @param newBooleanArray the {@link Boolean} array value
    */
   public void set(final boolean[] newBooleanArray) {
     if (newBooleanArray == null) {
@@ -69,7 +58,7 @@ public class TagBooleanArray extends Tag {
 
   /**
    * Returns the value of this {@link TagBooleanArray}.
-   * 
+   *
    * @return the value of this {@link TagBooleanArray}
    */
   public boolean[] get() {
@@ -93,9 +82,7 @@ public class TagBooleanArray extends Tag {
     if (getClass() != obj.getClass())
       return false;
     TagBooleanArray other = (TagBooleanArray) obj;
-    if (!Arrays.equals(data, other.data))
-      return false;
-    return true;
+    return Arrays.equals(data, other.data);
   }
 
   @Override

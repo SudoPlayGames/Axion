@@ -3,15 +3,10 @@ package com.sudoplay.axion.ext.tag;
 import com.sudoplay.axion.tag.Tag;
 
 /**
- * @tag.type 80
- * 
- * @tag.name <code>TAG_Boolean</code>
- * 
- * @tag.payload * True is recorded as a byte value of 1 and false is a byte
- *              value of 0.
- * 
  * @author Jason Taylor
- * 
+ * @tag.type 80
+ * @tag.name <code>TAG_Boolean</code>
+ * @tag.payload * True is recorded as a byte value of 1 and false is a byte value of 0.
  */
 public class TagBoolean extends Tag {
 
@@ -19,9 +14,8 @@ public class TagBoolean extends Tag {
 
   /**
    * Creates a new {@link TagBoolean} with the given name.
-   * 
-   * @param newName
-   *          the {@link Tag} name
+   *
+   * @param newName the {@link Tag} name
    */
   public TagBoolean(final String newName) {
     super(newName);
@@ -29,9 +23,8 @@ public class TagBoolean extends Tag {
 
   /**
    * Creates a new {@link TagBoolean} with no name and the given value.
-   * 
-   * @param newBoolean
-   *          the {@link Boolean} value
+   *
+   * @param newBoolean the {@link Boolean} value
    */
   public TagBoolean(final boolean newBoolean) {
     this(null, newBoolean);
@@ -39,11 +32,9 @@ public class TagBoolean extends Tag {
 
   /**
    * Creates a new {@link TagBoolean} with the given name and value.
-   * 
-   * @param newName
-   *          the {@link Tag} name
-   * @param newBoolean
-   *          the {@link Boolean} value
+   *
+   * @param newName    the {@link Tag} name
+   * @param newBoolean the {@link Boolean} value
    */
   public TagBoolean(final String newName, final boolean newBoolean) {
     super(newName);
@@ -52,9 +43,8 @@ public class TagBoolean extends Tag {
 
   /**
    * Sets the value of this {@link TagBoolean} to the given value.
-   * 
-   * @param newBoolean
-   *          the {@link Boolean} value
+   *
+   * @param newBoolean the {@link Boolean} value
    */
   public void set(final boolean newBoolean) {
     data = newBoolean;
@@ -62,7 +52,7 @@ public class TagBoolean extends Tag {
 
   /**
    * Returns the value of this {@link TagBoolean}.
-   * 
+   *
    * @return the value of this {@link TagBoolean}
    */
   public boolean get() {
@@ -86,9 +76,7 @@ public class TagBoolean extends Tag {
     if (getClass() != obj.getClass())
       return false;
     TagBoolean other = (TagBoolean) obj;
-    if (data != other.data)
-      return false;
-    return true;
+    return data == other.data;
   }
 
   @Override

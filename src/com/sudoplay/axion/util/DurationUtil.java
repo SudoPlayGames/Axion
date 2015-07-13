@@ -15,12 +15,7 @@ public class DurationUtil {
 
   public static String formatDurationWords(long durationMillis) {
 
-    int years = 0;
-    int weeks = 0;
-    int days = 0;
-    int hours = 0;
-    int minutes = 0;
-    int seconds = 0;
+    int years, weeks, days, hours, minutes, seconds;
 
     StringBuilder out = new StringBuilder();
 
@@ -35,6 +30,7 @@ public class DurationUtil {
     }
 
     if (durationMillis >= MILLIS_PER_WEEK) {
+      weeks = (int) (durationMillis / MILLIS_PER_WEEK);
       if (out.length() > 0) {
         out.append(" ");
       }
@@ -43,7 +39,6 @@ public class DurationUtil {
       if (weeks > 1) {
         out.append("s");
       }
-      weeks = (int) (durationMillis / MILLIS_PER_WEEK);
       durationMillis -= weeks * MILLIS_PER_WEEK;
     }
 

@@ -1,18 +1,16 @@
 package com.sudoplay.axion.mapper;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import com.sudoplay.axion.tag.Tag;
+import com.sudoplay.axion.util.TypeResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.sudoplay.axion.tag.Tag;
-import com.sudoplay.axion.util.TypeResolver;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * The {@link NBTObjectMapperRegistry} is responsible for storing the object
- * type to {@link NBTObjectMapper} relationship and providing a lookup method to
- * retrieve the mapper from its type.
+ * The {@link NBTObjectMapperRegistry} is responsible for storing the object type to {@link NBTObjectMapper}
+ * relationship and providing a lookup method to retrieve the mapper from its type.
  *
  * @author Jason Taylor
  */
@@ -20,7 +18,7 @@ public class NBTObjectMapperRegistry implements Cloneable {
 
   private static final Logger LOG = LoggerFactory.getLogger(NBTObjectMapperRegistry.class);
 
-  private Map<Class<?>, NBTObjectMapper<? extends Tag, ?>> typeToMapper = new HashMap<Class<?>, NBTObjectMapper<? extends Tag, ?>>();
+  private Map<Class<?>, NBTObjectMapper<? extends Tag, ?>> typeToMapper = new HashMap<>();
 
   /**
    * Creates a new {@link NBTObjectMapperRegistry}.
@@ -32,10 +30,9 @@ public class NBTObjectMapperRegistry implements Cloneable {
   /**
    * Creates a new {@link NBTObjectMapper} by duplicating the registry given.
    * <p>
-   * Note that this duplicates the backing map, but doesn't actually duplicate
-   * the mappers.
+   * Note that this duplicates the backing map, but doesn't actually duplicate the mappers.
    *
-   * @param toCopy
+   * @param toCopy registry to copy
    */
   protected NBTObjectMapperRegistry(final NBTObjectMapperRegistry toCopy) {
     LOG.debug("Entering NBTObjectMapperRegistry(toCopy=[{}])", toCopy);
@@ -46,16 +43,14 @@ public class NBTObjectMapperRegistry implements Cloneable {
   /**
    * Register a new {@link NBTObjectMapper} for the type given.
    * <p>
-   * If a mapper has already been registered for the type given, an exception is
-   * thrown.
+   * If a mapper has already been registered for the type given, an exception is thrown.
    *
-   * @param type
-   *          the class of the object to map
-   * @param mapper
-   *          the {@link NBTObjectMapper} to register
+   * @param type   the class of the object to map
+   * @param mapper the {@link NBTObjectMapper} to register
    * @throws AxionMapperRegistrationException
    */
-  public <T extends Tag, O> void register(final Class<O> type, final NBTObjectMapper<T, O> mapper) throws AxionMapperRegistrationException {
+  public <T extends Tag, O> void register(final Class<O> type, final NBTObjectMapper<T, O> mapper) throws
+      AxionMapperRegistrationException {
     LOG.debug("Entering register(type=[{}], mapper=[{}])", type, mapper);
     if (typeToMapper.containsKey(type)) {
       LOG.error("Mapper already registered for type [{}]", type);
@@ -70,13 +65,13 @@ public class NBTObjectMapperRegistry implements Cloneable {
    * <p>
    * If no mapper is found, an exception is thrown.
    *
-   * @param type
-   *          the type to get the {@link NBTObjectMapper} for
+   * @param type the type to get the {@link NBTObjectMapper} for
    * @return the {@link NBTObjectMapper} registered for the type given
    * @throws AxionMapperRegistrationException
    */
   @SuppressWarnings("unchecked")
-  public <T extends Tag, O> NBTObjectMapper<T, O> getMapperFor(final Class<O> type) throws AxionMapperRegistrationException {
+  public <T extends Tag, O> NBTObjectMapper<T, O> getMapperFor(final Class<O> type) throws
+      AxionMapperRegistrationException {
     LOG.debug("Entering getMapperFor(type=[{}])", type);
     NBTObjectMapper<T, O> converter = null;
     if (type != null) {
@@ -103,8 +98,7 @@ public class NBTObjectMapperRegistry implements Cloneable {
   }
 
   /**
-   * Duplicates this {@link NBTObjectMapperRegistry} by using a copy
-   * constructor.
+   * Duplicates this {@link NBTObjectMapperRegistry} by using a copy constructor.
    *
    * @see #NBTObjectMapperRegistry(NBTObjectMapperRegistry)
    */

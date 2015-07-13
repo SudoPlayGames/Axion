@@ -1,15 +1,10 @@
 package com.sudoplay.axion.stream;
 
-import java.io.DataOutputStream;
-import java.io.FilterOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 
 /**
- * This is basically a {@link DataOutputStream} modified to support a custom
- * {@link CharacterEncoder}.
- * 
+ * This is basically a {@link DataOutputStream} modified to support a custom {@link CharacterEncoder}.
+ *
  * @author Jason Taylor
  */
 public class AxionOutputStream extends FilterOutputStream {
@@ -18,13 +13,10 @@ public class AxionOutputStream extends FilterOutputStream {
   private byte writeBuffer[] = new byte[8];
 
   /**
-   * Creates a new {@link AxionOutputStream} from the given {@link InputStream}
-   * and {@link CharacterEncoder}.
-   * 
-   * @param newOutputStream
-   *          the {@link OutputStream} to wrap
-   * @param newCharacterEncoder
-   *          the {@link CharacterEncoder} to use
+   * Creates a new {@link AxionOutputStream} from the given {@link InputStream} and {@link CharacterEncoder}.
+   *
+   * @param newOutputStream     the {@link OutputStream} to wrap
+   * @param newCharacterEncoder the {@link CharacterEncoder} to use
    */
   public AxionOutputStream(final OutputStream newOutputStream, final CharacterEncoder newCharacterEncoder) {
     super(newOutputStream);
@@ -33,9 +25,8 @@ public class AxionOutputStream extends FilterOutputStream {
 
   /**
    * Writes a single byte; 0 for false, 1 for true.
-   * 
-   * @param v
-   *          the boolean value to write
+   *
+   * @param v the boolean value to write
    * @throws IOException
    */
   public final void writeBoolean(boolean v) throws IOException {
@@ -44,9 +35,8 @@ public class AxionOutputStream extends FilterOutputStream {
 
   /**
    * Writes a single byte.
-   * 
-   * @param v
-   *          the byte value to write
+   *
+   * @param v the byte value to write
    * @throws IOException
    */
   public final void writeByte(int v) throws IOException {
@@ -55,35 +45,32 @@ public class AxionOutputStream extends FilterOutputStream {
 
   /**
    * Writes a two-byte short.
-   * 
-   * @param v
-   *          the short value to write
+   *
+   * @param v the short value to write
    * @throws IOException
    */
   public final void writeShort(int v) throws IOException {
     out.write((v >>> 8) & 0xFF);
-    out.write((v >>> 0) & 0xFF);
+    out.write(v & 0xFF);
   }
 
   /**
    * Writes a four-byte integer.
-   * 
-   * @param v
-   *          the integer value to write
+   *
+   * @param v the integer value to write
    * @throws IOException
    */
   public final void writeInt(int v) throws IOException {
     out.write((v >>> 24) & 0xFF);
     out.write((v >>> 16) & 0xFF);
     out.write((v >>> 8) & 0xFF);
-    out.write((v >>> 0) & 0xFF);
+    out.write(v & 0xFF);
   }
 
   /**
    * Writes an eight-byte long.
-   * 
-   * @param v
-   *          the long value to write
+   *
+   * @param v the long value to write
    * @throws IOException
    */
   public final void writeLong(long v) throws IOException {
@@ -94,15 +81,14 @@ public class AxionOutputStream extends FilterOutputStream {
     writeBuffer[4] = (byte) (v >>> 24);
     writeBuffer[5] = (byte) (v >>> 16);
     writeBuffer[6] = (byte) (v >>> 8);
-    writeBuffer[7] = (byte) (v >>> 0);
+    writeBuffer[7] = (byte) v;
     out.write(writeBuffer, 0, 8);
   }
 
   /**
    * Writes a four-byte float.
-   * 
-   * @param v
-   *          the float to write
+   *
+   * @param v the float to write
    * @throws IOException
    */
   public final void writeFloat(float v) throws IOException {
@@ -111,9 +97,8 @@ public class AxionOutputStream extends FilterOutputStream {
 
   /**
    * Writes an eight-byte double.
-   * 
-   * @param v
-   *          the double to write
+   *
+   * @param v the double to write
    * @throws IOException
    */
   public final void writeDouble(double v) throws IOException {
@@ -121,10 +106,10 @@ public class AxionOutputStream extends FilterOutputStream {
   }
 
   /**
-   * Writes a string using the {@link CharacterEncoder} set in the constructor,
-   * {@link #AxionOutputStream(OutputStream, CharacterEncoder)}.
-   * 
-   * @param v
+   * Writes a string using the {@link CharacterEncoder} set in the constructor, {@link #AxionOutputStream(OutputStream,
+   * CharacterEncoder)}.
+   *
+   * @param v string
    * @throws IOException
    */
   public final void writeString(String v) throws IOException {

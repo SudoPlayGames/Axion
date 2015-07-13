@@ -3,16 +3,11 @@ package com.sudoplay.axion.spec.tag;
 import com.sudoplay.axion.tag.Tag;
 
 /**
- * @tag.type 8
- * 
- * @tag.name <code>TAG_String</code>
- * 
- * @tag.payload * <code>TAG_Short</code> length<br>
- *              * An array of bytes defining a string in UTF-8 format. The
- *              length of this array is <code>length</code> bytes.
- * 
  * @author Jason Taylor
- * 
+ * @tag.type 8
+ * @tag.name <code>TAG_String</code>
+ * @tag.payload * <code>TAG_Short</code> length<br> * An array of bytes defining a string in UTF-8 format. The length of
+ * this array is <code>length</code> bytes.
  */
 public class TagString extends Tag {
 
@@ -22,9 +17,8 @@ public class TagString extends Tag {
 
   /**
    * Creates a new {@link TagString} with the given name.
-   * 
-   * @param newName
-   *          the {@link Tag} name
+   *
+   * @param newName the {@link Tag} name
    */
   public TagString(final String newName) {
     super(newName);
@@ -32,11 +26,9 @@ public class TagString extends Tag {
 
   /**
    * Creates a new {@link TagString} with the given name and value.
-   * 
-   * @param newName
-   *          the {@link Tag} name
-   * @param newString
-   *          the {@link String} value
+   *
+   * @param newName   the {@link Tag} name
+   * @param newString the {@link String} value
    */
   public TagString(final String newName, final String newString) {
     super(newName);
@@ -45,9 +37,8 @@ public class TagString extends Tag {
 
   /**
    * Sets the value of this {@link TagString} to the given value.
-   * 
-   * @param newString
-   *          the {@link String} value
+   *
+   * @param newString the {@link String} value
    */
   public void set(final String newString) {
     if (newString == null) {
@@ -59,7 +50,7 @@ public class TagString extends Tag {
 
   /**
    * Returns the value of this {@link TagString}.
-   * 
+   *
    * @return the value of this {@link TagString}
    */
   public String get() {

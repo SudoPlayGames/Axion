@@ -3,14 +3,10 @@ package com.sudoplay.axion.spec.tag;
 import com.sudoplay.axion.tag.Tag;
 
 /**
- * @tag.type 1
- * 
- * @tag.name <code>TAG_Byte</code>
- * 
- * @tag.payload * A single signed byte (8 bits)
- * 
  * @author Jason Taylor
- * 
+ * @tag.type 1
+ * @tag.name <code>TAG_Byte</code>
+ * @tag.payload * A single signed byte (8 bits)
  */
 public class TagByte extends Tag {
 
@@ -18,9 +14,8 @@ public class TagByte extends Tag {
 
   /**
    * Creates a new {@link TagByte} with the given name.
-   * 
-   * @param newName
-   *          the {@link Tag} name
+   *
+   * @param newName the {@link Tag} name
    */
   public TagByte(final String newName) {
     super(newName);
@@ -28,9 +23,8 @@ public class TagByte extends Tag {
 
   /**
    * Creates a new {@link TagByte} with no name and the given value.
-   * 
-   * @param newByte
-   *          the {@link Byte} value
+   *
+   * @param newByte the {@link Byte} value
    */
   public TagByte(final byte newByte) {
     this(null, newByte);
@@ -38,11 +32,9 @@ public class TagByte extends Tag {
 
   /**
    * Creates a new {@link TagByte} with the given name and value.
-   * 
-   * @param newName
-   *          the {@link Tag} name
-   * @param newByte
-   *          the {@link Byte} value
+   *
+   * @param newName the {@link Tag} name
+   * @param newByte the {@link Byte} value
    */
   public TagByte(final String newName, final byte newByte) {
     super(newName);
@@ -51,9 +43,8 @@ public class TagByte extends Tag {
 
   /**
    * Sets the value of this {@link TagByte} to the given value.
-   * 
-   * @param newByte
-   *          the {@link Byte} value
+   *
+   * @param newByte the {@link Byte} value
    */
   public void set(final byte newByte) {
     data = newByte;
@@ -61,7 +52,7 @@ public class TagByte extends Tag {
 
   /**
    * Returns the value of this {@link TagByte}.
-   * 
+   *
    * @return the value of this {@link TagByte}
    */
   public byte get() {
@@ -85,9 +76,7 @@ public class TagByte extends Tag {
     if (getClass() != obj.getClass())
       return false;
     TagByte other = (TagByte) obj;
-    if (data != other.data)
-      return false;
-    return true;
+    return data == other.data;
   }
 
   @Override

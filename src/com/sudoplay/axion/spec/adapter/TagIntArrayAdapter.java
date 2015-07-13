@@ -1,22 +1,21 @@
 package com.sudoplay.axion.spec.adapter;
 
-import java.io.IOException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.sudoplay.axion.registry.TagAdapter;
 import com.sudoplay.axion.spec.tag.TagIntArray;
 import com.sudoplay.axion.spec.tag.TagList;
 import com.sudoplay.axion.stream.AxionInputStream;
 import com.sudoplay.axion.stream.AxionOutputStream;
 import com.sudoplay.axion.tag.Tag;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
 
 /**
  * The {@link TagAdapter} used to read and write a {@link TagIntArray}.
  * <p>
  * Part of the original specification.
- * 
+ *
  * @author Jason Taylor
  */
 public class TagIntArrayAdapter extends TagAdapter<TagIntArray> {
@@ -29,8 +28,8 @@ public class TagIntArrayAdapter extends TagAdapter<TagIntArray> {
     int[] data = (tag.get());
     int len = data.length;
     out.writeInt(len);
-    for (int i = 0; i < len; i++) {
-      out.writeInt(data[i]);
+    for (int aData : data) {
+      out.writeInt(aData);
     }
     LOG.trace("Leaving write()");
   }

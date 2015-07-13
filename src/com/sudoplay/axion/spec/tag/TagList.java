@@ -1,10 +1,5 @@
 package com.sudoplay.axion.spec.tag;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-
 import com.sudoplay.axion.Axion;
 import com.sudoplay.axion.mapper.AxionMapperRegistrationException;
 import com.sudoplay.axion.mapper.NBTObjectMapper;
@@ -15,21 +10,19 @@ import com.sudoplay.axion.tag.AxionInvalidTagException;
 import com.sudoplay.axion.tag.ContainerTag;
 import com.sudoplay.axion.tag.Tag;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
- * @tag.type 9
- * 
- * @tag.name <code>TAG_List</code>
- * 
- * @tag.payload * <code>TAG_Byte</code> tagId<br>
- *              * <code>TAG_Int</code> length<br>
- *              * A sequential list of Tags (not Named Tags), of type
- *              <code>typeId</code>. The length of this array is
- *              <code>length</code> Tags.
- * 
- * @tag.note All tags share the same type.
- * 
  * @author Jason Taylor
- * 
+ * @tag.type 9
+ * @tag.name <code>TAG_List</code>
+ * @tag.payload * <code>TAG_Byte</code> tagId<br> * <code>TAG_Int</code> length<br> * A sequential list of Tags (not
+ * Named Tags), of type <code>typeId</code>. The length of this array is <code>length</code> Tags.
+ * @tag.note All tags share the same type.
  */
 public class TagList extends ContainerTag {
 
@@ -41,52 +34,41 @@ public class TagList extends ContainerTag {
   private final Class<? extends Tag> type;
 
   /**
-   * Creates a new {@link TagList} of the given type with no name and an empty
-   * backing list.
-   * 
-   * @param tagClass
-   *          the list type
+   * Creates a new {@link TagList} of the given type with no name and an empty backing list.
+   *
+   * @param tagClass the list type
    */
   public TagList(final Class<? extends Tag> tagClass) {
-    this(tagClass, null, new ArrayList<Tag>());
+    this(tagClass, null, new ArrayList<>());
   }
 
   /**
-   * Creates a new {@link TagList} of the given type with no name and a copy of
-   * the given list as the backing list.
-   * 
-   * @param tagClass
-   *          the list type
-   * @param newList
-   *          the list
+   * Creates a new {@link TagList} of the given type with no name and a copy of the given list as the backing list.
+   *
+   * @param tagClass the list type
+   * @param newList  the list
    */
   public TagList(final Class<? extends Tag> tagClass, final List<Tag> newList) {
     this(tagClass, null, newList);
   }
 
   /**
-   * Creates a new {@link TagList} of the given type with the given name and an
-   * empty backing list.
-   * 
-   * @param tagClass
-   *          the list type
-   * @param newName
-   *          the {@link Tag} name
+   * Creates a new {@link TagList} of the given type with the given name and an empty backing list.
+   *
+   * @param tagClass the list type
+   * @param newName  the {@link Tag} name
    */
   public TagList(final Class<? extends Tag> tagClass, final String newName) {
-    this(tagClass, newName, new ArrayList<Tag>());
+    this(tagClass, newName, new ArrayList<>());
   }
 
   /**
-   * Creates a new {@link TagList} of the given type with the given name and a
-   * copy of the given list as the backing list.
-   * 
-   * @param tagClass
-   *          the list type
-   * @param newName
-   *          the {@link Tag} name
-   * @param newList
-   *          the list
+   * Creates a new {@link TagList} of the given type with the given name and a copy of the given list as the backing
+   * list.
+   *
+   * @param tagClass the list type
+   * @param newName  the {@link Tag} name
+   * @param newList  the list
    */
   public TagList(final Class<? extends Tag> tagClass, final String newName, final List<Tag> newList) {
     super(newName);
@@ -103,43 +85,33 @@ public class TagList extends ContainerTag {
   }
 
   /**
-   * Adds tag to the end of the list. If the tag to be added does not match this
-   * list's type, an exception is thrown.
-   * 
-   * @param tag
-   *          the {@link Tag} to add
+   * Adds tag to the end of the list. If the tag to be added does not match this list's type, an exception is thrown.
+   *
+   * @param tag the {@link Tag} to add
    */
   public void add(final Tag tag) {
     assertValid(tag).addTo(this);
   }
 
   /**
-   * Converts the value given into a tag using the {@link TagConverter}
-   * registered for the value's type and adds the new tag to this
-   * {@link TagList}.
-   * 
-   * @param value
-   *          the value to convert
-   * @param axion
-   *          an {@link Axion} instance
-   * @throws AxionTagRegistrationException
-   *           if no {@link TagConverter} is registered for the value's type
+   * Converts the value given into a tag using the {@link TagConverter} registered for the value's type and adds the new
+   * tag to this {@link TagList}.
+   *
+   * @param value the value to convert
+   * @param axion an {@link Axion} instance
+   * @throws AxionTagRegistrationException if no {@link TagConverter} is registered for the value's type
    */
   public <V> void addValue(final V value, final Axion axion) throws AxionTagRegistrationException {
     add(axion.createTagWithConverter(null, value));
   }
 
   /**
-   * Creates a tag from the mappable value given using the
-   * {@link NBTObjectMapper} registered for the value's type and adds the new
-   * tag to this {@link TagList}.
-   * 
-   * @param value
-   *          the value to map
-   * @param axion
-   *          an {@link Axion} instance
-   * @throws AxionMapperRegistrationException
-   *           if no {@link NBTObjectMapper} is registered for the value's type
+   * Creates a tag from the mappable value given using the {@link NBTObjectMapper} registered for the value's type and
+   * adds the new tag to this {@link TagList}.
+   *
+   * @param value the value to map
+   * @param axion an {@link Axion} instance
+   * @throws AxionMapperRegistrationException if no {@link NBTObjectMapper} is registered for the value's type
    */
   public <V> void addMappableValue(final V value, final Axion axion) throws AxionMapperRegistrationException {
     add(axion.createTagWithMapper(null, value));
@@ -147,9 +119,8 @@ public class TagList extends ContainerTag {
 
   /**
    * Removes a {@link Tag} from this list.
-   * 
-   * @param tag
-   *          the {@link Tag} to remove
+   *
+   * @param tag the {@link Tag} to remove
    * @return true if the given {@link Tag} was found and removed
    */
   public boolean remove(final Tag tag) {
@@ -162,9 +133,8 @@ public class TagList extends ContainerTag {
 
   /**
    * Removes a {@link Tag} from this list via its index.
-   * 
-   * @param index
-   *          the index of the {@link Tag} to remove
+   *
+   * @param index the index of the {@link Tag} to remove
    * @return the {@link Tag} removed
    */
   public Tag remove(final int index) {
@@ -176,12 +146,10 @@ public class TagList extends ContainerTag {
   /**
    * Checks if this {@link TagList} contains the {@link Tag} passed in.
    * <p>
-   * Since names are stripped of tags in lists, this method compares values
-   * only; tags with different names and identical values will match.
-   * 
-   * @param tag
-   *          tag whose presence in this list is to be tested
-   * 
+   * Since names are stripped of tags in lists, this method compares values only; tags with different names and
+   * identical values will match.
+   *
+   * @param tag tag whose presence in this list is to be tested
    * @return true if this list contains a tag with a matching value
    */
   @Override
@@ -208,7 +176,7 @@ public class TagList extends ContainerTag {
 
   @Override
   public void clear() {
-    List<Tag> toRemove = new ArrayList<Tag>(data);
+    List<Tag> toRemove = new ArrayList<>(data);
     for (Tag child : toRemove) {
       child.removeFromParent();
     }
@@ -216,7 +184,7 @@ public class TagList extends ContainerTag {
 
   /**
    * Returns the type of this {@link TagList}.
-   * 
+   *
    * @return the type of this {@link TagList}
    */
   public Class<? extends Tag> getType() {
@@ -225,7 +193,7 @@ public class TagList extends ContainerTag {
 
   /**
    * Returns an unmodifiable view of the backing list.
-   * 
+   *
    * @return an unmodifiable view of the backing list
    */
   public List<Tag> getAsList() {
@@ -234,9 +202,8 @@ public class TagList extends ContainerTag {
 
   /**
    * Returns a {@link Tag} from the backing list at the index given.
-   * 
-   * @param index
-   *          the index of the {@link Tag} to get
+   *
+   * @param index the index of the {@link Tag} to get
    * @return a {@link Tag} from the backing list at the index given
    */
   @SuppressWarnings("unchecked")
@@ -245,36 +212,29 @@ public class TagList extends ContainerTag {
   }
 
   /**
-   * Uses the registered {@link TagConverter} for the type of the tag requested
-   * and returns the converted value of the {@link Tag} with the index given.
-   * 
-   * @param index
-   *          the index of the {@link Tag} to get
-   * @param axion
-   *          an {@link Axion} instance
+   * Uses the registered {@link TagConverter} for the type of the tag requested and returns the converted value of the
+   * {@link Tag} with the index given.
+   *
+   * @param index the index of the {@link Tag} to get
+   * @param axion an {@link Axion} instance
    * @return the converted value of the {@link Tag} with the index given
-   * @throws AxionTagRegistrationException
-   *           if no {@link TagConverter} is registered for the tag requested
+   * @throws AxionTagRegistrationException if no {@link TagConverter} is registered for the tag requested
    */
   public <V> V getValue(final int index, final Axion axion) throws AxionTagRegistrationException {
     return axion.convertToValue(data.get(index));
   }
 
   /**
-   * Uses the registered {@link NBTObjectMapper} for the type given to return a
-   * new object from the tag requested.
-   * 
-   * @param index
-   *          the index of the {@link Tag} to get
-   * @param type
-   *          the class of the object to return
-   * @param axion
-   *          an {@link Axion} instance
+   * Uses the registered {@link NBTObjectMapper} for the type given to return a new object from the tag requested.
+   *
+   * @param index the index of the {@link Tag} to get
+   * @param type  the class of the object to return
+   * @param axion an {@link Axion} instance
    * @return a new object from the tag requested
-   * @throws AxionMapperRegistrationException
-   *           if no {@link NBTObjectMapper} is registered for the type given
+   * @throws AxionMapperRegistrationException if no {@link NBTObjectMapper} is registered for the type given
    */
-  public <V> V getValue(final int index, final Class<V> type, final Axion axion) throws AxionMapperRegistrationException {
+  public <V> V getValue(final int index, final Class<V> type, final Axion axion) throws
+      AxionMapperRegistrationException {
     return axion.createObjectFrom(data.get(index), type);
   }
 
@@ -321,28 +281,26 @@ public class TagList extends ContainerTag {
   @Override
   protected void onChildNameChange(final String oldName, final String newName) throws AxionIllegalTagNameException {
     if (newName != null && !newName.isEmpty()) {
-      throw new AxionIllegalTagNameException("Tag belongs to a " + TagList.class.getSimpleName() + " and can not be named");
+      throw new AxionIllegalTagNameException("Tag belongs to a " + TagList.class.getSimpleName() + " and can not be " +
+          "named");
     }
   }
 
   @Override
   public TagList clone() {
     if (data.isEmpty()) {
-      return new TagList(type, getName(), new ArrayList<Tag>());
+      return new TagList(type, getName(), new ArrayList<>());
     } else {
-      List<Tag> newList = new ArrayList<Tag>(data.size());
-      for (Tag tag : data) {
-        newList.add(tag.clone());
-      }
+      List<Tag> newList = new ArrayList<>(data.size());
+      newList.addAll(data.stream().map(Tag::clone).collect(Collectors.toList()));
       return new TagList(type, getName(), newList);
     }
   }
 
   /**
    * Checks if the {@link Tag} given is not null and of this list's type.
-   * 
-   * @param tag
-   *          the {@link Tag} to check
+   *
+   * @param tag the {@link Tag} to check
    * @return the {@link Tag} given
    * @throws AxionInvalidTagException
    */
@@ -350,7 +308,8 @@ public class TagList extends ContainerTag {
     if (tag == null) {
       throw new AxionInvalidTagException(this.toString() + " can't contain null tags");
     } else if (type != tag.getClass()) {
-      throw new AxionInvalidTagException("Can't add tag of type [" + tag.getClass().getSimpleName() + "] to " + this.toString());
+      throw new AxionInvalidTagException("Can't add tag of type [" + tag.getClass().getSimpleName() + "] to " + this
+          .toString());
     }
     return tag;
   }

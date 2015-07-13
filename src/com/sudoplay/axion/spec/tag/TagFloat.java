@@ -3,15 +3,10 @@ package com.sudoplay.axion.spec.tag;
 import com.sudoplay.axion.tag.Tag;
 
 /**
- * @tag.type 5
- * 
- * @tag.name <code>TAG_Float</code>
- * 
- * @tag.payload * A floating point value (32 bits, big endian, IEEE 754-2008,
- *              binary32).
- * 
  * @author Jason Taylor
- * 
+ * @tag.type 5
+ * @tag.name <code>TAG_Float</code>
+ * @tag.payload * A floating point value (32 bits, big endian, IEEE 754-2008, binary32).
  */
 public class TagFloat extends Tag {
 
@@ -19,9 +14,8 @@ public class TagFloat extends Tag {
 
   /**
    * Creates a new {@link TagFloat} with the given name.
-   * 
-   * @param newName
-   *          the {@link Tag} name
+   *
+   * @param newName the {@link Tag} name
    */
   public TagFloat(final String newName) {
     super(newName);
@@ -29,9 +23,8 @@ public class TagFloat extends Tag {
 
   /**
    * Creates a new {@link TagFloat} with no name and the given value.
-   * 
-   * @param newFloat
-   *          the {@link Float} value
+   *
+   * @param newFloat the {@link Float} value
    */
   public TagFloat(final float newFloat) {
     this(null, newFloat);
@@ -39,11 +32,9 @@ public class TagFloat extends Tag {
 
   /**
    * Creates a new {@link TagFloat} with the given name and value.
-   * 
-   * @param newName
-   *          the {@link Tag} name
-   * @param newFloat
-   *          the {@link Float} value
+   *
+   * @param newName  the {@link Tag} name
+   * @param newFloat the {@link Float} value
    */
   public TagFloat(final String newName, final float newFloat) {
     super(newName);
@@ -52,9 +43,8 @@ public class TagFloat extends Tag {
 
   /**
    * Sets the value of this {@link TagFloat} to the given value.
-   * 
-   * @param newFloat
-   *          the {@link Float} value
+   *
+   * @param newFloat the {@link Float} value
    */
   public void set(final float newFloat) {
     data = newFloat;
@@ -62,7 +52,7 @@ public class TagFloat extends Tag {
 
   /**
    * Returns the value of this {@link TagFloat}.
-   * 
+   *
    * @return the value of this {@link TagFloat}
    */
   public float get() {
@@ -86,9 +76,7 @@ public class TagFloat extends Tag {
     if (getClass() != obj.getClass())
       return false;
     TagFloat other = (TagFloat) obj;
-    if (Float.floatToIntBits(data) != Float.floatToIntBits(other.data))
-      return false;
-    return true;
+    return Float.floatToIntBits(data) == Float.floatToIntBits(other.data);
   }
 
   @Override

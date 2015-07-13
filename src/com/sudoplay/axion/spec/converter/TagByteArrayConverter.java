@@ -7,7 +7,7 @@ import com.sudoplay.axion.spec.tag.TagByteArray;
  * The {@link TagConverter} used to convert to and from a {@link TagByteArray}.
  * <p>
  * Part of the original specification.
- * 
+ *
  * @author Jason Taylor
  */
 public class TagByteArrayConverter extends TagConverter<TagByteArray, byte[]> {

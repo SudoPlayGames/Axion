@@ -1,20 +1,15 @@
 package com.sudoplay.axion.spec.tag;
 
-import java.util.Arrays;
-
 import com.sudoplay.axion.tag.Tag;
 
+import java.util.Arrays;
+
 /**
- * @tag.type 7
- * 
- * @tag.name <code>TAG_Byte_Array</code>
- * 
- * @tag.payload * <code>TAG_Int</code> length<br>
- *              * An array of bytes of unspecified format. The length of this
- *              array is <code>length</code> bytes.
- * 
  * @author Jason Taylor
- * 
+ * @tag.type 7
+ * @tag.name <code>TAG_Byte_Array</code>
+ * @tag.payload * <code>TAG_Int</code> length<br> * An array of bytes of unspecified format. The length of this array is
+ * <code>length</code> bytes.
  */
 public class TagByteArray extends Tag {
 
@@ -22,9 +17,8 @@ public class TagByteArray extends Tag {
 
   /**
    * Creates a new {@link TagByteArray} with the given name.
-   * 
-   * @param newName
-   *          the {@link Tag} name
+   *
+   * @param newName the {@link Tag} name
    */
   public TagByteArray(final String newName) {
     this(newName, new byte[0]);
@@ -32,9 +26,8 @@ public class TagByteArray extends Tag {
 
   /**
    * Creates a new {@link TagByteArray} with no name and the given value.
-   * 
-   * @param newByteArray
-   *          the {@link Byte} array value
+   *
+   * @param newByteArray the {@link Byte} array value
    */
   public TagByteArray(final byte[] newByteArray) {
     this(null, newByteArray);
@@ -42,11 +35,9 @@ public class TagByteArray extends Tag {
 
   /**
    * Creates a new {@link TagByteArray} with the given name and value.
-   * 
-   * @param newName
-   *          the {@link Tag} name
-   * @param newByteArray
-   *          the {@link Byte} array value
+   *
+   * @param newName      the {@link Tag} name
+   * @param newByteArray the {@link Byte} array value
    */
   public TagByteArray(final String newName, final byte[] newByteArray) {
     super(newName);
@@ -55,9 +46,8 @@ public class TagByteArray extends Tag {
 
   /**
    * Sets the value of this {@link TagByteArray} to a copy of the given value.
-   * 
-   * @param newByteArray
-   *          the {@link Byte} array value
+   *
+   * @param newByteArray the {@link Byte} array value
    */
   public void set(final byte[] newByteArray) {
     if (newByteArray == null) {
@@ -68,7 +58,7 @@ public class TagByteArray extends Tag {
 
   /**
    * Returns a copy of the value of this {@link TagByteArray}.
-   * 
+   *
    * @return a copy of the value of this {@link TagByteArray}
    */
   public byte[] get() {
@@ -92,9 +82,7 @@ public class TagByteArray extends Tag {
     if (getClass() != obj.getClass())
       return false;
     TagByteArray other = (TagByteArray) obj;
-    if (!Arrays.equals(data, other.data))
-      return false;
-    return true;
+    return Arrays.equals(data, other.data);
   }
 
   @Override

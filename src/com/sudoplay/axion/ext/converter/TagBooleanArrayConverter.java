@@ -4,11 +4,10 @@ import com.sudoplay.axion.ext.tag.TagBooleanArray;
 import com.sudoplay.axion.registry.TagConverter;
 
 /**
- * The {@link TagConverter} used to convert to and from a
- * {@link TagBooleanArray}.
+ * The {@link TagConverter} used to convert to and from a {@link TagBooleanArray}.
  * <p>
  * Part of the extended, custom specification.
- * 
+ *
  * @author Jason Taylor
  */
 public class TagBooleanArrayConverter extends TagConverter<TagBooleanArray, boolean[]> {

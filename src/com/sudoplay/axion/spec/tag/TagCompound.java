@@ -1,13 +1,5 @@
 package com.sudoplay.axion.spec.tag;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import com.sudoplay.axion.Axion;
 import com.sudoplay.axion.mapper.AxionMapperRegistrationException;
 import com.sudoplay.axion.mapper.NBTObjectMapper;
@@ -18,23 +10,18 @@ import com.sudoplay.axion.tag.AxionInvalidTagException;
 import com.sudoplay.axion.tag.ContainerTag;
 import com.sudoplay.axion.tag.Tag;
 
+import java.util.*;
+import java.util.Map.Entry;
+
 /**
- * @tag.type 10
- * 
- * @tag.name <code>TAG_Compound</code>
- * 
- * @tag.payload * A sequential list of Named Tags. This array keeps going until
- *              a <code>TAG_End</code> is found.<br>
- *              * <code>TAG_End</code> end
- * 
- * @tag.note If there's a nested <code>TAG_Compound</code> within this tag, that
- *           one will also have a <code>TAG_End</code>, so simply reading until
- *           the next <code>TAG_End</code> will not work. The names of the named
- *           tags have to be unique within each <code>TAG_Compound</code> The
- *           order of the tags is not guaranteed.
- * 
  * @author Jason Taylor
- * 
+ * @tag.type 10
+ * @tag.name <code>TAG_Compound</code>
+ * @tag.payload * A sequential list of Named Tags. This array keeps going until a <code>TAG_End</code> is found.<br> *
+ * <code>TAG_End</code> end
+ * @tag.note If there's a nested <code>TAG_Compound</code> within this tag, that one will also have a
+ * <code>TAG_End</code>, so simply reading until the next <code>TAG_End</code> will not work. The names of the named
+ * tags have to be unique within each <code>TAG_Compound</code> The order of the tags is not guaranteed.
  */
 public class TagCompound extends ContainerTag {
 
@@ -48,52 +35,44 @@ public class TagCompound extends ContainerTag {
   }
 
   /**
-   * Creates a new {@link TagCompound} with no name and a copy of the map given
-   * as the backing map.
-   * 
-   * @param newMap
-   *          the {@link Map} value
+   * Creates a new {@link TagCompound} with no name and a copy of the map given as the backing map.
+   *
+   * @param newMap the {@link Map} value
    */
   public TagCompound(final Map<String, Tag> newMap) {
     this(null, newMap);
   }
 
   /**
-   * Creates a new {@link TagCompound} with the given name and an empty backing
-   * map.
-   * 
-   * @param newName
-   *          the {@link Tag} name
+   * Creates a new {@link TagCompound} with the given name and an empty backing map.
+   *
+   * @param newName the {@link Tag} name
    */
   public TagCompound(final String newName) {
     this(newName, null);
   }
 
   /**
-   * Creates a new {@link TagCompound} with the given name and a copy of the map
-   * given as the backing map.
-   * 
-   * @param newName
-   *          the {@link Tag} name
-   * @param newMap
-   *          the {@link Map} value
+   * Creates a new {@link TagCompound} with the given name and a copy of the map given as the backing map.
+   *
+   * @param newName the {@link Tag} name
+   * @param newMap  the {@link Map} value
    */
   public TagCompound(final String newName, final Map<String, Tag> newMap) {
     super(newName);
     if (newMap == null) {
-      data = new HashMap<String, Tag>();
+      data = new HashMap<>();
     } else {
-      data = new HashMap<String, Tag>(newMap);
-      Iterator<Entry<String, Tag>> it = data.entrySet().iterator();
-      while (it.hasNext()) {
-        assertValid(it.next().getValue());
+      data = new HashMap<>(newMap);
+      for (Entry<String, Tag> stringTagEntry : data.entrySet()) {
+        assertValid(stringTagEntry.getValue());
       }
     }
   }
 
   /**
    * Returns an unmodifiable {@link Iterator} for the backing map's values.
-   * 
+   *
    * @return an unmodifiable {@link Iterator} for the backing map's values
    */
   @Override
@@ -103,7 +82,7 @@ public class TagCompound extends ContainerTag {
 
   @Override
   public void clear() {
-    List<Tag> toRemove = new ArrayList<Tag>(data.values());
+    List<Tag> toRemove = new ArrayList<>(data.values());
     for (Tag child : toRemove) {
       child.removeFromParent();
     }
@@ -116,15 +95,12 @@ public class TagCompound extends ContainerTag {
 
   @Override
   public boolean contains(final Tag tag) {
-    if (tag == null) {
-      return false;
-    }
-    return data.values().contains(tag);
+    return tag != null && data.values().contains(tag);
   }
 
   /**
    * Returns an unmodifiable view of this {@link TagCompound}'s backing map.
-   * 
+   *
    * @return an unmodifiable view of this {@link TagCompound}'s backing map
    */
   public Map<String, Tag> getAsMap() {
@@ -133,9 +109,8 @@ public class TagCompound extends ContainerTag {
 
   /**
    * Returns true if the backing map contains the key given.
-   * 
-   * @param name
-   *          the name of the {@link Tag} to look for
+   *
+   * @param name the name of the {@link Tag} to look for
    * @return true if the backing map contains the key given
    */
   public boolean containsKey(final String name) {
@@ -144,9 +119,8 @@ public class TagCompound extends ContainerTag {
 
   /**
    * Removes and returns the tag with the name given.
-   * 
-   * @param name
-   *          the name of the {@link Tag} to remove
+   *
+   * @param name the name of the {@link Tag} to remove
    * @return the tag with the name given
    */
   public Tag remove(final String name) {
@@ -163,9 +137,8 @@ public class TagCompound extends ContainerTag {
 
   /**
    * Returns the {@link Tag} with the name given.
-   * 
-   * @param name
-   *          the name of the {@link Tag} to get
+   *
+   * @param name the name of the {@link Tag} to get
    * @return the {@link Tag} with the name given
    */
   @SuppressWarnings("unchecked")
@@ -174,46 +147,37 @@ public class TagCompound extends ContainerTag {
   }
 
   /**
-   * Uses the registered {@link TagConverter} for the type of the tag requested
-   * and returns the converted value of the {@link Tag} with the name given.
-   * 
-   * @param name
-   *          the name of the {@link Tag} to get
-   * @param axion
-   *          an {@link Axion} instance
+   * Uses the registered {@link TagConverter} for the type of the tag requested and returns the converted value of the
+   * {@link Tag} with the name given.
+   *
+   * @param name  the name of the {@link Tag} to get
+   * @param axion an {@link Axion} instance
    * @return the converted value of the {@link Tag} with the name given
-   * @throws AxionTagRegistrationException
-   *           if no {@link TagConverter} is registered for the tag requested
+   * @throws AxionTagRegistrationException if no {@link TagConverter} is registered for the tag requested
    */
   public <V> V getValue(final String name, final Axion axion) throws AxionTagRegistrationException {
     return axion.convertToValue(data.get(name));
   }
 
   /**
-   * Uses the registered {@link NBTObjectMapper} for the type given to return a
-   * new object from the tag requested.
-   * 
-   * @param name
-   *          the name of the {@link Tag} to get
-   * @param type
-   *          the class of the object to return
-   * @param axion
-   *          an {@link Axion} instance
+   * Uses the registered {@link NBTObjectMapper} for the type given to return a new object from the tag requested.
+   *
+   * @param name  the name of the {@link Tag} to get
+   * @param type  the class of the object to return
+   * @param axion an {@link Axion} instance
    * @return a new object from the tag requested
-   * @throws AxionMapperRegistrationException
-   *           if no {@link NBTObjectMapper} is registered for the type given
+   * @throws AxionMapperRegistrationException if no {@link NBTObjectMapper} is registered for the type given
    */
-  public <V> V getValue(final String name, final Class<V> type, final Axion axion) throws AxionMapperRegistrationException {
+  public <V> V getValue(final String name, final Class<V> type, final Axion axion) throws
+      AxionMapperRegistrationException {
     return axion.createObjectFrom(data.get(name), type);
   }
 
   /**
-   * Adds a {@link Tag} to this {@link TagCompound}. If a tag exists in this
-   * compound with the same name as the given tag, the old tag will be replaced
-   * by the new tag.
-   * 
-   * @param tag
-   *          the {@link Tag} to add
+   * Adds a {@link Tag} to this {@link TagCompound}. If a tag exists in this compound with the same name as the given
+   * tag, the old tag will be replaced by the new tag.
+   *
+   * @param tag the {@link Tag} to add
    */
   public void put(final Tag tag) {
     assertValid(tag);
@@ -223,49 +187,38 @@ public class TagCompound extends ContainerTag {
 
   /**
    * Adds a {@link Tag} to this {@link TagCompound} with the name given.
-   * 
-   * @param name
-   *          name of the {@link Tag}
-   * @param tag
-   *          the {@link Tag} to add
+   *
+   * @param name name of the {@link Tag}
+   * @param tag  the {@link Tag} to add
    */
   public void put(final String name, final Tag tag) {
     put(tag.setName(name));
   }
 
   /**
-   * Converts the value given into a tag using the {@link TagConverter}
-   * registered for the value's type and adds the new tag to this
-   * {@link TagCompound}.
-   * 
-   * @param name
-   *          name of the {@link Tag}
-   * @param value
-   *          the value to convert
-   * @param axion
-   *          an {@link Axion} instance
-   * @throws AxionTagRegistrationException
-   *           if no {@link TagConverter} is registered for the value's type
+   * Converts the value given into a tag using the {@link TagConverter} registered for the value's type and adds the new
+   * tag to this {@link TagCompound}.
+   *
+   * @param name  name of the {@link Tag}
+   * @param value the value to convert
+   * @param axion an {@link Axion} instance
+   * @throws AxionTagRegistrationException if no {@link TagConverter} is registered for the value's type
    */
   public <V> void putValue(final String name, final V value, final Axion axion) throws AxionTagRegistrationException {
     put(axion.createTagWithConverter(name, value));
   }
 
   /**
-   * Creates a tag from the mappable value given using the
-   * {@link NBTObjectMapper} registered for the value's type and adds the new
-   * tag to this {@link TagCompound}.
-   * 
-   * @param name
-   *          name of the {@link Tag}
-   * @param value
-   *          the value to map
-   * @param axion
-   *          an {@link Axion} instance
-   * @throws AxionMapperRegistrationException
-   *           if no {@link NBTObjectMapper} is registered for the value's type
+   * Creates a tag from the mappable value given using the {@link NBTObjectMapper} registered for the value's type and
+   * adds the new tag to this {@link TagCompound}.
+   *
+   * @param name  name of the {@link Tag}
+   * @param value the value to map
+   * @param axion an {@link Axion} instance
+   * @throws AxionMapperRegistrationException if no {@link NBTObjectMapper} is registered for the value's type
    */
-  public <V> void putMappableValue(final String name, final V value, final Axion axion) throws AxionMapperRegistrationException {
+  public <V> void putMappableValue(final String name, final V value, final Axion axion) throws
+      AxionMapperRegistrationException {
     put(axion.createTagWithMapper(name, value));
   }
 
@@ -281,9 +234,8 @@ public class TagCompound extends ContainerTag {
 
   /**
    * Checks if the {@link Tag} given is not null and has a name.
-   * 
-   * @param tag
-   *          the {@link Tag} to check
+   *
+   * @param tag the {@link Tag} to check
    * @return the {@link Tag} given
    * @throws AxionInvalidTagException
    */
@@ -324,7 +276,8 @@ public class TagCompound extends ContainerTag {
   @Override
   protected void onChildNameChange(final String oldName, final String newName) throws AxionIllegalTagNameException {
     if (newName == null || newName.isEmpty()) {
-      throw new AxionIllegalTagNameException("Tag belongs to [" + this.toString() + "] and can not have an empty or null name");
+      throw new AxionIllegalTagNameException("Tag belongs to [" + this.toString() + "] and can not have an empty or " +
+          "null name");
     }
     data.put(newName, data.remove(oldName));
   }

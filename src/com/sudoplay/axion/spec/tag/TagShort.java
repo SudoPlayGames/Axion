@@ -3,14 +3,10 @@ package com.sudoplay.axion.spec.tag;
 import com.sudoplay.axion.tag.Tag;
 
 /**
- * @tag.type 2
- * 
- * @tag.name <code>TAG_Short</code>
- * 
- * @tag.payload * A signed short (16 bits, big endian).
- * 
  * @author Jason Taylor
- * 
+ * @tag.type 2
+ * @tag.name <code>TAG_Short</code>
+ * @tag.payload * A signed short (16 bits, big endian).
  */
 public class TagShort extends Tag {
 
@@ -18,9 +14,8 @@ public class TagShort extends Tag {
 
   /**
    * Creates a new {@link TagShort} with the given name.
-   * 
-   * @param newName
-   *          the {@link Tag} name
+   *
+   * @param newName the {@link Tag} name
    */
   public TagShort(final String newName) {
     super(newName);
@@ -28,9 +23,8 @@ public class TagShort extends Tag {
 
   /**
    * Creates a new {@link TagShort} with no name and the given value.
-   * 
-   * @param newShort
-   *          the {@link Short} value
+   *
+   * @param newShort the {@link Short} value
    */
   public TagShort(final short newShort) {
     this(null, newShort);
@@ -38,11 +32,9 @@ public class TagShort extends Tag {
 
   /**
    * Creates a new {@link TagShort} with the given name and value.
-   * 
-   * @param newName
-   *          the {@link Tag} name
-   * @param newShort
-   *          the {@link Short} value
+   *
+   * @param newName  the {@link Tag} name
+   * @param newShort the {@link Short} value
    */
   public TagShort(final String newName, final short newShort) {
     super(newName);
@@ -51,9 +43,8 @@ public class TagShort extends Tag {
 
   /**
    * Sets the value of this {@link TagShort} to the given value.
-   * 
-   * @param newShort
-   *          the {@link Short} value
+   *
+   * @param newShort the {@link Short} value
    */
   public void set(final short newShort) {
     data = newShort;
@@ -61,7 +52,7 @@ public class TagShort extends Tag {
 
   /**
    * Returns the value of this {@link TagShort}.
-   * 
+   *
    * @return the value of this {@link TagShort}
    */
   public short get() {
@@ -85,9 +76,7 @@ public class TagShort extends Tag {
     if (getClass() != obj.getClass())
       return false;
     TagShort other = (TagShort) obj;
-    if (data != other.data)
-      return false;
-    return true;
+    return data == other.data;
   }
 
   @Override

@@ -4,11 +4,10 @@ import com.sudoplay.axion.ext.tag.TagDoubleArray;
 import com.sudoplay.axion.registry.TagConverter;
 
 /**
- * The {@link TagConverter} used to convert to and from a {@link TagDoubleArray}
- * .
+ * The {@link TagConverter} used to convert to and from a {@link TagDoubleArray} .
  * <p>
  * Part of the extended, custom specification.
- * 
+ *
  * @author Jason Taylor
  */
 public class TagDoubleArrayConverter extends TagConverter<TagDoubleArray, double[]> {

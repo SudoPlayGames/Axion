@@ -1,20 +1,15 @@
 package com.sudoplay.axion.ext.tag;
 
-import java.util.Arrays;
-
 import com.sudoplay.axion.tag.Tag;
 
+import java.util.Arrays;
+
 /**
- * @tag.type 84
- * 
- * @tag.name <code>TAG_Short_Array</code>
- * 
- * @tag.payload * <code>TAG_Int</code> length<br>
- *              * An array of shorts. The length of this array is
- *              <code>length</code> shorts.
- * 
  * @author Jason Taylor
- * 
+ * @tag.type 84
+ * @tag.name <code>TAG_Short_Array</code>
+ * @tag.payload * <code>TAG_Int</code> length<br> * An array of shorts. The length of this array is <code>length</code>
+ * shorts.
  */
 public class TagShortArray extends Tag {
 
@@ -22,9 +17,8 @@ public class TagShortArray extends Tag {
 
   /**
    * Creates a new {@link TagShortArray} with the given name.
-   * 
-   * @param newName
-   *          the {@link Tag} name
+   *
+   * @param newName the {@link Tag} name
    */
   public TagShortArray(final String newName) {
     this(newName, new short[0]);
@@ -32,9 +26,8 @@ public class TagShortArray extends Tag {
 
   /**
    * Creates a new {@link TagShortArray} with no name and the given value.
-   * 
-   * @param newShortArray
-   *          the {@link Short} array value
+   *
+   * @param newShortArray the {@link Short} array value
    */
   public TagShortArray(final short[] newShortArray) {
     this(null, newShortArray);
@@ -42,11 +35,9 @@ public class TagShortArray extends Tag {
 
   /**
    * Creates a new {@link TagShortArray} with the given name and value.
-   * 
-   * @param newName
-   *          the {@link Tag} name
-   * @param newShortArray
-   *          the {@link Short} array value
+   *
+   * @param newName       the {@link Tag} name
+   * @param newShortArray the {@link Short} array value
    */
   public TagShortArray(final String newName, final short[] newShortArray) {
     super(newName);
@@ -55,9 +46,8 @@ public class TagShortArray extends Tag {
 
   /**
    * Sets the value of this {@link TagShortArray} to the given value.
-   * 
-   * @param newShortArray
-   *          the {@link Short} array value
+   *
+   * @param newShortArray the {@link Short} array value
    */
   public void set(final short[] newShortArray) {
     if (newShortArray == null) {
@@ -68,7 +58,7 @@ public class TagShortArray extends Tag {
 
   /**
    * Returns the value of this {@link TagShortArray}.
-   * 
+   *
    * @return the value of this {@link TagShortArray}
    */
   public short[] get() {
@@ -92,9 +82,7 @@ public class TagShortArray extends Tag {
     if (getClass() != obj.getClass())
       return false;
     TagShortArray other = (TagShortArray) obj;
-    if (!Arrays.equals(data, other.data))
-      return false;
-    return true;
+    return Arrays.equals(data, other.data);
   }
 
   @Override

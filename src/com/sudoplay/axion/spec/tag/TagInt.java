@@ -3,14 +3,10 @@ package com.sudoplay.axion.spec.tag;
 import com.sudoplay.axion.tag.Tag;
 
 /**
- * @tag.type 3
- * 
- * @tag.name <code>TAG_Int</code>
- * 
- * @tag.payload * A signed short (32 bits, big endian).
- * 
  * @author Jason Taylor
- * 
+ * @tag.type 3
+ * @tag.name <code>TAG_Int</code>
+ * @tag.payload * A signed short (32 bits, big endian).
  */
 public class TagInt extends Tag {
 
@@ -18,9 +14,8 @@ public class TagInt extends Tag {
 
   /**
    * Creates a new {@link TagInt} with the given name.
-   * 
-   * @param newName
-   *          the {@link Tag} name
+   *
+   * @param newName the {@link Tag} name
    */
   public TagInt(final String newName) {
     super(newName);
@@ -28,9 +23,8 @@ public class TagInt extends Tag {
 
   /**
    * Creates a new {@link TagInt} with no name and the given value.
-   * 
-   * @param newInt
-   *          the {@link Integer} value
+   *
+   * @param newInt the {@link Integer} value
    */
   public TagInt(final int newInt) {
     this(null, newInt);
@@ -38,11 +32,9 @@ public class TagInt extends Tag {
 
   /**
    * Creates a new {@link TagInt} with the given name and value.
-   * 
-   * @param newName
-   *          the {@link Tag} name
-   * @param newInt
-   *          the {@link Integer} value
+   *
+   * @param newName the {@link Tag} name
+   * @param newInt  the {@link Integer} value
    */
   public TagInt(final String newName, final int newInt) {
     super(newName);
@@ -51,9 +43,8 @@ public class TagInt extends Tag {
 
   /**
    * Sets the value of this {@link TagInt} to the given value.
-   * 
-   * @param newInt
-   *          the {@link Integer} value
+   *
+   * @param newInt the {@link Integer} value
    */
   public void set(final int newInt) {
     data = newInt;
@@ -61,7 +52,7 @@ public class TagInt extends Tag {
 
   /**
    * Returns the value of this {@link TagInt}.
-   * 
+   *
    * @return the value of this {@link TagInt}
    */
   public int get() {
@@ -85,9 +76,7 @@ public class TagInt extends Tag {
     if (getClass() != obj.getClass())
       return false;
     TagInt other = (TagInt) obj;
-    if (data != other.data)
-      return false;
-    return true;
+    return data == other.data;
   }
 
   @Override

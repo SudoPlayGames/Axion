@@ -1,20 +1,15 @@
 package com.sudoplay.axion.ext.tag;
 
-import java.util.Arrays;
-
 import com.sudoplay.axion.tag.Tag;
 
+import java.util.Arrays;
+
 /**
- * @tag.type 81
- * 
- * @tag.name <code>TAG_Double_Array</code>
- * 
- * @tag.payload * <code>TAG_Int</code> length<br>
- *              * An array of doubles. The length of this array is
- *              <code>length</code> doubles.
- * 
  * @author Jason Taylor
- * 
+ * @tag.type 81
+ * @tag.name <code>TAG_Double_Array</code>
+ * @tag.payload * <code>TAG_Int</code> length<br> * An array of doubles. The length of this array is <code>length</code>
+ * doubles.
  */
 public class TagDoubleArray extends Tag {
 
@@ -22,9 +17,8 @@ public class TagDoubleArray extends Tag {
 
   /**
    * Creates a new {@link TagDoubleArray} with the given name.
-   * 
-   * @param newName
-   *          the {@link Tag} name
+   *
+   * @param newName the {@link Tag} name
    */
   public TagDoubleArray(final String newName) {
     this(newName, new double[0]);
@@ -32,9 +26,8 @@ public class TagDoubleArray extends Tag {
 
   /**
    * Creates a new {@link TagDoubleArray} with no name and the given value.
-   * 
-   * @param newDoubleArray
-   *          the {@link Double} array value
+   *
+   * @param newDoubleArray the {@link Double} array value
    */
   public TagDoubleArray(final double[] newDoubleArray) {
     this(null, newDoubleArray);
@@ -42,11 +35,9 @@ public class TagDoubleArray extends Tag {
 
   /**
    * Creates a new {@link TagDoubleArray} with the given name and value.
-   * 
-   * @param newName
-   *          the {@link Tag} name
-   * @param newDoubleArray
-   *          the {@link Double} array value
+   *
+   * @param newName        the {@link Tag} name
+   * @param newDoubleArray the {@link Double} array value
    */
   public TagDoubleArray(final String newName, final double[] newDoubleArray) {
     super(newName);
@@ -55,9 +46,8 @@ public class TagDoubleArray extends Tag {
 
   /**
    * Sets the value of this {@link TagDoubleArray} to the given value.
-   * 
-   * @param newDoubleArray
-   *          the {@link Double} array value
+   *
+   * @param newDoubleArray the {@link Double} array value
    */
   public void set(final double[] newDoubleArray) {
     if (newDoubleArray == null) {
@@ -68,7 +58,7 @@ public class TagDoubleArray extends Tag {
 
   /**
    * Returns the value of this {@link TagDoubleArray}.
-   * 
+   *
    * @return the value of this {@link TagDoubleArray}
    */
   public double[] get() {
@@ -92,9 +82,7 @@ public class TagDoubleArray extends Tag {
     if (getClass() != obj.getClass())
       return false;
     TagDoubleArray other = (TagDoubleArray) obj;
-    if (!Arrays.equals(data, other.data))
-      return false;
-    return true;
+    return Arrays.equals(data, other.data);
   }
 
   @Override

@@ -1,5 +1,6 @@
 package com.sudoplay.axion;
 
+@SuppressWarnings("unused")
 public class AxionInstanceException extends RuntimeException {
 
   private static final long serialVersionUID = 8165926689975011925L;

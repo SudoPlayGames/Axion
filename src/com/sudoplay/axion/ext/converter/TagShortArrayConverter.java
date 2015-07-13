@@ -7,7 +7,7 @@ import com.sudoplay.axion.registry.TagConverter;
  * The {@link TagConverter} used to convert to and from a {@link TagShortArray}.
  * <p>
  * Part of the extended, custom specification.
- * 
+ *
  * @author Jason Taylor
  */
 public class TagShortArrayConverter extends TagConverter<TagShortArray, short[]> {

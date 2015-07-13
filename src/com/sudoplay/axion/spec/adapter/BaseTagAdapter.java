@@ -1,22 +1,20 @@
 package com.sudoplay.axion.spec.adapter;
 
-import java.io.IOException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.sudoplay.axion.registry.TagAdapter;
 import com.sudoplay.axion.spec.tag.TagList;
 import com.sudoplay.axion.stream.AxionInputStream;
 import com.sudoplay.axion.stream.AxionOutputStream;
 import com.sudoplay.axion.tag.Tag;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
 
 /**
- * The {@link TagAdapter} used to as the entry point to read and write a tag
- * hierarchy.
+ * The {@link TagAdapter} used to as the entry point to read and write a tag hierarchy.
  * <p>
  * Part of the original specification.
- * 
+ *
  * @author Jason Taylor
  */
 public class BaseTagAdapter extends TagAdapter<Tag> {

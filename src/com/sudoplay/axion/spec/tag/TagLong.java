@@ -3,14 +3,10 @@ package com.sudoplay.axion.spec.tag;
 import com.sudoplay.axion.tag.Tag;
 
 /**
- * @tag.type 4
- * 
- * @tag.name <code>TAG_Long</code>
- * 
- * @tag.payload * A signed long (64 bits, big endian).
- * 
  * @author Jason Taylor
- * 
+ * @tag.type 4
+ * @tag.name <code>TAG_Long</code>
+ * @tag.payload * A signed long (64 bits, big endian).
  */
 public class TagLong extends Tag {
 
@@ -18,9 +14,8 @@ public class TagLong extends Tag {
 
   /**
    * Creates a new {@link TagLong} with the given name.
-   * 
-   * @param newName
-   *          the {@link Tag} name
+   *
+   * @param newName the {@link Tag} name
    */
   public TagLong(final String newName) {
     super(newName);
@@ -28,9 +23,8 @@ public class TagLong extends Tag {
 
   /**
    * Creates a new {@link TagLong} with no name and the given value.
-   * 
-   * @param newLong
-   *          the {@link Long} value
+   *
+   * @param newLong the {@link Long} value
    */
   public TagLong(final long newLong) {
     this(null, newLong);
@@ -38,11 +32,9 @@ public class TagLong extends Tag {
 
   /**
    * Creates a new {@link TagLong} with the given name and value.
-   * 
-   * @param newName
-   *          the {@link Tag} name
-   * @param newLong
-   *          the {@link Long} value
+   *
+   * @param newName the {@link Tag} name
+   * @param newLong the {@link Long} value
    */
   public TagLong(final String newName, final long newLong) {
     super(newName);
@@ -51,9 +43,8 @@ public class TagLong extends Tag {
 
   /**
    * Sets the value of this {@link TagLong} to the given value.
-   * 
-   * @param newLong
-   *          the {@link Long} value
+   *
+   * @param newLong the {@link Long} value
    */
   public void set(final long newLong) {
     data = newLong;
@@ -61,7 +52,7 @@ public class TagLong extends Tag {
 
   /**
    * Returns the value of this {@link TagLong}.
-   * 
+   *
    * @return the value of this {@link TagLong}
    */
   public long get() {
@@ -85,9 +76,7 @@ public class TagLong extends Tag {
     if (getClass() != obj.getClass())
       return false;
     TagLong other = (TagLong) obj;
-    if (data != other.data)
-      return false;
-    return true;
+    return data == other.data;
   }
 
   @Override

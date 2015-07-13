@@ -3,15 +3,10 @@ package com.sudoplay.axion.spec.tag;
 import com.sudoplay.axion.tag.Tag;
 
 /**
- * @tag.type 6
- * 
- * @tag.name <code>TAG_Double</code>
- * 
- * @tag.payload * A floating point value (64 bits, big endian, IEEE 754-2008,
- *              binary64).
- * 
  * @author Jason Taylor
- * 
+ * @tag.type 6
+ * @tag.name <code>TAG_Double</code>
+ * @tag.payload * A floating point value (64 bits, big endian, IEEE 754-2008, binary64).
  */
 public class TagDouble extends Tag {
 
@@ -19,9 +14,8 @@ public class TagDouble extends Tag {
 
   /**
    * Creates a new {@link TagDouble} with the given name.
-   * 
-   * @param newName
-   *          the {@link Tag} name
+   *
+   * @param newName the {@link Tag} name
    */
   public TagDouble(final String newName) {
     super(newName);
@@ -29,9 +23,8 @@ public class TagDouble extends Tag {
 
   /**
    * Creates a new {@link TagDouble} with no name and the given value.
-   * 
-   * @param newDouble
-   *          the {@link Double} value
+   *
+   * @param newDouble the {@link Double} value
    */
   public TagDouble(final double newDouble) {
     this(null, newDouble);
@@ -39,11 +32,9 @@ public class TagDouble extends Tag {
 
   /**
    * Creates the {@link TagDouble} with the given name and value.
-   * 
-   * @param newName
-   *          the {@link Tag} name
-   * @param newDouble
-   *          the {@link Double} value
+   *
+   * @param newName   the {@link Tag} name
+   * @param newDouble the {@link Double} value
    */
   public TagDouble(final String newName, final double newDouble) {
     super(newName);
@@ -52,9 +43,8 @@ public class TagDouble extends Tag {
 
   /**
    * Sets the value of this {@link TagDouble} to the given value.
-   * 
-   * @param newDouble
-   *          the {@link Double} value
+   *
+   * @param newDouble the {@link Double} value
    */
   public void set(final double newDouble) {
     data = newDouble;
@@ -62,7 +52,7 @@ public class TagDouble extends Tag {
 
   /**
    * Returns the value of this {@link TagDouble}.
-   * 
+   *
    * @return the value of this {@link TagDouble}
    */
   public double get() {
@@ -88,9 +78,7 @@ public class TagDouble extends Tag {
     if (getClass() != obj.getClass())
       return false;
     TagDouble other = (TagDouble) obj;
-    if (Double.doubleToLongBits(data) != Double.doubleToLongBits(other.data))
-      return false;
-    return true;
+    return Double.doubleToLongBits(data) == Double.doubleToLongBits(other.data);
   }
 
   @Override

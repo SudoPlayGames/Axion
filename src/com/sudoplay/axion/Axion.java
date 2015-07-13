@@ -79,6 +79,7 @@ public class Axion {
    * @return a new configuration
    * @throws AxionInstanceException
    */
+  @SuppressWarnings("unused")
   public static Axion createInstance(final String newName) throws AxionInstanceException {
     LOG.debug("Entering createInstance(newName=[{}])", newName);
     if (INSTANCES.containsKey(newName)) {
@@ -100,6 +101,7 @@ public class Axion {
    * @return a new configuration
    * @throws AxionInstanceException
    */
+  @SuppressWarnings("unused")
   public static Axion createInstanceFrom(final String name, final String newName) throws AxionInstanceException {
     return createInstanceFrom(Axion.getInstance(name), newName);
   }
@@ -113,6 +115,7 @@ public class Axion {
    * @return a new configuration
    * @throws AxionInstanceException
    */
+  @SuppressWarnings("unused")
   public static Axion createInstanceFrom(final Axion axion, final String newName) throws AxionInstanceException {
     LOG.debug("Entering createInstanceFrom(axion=[{}], newName=[{}])", axion, newName);
     if (INSTANCES.containsKey(newName)) {
@@ -132,6 +135,7 @@ public class Axion {
    * @return the removed configuration, null if it doesn't exist
    * @throws AxionInstanceException
    */
+  @SuppressWarnings("unused")
   public static Axion deleteInstance(final String name) throws AxionInstanceException {
     LOG.debug("Entering deleteInstance(name=[{}])", name);
     if (SPEC_INSTANCE_NAME.equals(name) || EXT_INSTANCE_NAME.equals(name)) {
@@ -149,6 +153,7 @@ public class Axion {
    * @param name name of the instance to get
    * @return the named Axion instance
    */
+  @SuppressWarnings("unused")
   public static Axion getInstance(final String name) {
     return INSTANCES.get(name);
   }
@@ -158,6 +163,7 @@ public class Axion {
    *
    * @return the extended Axion instance
    */
+  @SuppressWarnings("unused")
   public static Axion getExtInstance() {
     return INSTANCES.get(EXT_INSTANCE_NAME);
   }
@@ -167,6 +173,7 @@ public class Axion {
    *
    * @return the strict specification Axion instance
    */
+  @SuppressWarnings("unused")
   public static Axion getSpecInstance() {
     return INSTANCES.get(SPEC_INSTANCE_NAME);
   }
@@ -176,6 +183,7 @@ public class Axion {
    *
    * @return an unmodifiable map of all the {@link Axion} instances
    */
+  @SuppressWarnings("unused")
   public static Map<String, Axion> getInstances() {
     return Collections.unmodifiableMap(INSTANCES);
   }
@@ -185,6 +193,7 @@ public class Axion {
    *
    * @return the {@link AxionConfiguration} for this {@link Axion} instance
    */
+  @SuppressWarnings("unused")
   public AxionConfiguration configuration() {
     return configuration;
   }
@@ -199,6 +208,7 @@ public class Axion {
    * @see #unlock()
    * @see #setImmutable()
    */
+  @SuppressWarnings("unused")
   public Axion lock() {
     configuration.lock();
     return this;
@@ -213,6 +223,7 @@ public class Axion {
    * @see #lock()
    * @see #setImmutable()
    */
+  @SuppressWarnings("unused")
   public Axion unlock() {
     configuration.unlock();
     return this;
@@ -225,6 +236,7 @@ public class Axion {
    * @see #lock()
    * @see #unlock()
    */
+  @SuppressWarnings("unused")
   public Axion setImmutable() {
     configuration.setImmutable();
     return this;
@@ -239,6 +251,7 @@ public class Axion {
    * @return the registered id for the {@link Tag} class given
    * @throws AxionTagRegistrationException
    */
+  @SuppressWarnings("unused")
   public int getIdFor(final Class<? extends Tag> tagClass) throws AxionTagRegistrationException {
     return configuration.getIdFor(tagClass);
   }
@@ -246,6 +259,7 @@ public class Axion {
   /**
    * @return true if protection mode is <b>Locked</b>
    */
+  @SuppressWarnings("unused")
   public boolean isLocked() {
     return configuration.isLocked();
   }
@@ -253,6 +267,7 @@ public class Axion {
   /**
    * @return true if protection mode is <b>Unlocked</b>
    */
+  @SuppressWarnings("unused")
   public boolean isUnlocked() {
     return configuration.isUnlocked();
   }
@@ -260,6 +275,7 @@ public class Axion {
   /**
    * @return true if protection mode is <b>Immutable</b>
    */
+  @SuppressWarnings("unused")
   public boolean isImmutable() {
     return configuration.isImmutable();
   }
@@ -272,6 +288,7 @@ public class Axion {
    * @param newCharacterEncodingType the new encoding type
    * @return this {@link Axion} instance
    */
+  @SuppressWarnings("unused")
   public Axion setCharacterEncodingType(final CharacterEncodingType newCharacterEncodingType) {
     configuration.setCharacterEncodingType(newCharacterEncodingType);
     return this;
@@ -287,6 +304,7 @@ public class Axion {
    * @throws AxionInstanceException
    * @see #getBaseTagAdapter()
    */
+  @SuppressWarnings("unused")
   public Axion registerBaseTagAdapter(final TagAdapter<Tag> newBaseTagAdapter) throws AxionConfigurationException,
       AxionInstanceException {
     configuration.registerBaseTagAdapter(newBaseTagAdapter);
@@ -313,6 +331,7 @@ public class Axion {
    * @see #getConverterFor(Object)
    * @see #getIdFor(Class)
    */
+  @SuppressWarnings("unused")
   public <T extends Tag, V> Axion registerTag(final int id, final Class<T> tagClass, final Class<V> type, final
   TagAdapter<T> adapter,
                                               final TagConverter<T, V> converter) throws
@@ -330,6 +349,7 @@ public class Axion {
    * @param mapper the mapper
    * @return this {@link Axion} instance
    */
+  @SuppressWarnings("unused")
   public <T extends Tag, O> Axion registerNBTObjectMapper(final Class<O> type, final NBTObjectMapper<T, O> mapper) {
     configuration.registerNBTObjectMapper(type, mapper);
     return this;
@@ -343,6 +363,7 @@ public class Axion {
    * @param newCompressionType the compression type to use
    * @return this {@link Axion} instance
    */
+  @SuppressWarnings("unused")
   public Axion setCompressionType(final CompressionType newCompressionType) {
     configuration.setCompressionType(newCompressionType);
     return this;
@@ -355,6 +376,7 @@ public class Axion {
    *
    * @return the base {@link TagAdapter}
    */
+  @SuppressWarnings("unused")
   protected TagAdapter<Tag> getBaseTagAdapter() throws AxionTagRegistrationException {
     return configuration.getBaseTagAdapter();
   }
@@ -368,6 +390,7 @@ public class Axion {
    * @return the registered {@link Tag} class for the id given
    * @throws AxionTagRegistrationException
    */
+  @SuppressWarnings("unused")
   public Class<? extends Tag> getClassFor(final int id) throws AxionTagRegistrationException {
     return configuration.getClassFor(id);
   }
@@ -380,6 +403,7 @@ public class Axion {
    * @param id id to get the adapter for
    * @return the registered {@link TagAdapter} for the id given
    */
+  @SuppressWarnings("unused")
   public <T extends Tag> TagAdapter<T> getAdapterFor(final int id) throws AxionTagRegistrationException {
     return configuration.getAdapterFor(id);
   }
@@ -393,6 +417,7 @@ public class Axion {
    * @return the registered {@link TagAdapter} for the tag class given
    * @throws AxionTagRegistrationException
    */
+  @SuppressWarnings("unused")
   public <T extends Tag> TagAdapter<T> getAdapterFor(final Class<T> tagClass) throws AxionTagRegistrationException {
     return configuration.getAdapterFor(tagClass);
   }
@@ -406,6 +431,7 @@ public class Axion {
    * @return the registered {@link TagConverter} for the tag given
    * @throws AxionTagRegistrationException
    */
+  @SuppressWarnings("unused")
   public <T extends Tag, V> TagConverter<T, V> getConverterFor(final T tag) throws AxionTagRegistrationException {
     return configuration.getConverterFor(tag);
   }
@@ -419,6 +445,7 @@ public class Axion {
    * @return the registered {@link TagConverter} for the value given
    * @throws AxionTagRegistrationException
    */
+  @SuppressWarnings("unused")
   public <T extends Tag, V> TagConverter<T, V> getConverterFor(final V value) throws AxionTagRegistrationException {
     return configuration.getConverterFor(value);
   }
@@ -484,6 +511,7 @@ public class Axion {
    * @return the {@link NBTObjectMapper} registered for the class type given
    * @throws AxionMapperRegistrationException
    */
+  @SuppressWarnings("unused")
   public <T extends Tag, O> NBTObjectMapper<T, O> getMapperFor(final Class<O> type) throws
       AxionMapperRegistrationException {
     return configuration.getMapperFor(type);

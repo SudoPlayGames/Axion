@@ -15,7 +15,7 @@ public class ModifiedUTFCharacterEncoder extends CharacterEncoder {
 
   /**
    * Modified version of {@link DataOutputStream#writeUTF(String)}
-   * 
+   *
    * @see DataOutputStream#writeUTF(String)
    */
   @Override
@@ -45,7 +45,7 @@ public class ModifiedUTFCharacterEncoder extends CharacterEncoder {
     bytearr = this.bytearr;
 
     bytearr[count++] = (byte) ((utflen >>> 8) & 0xFF);
-    bytearr[count++] = (byte) ((utflen >>> 0) & 0xFF);
+    bytearr[count++] = (byte) (utflen & 0xFF);
 
     int i = 0;
     for (i = 0; i < strlen; i++) {
@@ -63,10 +63,10 @@ public class ModifiedUTFCharacterEncoder extends CharacterEncoder {
       } else if (c > 0x07FF) {
         bytearr[count++] = (byte) (0xE0 | ((c >> 12) & 0x0F));
         bytearr[count++] = (byte) (0x80 | ((c >> 6) & 0x3F));
-        bytearr[count++] = (byte) (0x80 | ((c >> 0) & 0x3F));
+        bytearr[count++] = (byte) (0x80 | (c & 0x3F));
       } else {
         bytearr[count++] = (byte) (0xC0 | ((c >> 6) & 0x1F));
-        bytearr[count++] = (byte) (0x80 | ((c >> 0) & 0x3F));
+        bytearr[count++] = (byte) (0x80 | (c & 0x3F));
       }
     }
     out.write(bytearr, 0, utflen + 2);
@@ -74,7 +74,7 @@ public class ModifiedUTFCharacterEncoder extends CharacterEncoder {
 
   /**
    * Modified version of {@link DataInputStream#readUTF(java.io.DataInput)}
-   * 
+   *
    * @see DataInputStream#readUTF(java.io.DataInput)
    */
   @Override
@@ -106,43 +106,43 @@ public class ModifiedUTFCharacterEncoder extends CharacterEncoder {
     while (count < utflen) {
       c = (int) bytearr[count] & 0xff;
       switch (c >> 4) {
-      case 0:
-      case 1:
-      case 2:
-      case 3:
-      case 4:
-      case 5:
-      case 6:
-      case 7:
+        case 0:
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+        case 5:
+        case 6:
+        case 7:
         /* 0xxxxxxx */
-        count++;
-        chararr[chararr_count++] = (char) c;
-        break;
-      case 12:
-      case 13:
+          count++;
+          chararr[chararr_count++] = (char) c;
+          break;
+        case 12:
+        case 13:
         /* 110x xxxx 10xx xxxx */
-        count += 2;
-        if (count > utflen)
-          throw new AxionCharacterEncodingException("malformed input: partial character at end");
-        char2 = (int) bytearr[count - 1];
-        if ((char2 & 0xC0) != 0x80)
-          throw new AxionCharacterEncodingException("malformed input around byte " + count);
-        chararr[chararr_count++] = (char) (((c & 0x1F) << 6) | (char2 & 0x3F));
-        break;
-      case 14:
+          count += 2;
+          if (count > utflen)
+            throw new AxionCharacterEncodingException("malformed input: partial character at end");
+          char2 = (int) bytearr[count - 1];
+          if ((char2 & 0xC0) != 0x80)
+            throw new AxionCharacterEncodingException("malformed input around byte " + count);
+          chararr[chararr_count++] = (char) (((c & 0x1F) << 6) | (char2 & 0x3F));
+          break;
+        case 14:
         /* 1110 xxxx 10xx xxxx 10xx xxxx */
-        count += 3;
-        if (count > utflen)
-          throw new AxionCharacterEncodingException("malformed input: partial character at end");
-        char2 = (int) bytearr[count - 2];
-        char3 = (int) bytearr[count - 1];
-        if (((char2 & 0xC0) != 0x80) || ((char3 & 0xC0) != 0x80))
-          throw new AxionCharacterEncodingException("malformed input around byte " + (count - 1));
-        chararr[chararr_count++] = (char) (((c & 0x0F) << 12) | ((char2 & 0x3F) << 6) | ((char3 & 0x3F) << 0));
-        break;
-      default:
+          count += 3;
+          if (count > utflen)
+            throw new AxionCharacterEncodingException("malformed input: partial character at end");
+          char2 = (int) bytearr[count - 2];
+          char3 = (int) bytearr[count - 1];
+          if (((char2 & 0xC0) != 0x80) || ((char3 & 0xC0) != 0x80))
+            throw new AxionCharacterEncodingException("malformed input around byte " + (count - 1));
+          chararr[chararr_count++] = (char) (((c & 0x0F) << 12) | ((char2 & 0x3F) << 6) | (char3 & 0x3F));
+          break;
+        default:
         /* 10xx xxxx, 1111 xxxx */
-        throw new AxionCharacterEncodingException("malformed input around byte " + count);
+          throw new AxionCharacterEncodingException("malformed input around byte " + count);
       }
     }
     // The number of chars produced may be less than utflen

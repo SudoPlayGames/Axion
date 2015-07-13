@@ -1,5 +1,6 @@
 package com.sudoplay.axion.tag;
 
+@SuppressWarnings("unused")
 public class AxionInvalidTagException extends RuntimeException {
 
   private static final long serialVersionUID = 713766273941609280L;

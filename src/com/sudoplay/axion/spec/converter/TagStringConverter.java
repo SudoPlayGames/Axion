@@ -7,7 +7,7 @@ import com.sudoplay.axion.spec.tag.TagString;
  * The {@link TagConverter} used to convert to and from a {@link TagString}.
  * <p>
  * Part of the original specification.
- * 
+ *
  * @author Jason Taylor
  */
 public class TagStringConverter extends TagConverter<TagString, String> {

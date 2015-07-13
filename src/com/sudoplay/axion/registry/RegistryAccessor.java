@@ -3,9 +3,9 @@ package com.sudoplay.axion.registry;
 import com.sudoplay.axion.tag.Tag;
 
 /**
- * The {@link RegistryAccessor} class holds a reference to a {@link TagRegistry}
- * and allows sub-classes read-only access to the registry.
- * 
+ * The {@link RegistryAccessor} class holds a reference to a {@link TagRegistry} and allows sub-classes read-only access
+ * to the registry.
+ *
  * @author Jason Taylor
  */
 public abstract class RegistryAccessor {
@@ -17,9 +17,8 @@ public abstract class RegistryAccessor {
 
   /**
    * Sets the {@link TagRegistry} reference to the registry given.
-   * 
-   * @param newTagRegistry
-   *          the new {@link TagRegistry}
+   *
+   * @param newTagRegistry the new {@link TagRegistry}
    */
   protected void setRegistry(final TagRegistry newTagRegistry) {
     registry = newTagRegistry;
@@ -29,7 +28,7 @@ public abstract class RegistryAccessor {
    * Returns the base {@link TagAdapter}.
    * <p>
    * If no base tag adapter has been registered, an exception is thrown.
-   * 
+   *
    * @return the base {@link TagAdapter}
    * @see TagRegistry#registerBaseTagAdapter(TagAdapter)
    */
@@ -39,9 +38,8 @@ public abstract class RegistryAccessor {
 
   /**
    * Returns the {@link TagAdapter} registered for the given int id.
-   * 
-   * @param id
-   *          the id of the {@link TagAdapter}
+   *
+   * @param id the id of the {@link TagAdapter}
    * @return the {@link TagAdapter} registered for the given int id
    */
   protected <A extends Tag> TagAdapter<A> getAdapterFor(final int id) {
@@ -52,9 +50,8 @@ public abstract class RegistryAccessor {
    * Returns the {@link TagAdapter} registered for the given tag class.
    * <p>
    * If no adapter is found, an exception is thrown.
-   * 
-   * @param tagClass
-   *          the tag class of the {@link TagAdapter}
+   *
+   * @param tagClass the tag class of the {@link TagAdapter}
    * @return the {@link TagAdapter} registered for the given tag class
    * @throws AxionTagRegistrationException
    */
@@ -63,15 +60,12 @@ public abstract class RegistryAccessor {
   }
 
   /**
-   * Converts a value to its {@link Tag} using the {@link TagConverter}
-   * registered for the given value.
+   * Converts a value to its {@link Tag} using the {@link TagConverter} registered for the given value.
    * <p>
    * If no converter is found, an exception is thrown.
-   * 
-   * @param name
-   *          the name of the new tag
-   * @param value
-   *          the value to convert
+   *
+   * @param name  the name of the new tag
+   * @param value the value to convert
    * @return a new {@link Tag} converted from the given value
    * @throws AxionTagRegistrationException
    */
@@ -82,13 +76,11 @@ public abstract class RegistryAccessor {
   }
 
   /**
-   * Converts a {@link Tag} to its value using the {@link TagConverter}
-   * registered for the given {@link Tag}.
+   * Converts a {@link Tag} to its value using the {@link TagConverter} registered for the given {@link Tag}.
    * <p>
    * If no converter is found, an exception is thrown.
-   * 
-   * @param tag
-   *          the {@link Tag} to convert
+   *
+   * @param tag the {@link Tag} to convert
    * @return a new value converted from the given {@link Tag}
    * @throws AxionTagRegistrationException
    */
@@ -102,9 +94,8 @@ public abstract class RegistryAccessor {
    * Returns the int id registered for the given {@link Tag} class.
    * <p>
    * If no id is found, an exception is thrown.
-   * 
-   * @param tagClass
-   *          the class to get the id for
+   *
+   * @param tagClass the class to get the id for
    * @return the int id
    * @throws AxionTagRegistrationException
    */
@@ -116,9 +107,8 @@ public abstract class RegistryAccessor {
    * Returns the {@link Tag} class for the given int id.
    * <p>
    * If no class is found, an exception is thrown.
-   * 
-   * @param id
-   *          the id to get the class for
+   *
+   * @param id the id to get the class for
    * @return the {@link Tag} class
    * @throws AxionTagRegistrationException
    */

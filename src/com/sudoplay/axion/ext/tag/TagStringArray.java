@@ -1,20 +1,15 @@
 package com.sudoplay.axion.ext.tag;
 
-import java.util.Arrays;
-
 import com.sudoplay.axion.tag.Tag;
 
+import java.util.Arrays;
+
 /**
- * @tag.type 85
- * 
- * @tag.name <code>TAG_String_Array</code>
- * 
- * @tag.payload * <code>TAG_Int</code> length<br>
- *              * An array of Strings. The length of this array is
- *              <code>length</code> Strings.
- * 
  * @author Jason Taylor
- * 
+ * @tag.type 85
+ * @tag.name <code>TAG_String_Array</code>
+ * @tag.payload * <code>TAG_Int</code> length<br> * An array of Strings. The length of this array is <code>length</code>
+ * Strings.
  */
 public class TagStringArray extends Tag {
 
@@ -22,9 +17,8 @@ public class TagStringArray extends Tag {
 
   /**
    * Creates a new {@link TagStringArray} with the given name.
-   * 
-   * @param newName
-   *          the {@link Tag} name
+   *
+   * @param newName the {@link Tag} name
    */
   public TagStringArray(final String newName) {
     this(newName, new String[0]);
@@ -32,9 +26,8 @@ public class TagStringArray extends Tag {
 
   /**
    * Creates a new {@link TagStringArray} with no name and the given value.
-   * 
-   * @param newStringArray
-   *          the {@link String} array value
+   *
+   * @param newStringArray the {@link String} array value
    */
   public TagStringArray(final String[] newStringArray) {
     this(null, newStringArray);
@@ -42,11 +35,9 @@ public class TagStringArray extends Tag {
 
   /**
    * Creates a new {@link TagStringArray} with the given name and value.
-   * 
-   * @param newName
-   *          the {@link Tag} name
-   * @param newStringArray
-   *          the {@link String} array value
+   *
+   * @param newName        the {@link Tag} name
+   * @param newStringArray the {@link String} array value
    */
   public TagStringArray(final String newName, final String[] newStringArray) {
     super(newName);
@@ -55,9 +46,8 @@ public class TagStringArray extends Tag {
 
   /**
    * Sets the value of this {@link TagStringArray} to the given value.
-   * 
-   * @param newStringArray
-   *          the {@link String} array value
+   *
+   * @param newStringArray the {@link String} array value
    */
   public void set(final String[] newStringArray) {
     if (newStringArray == null) {
@@ -68,7 +58,7 @@ public class TagStringArray extends Tag {
 
   /**
    * Returns the value of this {@link TagStringArray}.
-   * 
+   *
    * @return the value of this {@link TagStringArray}
    */
   public String[] get() {
@@ -92,9 +82,7 @@ public class TagStringArray extends Tag {
     if (getClass() != obj.getClass())
       return false;
     TagStringArray other = (TagStringArray) obj;
-    if (!Arrays.equals(data, other.data))
-      return false;
-    return true;
+    return Arrays.equals(data, other.data);
   }
 
   @Override

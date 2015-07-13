@@ -1,47 +1,27 @@
 package com.sudoplay.axion.registry;
 
-import java.io.IOException;
-
 import com.sudoplay.axion.AxionInstanceException;
-import com.sudoplay.axion.ext.adapter.TagBooleanAdapter;
-import com.sudoplay.axion.ext.adapter.TagBooleanArrayAdapter;
-import com.sudoplay.axion.ext.adapter.TagDoubleArrayAdapter;
-import com.sudoplay.axion.ext.adapter.TagFloatArrayAdapter;
-import com.sudoplay.axion.ext.adapter.TagLongArrayAdapter;
-import com.sudoplay.axion.ext.adapter.TagShortArrayAdapter;
-import com.sudoplay.axion.ext.adapter.TagStringArrayAdapter;
-import com.sudoplay.axion.spec.adapter.BaseTagAdapter;
-import com.sudoplay.axion.spec.adapter.TagByteAdapter;
-import com.sudoplay.axion.spec.adapter.TagByteArrayAdapter;
-import com.sudoplay.axion.spec.adapter.TagCompoundAdapter;
-import com.sudoplay.axion.spec.adapter.TagDoubleAdapter;
-import com.sudoplay.axion.spec.adapter.TagFloatAdapter;
-import com.sudoplay.axion.spec.adapter.TagIntAdapter;
-import com.sudoplay.axion.spec.adapter.TagIntArrayAdapter;
-import com.sudoplay.axion.spec.adapter.TagListAdapter;
-import com.sudoplay.axion.spec.adapter.TagLongAdapter;
-import com.sudoplay.axion.spec.adapter.TagShortAdapter;
-import com.sudoplay.axion.spec.adapter.TagStringAdapter;
+import com.sudoplay.axion.ext.adapter.*;
+import com.sudoplay.axion.spec.adapter.*;
 import com.sudoplay.axion.spec.tag.TagCompound;
 import com.sudoplay.axion.spec.tag.TagList;
 import com.sudoplay.axion.stream.AxionInputStream;
 import com.sudoplay.axion.stream.AxionOutputStream;
 import com.sudoplay.axion.tag.Tag;
 
+import java.io.IOException;
+
 /**
- * Classes that extend the abstract {@link TagAdapter} class define how
- * {@link Tag}s are read from and written to the underlying streams.
- * 
+ * Classes that extend the abstract {@link TagAdapter} class define how {@link Tag}s are read from and written to the
+ * underlying streams.
+ *
+ * @param <T> {@link Tag} type
  * @author Jason Taylor
- * 
- * @param <T>
- *          {@link Tag} type
  */
 public abstract class TagAdapter<T extends Tag> extends RegistryAccessor {
 
   /**
-   * Group of {@link TagAdapter}s that conform to the original NBT
-   * specification.
+   * Group of {@link TagAdapter}s that conform to the original NBT specification.
    */
   public static class Spec {
     public static final BaseTagAdapter BASE = new BaseTagAdapter();
@@ -59,8 +39,7 @@ public abstract class TagAdapter<T extends Tag> extends RegistryAccessor {
   }
 
   /**
-   * Group of {@link TagAdapter}s that conform to Axion's custom, extended
-   * specification.
+   * Group of {@link TagAdapter}s that conform to Axion's custom, extended specification.
    */
   public static class Ext {
     public static final TagBooleanAdapter BOOLEAN = new TagBooleanAdapter();
@@ -79,11 +58,9 @@ public abstract class TagAdapter<T extends Tag> extends RegistryAccessor {
 
   /**
    * Reads a {@link Tag} from the {@link AxionInputStream}.
-   * 
-   * @param parent
-   *          the parent of the {@link Tag} being read
-   * @param in
-   *          the {@link AxionInputStream}
+   *
+   * @param parent the parent of the {@link Tag} being read
+   * @param in     the {@link AxionInputStream}
    * @return the {@link Tag} read
    * @throws IOException
    */
@@ -91,24 +68,19 @@ public abstract class TagAdapter<T extends Tag> extends RegistryAccessor {
 
   /**
    * Writes a {@link Tag} to the {@link AxionOutputStream}.
-   * 
-   * @param tag
-   *          the {@link Tag} to write
-   * @param out
-   *          the {@link AxionOutputStream} to write to
+   *
+   * @param tag the {@link Tag} to write
+   * @param out the {@link AxionOutputStream} to write to
    * @throws IOException
    */
   public abstract void write(final T tag, final AxionOutputStream out) throws IOException;
 
   /**
-   * Appends the {@link Tag} string to the {@link StringBuilder} given. This is
-   * the default behavior and is overridden in special cases, such as the
-   * {@link TagList} and {@link TagCompound}.
-   * 
-   * @param tag
-   *          the {@link Tag} to write
-   * @param out
-   *          the {@link StringBuilder} to append to
+   * Appends the {@link Tag} string to the {@link StringBuilder} given. This is the default behavior and is overridden
+   * in special cases, such as the {@link TagList} and {@link TagCompound}.
+   *
+   * @param tag the {@link Tag} to write
+   * @param out the {@link StringBuilder} to append to
    * @return the {@link StringBuilder} given
    */
   public StringBuilder toString(final Tag tag, final StringBuilder out) {
@@ -116,13 +88,11 @@ public abstract class TagAdapter<T extends Tag> extends RegistryAccessor {
   }
 
   /**
-   * Appends a two-space indent to the {@link StringBuilder} given, once for
-   * each non-null parent of the {@link Tag} given.
-   * 
-   * @param tag
-   *          the {@link Tag}
-   * @param out
-   *          the {@link StringBuilder} to append to
+   * Appends a two-space indent to the {@link StringBuilder} given, once for each non-null parent of the {@link Tag}
+   * given.
+   *
+   * @param tag the {@link Tag}
+   * @param out the {@link StringBuilder} to append to
    * @return the {@link StringBuilder} given
    */
   protected StringBuilder applyIndent(final Tag tag, final StringBuilder out) {
@@ -135,11 +105,9 @@ public abstract class TagAdapter<T extends Tag> extends RegistryAccessor {
   }
 
   /**
-   * Creates a new instance of this {@link TagAdapter} and assigns a reference
-   * to the {@link TagRegistry} given.
-   * 
-   * @param newTagRegistry
-   *          the {@link TagRegistry} to assign to the new instance
+   * Creates a new instance of this {@link TagAdapter} and assigns a reference to the {@link TagRegistry} given.
+   *
+   * @param newTagRegistry the {@link TagRegistry} to assign to the new instance
    * @return a new instance of this {@link TagAdapter}
    * @throws AxionInstanceException
    */
@@ -150,7 +118,8 @@ public abstract class TagAdapter<T extends Tag> extends RegistryAccessor {
       newInstance.setRegistry(newTagRegistry);
       return newInstance;
     } catch (Exception e) {
-      throw new AxionInstanceException("Unable to instantiate new adapter of type [" + this.getClass().getSimpleName() + "]", e);
+      throw new AxionInstanceException("Unable to instantiate new adapter of type [" + this.getClass().getSimpleName
+          () + "]", e);
     }
   }
 

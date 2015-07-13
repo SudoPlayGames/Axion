@@ -1,20 +1,15 @@
 package com.sudoplay.axion.ext.tag;
 
-import java.util.Arrays;
-
 import com.sudoplay.axion.tag.Tag;
 
+import java.util.Arrays;
+
 /**
- * @tag.type 83
- * 
- * @tag.name <code>TAG_Long_Array</code>
- * 
- * @tag.payload * <code>TAG_Int</code> length<br>
- *              * An array of longs. The length of this array is
- *              <code>length</code> longs.
- * 
  * @author Jason Taylor
- * 
+ * @tag.type 83
+ * @tag.name <code>TAG_Long_Array</code>
+ * @tag.payload * <code>TAG_Int</code> length<br> * An array of longs. The length of this array is <code>length</code>
+ * longs.
  */
 public class TagLongArray extends Tag {
 
@@ -22,9 +17,8 @@ public class TagLongArray extends Tag {
 
   /**
    * Creates a new {@link TagLongArray} with the given name.
-   * 
-   * @param newName
-   *          the {@link Tag} name
+   *
+   * @param newName the {@link Tag} name
    */
   public TagLongArray(final String newName) {
     this(newName, new long[0]);
@@ -32,9 +26,8 @@ public class TagLongArray extends Tag {
 
   /**
    * Creates a new {@link TagLongArray} with no name and the given value.
-   * 
-   * @param newLongArray
-   *          the {@link Long} array value
+   *
+   * @param newLongArray the {@link Long} array value
    */
   public TagLongArray(final long[] newLongArray) {
     this(null, newLongArray);
@@ -42,11 +35,9 @@ public class TagLongArray extends Tag {
 
   /**
    * Creates a new {@link TagLongArray} with the given name and value.
-   * 
-   * @param newName
-   *          the {@link Tag} name
-   * @param newLongArray
-   *          the {@link Long} array value
+   *
+   * @param newName      the {@link Tag} name
+   * @param newLongArray the {@link Long} array value
    */
   public TagLongArray(final String newName, final long[] newLongArray) {
     super(newName);
@@ -55,9 +46,8 @@ public class TagLongArray extends Tag {
 
   /**
    * Sets the value of this {@link TagLongArray} to the given value.
-   * 
-   * @param newLongArray
-   *          the {@link Long} array value
+   *
+   * @param newLongArray the {@link Long} array value
    */
   public void set(final long[] newLongArray) {
     if (newLongArray == null) {
@@ -68,7 +58,7 @@ public class TagLongArray extends Tag {
 
   /**
    * Returns the value of this {@link TagLongArray}.
-   * 
+   *
    * @return the value of this {@link TagLongArray}
    */
   public long[] get() {
@@ -92,9 +82,7 @@ public class TagLongArray extends Tag {
     if (getClass() != obj.getClass())
       return false;
     TagLongArray other = (TagLongArray) obj;
-    if (!Arrays.equals(data, other.data))
-      return false;
-    return true;
+    return Arrays.equals(data, other.data);
   }
 
   @Override

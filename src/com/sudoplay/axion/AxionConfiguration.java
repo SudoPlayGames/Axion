@@ -1,22 +1,7 @@
 package com.sudoplay.axion;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.List;
-import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.sudoplay.axion.AxionConfigurationProtection.ProtectionMode;
-import com.sudoplay.axion.ext.tag.TagBoolean;
-import com.sudoplay.axion.ext.tag.TagBooleanArray;
-import com.sudoplay.axion.ext.tag.TagDoubleArray;
-import com.sudoplay.axion.ext.tag.TagFloatArray;
-import com.sudoplay.axion.ext.tag.TagLongArray;
-import com.sudoplay.axion.ext.tag.TagShortArray;
-import com.sudoplay.axion.ext.tag.TagStringArray;
+import com.sudoplay.axion.ext.tag.*;
 import com.sudoplay.axion.mapper.AxionMapperRegistrationException;
 import com.sudoplay.axion.mapper.NBTObjectMapper;
 import com.sudoplay.axion.mapper.NBTObjectMapperRegistry;
@@ -24,27 +9,25 @@ import com.sudoplay.axion.registry.AxionTagRegistrationException;
 import com.sudoplay.axion.registry.TagAdapter;
 import com.sudoplay.axion.registry.TagConverter;
 import com.sudoplay.axion.registry.TagRegistry;
-import com.sudoplay.axion.spec.tag.TagByte;
-import com.sudoplay.axion.spec.tag.TagByteArray;
-import com.sudoplay.axion.spec.tag.TagCompound;
-import com.sudoplay.axion.spec.tag.TagDouble;
-import com.sudoplay.axion.spec.tag.TagFloat;
-import com.sudoplay.axion.spec.tag.TagInt;
-import com.sudoplay.axion.spec.tag.TagIntArray;
-import com.sudoplay.axion.spec.tag.TagList;
-import com.sudoplay.axion.spec.tag.TagLong;
-import com.sudoplay.axion.spec.tag.TagShort;
-import com.sudoplay.axion.spec.tag.TagString;
+import com.sudoplay.axion.spec.tag.*;
 import com.sudoplay.axion.stream.AxionInputStream;
 import com.sudoplay.axion.stream.AxionOutputStream;
 import com.sudoplay.axion.stream.CharacterEncoderFactory;
 import com.sudoplay.axion.stream.StreamCompressionWrapper;
 import com.sudoplay.axion.tag.Tag;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.List;
+import java.util.Map;
 
 /**
- * The {@link AxionConfiguration} class manages all the user-definable
- * configuration state for an {@link Axion} instance.
- * 
+ * The {@link AxionConfiguration} class manages all the user-definable configuration state for an {@link Axion}
+ * instance.
+ *
  * @author Jason Taylor
  */
 public class AxionConfiguration implements Cloneable {
@@ -52,8 +35,8 @@ public class AxionConfiguration implements Cloneable {
   private static final Logger LOG = LoggerFactory.getLogger(AxionConfiguration.class);
 
   /**
-   * An {@link AxionConfiguration} instance configured to read and write NBT
-   * using the original specifications; supports the late added TAG_Int_Array.
+   * An {@link AxionConfiguration} instance configured to read and write NBT using the original specifications; supports
+   * the late added TAG_Int_Array.
    */
   protected static final AxionConfiguration SPEC_CONFIGURATION = new AxionConfiguration() {
     {
@@ -77,8 +60,8 @@ public class AxionConfiguration implements Cloneable {
   };
 
   /**
-   * An {@link AxionConfiguration} instance that extends the original NBT
-   * specifications to include the boolean class and common array classes.
+   * An {@link AxionConfiguration} instance that extends the original NBT specifications to include the boolean class
+   * and common array classes.
    */
   protected static final AxionConfiguration EXT_CONFIGURATION = new AxionConfiguration(SPEC_CONFIGURATION) {
     {
@@ -88,7 +71,8 @@ public class AxionConfiguration implements Cloneable {
       registerTag(83, TagLongArray.class, long[].class, TagAdapter.Ext.LONG_ARRAY, TagConverter.Ext.LONG_ARRAY);
       registerTag(84, TagShortArray.class, short[].class, TagAdapter.Ext.SHORT_ARRAY, TagConverter.Ext.SHORT_ARRAY);
       registerTag(85, TagStringArray.class, String[].class, TagAdapter.Ext.STRING_ARRAY, TagConverter.Ext.STRING_ARRAY);
-      registerTag(86, TagBooleanArray.class, boolean[].class, TagAdapter.Ext.BOOLEAN_ARRAY, TagConverter.Ext.BOOLEAN_ARRAY);
+      registerTag(86, TagBooleanArray.class, boolean[].class, TagAdapter.Ext.BOOLEAN_ARRAY, TagConverter.Ext
+          .BOOLEAN_ARRAY);
 
       setCharacterEncodingType(CharacterEncodingType.MODIFIED_UTF_8);
       setCompressionType(CompressionType.GZip);
@@ -97,21 +81,20 @@ public class AxionConfiguration implements Cloneable {
   };
 
   /**
-   * The compression type that an {@link AxionConfiguration} will use to read
-   * and write when accessing the underlying streams.
+   * The compression type that an {@link AxionConfiguration} will use to read and write when accessing the underlying
+   * streams.
    */
-  public static enum CompressionType {
+  public enum CompressionType {
     GZip, Deflater, None
   }
 
   /**
-   * The character encoding type that an {@link AxionConfiguration} will use to
-   * read and write strings with the {@link AxionInputStream#readString()} and
-   * {@link AxionOutputStream#writeString(String)} methods.
-   * 
+   * The character encoding type that an {@link AxionConfiguration} will use to read and write strings with the {@link
+   * AxionInputStream#readString()} and {@link AxionOutputStream#writeString(String)} methods.
+   *
    * @see AxionConfiguration#setCharacterEncodingType(CharacterEncodingType)
    */
-  public static enum CharacterEncodingType {
+  public enum CharacterEncodingType {
     MODIFIED_UTF_8, US_ASCII, ISO_8859_1, UTF_8, UTF_16BE, UTF_16LE, UTF_16
   }
 
@@ -122,23 +105,20 @@ public class AxionConfiguration implements Cloneable {
   private AxionConfigurationProtection configurationProtection;
 
   /**
-   * Creates a new {@link AxionConfiguration} instance with
-   * {@link ProtectionMode#Unlocked}.
+   * Creates a new {@link AxionConfiguration} instance with {@link ProtectionMode#Unlocked}.
    */
   protected AxionConfiguration() {
     this(ProtectionMode.Unlocked);
   }
 
   /**
-   * Creates a new {@link AxionConfiguration} instance by duplicating all
-   * registered {@link TagAdapter}s, {@link TagConverter}s and
-   * {@link NBTObjectMapper}s. The {@link StreamCompressionWrapper} is not
-   * duplicated, merely referenced.
+   * Creates a new {@link AxionConfiguration} instance by duplicating all registered {@link TagAdapter}s, {@link
+   * TagConverter}s and {@link NBTObjectMapper}s. The {@link StreamCompressionWrapper} is not duplicated, merely
+   * referenced.
    * <p>
    * The new instance created will be {@link ProtectionMode#Unlocked}.
-   * 
-   * @param toCopy
-   *          the {@link AxionConfiguration} to duplicate
+   *
+   * @param toCopy the {@link AxionConfiguration} to duplicate
    */
   protected AxionConfiguration(final AxionConfiguration toCopy) {
     LOG.debug("Entering AxionConfiguration(toCopy=[{}])", toCopy);
@@ -151,10 +131,9 @@ public class AxionConfiguration implements Cloneable {
   }
 
   /**
-   * Creates a new {@link AxionConfiguration} instance with the given
-   * {@link ProtectionMode}.
-   * 
-   * @param newProtectionMode
+   * Creates a new {@link AxionConfiguration} instance with the given {@link ProtectionMode}.
+   *
+   * @param newProtectionMode new protection mode
    */
   protected AxionConfiguration(final ProtectionMode newProtectionMode) {
     LOG.debug("Entering AxionConfiguration(newProtectionMode=[{}])", newProtectionMode);
@@ -167,12 +146,11 @@ public class AxionConfiguration implements Cloneable {
   }
 
   /**
-   * Changes this configuration's protection mode to <b>Locked</b>. Any attempt
-   * to change this configuration while it is locked will result in an
-   * exception. Use {@link #unlock()} to unlock.
+   * Changes this configuration's protection mode to <b>Locked</b>. Any attempt to change this configuration while it is
+   * locked will result in an exception. Use {@link #unlock()} to unlock.
    * <p>
    * Can't use when <b>Immutable</b>.
-   * 
+   *
    * @return this {@link AxionConfiguration}
    * @see #unlock()
    * @see #setImmutable()
@@ -189,7 +167,7 @@ public class AxionConfiguration implements Cloneable {
    * Changes this configuration's protection mode to <b>Unlocked</b>.
    * <p>
    * Can't use when <b>Immutable</b>.
-   * 
+   *
    * @return this {@link AxionConfiguration}
    * @see #lock()
    * @see #setImmutable()
@@ -202,9 +180,8 @@ public class AxionConfiguration implements Cloneable {
   }
 
   /**
-   * Changes this configuration's protection mode to <b>Immutable</b>. Once this
-   * mode is set, it can't be undone.
-   * 
+   * Changes this configuration's protection mode to <b>Immutable</b>. Once this mode is set, it can't be undone.
+   *
    * @return this {@link AxionConfiguration}
    * @see #lock()
    * @see #unlock()
@@ -242,9 +219,8 @@ public class AxionConfiguration implements Cloneable {
    * Sets the {@link CharacterEncodingType}.
    * <p>
    * Can't use when <b>Locked</b> or <b>Immutable</b>.
-   * 
-   * @param newCharacterEncodingType
-   *          the new encoding type
+   *
+   * @param newCharacterEncodingType the new encoding type
    * @return this {@link AxionConfiguration}
    */
   protected AxionConfiguration setCharacterEncodingType(final CharacterEncodingType newCharacterEncodingType) {
@@ -259,14 +235,14 @@ public class AxionConfiguration implements Cloneable {
    * Register a {@link TagAdapter} as the base tag adapter.
    * <p>
    * Can't use when <b>Locked</b> or <b>Immutable</b>.
-   * 
-   * @param newBaseTagAdapter
-   *          the new base tag adapter
+   *
+   * @param newBaseTagAdapter the new base tag adapter
    * @throws AxionConfigurationException
    * @throws AxionInstanceException
    * @see #getBaseTagAdapter()
    */
-  protected void registerBaseTagAdapter(final TagAdapter<Tag> newBaseTagAdapter) throws AxionConfigurationException, AxionInstanceException {
+  protected void registerBaseTagAdapter(final TagAdapter<Tag> newBaseTagAdapter) throws AxionConfigurationException,
+      AxionInstanceException {
     configurationProtection.assertUnlocked();
     configurationProtection.assertMutable();
     tagRegistry.registerBaseTagAdapter(newBaseTagAdapter);
@@ -276,17 +252,12 @@ public class AxionConfiguration implements Cloneable {
    * Registers the relationships for a tag.
    * <p>
    * Can't use when <b>Locked</b> or <b>Immutable</b>.
-   * 
-   * @param id
-   *          the id of the tag
-   * @param tagClass
-   *          the class of the tag
-   * @param type
-   *          the class of the type
-   * @param adapter
-   *          {@link TagAdapter} for the tag
-   * @param converter
-   *          {@link TagConverter} for the tag
+   *
+   * @param id        the id of the tag
+   * @param tagClass  the class of the tag
+   * @param type      the class of the type
+   * @param adapter   {@link TagAdapter} for the tag
+   * @param converter {@link TagConverter} for the tag
    * @return this {@link AxionConfiguration}
    * @throws AxionTagRegistrationException
    * @throws AxionInstanceException
@@ -297,8 +268,10 @@ public class AxionConfiguration implements Cloneable {
    * @see #getConverterFor(Object)
    * @see #getIdFor(Class)
    */
-  protected <T extends Tag, V> AxionConfiguration registerTag(final int id, final Class<T> tagClass, final Class<V> type, final TagAdapter<T> adapter,
-      final TagConverter<T, V> converter) throws AxionTagRegistrationException, AxionInstanceException {
+  protected <T extends Tag, V> AxionConfiguration registerTag(final int id, final Class<T> tagClass, final Class<V>
+      type, final TagAdapter<T> adapter,
+                                                              final TagConverter<T, V> converter) throws
+      AxionTagRegistrationException, AxionInstanceException {
     configurationProtection.assertUnlocked();
     configurationProtection.assertMutable();
     tagRegistry.register(id, tagClass, type, adapter, converter);
@@ -309,14 +282,13 @@ public class AxionConfiguration implements Cloneable {
    * Registers a {@link NBTObjectMapper} for the class type given.
    * <p>
    * Can't use when <b>Locked</b> or <b>Immutable</b>.
-   * 
-   * @param type
-   *          the type of the object
-   * @param mapper
-   *          the mapper
+   *
+   * @param type   the type of the object
+   * @param mapper the mapper
    * @return this {@link AxionConfiguration}
    */
-  protected <T extends Tag, O> AxionConfiguration registerNBTObjectMapper(final Class<O> type, final NBTObjectMapper<T, O> mapper) {
+  protected <T extends Tag, O> AxionConfiguration registerNBTObjectMapper(final Class<O> type, final
+  NBTObjectMapper<T, O> mapper) {
     configurationProtection.assertUnlocked();
     configurationProtection.assertMutable();
     mappers.register(type, mapper);
@@ -324,13 +296,11 @@ public class AxionConfiguration implements Cloneable {
   }
 
   /**
-   * Sets this {@link AxionConfiguration} to use the {@link CompressionType}
-   * given.
+   * Sets this {@link AxionConfiguration} to use the {@link CompressionType} given.
    * <p>
    * Can't use when <b>Locked</b> or <b>Immutable</b>.
-   * 
-   * @param newCompressionType
-   *          the compression type to use
+   *
+   * @param newCompressionType the compression type to use
    * @return this {@link AxionConfiguration}
    */
   protected AxionConfiguration setCompressionType(final CompressionType newCompressionType) {
@@ -338,16 +308,16 @@ public class AxionConfiguration implements Cloneable {
     configurationProtection.assertUnlocked();
     configurationProtection.assertMutable();
     switch (newCompressionType) {
-    case Deflater:
-      streamCompressionWrapper = StreamCompressionWrapper.DEFLATER_STREAM_COMPRESSION_WRAPPER;
-      break;
-    case None:
-      streamCompressionWrapper = StreamCompressionWrapper.PASSTHROUGH_STREAM_COMPRESSION_WRAPPER;
-      break;
-    default:
-    case GZip:
-      streamCompressionWrapper = StreamCompressionWrapper.GZIP_STREAM_COMPRESSION_WRAPPER;
-      break;
+      case Deflater:
+        streamCompressionWrapper = StreamCompressionWrapper.DEFLATER_STREAM_COMPRESSION_WRAPPER;
+        break;
+      case None:
+        streamCompressionWrapper = StreamCompressionWrapper.PASSTHROUGH_STREAM_COMPRESSION_WRAPPER;
+        break;
+      default:
+      case GZip:
+        streamCompressionWrapper = StreamCompressionWrapper.GZIP_STREAM_COMPRESSION_WRAPPER;
+        break;
     }
     return this;
   }
@@ -356,7 +326,7 @@ public class AxionConfiguration implements Cloneable {
    * Returns the {@link TagAdapter} registered as the base tag adapter.
    * <p>
    * If no base tag adapter has been registered, an exception is thrown.
-   * 
+   *
    * @return the base {@link TagAdapter}
    */
   protected TagAdapter<Tag> getBaseTagAdapter() throws AxionTagRegistrationException {
@@ -365,9 +335,8 @@ public class AxionConfiguration implements Cloneable {
 
   /**
    * Returns the int id for the {@link Tag} class given.
-   * 
-   * @param tagClass
-   *          class to get the id for
+   *
+   * @param tagClass class to get the id for
    * @return the int id for the {@link Tag} class given
    */
   protected int getIdFor(final Class<? extends Tag> tagClass) {
@@ -378,9 +347,8 @@ public class AxionConfiguration implements Cloneable {
    * Returns the {@link Tag} class for the int id given.
    * <p>
    * If no class is found, an exception is thrown.
-   * 
-   * @param id
-   *          the id to get the class for
+   *
+   * @param id the id to get the class for
    * @return the {@link Tag} class for the int id given
    * @throws AxionTagRegistrationException
    */
@@ -392,9 +360,8 @@ public class AxionConfiguration implements Cloneable {
    * Returns the {@link TagAdapter} for the int id given.
    * <p>
    * If no adapter is found, an exception is thrown.
-   * 
-   * @param id
-   *          the id to get the {@link TagAdapter} for
+   *
+   * @param id the id to get the {@link TagAdapter} for
    * @return the {@link TagAdapter} for the int id given
    * @throws AxionTagRegistrationException
    */
@@ -406,9 +373,8 @@ public class AxionConfiguration implements Cloneable {
    * Returns the {@link TagAdapter} for the {@link Tag} class given.
    * <p>
    * If no adapter is found, an exception is thrown.
-   * 
-   * @param tagClass
-   *          {@link Tag} class to get the {@link TagAdapter} for
+   *
+   * @param tagClass {@link Tag} class to get the {@link TagAdapter} for
    * @return the {@link TagAdapter} for the {@link Tag} class given
    * @throws AxionTagRegistrationException
    */
@@ -420,9 +386,8 @@ public class AxionConfiguration implements Cloneable {
    * Returns the {@link TagConverter} for the {@link Tag} given.
    * <p>
    * If no converter is found, an exception is thrown.
-   * 
-   * @param tag
-   *          {@link Tag} to get the {@link TagConverter} for
+   *
+   * @param tag {@link Tag} to get the {@link TagConverter} for
    * @return the {@link TagConverter} for the {@link Tag} given
    * @throws AxionTagRegistrationException
    */
@@ -435,9 +400,8 @@ public class AxionConfiguration implements Cloneable {
    * Returns the {@link TagConverter} for the value given.
    * <p>
    * If no converter is found, an exception is thrown.
-   * 
-   * @param value
-   *          value to get the {@link TagConverter} for
+   *
+   * @param value value to get the {@link TagConverter} for
    * @return the {@link TagConverter} for the value given
    * @throws AxionTagRegistrationException
    */
@@ -450,7 +414,7 @@ public class AxionConfiguration implements Cloneable {
    * Returns true if the given value's class has a converter registered.
    *
    * @param value value
-   * @param <V> value type
+   * @param <V>   value type
    * @return true if the give value's class has a converter registered
    */
   protected <V> boolean hasConverterFor(final V value) {
@@ -459,6 +423,7 @@ public class AxionConfiguration implements Cloneable {
 
   /**
    * Returns true if the given tag's class has a converter registered.
+   *
    * @param tag tag
    * @param <T> tag type
    * @return true if the given tag's class has a converter registered
@@ -469,13 +434,13 @@ public class AxionConfiguration implements Cloneable {
 
   /**
    * Returns the {@link NBTObjectMapper} registered for the class type provided.
-   * 
-   * @param type
-   *          class type to get the {@link NBTObjectMapper} for
+   *
+   * @param type class type to get the {@link NBTObjectMapper} for
    * @return the {@link NBTObjectMapper} registered for the class type provided
    * @throws AxionMapperRegistrationException
    */
-  protected <T extends Tag, O> NBTObjectMapper<T, O> getMapperFor(final Class<O> type) throws AxionMapperRegistrationException {
+  protected <T extends Tag, O> NBTObjectMapper<T, O> getMapperFor(final Class<O> type) throws
+      AxionMapperRegistrationException {
     return mappers.getMapperFor(type);
   }
 
@@ -490,36 +455,36 @@ public class AxionConfiguration implements Cloneable {
   }
 
   /**
-   * Wraps an {@link InputStream} using the {@link StreamCompressionWrapper} set
-   * with {@link #setCompressionType(CompressionType)}.
-   * 
-   * @param inputStream
-   *          the {@link InputStream} to wrap
+   * Wraps an {@link InputStream} using the {@link StreamCompressionWrapper} set with {@link
+   * #setCompressionType(CompressionType)}.
+   *
+   * @param inputStream the {@link InputStream} to wrap
    * @return a new {@link AxionInputStream}
    * @throws IOException
    * @see #setCompressionType(CompressionType)
    */
   protected AxionInputStream wrap(final InputStream inputStream) throws IOException {
-    return new AxionInputStream(streamCompressionWrapper.wrap(inputStream), CharacterEncoderFactory.create(characterEncodingType));
+    return new AxionInputStream(streamCompressionWrapper.wrap(inputStream), CharacterEncoderFactory.create
+        (characterEncodingType));
   }
 
   /**
-   * Wraps an {@link OutputStream} using the {@link StreamCompressionWrapper}
-   * set with {@link #setCompressionType(CompressionType)}.
-   * 
-   * @param outputStream
-   *          the {@link OutputStream} to wrap
+   * Wraps an {@link OutputStream} using the {@link StreamCompressionWrapper} set with {@link
+   * #setCompressionType(CompressionType)}.
+   *
+   * @param outputStream the {@link OutputStream} to wrap
    * @return a new {@link AxionInputStream}
    * @throws IOException
    * @see #setCompressionType(CompressionType)
    */
   protected AxionOutputStream wrap(final OutputStream outputStream) throws IOException {
-    return new AxionOutputStream(streamCompressionWrapper.wrap(outputStream), CharacterEncoderFactory.create(characterEncodingType));
+    return new AxionOutputStream(streamCompressionWrapper.wrap(outputStream), CharacterEncoderFactory.create
+        (characterEncodingType));
   }
 
   /**
    * Creates a duplicate instance of this {@link AxionConfiguration}.
-   * 
+   *
    * @see AxionConfiguration#AxionConfiguration(AxionConfiguration)
    */
   @Override

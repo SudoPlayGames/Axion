@@ -1,20 +1,15 @@
 package com.sudoplay.axion.ext.tag;
 
-import java.util.Arrays;
-
 import com.sudoplay.axion.tag.Tag;
 
+import java.util.Arrays;
+
 /**
- * @tag.type 82
- * 
- * @tag.name <code>TAG_Float_Array</code>
- * 
- * @tag.payload * <code>TAG_Int</code> length<br>
- *              * An array of floats. The length of this array is
- *              <code>length</code> floats.
- * 
  * @author Jason Taylor
- * 
+ * @tag.type 82
+ * @tag.name <code>TAG_Float_Array</code>
+ * @tag.payload * <code>TAG_Int</code> length<br> * An array of floats. The length of this array is <code>length</code>
+ * floats.
  */
 public class TagFloatArray extends Tag {
 
@@ -22,9 +17,8 @@ public class TagFloatArray extends Tag {
 
   /**
    * Creates a new {@link TagFloatArray} with the given name.
-   * 
-   * @param newName
-   *          the {@link Tag} name
+   *
+   * @param newName the {@link Tag} name
    */
   public TagFloatArray(final String newName) {
     this(newName, new float[0]);
@@ -32,9 +26,8 @@ public class TagFloatArray extends Tag {
 
   /**
    * Creates a new {@link TagFloatArray} with no name and the given value.
-   * 
-   * @param newFloatArray
-   *          the {@link Float} array value
+   *
+   * @param newFloatArray the {@link Float} array value
    */
   public TagFloatArray(final float[] newFloatArray) {
     this(null, newFloatArray);
@@ -42,11 +35,9 @@ public class TagFloatArray extends Tag {
 
   /**
    * Creates a new {@link TagFloatArray} with the given name and value.
-   * 
-   * @param newName
-   *          the {@link Tag} name
-   * @param newFloatArray
-   *          the {@link Float} array value
+   *
+   * @param newName       the {@link Tag} name
+   * @param newFloatArray the {@link Float} array value
    */
   public TagFloatArray(final String newName, final float[] newFloatArray) {
     super(newName);
@@ -55,9 +46,8 @@ public class TagFloatArray extends Tag {
 
   /**
    * Sets the value of this {@link TagFloatArray} to the given value.
-   * 
-   * @param newFloatArray
-   *          the {@link Float} array value
+   *
+   * @param newFloatArray the {@link Float} array value
    */
   public void set(final float[] newFloatArray) {
     if (newFloatArray == null) {
@@ -68,7 +58,7 @@ public class TagFloatArray extends Tag {
 
   /**
    * Returns the value of this {@link TagFloatArray}.
-   * 
+   *
    * @return the value of this {@link TagFloatArray}
    */
   public float[] get() {
@@ -92,9 +82,7 @@ public class TagFloatArray extends Tag {
     if (getClass() != obj.getClass())
       return false;
     TagFloatArray other = (TagFloatArray) obj;
-    if (!Arrays.equals(data, other.data))
-      return false;
-    return true;
+    return Arrays.equals(data, other.data);
   }
 
   @Override

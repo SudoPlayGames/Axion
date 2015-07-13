@@ -1,20 +1,15 @@
 package com.sudoplay.axion.spec.tag;
 
-import java.util.Arrays;
-
 import com.sudoplay.axion.tag.Tag;
 
+import java.util.Arrays;
+
 /**
- * @tag.type 11
- * 
- * @tag.name <code>TAG_Int_Array</code>
- * 
- * @tag.payload * <code>TAG_Int</code> length<br>
- *              * An array of ints. The length of this array is
- *              <code>length</code> ints.
- * 
  * @author Jason Taylor
- * 
+ * @tag.type 11
+ * @tag.name <code>TAG_Int_Array</code>
+ * @tag.payload * <code>TAG_Int</code> length<br> * An array of ints. The length of this array is <code>length</code>
+ * ints.
  */
 public class TagIntArray extends Tag {
 
@@ -22,9 +17,8 @@ public class TagIntArray extends Tag {
 
   /**
    * Creates a new {@link TagIntArray} with the given name.
-   * 
-   * @param newName
-   *          the {@link Tag} name
+   *
+   * @param newName the {@link Tag} name
    */
   public TagIntArray(final String newName) {
     this(newName, new int[0]);
@@ -32,9 +26,8 @@ public class TagIntArray extends Tag {
 
   /**
    * Creates a new {@link TagIntArray} with no name and the given value.
-   * 
-   * @param newIntArray
-   *          the {@link Integer} array value
+   *
+   * @param newIntArray the {@link Integer} array value
    */
   public TagIntArray(final int[] newIntArray) {
     this(null, newIntArray);
@@ -42,11 +35,9 @@ public class TagIntArray extends Tag {
 
   /**
    * Creates a new {@link TagIntArray} with the given name and value.
-   * 
-   * @param newName
-   *          the {@link Tag} name
-   * @param newIntArray
-   *          the {@link Integer} array value
+   *
+   * @param newName     the {@link Tag} name
+   * @param newIntArray the {@link Integer} array value
    */
   public TagIntArray(final String newName, final int[] newIntArray) {
     super(newName);
@@ -55,9 +46,8 @@ public class TagIntArray extends Tag {
 
   /**
    * Sets the value of this {@link TagIntArray} to the given value.
-   * 
-   * @param newIntArray
-   *          the {@link Integer} array value
+   *
+   * @param newIntArray the {@link Integer} array value
    */
   public void set(final int[] newIntArray) {
     if (newIntArray == null) {
@@ -68,7 +58,7 @@ public class TagIntArray extends Tag {
 
   /**
    * Returns the value of this {@link TagIntArray}.
-   * 
+   *
    * @return the value of this {@link TagIntArray}
    */
   public int[] get() {
@@ -92,9 +82,7 @@ public class TagIntArray extends Tag {
     if (getClass() != obj.getClass())
       return false;
     TagIntArray other = (TagIntArray) obj;
-    if (!Arrays.equals(data, other.data))
-      return false;
-    return true;
+    return Arrays.equals(data, other.data);
   }
 
   @Override

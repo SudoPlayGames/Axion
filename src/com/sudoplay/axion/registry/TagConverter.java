@@ -1,42 +1,22 @@
 package com.sudoplay.axion.registry;
 
 import com.sudoplay.axion.AxionInstanceException;
-import com.sudoplay.axion.ext.converter.TagBooleanArrayConverter;
-import com.sudoplay.axion.ext.converter.TagBooleanConverter;
-import com.sudoplay.axion.ext.converter.TagDoubleArrayConverter;
-import com.sudoplay.axion.ext.converter.TagFloatArrayConverter;
-import com.sudoplay.axion.ext.converter.TagLongArrayConverter;
-import com.sudoplay.axion.ext.converter.TagShortArrayConverter;
-import com.sudoplay.axion.ext.converter.TagStringArrayConverter;
-import com.sudoplay.axion.spec.converter.TagByteArrayConverter;
-import com.sudoplay.axion.spec.converter.TagByteConverter;
-import com.sudoplay.axion.spec.converter.TagCompoundConverter;
-import com.sudoplay.axion.spec.converter.TagDoubleConverter;
-import com.sudoplay.axion.spec.converter.TagFloatConverter;
-import com.sudoplay.axion.spec.converter.TagIntArrayConverter;
-import com.sudoplay.axion.spec.converter.TagIntConverter;
-import com.sudoplay.axion.spec.converter.TagListConverter;
-import com.sudoplay.axion.spec.converter.TagLongConverter;
-import com.sudoplay.axion.spec.converter.TagShortConverter;
-import com.sudoplay.axion.spec.converter.TagStringConverter;
+import com.sudoplay.axion.ext.converter.*;
+import com.sudoplay.axion.spec.converter.*;
 import com.sudoplay.axion.tag.Tag;
 
 /**
- * Classes that extend the abstract {@link TagConverter} class define how
- * {@link Tag}s are converted to and from their respective values.
- * 
+ * Classes that extend the abstract {@link TagConverter} class define how {@link Tag}s are converted to and from their
+ * respective values.
+ *
+ * @param <T> {@link Tag} type
+ * @param <V> value type
  * @author Jason Taylor
- * 
- * @param <T>
- *          {@link Tag} type
- * @param <V>
- *          value type
  */
 public abstract class TagConverter<T extends Tag, V> extends RegistryAccessor {
 
   /**
-   * Group of {@link TagConverter}s that conform to the original NBT
-   * specification.
+   * Group of {@link TagConverter}s that conform to the original NBT specification.
    */
   public static class Spec {
     public static final TagByteConverter BYTE = new TagByteConverter();
@@ -53,8 +33,7 @@ public abstract class TagConverter<T extends Tag, V> extends RegistryAccessor {
   }
 
   /**
-   * Group of {@link TagConverter}s that conform to Axion's custom, extended
-   * specification.
+   * Group of {@link TagConverter}s that conform to Axion's custom, extended specification.
    */
   public static class Ext {
     public static final TagBooleanConverter BOOLEAN = new TagBooleanConverter();
@@ -68,30 +47,25 @@ public abstract class TagConverter<T extends Tag, V> extends RegistryAccessor {
 
   /**
    * Converts a {@link Tag} into a value.
-   * 
-   * @param tag
-   *          the {@link Tag} to convert
+   *
+   * @param tag the {@link Tag} to convert
    * @return the converted value
    */
   public abstract V convert(final T tag);
 
   /**
    * Converts a value into a {@link Tag}.
-   * 
-   * @param name
-   *          the name for the created {@link Tag}
-   * @param value
-   *          the value to create the tag from
+   *
+   * @param name  the name for the created {@link Tag}
+   * @param value the value to create the tag from
    * @return a new {@link Tag} from the value
    */
   public abstract T convert(final String name, final V value);
 
   /**
-   * Creates a new instance of this {@link TagConverter} and assigns a reference
-   * to the {@link TagRegistry} given.
-   * 
-   * @param newTagRegistry
-   *          the {@link TagRegistry} to assign to the new instance
+   * Creates a new instance of this {@link TagConverter} and assigns a reference to the {@link TagRegistry} given.
+   *
+   * @param newTagRegistry the {@link TagRegistry} to assign to the new instance
    * @return a new instance of this {@link TagConverter}
    */
   @SuppressWarnings("unchecked")
@@ -101,7 +75,8 @@ public abstract class TagConverter<T extends Tag, V> extends RegistryAccessor {
       newInstance.setRegistry(newTagRegistry);
       return newInstance;
     } catch (Exception e) {
-      throw new AxionInstanceException("Unable to instantiate new converter of type " + this.getClass().getSimpleName(), e);
+      throw new AxionInstanceException("Unable to instantiate new converter of type " + this.getClass().getSimpleName
+          (), e);
     }
   }
 

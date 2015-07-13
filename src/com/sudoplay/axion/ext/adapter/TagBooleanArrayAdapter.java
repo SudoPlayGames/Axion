@@ -1,30 +1,29 @@
 package com.sudoplay.axion.ext.adapter;
 
-import java.io.IOException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.sudoplay.axion.ext.tag.TagBooleanArray;
 import com.sudoplay.axion.registry.TagAdapter;
 import com.sudoplay.axion.spec.tag.TagList;
 import com.sudoplay.axion.stream.AxionInputStream;
 import com.sudoplay.axion.stream.AxionOutputStream;
 import com.sudoplay.axion.tag.Tag;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
 
 /**
- * The {@link TagAdapter} used to read and write a {@link TagBooleanArray}. The
- * booleans are read and written as bits; 8 bits per byte.
+ * The {@link TagAdapter} used to read and write a {@link TagBooleanArray}. The booleans are read and written as bits; 8
+ * bits per byte.
  * <p>
  * Part of the extended, custom specification.
- * 
+ *
  * @author Jason Taylor
  */
 public class TagBooleanArrayAdapter extends TagAdapter<TagBooleanArray> {
 
   private static final Logger LOG = LoggerFactory.getLogger(TagBooleanArrayAdapter.class);
 
-  private static final int[] POW = new int[] { 1, 2, 4, 8, 16, 32, 64, 128 };
+  private static final int[] POW = new int[]{1, 2, 4, 8, 16, 32, 64, 128};
 
   @Override
   public TagBooleanArray read(Tag parent, AxionInputStream in) throws IOException {
