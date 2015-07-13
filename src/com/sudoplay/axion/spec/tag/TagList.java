@@ -126,7 +126,7 @@ public class TagList extends ContainerTag {
    *           if no {@link TagConverter} is registered for the value's type
    */
   public <V> void addValue(final V value, final Axion axion) throws AxionTagRegistrationException {
-    add(axion.convertToTag(null, value));
+    add(axion.createTagWithConverter(null, value));
   }
 
   /**
@@ -142,7 +142,7 @@ public class TagList extends ContainerTag {
    *           if no {@link NBTObjectMapper} is registered for the value's type
    */
   public <V> void addMappableValue(final V value, final Axion axion) throws AxionMapperRegistrationException {
-    add(axion.createTagFrom(null, value));
+    add(axion.createTagWithMapper(null, value));
   }
 
   /**

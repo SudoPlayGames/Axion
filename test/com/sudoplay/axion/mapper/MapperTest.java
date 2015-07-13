@@ -7,7 +7,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.sudoplay.axion.Axion;
-import com.sudoplay.axion.mapper.NBTObjectMapper;
 import com.sudoplay.axion.spec.tag.TagFloat;
 import com.sudoplay.axion.spec.tag.TagList;
 
@@ -30,7 +29,7 @@ public class MapperTest {
     Axion axion = Axion.getInstance("vectorTest");
 
     Vector3f position = new Vector3f(16f, 2.5f, 65f);
-    TagList tagList = axion.createTagFrom("vec1", position);
+    TagList tagList = axion.createTagWithMapper("vec1", position);
     Vector3f result = axion.createObjectFrom(tagList, Vector3f.class);
 
     assertEquals(position, result);

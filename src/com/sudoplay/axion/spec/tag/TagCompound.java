@@ -248,7 +248,7 @@ public class TagCompound extends ContainerTag {
    *           if no {@link TagConverter} is registered for the value's type
    */
   public <V> void putValue(final String name, final V value, final Axion axion) throws AxionTagRegistrationException {
-    put(axion.convertToTag(name, value));
+    put(axion.createTagWithConverter(name, value));
   }
 
   /**
@@ -266,7 +266,7 @@ public class TagCompound extends ContainerTag {
    *           if no {@link NBTObjectMapper} is registered for the value's type
    */
   public <V> void putMappableValue(final String name, final V value, final Axion axion) throws AxionMapperRegistrationException {
-    put(axion.createTagFrom(name, value));
+    put(axion.createTagWithMapper(name, value));
   }
 
   @Override

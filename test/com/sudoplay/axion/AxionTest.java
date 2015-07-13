@@ -4,8 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Date;
 
 import com.sudoplay.axion.api.AxionWritable;
@@ -86,20 +84,21 @@ public class AxionTest {
     testClass.aLong = 42;
 
     TagCompound tagCompound = axion.write("testClass", testClass);
-    TestClassWithNullaryConstructor newTestClass = axion.read(tagCompound, TestClassWithNullaryConstructor.class);
+    TestClassWithNullaryConstructor newTestClass = axion.createFromTag(tagCompound, TestClassWithNullaryConstructor
+        .class);
     assertEquals(testClass.aLong, newTestClass.aLong);
   }
 
   @Test
   public void test_writeObject_writesConvertibleObjects() {
-    TagBoolean tag = axion.write("aBoolean", true);
+    TagBoolean tag = axion.createTag("aBoolean", true);
     assertEquals(true, tag.get());
   }
 
   @Test
   public void test_readObject_readsConvertibleObjects() {
-    TagBoolean tag = axion.write("aBoolean", true);
-    boolean b = axion.read(tag, boolean.class);
+    TagBoolean tag = axion.createTag("aBoolean", true);
+    boolean b = axion.createFromTag(tag, boolean.class);
     assertEquals(true, b);
   }
 
@@ -110,7 +109,7 @@ public class AxionTest {
     v.y = 73;
     v.z = 31415;
 
-    TagList list = axion.write(v);
+    TagList list = axion.createTag(v);
     assertEquals(42, ((TagInt)list.get(0)).get());
     assertEquals(73, ((TagInt)list.get(1)).get());
     assertEquals(31415, ((TagInt)list.get(2)).get());
@@ -123,8 +122,8 @@ public class AxionTest {
     v.y = 73;
     v.z = 31415;
 
-    TagList list = axion.write(v);
-    Vector newV = axion.read(list, Vector.class);
+    TagList list = axion.createTag(v);
+    Vector newV = axion.createFromTag(list, Vector.class);
     assertEquals(v.x, newV.x);
     assertEquals(v.y, newV.y);
     assertEquals(v.z, newV.z);
