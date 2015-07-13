@@ -9,6 +9,7 @@ import com.sudoplay.axion.tag.Tag;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.function.Predicate;
 
 /**
  * Default implementation of the AxionWriter interface.
@@ -37,10 +38,22 @@ public class DefaultAxionWriter implements AxionWriter {
   }
 
   @Override
+  public <S extends Tag> AxionWriter write(String name, S tag, Predicate<S> predicate) {
+    if (predicate.test(tag)) write(name, tag);
+    return this;
+  }
+
+  @Override
   public AxionWriter write(String name, AxionWritable axionWritable) {
     TagCompound tagCompound = new TagCompound();
     axionWritable.write(new DefaultAxionWriter(tagCompound, axion));
     tagCompound.put(name, tagCompound);
+    return this;
+  }
+
+  @Override
+  public AxionWriter write(String name, AxionWritable axionWritable, Predicate<AxionWritable> predicate) {
+    if (predicate.test(axionWritable)) write(name, axionWritable);
     return this;
   }
 
@@ -56,6 +69,12 @@ public class DefaultAxionWriter implements AxionWriter {
     }
     throw new AxionWriteException("Class has no converter registered, and no mapper registered: " + object.getClass()
         .toString());
+  }
+
+  @Override
+  public <O> AxionWriter write(String name, O object, Predicate<O> predicate) {
+    if (predicate.test(object)) write(name, object);
+    return this;
   }
 
   @Override

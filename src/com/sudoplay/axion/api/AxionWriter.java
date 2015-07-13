@@ -7,6 +7,7 @@ import com.sudoplay.axion.tag.Tag;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.function.Predicate;
 
 /**
  * Interface for the AxionWriter object that is passed into the AxionWritable methods.
@@ -20,9 +21,15 @@ public interface AxionWriter {
 
   <S extends Tag> AxionWriter write(String name, S tag);
 
+  <S extends Tag> AxionWriter write(String name, S tag, Predicate<S> predicate);
+
   AxionWriter write(String name, AxionWritable axionWritable);
 
+  AxionWriter write(String name, AxionWritable axionWritable, Predicate<AxionWritable> predicate);
+
   AxionWriter write(String name, Object object);
+
+  <O> AxionWriter write(String name, O object, Predicate<O> predicate);
 
   <K, V> AxionWriter writeMap(String name, Map<K, V> map);
 
@@ -34,6 +41,17 @@ public interface AxionWriter {
 
   AxionWriter setTagCompound(TagCompound tagCompound);
 
+  /**
+   * Writes a Map to a TagList.
+   * <p>
+   * A TagList was chosen over a TagCompound to provide support for sorted maps and non-string keys.
+   *
+   * @param axion
+   * @param map
+   * @param <K>
+   * @param <V>
+   * @return
+   */
   static <K, V> TagList writeMap(
       Axion axion,
       Map<K, V> map
