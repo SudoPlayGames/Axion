@@ -307,4 +307,16 @@ public class TagCompoundTest {
     assertEquals(tagByte, compound.get("newName"));
   }
 
+  @Test
+  public void test_stream() {
+    TagCompound compound = new TagCompound();
+    compound.put("first", new TagString("first"));
+    compound.put("second", new TagLong(42L));
+    compound.put("third", new TagLong(73L));
+    compound.put("last", new TagFloat(3.1415f));
+
+    assertEquals(1, compound.stream().filter(e -> "second".equals(e.getKey())).count());
+    assertEquals(2, compound.stream().filter(e -> e.getValue() instanceof TagLong).count());
+  }
+
 }

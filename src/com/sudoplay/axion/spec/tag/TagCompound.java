@@ -12,6 +12,7 @@ import com.sudoplay.axion.tag.Tag;
 
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.stream.Stream;
 
 /**
  * @author Jason Taylor
@@ -78,6 +79,11 @@ public class TagCompound extends ContainerTag {
   @Override
   public Iterator<Tag> iterator() {
     return Collections.unmodifiableCollection(data.values()).iterator();
+  }
+
+  public Stream<Entry<String, Tag>> stream() {
+    Set<Entry<String, Tag>> set = data.entrySet();
+    return set.stream();
   }
 
   @Override
