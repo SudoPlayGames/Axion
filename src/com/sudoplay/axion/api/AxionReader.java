@@ -20,7 +20,11 @@ public interface AxionReader {
 
   <V> V read(String name);
 
+  <V, T extends Tag> V read(T tag);
+
   <V> V read(String name, Class<V> vClass);
+
+  <V, T extends Tag> V read(T tag, Class<V> vClass);
 
   <T extends Tag> T readAsTag(String name);
 

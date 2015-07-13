@@ -34,22 +34,32 @@ public class DefaultAxionReader implements AxionReader {
   @Override
   public <V> V read(String name) {
     Tag in = tagCompound.get(name);
-    if (axion.hasConverterFor(in)) {
-      return axion.convertToValue(in);
+    return this.read(in);
+  }
+
+  @Override
+  public <V, T extends Tag> V read(T tag) {
+    if (axion.hasConverterFor(tag)) {
+      return axion.convertToValue(tag);
     }
-    throw new AxionTagRegistrationException("No converter registered for tag: " + in.getClass());
+    throw new AxionTagRegistrationException("No converter registered for tag: " + tag.getClass());
   }
 
   @Override
   public <V> V read(String name, Class<V> vClass) {
     Tag in = tagCompound.get(name);
+    return this.read(in, vClass);
+  }
+
+  @Override
+  public <V, T extends Tag> V read(T tag, Class<V> vClass) {
     if (AxionWritable.class.isAssignableFrom(vClass)
-        && in.getClass() == TagCompound.class) {
+        && tag.getClass() == TagCompound.class) {
       try {
         Constructor<V> oConstructor = vClass.getDeclaredConstructor();
         oConstructor.setAccessible(true);
         V oObject = oConstructor.newInstance();
-        ((AxionWritable) oObject).read(new DefaultAxionReader((TagCompound) in, axion));
+        ((AxionWritable) oObject).read(new DefaultAxionReader((TagCompound) tag, axion));
         return oObject;
       } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
         String message = "Failed to find nullary constructor for class: " + vClass.toString();
@@ -57,7 +67,7 @@ public class DefaultAxionReader implements AxionReader {
       }
 
     } else if (axion.hasMapperFor(vClass)) {
-      return axion.createObjectFrom(in, vClass);
+      return axion.createObjectFrom(tag, vClass);
 
     }
     throw new AxionWriteException("Class not assignable from AxionWritable and no mapper registered: " + vClass);
