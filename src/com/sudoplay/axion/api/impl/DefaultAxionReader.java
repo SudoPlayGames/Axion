@@ -32,6 +32,11 @@ public class DefaultAxionReader implements AxionReader {
   }
 
   @Override
+  public boolean has(String name) {
+    return tagCompound.containsKey(name);
+  }
+
+  @Override
   public <V> V read(String name) {
     Tag in = tagCompound.get(name);
     return this.read(in);

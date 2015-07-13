@@ -18,6 +18,8 @@ import java.util.function.Consumer;
 @SuppressWarnings("unused")
 public interface AxionReader {
 
+  boolean has(String name);
+
   <V> V read(String name);
 
   <V, T extends Tag> V read(T tag);
