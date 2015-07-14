@@ -3,7 +3,9 @@ package com.sudoplay.axion;
 import com.sudoplay.axion.AxionConfiguration.CharacterEncodingType;
 import com.sudoplay.axion.AxionConfiguration.CompressionType;
 import com.sudoplay.axion.AxionConfigurationProtection.ProtectionMode;
+import com.sudoplay.axion.api.AxionReader;
 import com.sudoplay.axion.api.AxionWritable;
+import com.sudoplay.axion.api.AxionWriter;
 import com.sudoplay.axion.api.impl.DefaultAxionReader;
 import com.sudoplay.axion.api.impl.DefaultAxionWriter;
 import com.sudoplay.axion.mapper.AxionMapperRegistrationException;
@@ -25,6 +27,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Predicate;
 
 /**
  * This is the main class for {@link Axion}, a tool for working with NBT.
@@ -240,6 +243,18 @@ public class Axion {
   public Axion setImmutable() {
     configuration.setImmutable();
     return this;
+  }
+
+  public AxionWriter defaultWriter() {
+    return new DefaultAxionWriter(this);
+  }
+
+  public AxionWriter defaultWriter(TagCompound tagCompound) {
+    return new DefaultAxionWriter(tagCompound, this);
+  }
+
+  public AxionReader defaultReader(TagCompound tagCompound) {
+    return new DefaultAxionReader(tagCompound, this);
   }
 
   /**
