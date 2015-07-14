@@ -620,7 +620,7 @@ public class Axion {
         Constructor<O> oConstructor = objectClass.getDeclaredConstructor();
         oConstructor.setAccessible(true);
         O oObject = oConstructor.newInstance();
-        ((AxionWritable) oObject).read(new DefaultAxionReader((TagCompound) in, this));
+        ((AxionWritable) oObject).read(this.defaultReader((TagCompound) in));
         return oObject;
       } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
         String message = "Failed to find nullary constructor for class: " + objectClass.toString();
@@ -702,7 +702,7 @@ public class Axion {
    */
   public TagCompound createTagFrom(String name, AxionWritable writable) {
     TagCompound tagCompound = new TagCompound();
-    writable.write(new DefaultAxionWriter(tagCompound, this));
+    writable.write(this.defaultWriter(tagCompound));
     tagCompound.setName(name);
     return tagCompound;
   }
@@ -722,7 +722,7 @@ public class Axion {
       AxionTagRegistrationException {
     LOG.debug("Entering read(file=[{}], axionWritable=[{}])", file, axionWritable);
     long start = System.currentTimeMillis();
-    axionWritable.read(new DefaultAxionReader(read(file), this));
+    axionWritable.read(this.defaultReader(read(file)));
     LOG.info("Read of file [{}] into [{}] completed in [{}]", file, axionWritable, DurationUtil.formatDurationWords
         (System.currentTimeMillis() - start));
     LOG.debug("Leaving read(): [{}]", axionWritable);
@@ -740,7 +740,7 @@ public class Axion {
     LOG.debug("Entering write(axionWritable=[{}], file=[{}])", axionWritable, file);
     long start = System.currentTimeMillis();
     TagCompound tagCompound = new TagCompound();
-    axionWritable.write(new DefaultAxionWriter(tagCompound, this));
+    axionWritable.write(this.defaultWriter(tagCompound));
     write(tagCompound, file);
     LOG.info("Write of [{}] to file [{}] completed in [{}]", axionWritable, file, DurationUtil.formatDurationWords
         (System.currentTimeMillis() - start));
@@ -797,7 +797,7 @@ public class Axion {
   public <T extends AxionWritable> T read(final InputStream inputStream, final T axionWritable) throws IOException {
     LOG.debug("Entering read(inputStream=[{}], axionWritable=[{}])", inputStream, axionWritable);
     long start = System.currentTimeMillis();
-    axionWritable.read(new DefaultAxionReader(read(inputStream), this));
+    axionWritable.read(this.defaultReader(read(inputStream)));
     LOG.info("Read into [{}] completed in [{}]", axionWritable, DurationUtil.formatDurationWords(System
         .currentTimeMillis() - start));
     LOG.debug("Leaving read(): [{}]", axionWritable);
@@ -819,7 +819,7 @@ public class Axion {
     LOG.debug("Entering write(axionWritable=[{}], outputStream=[{}])", axionWritable, outputStream);
     long start = System.currentTimeMillis();
     TagCompound tagCompound = new TagCompound();
-    axionWritable.write(new DefaultAxionWriter(tagCompound, this));
+    axionWritable.write(this.defaultWriter(tagCompound));
     write(tagCompound, outputStream);
     LOG.info("Write completed in [{}]", DurationUtil.formatDurationWords(System.currentTimeMillis() - start));
     LOG.debug("Leaving write()");
