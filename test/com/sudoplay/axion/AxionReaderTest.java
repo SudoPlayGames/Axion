@@ -27,7 +27,9 @@ public class AxionReaderTest {
 
   @BeforeClass
   public static void before() {
-    axion = Axion.createInstanceFrom(Axion.getExtInstance(), "test");
+    if ((axion = Axion.getInstance("test")) == null) {
+      axion = Axion.createInstanceFrom(Axion.getExtInstance(), "test");
+    }
     axion.registerNBTObjectMapper(Vector.class, new VectorMapper());
   }
 
@@ -68,6 +70,7 @@ public class AxionReaderTest {
     TagCompound out = new TagCompound();
     getTestWritableVector().write(axion.defaultWriter(out));
     t.put("writableVector", out);
+    t.put("writableArgsVector", axion.createTagFrom(new WritableArgsVector(3, 1, 4)));
     return t;
   }
 
@@ -157,13 +160,17 @@ public class AxionReaderTest {
   @Test
   public void test_read_name_function() {
     AxionReader in = getTestReader();
+    boolean b;
 
     // should return value after function application
     assertTrue(in.read("boolean", value -> !value));
 
+    // should return null if tag doesn't exist
+    assertNull(in.read("booleao", (Function<Boolean, Boolean>) value -> !value));
+
     // should throw IllegalArgumentException on null name parameter
     try {
-      boolean b = in.read((String) null, value -> !value);
+      b = in.read((String) null, value -> !value);
       fail();
     } catch (IllegalArgumentException e) {
       // expected
@@ -171,15 +178,7 @@ public class AxionReaderTest {
 
     // should throw IllegalArgumentException on null function parameter
     try {
-      boolean b = (boolean) in.read("boolean", (Function) null);
-      fail();
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
-
-    // should throw IllegalArgumentException when tag does not exist
-    try {
-      boolean b = in.read("loobean", value -> !value);
+      b = (boolean) in.read("boolean", (Function) null);
       fail();
     } catch (IllegalArgumentException e) {
       // expected
@@ -306,6 +305,9 @@ public class AxionReaderTest {
   public void test_read_name_class_function() {
     AxionReader in = getTestReader();
 
+    // should return null if the tag doesn't exist
+    assertNull(in.read("yay", Vector.class, (Function<Vector, Vector>) vector -> vector));
+
     // should apply given function before returning value
     Vector v = in.read("vector", Vector.class, (Function<Vector, Vector>) vector -> {
       vector.y = 42;
@@ -329,7 +331,7 @@ public class AxionReaderTest {
       // expected
     }
 
-    // should throw IllegalArgumentException on null class parameter
+    // should throw IllegalArgumentException on null function parameter
     try {
       in.read("vector", (Class<Vector>) null, (Function<Vector, Vector>) vector -> vector);
       fail();
@@ -342,6 +344,32 @@ public class AxionReaderTest {
   public void test_read_tag_class() {
     AxionReader in = getTestReader();
 
+    // should read implementations of AxionWritable that have a nullary constructor
+    WritableVector writableVector = in.read(axion.createTagFrom(getTestWritableVector()), WritableVector.class);
+    assertEquals(1, writableVector.y);
+
+    // should read mappable classes
+    Vector v = in.read((Tag) axion.createTagFrom(getTestVector()), Vector.class);
+    assertEquals(1, v.y);
+
+    // should throw AxionReadException if the class doesn't implement AxionWritable interface
+    try {
+      TagList tagList = in.getTagCompound().get("vector");
+      in.read(tagList, ArgsVector.class);
+      fail();
+    } catch (AxionReadException e) {
+      // expected
+    }
+
+    // should throw AxionReadException if the AxionWritable implementation has no nullary constructor
+    try {
+      TagCompound tagCompound = in.getTagCompound().get("writableArgsVector");
+      in.read(tagCompound, WritableArgsVector.class);
+      fail();
+    } catch (AxionReadException e) {
+      // expected
+    }
+
     // should throw IllegalArgumentException on null tag parameter
     try {
       in.read((Tag) null, Vector.class);
@@ -353,6 +381,160 @@ public class AxionReaderTest {
     // should throw IllegalArgumentException on null class parameter
     try {
       in.read(new TagCompound(), (Class<Vector>) null);
+      fail();
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+  }
+
+  @Test
+  public void test_read_tag_class_defaultValue() {
+    AxionReader in = getTestReader();
+
+    // should read implementations of AxionWritable that have a nullary constructor
+    WritableVector writableVector = in.read(axion.createTagFrom(getTestWritableVector()), WritableVector.class);
+    assertEquals(1, writableVector.y);
+
+    // should read mappable classes
+    Vector v = in.read((Tag) axion.createTagFrom(getTestVector()), Vector.class);
+    assertEquals(1, v.y);
+
+    // should throw AxionReadException if the class doesn't implement AxionWritable interface
+    try {
+      TagList tagList = in.getTag("vector");
+      in.read(tagList, ArgsVector.class);
+      fail();
+    } catch (AxionReadException e) {
+      // expected
+    }
+
+    // should throw AxionReadException if the AxionWritable implementation has no nullary constructor
+    try {
+      TagCompound tagCompound = in.getTagCompound().get("writableArgsVector");
+      in.read(tagCompound, WritableArgsVector.class);
+      fail();
+    } catch (AxionReadException e) {
+      // expected
+    }
+
+    // should return default value if tag parameter is null
+    Vector vector = in.read((Tag) null, Vector.class, getTestVector());
+    assertEquals(1, vector.y);
+
+    // should accept null as defaultValue
+    vector = in.read((Tag) null, Vector.class, (Vector) null);
+    assertNull(vector);
+
+    // should throw IllegalArgumentException on null class parameter
+    try {
+      in.read(new TagCompound(), null, new Vector());
+      fail();
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+  }
+
+  @Test
+  public void read_tag_class_function() {
+    AxionReader in = getTestReader();
+
+    // should read implementations of AxionWritable that have a nullary constructor and apply function to the value
+    // before returning
+    WritableVector writableVector = in.read(
+        axion.createTagFrom(getTestWritableVector()),
+        WritableVector.class,
+        (Function<WritableVector, WritableVector>) v -> {
+          v.y += 41;
+          return v;
+        });
+    assertEquals(42, writableVector.y);
+
+    // should read mappable classes and apply function to the value before returning
+    Vector v = in.read((Tag) axion.createTagFrom(getTestVector()), Vector.class);
+    assertEquals(1, v.y);
+
+    // should throw IllegalArgumentException on null tag parameter
+    try {
+      in.read((Tag) null, Vector.class);
+      fail();
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+
+    // should throw IllegalArgumentException on null class parameter
+    try {
+      in.read(new TagCompound(), (Class<Vector>) null);
+      fail();
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+  }
+
+  @Test
+  public void test_getTag_name() {
+    AxionReader in = getTestReader();
+
+    // should locate and return tag
+    assertEquals(in.getTagCompound().get("int"), in.getTag("int"));
+
+    // should return null if tag doesn't exist
+    assertNull(in.getTag("yarp"));
+
+    // should throw IllegalArgumentException on null name parameter
+    try {
+      in.getTag(null);
+      fail();
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+  }
+
+  @Test
+  public void test_getTag_name_defaultTag() {
+    AxionReader in = getTestReader();
+    TagInt defaultTag = new TagInt(73);
+
+    // should locate and return tag
+    assertEquals(in.getTagCompound().get("int"), in.getTag("int", defaultTag));
+
+    // should return default tag if tag doesn't exist
+    assertEquals(defaultTag, in.getTag("yarp", defaultTag));
+
+    // should allow null as defaultTag parameter
+    assertNull(in.getTag("yarp", (Tag) null));
+
+    // should throw IllegalArgumentException on null name parameter
+    try {
+      in.getTag(null, defaultTag);
+      fail();
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+  }
+
+  @Test
+  public void test_getTag_name_function() {
+    AxionReader in = getTestReader();
+    Function function = t -> new TagString("Peekaboo!");
+
+    // should apply function before returning tag
+    Tag tag = in.getTag("int", function);
+    assertTrue(tag instanceof TagString);
+
+    // should return null if the tag doesn't exist
+    assertNull(in.getTag("yargleberry", function));
+
+    // should throw IllegalArgumentException on null name parameter
+    try {
+      in.getTag(null, function);
+      fail();
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+
+    // should throw IllegalArgumentException on null function parameter
+    try {
+      in.getTag("int", (Function) null);
       fail();
     } catch (IllegalArgumentException e) {
       // expected
@@ -383,8 +565,37 @@ public class AxionReaderTest {
     public int x, y, z;
   }
 
-  public static class WritableVector extends Vector implements AxionWritable {
+  public static class ArgsVector {
+    public int x, y, z;
 
+    public ArgsVector(int x, int y, int z) {
+      this.x = x;
+      this.y = y;
+      this.z = z;
+    }
+  }
+
+  public static class WritableArgsVector extends ArgsVector implements AxionWritable {
+    public int x, y, z;
+
+    public WritableArgsVector(int x, int y, int z) {
+      super(x, y, z);
+    }
+
+    @Override
+    public void write(AxionWriter out) {
+      out.write("x", x).write("y", y).write("z", z);
+    }
+
+    @Override
+    public void read(AxionReader in) {
+      x = in.read("x");
+      y = in.read("y");
+      z = in.read("z");
+    }
+  }
+
+  public static class WritableVector extends Vector implements AxionWritable {
     @Override
     public void write(AxionWriter out) {
       out.write("x", x).write("y", y).write("z", z);

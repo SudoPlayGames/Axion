@@ -23,7 +23,9 @@ public class AxionTest {
 
   @BeforeClass
   public static void before() {
-    axion = Axion.createInstanceFrom(Axion.getExtInstance(), "test");
+    if ((axion = Axion.getInstance("test")) == null) {
+      axion = Axion.createInstanceFrom(Axion.getExtInstance(), "test");
+    }
     axion.registerNBTObjectMapper(Vector.class, new VectorMapper());
   }
 

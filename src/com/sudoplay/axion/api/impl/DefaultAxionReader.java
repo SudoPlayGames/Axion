@@ -1,15 +1,14 @@
 package com.sudoplay.axion.api.impl;
 
 import com.sudoplay.axion.Axion;
-import com.sudoplay.axion.util.AxionFunctions;
 import com.sudoplay.axion.AxionReadException;
-import com.sudoplay.axion.AxionWriteException;
 import com.sudoplay.axion.api.AxionReader;
 import com.sudoplay.axion.api.AxionWritable;
 import com.sudoplay.axion.registry.AxionTagRegistrationException;
 import com.sudoplay.axion.spec.tag.TagCompound;
 import com.sudoplay.axion.spec.tag.TagList;
 import com.sudoplay.axion.tag.Tag;
+import com.sudoplay.axion.util.AxionFunctions;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -61,7 +60,12 @@ public class DefaultAxionReader implements AxionReader {
   @Override
   public <V> V read(String name, Function<V, V> function) {
     this.assertNotNull(name, "name");
-    return this.read((Tag) tagCompound.get(name), function);
+    Tag tag = tagCompound.get(name);
+    if (tag != null) {
+      return this.read((Tag) tagCompound.get(name), function);
+    } else {
+      return null;
+    }
   }
 
   @Override
@@ -124,16 +128,19 @@ public class DefaultAxionReader implements AxionReader {
     assertNotNull(vClass, "class");
     assertNotNull(function, "function");
     Tag tag = tagCompound.get(name);
-    V value = this.read(tag, vClass);
-    return function.apply(value);
+    if (tag != null) {
+      V value = this.read(tag, vClass);
+      return function.apply(value);
+    } else {
+      return null;
+    }
   }
 
   @Override
   public <V, T extends Tag> V read(T tag, Class<V> vClass) {
     assertNotNull(tag, "tag");
     assertNotNull(vClass, "class");
-    if (AxionWritable.class.isAssignableFrom(vClass)
-        && tag.getClass() == TagCompound.class) {
+    if (AxionWritable.class.isAssignableFrom(vClass) && tag.getClass() == TagCompound.class) {
       try {
         Constructor<V> oConstructor = vClass.getDeclaredConstructor();
         oConstructor.setAccessible(true);
@@ -149,12 +156,16 @@ public class DefaultAxionReader implements AxionReader {
       return axion.createObjectFrom(tag, vClass);
 
     }
-    throw new AxionWriteException("Class not assignable from AxionWritable and no mapper registered: " + vClass);
+    throw new AxionReadException("Class not assignable from AxionWritable and no mapper registered: " + vClass);
   }
 
   @Override
   public <V, T extends Tag> V read(T tag, Class<V> vClass, V defaultValue) {
-    return this.read(tag, vClass, (Function<V, V>) value -> value == null ? defaultValue : value);
+    if (tag != null) {
+      return this.read(tag, vClass, AxionFunctions.ifNullChangeTo(defaultValue));
+    } else {
+      return defaultValue;
+    }
   }
 
   @Override
@@ -163,18 +174,28 @@ public class DefaultAxionReader implements AxionReader {
   }
 
   @Override
-  public <T extends Tag> T readAsTag(String name) {
+  public <T extends Tag> T getTag(String name) {
+    assertNotNull(name, "name");
     return tagCompound.get(name);
   }
 
   @Override
-  public <T extends Tag> T readAsTag(String name, T defaultTag) {
-    return readAsTag(name, (Function<T, T>) value -> value == null ? defaultTag : value);
+  public <T extends Tag> T getTag(String name, T defaultTag) {
+    assertNotNull(name, "name");
+    T in = tagCompound.get(name);
+    return (in != null) ? in : defaultTag;
   }
 
   @Override
-  public <T extends Tag> T readAsTag(String name, Function<T, T> function) {
-    return function.apply(this.readAsTag(name));
+  public <T extends Tag> T getTag(String name, Function<T, T> function) {
+    assertNotNull(name, "name");
+    assertNotNull(function, "function");
+    T in = tagCompound.get(name);
+    if (in != null) {
+      return function.apply(in);
+    } else {
+      return null;
+    }
   }
 
   @Override
