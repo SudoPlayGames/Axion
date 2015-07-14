@@ -1,6 +1,7 @@
 package com.sudoplay.axion.api.impl;
 
 import com.sudoplay.axion.Axion;
+import com.sudoplay.axion.util.AxionFunctions;
 import com.sudoplay.axion.AxionReadException;
 import com.sudoplay.axion.AxionWriteException;
 import com.sudoplay.axion.api.AxionReader;
@@ -34,27 +35,38 @@ public class DefaultAxionReader implements AxionReader {
 
   @Override
   public boolean has(String name) {
+    this.assertNotNull(name, "name");
     return tagCompound.containsKey(name);
   }
 
   @Override
   public <V> V read(String name) {
-    Tag in = tagCompound.get(name);
-    return this.read(in);
+    this.assertNotNull(name, "name");
+    Tag tag = tagCompound.get(name);
+    if (tag != null) {
+      if (axion.hasConverterFor(tag)) {
+        return axion.convertToValue(tag);
+      }
+      throw new AxionTagRegistrationException("No converter registered for tag: " + tag.getClass());
+    }
+    return null;
   }
 
   @Override
   public <V> V read(String name, V defaultValue) {
-    return this.read(name, (Function<V, V>) value -> value == null ? defaultValue : value);
+    this.assertNotNull(name, "name");
+    return this.read((Tag) tagCompound.get(name), defaultValue);
   }
 
   @Override
   public <V> V read(String name, Function<V, V> function) {
-    return function.apply(this.read(name));
+    this.assertNotNull(name, "name");
+    return this.read((Tag) tagCompound.get(name), function);
   }
 
   @Override
   public <V, T extends Tag> V read(T tag) {
+    this.assertNotNull(tag, "tag");
     if (axion.hasConverterFor(tag)) {
       return axion.convertToValue(tag);
     }
@@ -63,32 +75,63 @@ public class DefaultAxionReader implements AxionReader {
 
   @Override
   public <V, T extends Tag> V read(T tag, V defaultValue) {
-    return this.read(tag, (Function<V, V>) value -> value == null ? defaultValue : value);
+    if (tag != null) {
+      if (axion.hasConverterFor(tag)) {
+        return AxionFunctions.ifNullChangeTo(defaultValue).apply(axion.convertToValue(tag));
+      }
+      throw new AxionTagRegistrationException("No converter registered for tag: " + tag.getClass());
+    } else {
+      return defaultValue;
+    }
   }
 
   @Override
   public <V, T extends Tag> V read(T tag, Function<V, V> function) {
-    return function.apply(read(tag));
+    this.assertNotNull(tag, "tag");
+    this.assertNotNull(function, "function");
+    if (axion.hasConverterFor(tag)) {
+      return function.apply(axion.convertToValue(tag));
+    }
+    throw new AxionTagRegistrationException("No converter registered for tag: " + tag.getClass());
   }
 
   @Override
   public <V> V read(String name, Class<V> vClass) {
-    Tag in = tagCompound.get(name);
-    return this.read(in, vClass);
+    assertNotNull(name, "name");
+    assertNotNull(vClass, "class");
+    Tag tag = tagCompound.get(name);
+    if (tag != null) {
+      return this.read(tag, vClass);
+    }
+    return null;
   }
 
   @Override
   public <V> V read(String name, Class<V> vClass, V defaultValue) {
-    return this.read(name, vClass, (Function<V, V>) value -> value == null ? defaultValue : value);
+    assertNotNull(name, "name");
+    assertNotNull(vClass, "class");
+    Tag tag = tagCompound.get(name);
+    if (tag != null) {
+      return this.read(tag, vClass);
+    } else {
+      return defaultValue;
+    }
   }
 
   @Override
   public <V> V read(String name, Class<V> vClass, Function<V, V> function) {
-    return function.apply(read(name, vClass));
+    assertNotNull(name, "name");
+    assertNotNull(vClass, "class");
+    assertNotNull(function, "function");
+    Tag tag = tagCompound.get(name);
+    V value = this.read(tag, vClass);
+    return function.apply(value);
   }
 
   @Override
   public <V, T extends Tag> V read(T tag, Class<V> vClass) {
+    assertNotNull(tag, "tag");
+    assertNotNull(vClass, "class");
     if (AxionWritable.class.isAssignableFrom(vClass)
         && tag.getClass() == TagCompound.class) {
       try {
@@ -161,4 +204,10 @@ public class DefaultAxionReader implements AxionReader {
     this.tagCompound = tagCompound;
     return this;
   }
+
+  private <O> O assertNotNull(O o, String message) {
+    if (o == null) throw new IllegalArgumentException("Parameter can't be null: " + message);
+    return o;
+  }
+
 }
