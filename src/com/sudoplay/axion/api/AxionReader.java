@@ -5,12 +5,14 @@ import com.sudoplay.axion.mapper.NBTObjectMapper;
 import com.sudoplay.axion.registry.TagAdapter;
 import com.sudoplay.axion.registry.TagConverter;
 import com.sudoplay.axion.spec.tag.TagCompound;
-import com.sudoplay.axion.spec.tag.TagList;
 import com.sudoplay.axion.tag.Tag;
 
+import java.util.Collection;
+import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 /**
  * Interface for the AxionReader object that is passed into the AxionWritable methods.
@@ -106,7 +108,7 @@ public interface AxionReader {
    * Note: This method will not read implementations of {@link AxionWritable} or objects that have been registered with
    * {@link Axion#registerNBTObjectMapper(Class, NBTObjectMapper)}. It will only read tags registered with {@link
    * Axion#registerTag(int, Class, Class, TagAdapter, TagConverter)}. To read a writable or mappable object, {@link
-   * AxionReader#read(Tag, V)};
+   * AxionReader#read(Tag, Class, V)};
    *
    * @param tag          tag
    * @param defaultValue default value
@@ -274,40 +276,177 @@ public interface AxionReader {
    */
   <T extends Tag> T getTag(String name, Function<T, T> function);
 
-  <K, V> void readMap(String name, Class<K> kClass, Class<V> vClass, BiConsumer<K, V> consumer);
+  /**
+   * Reads a map into the given map.
+   * <p>
+   * Neither the name, class, or map parameter can be null.
+   *
+   * @param name   tag name
+   * @param kClass key class
+   * @param vClass value class
+   * @param map    map
+   * @param <K>    key type
+   * @param <V>    value type
+   * @return the populated map
+   */
+  <K, V> Map<K, V> consumeMap(String name, Class<K> kClass, Class<V> vClass, Map<K, V> map);
 
-  <V> void readCollection(String name, Class<V> vClass, Consumer<V> consumer);
+  /**
+   * Reads a map and passes its keys and values to the given consumer.
+   * <p>
+   * Neither the name, class, or consumer parameter can be null.
+   *
+   * @param name     tag name
+   * @param kClass   key class
+   * @param vClass   value class
+   * @param consumer consumer
+   * @param <K>      key type
+   * @param <V>      value type
+   */
+  <K, V> void consumeMap(String name, Class<K> kClass, Class<V> vClass, BiConsumer<K, V> consumer);
 
+  /**
+   * Reads a map into the given map.
+   * <p>
+   * Neither the tag, class, or map parameter can be null.
+   *
+   * @param tag    tag
+   * @param kClass key class
+   * @param vClass value class
+   * @param map    map
+   * @param <K>    key type
+   * @param <V>    value type
+   * @param <T>    tag type
+   * @return the populated map
+   */
+  <K, V, T extends Tag> Map<K, V> consumeMap(T tag, Class<K> kClass, Class<V> vClass, Map<K, V> map);
+
+  /**
+   * Reads a map and passes its keys and values to the given consumer.
+   * <p>
+   * Neither the tag, class, or consumer parameter can be null.
+   *
+   * @param tag      tag
+   * @param kClass   key class
+   * @param vClass   value class
+   * @param consumer consumer
+   * @param <K>      key type
+   * @param <V>      value type
+   * @param <T>      tag type
+   */
+  <K, V, T extends Tag> void consumeMap(T tag, Class<K> kClass, Class<V> vClass, BiConsumer<K, V> consumer);
+
+  /**
+   * Reads a map and returns a stream.
+   *
+   * @param name   tag name
+   * @param kClass key class
+   * @param vClass value class
+   * @param <K>    key type
+   * @param <V>    value type
+   * @return stream
+   */
+  <K, V> Stream<Map.Entry<K, V>> streamMap(String name, Class<K> kClass, Class<V> vClass);
+
+  /**
+   * Reads a map and returns a stream.
+   *
+   * @param tag    tag
+   * @param kClass key class
+   * @param vClass value class
+   * @param <K>    key type
+   * @param <V>    value type
+   * @return stream
+   */
+  <K, V, T extends Tag> Stream<Map.Entry<K, V>> streamMap(T tag, Class<K> kClass, Class<V> vClass);
+
+  /**
+   * Reads a collection into the given collection.
+   * <p>
+   * Neither the name, class, or collection parameter can be null.
+   *
+   * @param name       tag name
+   * @param vClass     value class
+   * @param collection collection
+   * @param <V>        value type
+   * @return the populated collection
+   */
+  <V> Collection<V> consumeCollection(String name, Class<V> vClass, Collection<V> collection);
+
+  /**
+   * Reads a collection and offers each element in the collection to the given consumer.
+   * <p>
+   * Neither the name, class, or consumer parameter can be null.
+   *
+   * @param name     tag name
+   * @param vClass   value class
+   * @param consumer consumer
+   * @param <V>      value type
+   */
+  <V> void consumeCollection(String name, Class<V> vClass, Consumer<V> consumer);
+
+  /**
+   * Reads a collection into the given collection.
+   * <p>
+   * Neither the tag, class, or collection parameter can be null.
+   *
+   * @param tag        tag
+   * @param vClass     value class
+   * @param collection collection
+   * @param <V>        value type
+   * @return the populated collection
+   */
+  <V, T extends Tag> Collection<V> consumeCollection(T tag, Class<V> vClass, Collection<V> collection);
+
+  /**
+   * Reads a collection and offers each element in the collection to the given consumer.
+   * <p>
+   * Neither the tag, class, or consumer parameter can be null.
+   *
+   * @param tag      tag
+   * @param vClass   value class
+   * @param consumer consumer
+   * @param <V>      value type
+   */
+  <V, T extends Tag> void consumeCollection(T tag, Class<V> vClass, Consumer<V> consumer);
+
+  /**
+   * Returns a stream of the collections values.
+   *
+   * @param name   tag name
+   * @param vClass value class
+   * @param <V>    value type
+   * @return a stream of the collections values
+   */
+  <V> Stream<V> streamCollection(String name, Class<V> vClass);
+
+  /**
+   * Returns a stream of the collections values.
+   *
+   * @param tag    tag
+   * @param vClass value class
+   * @param <V>    value type
+   * @param <T>    tag type
+   * @return a stream of the collections values
+   */
+  <V, T extends Tag> Stream<V> streamCollection(T tag, Class<V> vClass);
+
+  /**
+   * @return Axion instance
+   */
   Axion getAxion();
 
+  /**
+   * @return this reader's backing TagCompound
+   */
   TagCompound getTagCompound();
 
+  /**
+   * Sets this reader's backing TagCompound
+   *
+   * @param tagCompound tag
+   * @return this reader for convenience
+   */
   AxionReader setTagCompound(TagCompound tagCompound);
-
-  static <V> void readCollection(
-      Axion axion,
-      TagList in,
-      Class<V> classOfO,
-      Consumer<V> consumer
-  ) {
-    in.forEach(tag -> {
-      consumer.accept(axion.createFromTag(tag, classOfO));
-    });
-  }
-
-  static <K, V> void readMap(
-      Axion axion,
-      TagList in,
-      Class<K> kClass,
-      Class<V> vClass,
-      BiConsumer<K, V> consumer
-  ) {
-    in.forEach(tag -> {
-      TagCompound entry = (TagCompound) tag;
-      K key = axion.createFromTag(entry.get("key"), kClass);
-      V value = axion.createFromTag(entry.get("value"), vClass);
-      consumer.accept(key, value);
-    });
-  }
 
 }

@@ -11,13 +11,16 @@ import com.sudoplay.axion.spec.tag.TagInt;
 import com.sudoplay.axion.spec.tag.TagList;
 import com.sudoplay.axion.spec.tag.TagString;
 import com.sudoplay.axion.tag.Tag;
+import com.sudoplay.axion.util.AxionConsumers;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Random;
+import java.util.*;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 
@@ -31,6 +34,32 @@ public class AxionReaderTest {
       axion = Axion.createInstanceFrom(Axion.getExtInstance(), "test");
     }
     axion.registerNBTObjectMapper(Vector.class, new VectorMapper());
+  }
+
+  private TagList getTestMapTagList() {
+    TagList map;
+    TagList keyList, valueList;
+
+    map = new TagList(TagList.class);
+    keyList = new TagList(TagString.class);
+    valueList = new TagList(TagInt.class);
+
+    keyList.add(new TagString(null, "first"));
+    keyList.add(new TagString(null, "second"));
+    keyList.add(new TagString(null, "third"));
+    keyList.add(new TagString(null, "fourth"));
+    keyList.add(new TagString(null, "last"));
+
+    valueList.add(new TagInt(0));
+    valueList.add(new TagInt(1));
+    valueList.add(new TagInt(2));
+    valueList.add(new TagInt(3));
+    valueList.add(new TagInt(4));
+
+    map.add(keyList);
+    map.add(valueList);
+
+    return map;
   }
 
   private Vector getTestVector() {
@@ -66,6 +95,7 @@ public class AxionReaderTest {
     t.put("vector", axion.createTagFrom(getTestVector()));
     t.put("list", getTestTagList());
     t.put("compound", getNestedTestTagCompound());
+    t.put("map", getTestMapTagList());
 
     TagCompound out = new TagCompound();
     getTestWritableVector().write(axion.defaultWriter(out));
@@ -539,6 +569,558 @@ public class AxionReaderTest {
       fail();
     } catch (IllegalArgumentException e) {
       // expected
+    }
+  }
+
+  @Test
+  public void test_consumeMap_name_class_class_consumer() {
+    AxionReader in = getTestReader();
+    Map<String, Integer> map;
+
+    map = new LinkedHashMap<>();
+    in.consumeMap("map", String.class, int.class, map::put);
+    assertEquals(5, map.size());
+    assertEquals(2, (int) map.get("third"));
+
+    // should throw IllegalArgumentException when tag doesn't exist
+    try {
+      in.consumeMap("what?", String.class, int.class, (s, integer) -> {
+        fail(); // should never get this far with a null tag
+      });
+      fail();
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+
+    // should throw IllegalArgumentException when tag is not TagList
+    try {
+      in.consumeMap("int", String.class, int.class, (s, integer) -> {
+        fail(); // should never get this far with a null tag
+      });
+      fail();
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+
+    // should throw IllegalArgumentException on null name parameter
+    try {
+      in.consumeMap((String) null, String.class, int.class, (s, integer) -> {
+        fail(); // should never get this far with a null name
+      });
+      fail();
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+
+    // should throw IllegalArgumentException on null class parameter
+    try {
+      in.consumeMap("map", null, int.class, (s, integer) -> {
+        fail(); // should never get this far with a null class
+      });
+      fail();
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+
+    // should throw IllegalArgumentException on null class parameter
+    try {
+      in.consumeMap("map", String.class, null, (s, integer) -> {
+        fail(); // should never get this far with a null class
+      });
+      fail();
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+
+    // should throw IllegalArgumentException on null consumer parameter
+    try {
+      in.consumeMap("map", String.class, int.class, (BiConsumer<String, Integer>) null);
+      fail();
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+  }
+
+  @Test
+  public void test_consumeMap_name_class_class_map() {
+    AxionReader in = getTestReader();
+    Map<String, Integer> map;
+
+    map = in.consumeMap("map", String.class, int.class, new LinkedHashMap<>());
+    assertEquals(5, map.size());
+    assertEquals(2, (int) map.get("third"));
+
+    // should throw IllegalArgumentException when tag doesn't exist
+    try {
+      in.consumeMap("what?", String.class, int.class, new LinkedHashMap<>());
+      fail();
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+
+    // should throw IllegalArgumentException when tag is not TagList
+    try {
+      in.consumeMap("int", String.class, int.class, new LinkedHashMap<>());
+      fail();
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+
+    // should throw IllegalArgumentException on null name parameter
+    try {
+      in.consumeMap((String) null, String.class, int.class, new LinkedHashMap<>());
+      fail();
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+
+    // should throw IllegalArgumentException on null class parameter
+    try {
+      in.consumeMap("map", null, int.class, new LinkedHashMap<>());
+      fail();
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+
+    // should throw IllegalArgumentException on null class parameter
+    try {
+      in.consumeMap("map", String.class, null, new LinkedHashMap<>());
+      fail();
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+
+    // should throw IllegalArgumentException on null consumer parameter
+    try {
+      in.consumeMap("map", String.class, int.class, (Map<String, Integer>) null);
+      fail();
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+  }
+
+  @Test
+  public void test_consumeMap_tag_class_class_consumer() {
+    AxionReader in = getTestReader();
+    Map<String, Integer> map;
+    TagList tagList;
+
+    map = new LinkedHashMap<>();
+    tagList = in.getTagCompound().get("map");
+    in.consumeMap(tagList, String.class, int.class, map::put);
+    assertEquals(5, map.size());
+    assertEquals(2, (int) map.get("third"));
+
+    // should throw IllegalArgumentException when tag doesn't exist
+    try {
+      in.consumeMap("what?", String.class, int.class, (s, integer) -> {
+        fail(); // should never get this far with a null tag
+      });
+      fail();
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+
+    // should throw IllegalArgumentException when tag is not TagList
+    try {
+      in.consumeMap("int", String.class, int.class, (s, integer) -> {
+        fail(); // should never get this far with a null tag
+      });
+      fail();
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+
+    // should throw IllegalArgumentException on null name parameter
+    try {
+      in.consumeMap((String) null, String.class, int.class, (s, integer) -> {
+        fail(); // should never get this far with a null name
+      });
+      fail();
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+
+    // should throw IllegalArgumentException on null class parameter
+    try {
+      in.consumeMap("map", null, int.class, (s, integer) -> {
+        fail(); // should never get this far with a null class
+      });
+      fail();
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+
+    // should throw IllegalArgumentException on null class parameter
+    try {
+      in.consumeMap("map", String.class, null, (s, integer) -> {
+        fail(); // should never get this far with a null class
+      });
+      fail();
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+
+    // should throw IllegalArgumentException on null consumer parameter
+    try {
+      in.consumeMap("map", String.class, int.class, (BiConsumer<String, Integer>) null);
+      fail();
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+  }
+
+  @Test
+  public void test_consumeMap_tag_class_class_map() {
+    AxionReader in = getTestReader();
+    Map<String, Integer> map;
+    TagList tagList;
+
+    tagList = in.getTagCompound().get("map");
+    map = in.consumeMap(tagList, String.class, int.class, new LinkedHashMap<>());
+    assertEquals(5, map.size());
+    assertEquals(2, (int) map.get("third"));
+
+    // should throw IllegalArgumentException when tag doesn't exist
+    try {
+      in.consumeMap("what?", String.class, int.class, new LinkedHashMap<>());
+      fail();
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+
+    // should throw IllegalArgumentException when tag is not TagList
+    try {
+      in.consumeMap("int", String.class, int.class, new LinkedHashMap<>());
+      fail();
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+
+    // should throw IllegalArgumentException on null name parameter
+    try {
+      in.consumeMap((String) null, String.class, int.class, new LinkedHashMap<>());
+      fail();
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+
+    // should throw IllegalArgumentException on null class parameter
+    try {
+      in.consumeMap("map", null, int.class, new LinkedHashMap<>());
+      fail();
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+
+    // should throw IllegalArgumentException on null class parameter
+    try {
+      in.consumeMap("map", String.class, null, new LinkedHashMap<>());
+      fail();
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+
+    // should throw IllegalArgumentException on null map parameter
+    try {
+      in.consumeMap("map", String.class, int.class, (Map<String, Integer>) null);
+      fail();
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+  }
+
+  @Test
+  public void test_streamMap_name_class_class() {
+    AxionReader in = getTestReader();
+    Map<String, Integer> map;
+
+    // should stream values
+    in.streamMap("map", String.class, int.class).forEach(entry -> {
+      //noinspection ConstantConditions
+      assertTrue(entry.getKey() instanceof String);
+      //noinspection ConstantConditions
+      assertTrue(entry.getValue() instanceof Integer);
+    });
+
+    map = in.streamMap("map", String.class, int.class)
+        .filter(entry -> entry.getValue() < 3)
+        .map(entry -> {
+          entry.setValue(entry.getValue() + 5);
+          return entry;
+        })
+        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+    assertEquals(3, map.size());
+    assertEquals(5, (int) map.get("first"));
+
+    // should throw IllegalArgumentException on null name parameter
+    try {
+      in.streamMap((String) null, String.class, int.class);
+      fail();
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+
+    // should throw IllegalArgumentException on null class parameter
+    try {
+      in.streamMap("map", null, int.class);
+      fail();
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+
+    // should throw IllegalArgumentException on null class parameter
+    try {
+      in.streamMap("map", String.class, null);
+      fail();
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+  }
+
+  @Test
+  public void test_streamMap_tag_class_class() {
+    AxionReader in = getTestReader();
+    Map<String, Integer> map;
+    TagList tagList;
+
+    tagList = in.getTagCompound().get("map");
+
+    // should stream values
+    in.streamMap(tagList, String.class, int.class).forEach(entry -> {
+      //noinspection ConstantConditions
+      assertTrue(entry.getKey() instanceof String);
+      //noinspection ConstantConditions
+      assertTrue(entry.getValue() instanceof Integer);
+    });
+
+    map = in.streamMap(tagList, String.class, int.class)
+        .filter(entry -> entry.getValue() < 3)
+        .map(entry -> {
+          entry.setValue(entry.getValue() + 5);
+          return entry;
+        })
+        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+    assertEquals(3, map.size());
+    assertEquals(5, (int) map.get("first"));
+
+    // should throw IllegalArgumentException on null tag parameter
+    try {
+      in.streamMap((Tag) null, String.class, int.class);
+      fail();
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+
+    // should throw IllegalArgumentException on null class parameter
+    try {
+      in.streamMap(tagList, null, int.class);
+      fail();
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+
+    // should throw IllegalArgumentException on null class parameter
+    try {
+      in.streamMap(tagList, String.class, null);
+      fail();
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+  }
+
+  @Test
+  public void test_consumeCollection_name_class_consumer() {
+    AxionReader in = getTestReader();
+    Collection<Integer> collection = new ArrayList<>();
+
+    // should consume
+    in.consumeCollection("list", int.class, collection::add);
+    assertEquals(100, collection.size());
+
+    // should throw IllegalArgumentException on null name parameter
+    try {
+      in.consumeCollection((String) null, int.class, AxionConsumers.nullConsumer());
+      fail();
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+
+    // should throw IllegalArgumentException on null class parameter
+    try {
+      in.consumeCollection("list", null, AxionConsumers.nullConsumer());
+      fail();
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+
+    // should throw IllegalArgumentException on null consumer parameter
+    try {
+      in.consumeCollection("list", int.class, (Consumer<Integer>) null);
+      fail();
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+  }
+
+  @Test
+  public void test_consumeCollection_name_class_collection() {
+    AxionReader in = getTestReader();
+    Collection<Integer> collection;
+
+    // should consume
+    collection = in.consumeCollection("list", int.class, new ArrayList<>());
+    assertEquals(100, collection.size());
+
+    // should throw IllegalArgumentException on null name parameter
+    try {
+      in.consumeCollection((String) null, int.class, collection);
+      fail();
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+
+    // should throw IllegalArgumentException on null class parameter
+    try {
+      in.consumeCollection("list", null, collection);
+      fail();
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+
+    // should throw IllegalArgumentException on null collection parameter
+    try {
+      in.consumeCollection("list", int.class, (Collection<Integer>) null);
+      fail();
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+  }
+
+  @Test
+  public void test_consumeCollection_tag_class_consumer() {
+    AxionReader in = getTestReader();
+    Collection<Integer> collection = new ArrayList<>();
+    Tag tag = in.getTagCompound().get("list");
+
+    // should consume
+    in.consumeCollection(tag, int.class, collection::add);
+    assertEquals(100, collection.size());
+
+    // should throw IllegalArgumentException on null name parameter
+    try {
+      in.consumeCollection((String) null, int.class, AxionConsumers.nullConsumer());
+      fail();
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+
+    // should throw IllegalArgumentException on null class parameter
+    try {
+      in.consumeCollection(tag, null, AxionConsumers.nullConsumer());
+      fail();
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+
+    // should throw IllegalArgumentException on null consumer parameter
+    try {
+      in.consumeCollection(tag, int.class, (Consumer<Integer>) null);
+      fail();
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+  }
+
+  @Test
+  public void test_consumeCollection_tag_class_collection() {
+    AxionReader in = getTestReader();
+    Collection<Integer> collection;
+    Tag tag = in.getTagCompound().get("list");
+
+    // should consume
+    collection = in.consumeCollection(tag, int.class, new ArrayList<>());
+    assertEquals(100, collection.size());
+
+    // should throw IllegalArgumentException on null name parameter
+    try {
+      in.consumeCollection((String) null, int.class, collection);
+      fail();
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+
+    // should throw IllegalArgumentException on null class parameter
+    try {
+      in.consumeCollection(tag, null, collection);
+      fail();
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+
+    // should throw IllegalArgumentException on null collection parameter
+    try {
+      in.consumeCollection(tag, int.class, (Collection<Integer>) null);
+      fail();
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+  }
+
+  @Test
+  public void test_streamCollection_name_class() {
+    AxionReader in = getTestReader();
+    Collection<Integer> collection;
+
+    // should stream
+    collection = in.streamCollection("list", int.class)
+        .filter(i -> i < 50)
+        .collect(Collectors.toCollection(ArrayList::new));
+    assertEquals(51, collection.size());
+
+    // should throw IllegalArgumentException on null name parameter
+    try {
+      in.streamCollection((String) null, int.class);
+      fail();
+    } catch (IllegalArgumentException e) {
+      //expected
+    }
+
+    // should throw IllegalArgumentException on null class parameter
+    try {
+      in.streamCollection("list", null);
+      fail();
+    } catch (IllegalArgumentException e) {
+      //expected
+    }
+  }
+
+  @Test
+  public void test_streamCollection_tag_class() {
+    AxionReader in = getTestReader();
+    Collection<Integer> collection;
+    Tag tag = in.getTagCompound().get("list");
+
+    // should stream
+    collection = in.streamCollection(tag, int.class)
+        .filter(i -> i < 50)
+        .collect(Collectors.toCollection(ArrayList::new));
+    assertEquals(51, collection.size());
+
+    // should throw IllegalArgumentException on null name parameter
+    try {
+      in.streamCollection((String) null, int.class);
+      fail();
+    } catch (IllegalArgumentException e) {
+      //expected
+    }
+
+    // should throw IllegalArgumentException on null class parameter
+    try {
+      in.streamCollection(tag, null);
+      fail();
+    } catch (IllegalArgumentException e) {
+      //expected
     }
   }
 
