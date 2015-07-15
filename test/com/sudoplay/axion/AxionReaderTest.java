@@ -131,7 +131,7 @@ public class AxionReaderTest {
       // expected
     }
 
-    // should return null when trying to read a tag that doesn't exist
+    // should return null when trying to map a tag that doesn't exist
     assertNull(in.read("omg"));
   }
 
@@ -163,14 +163,15 @@ public class AxionReaderTest {
     boolean b;
 
     // should return value after function application
-    assertTrue(in.read("boolean", value -> !value));
+    assertTrue(in.map("boolean", value -> !value));
 
     // should return null if tag doesn't exist
-    assertNull(in.read("booleao", (Function<Boolean, Boolean>) value -> !value));
+    Boolean mayBeNull = in.map("booleao", value -> !value);
+    assertNull(mayBeNull);
 
     // should throw IllegalArgumentException on null name parameter
     try {
-      b = in.read((String) null, value -> !value);
+      b = in.map((String) null, value -> !value);
       fail();
     } catch (IllegalArgumentException e) {
       // expected
@@ -178,7 +179,7 @@ public class AxionReaderTest {
 
     // should throw IllegalArgumentException on null function parameter
     try {
-      b = (boolean) in.read("boolean", (Function) null);
+      b = in.map("boolean", null);
       fail();
     } catch (IllegalArgumentException e) {
       // expected
@@ -219,12 +220,12 @@ public class AxionReaderTest {
     AxionReader in = getTestReader();
 
     // should apply the function before returning the value
-    int actual = in.read(new TagInt(40), value -> value + 2);
+    int actual = in.map(new TagInt(40), value -> value + 2);
     assertEquals(42, actual);
 
     // should throw IllegalArgumentException on null tag parameter
     try {
-      int i = in.read((Tag) null, value -> value + 2);
+      int i = in.map((Tag) null, value -> value + 2);
       fail();
     } catch (IllegalArgumentException e) {
       // expected
@@ -232,7 +233,7 @@ public class AxionReaderTest {
 
     // should throw IllegalArgumentException on null function parameter
     try {
-      int i = in.read(new TagInt(42), (Function<Integer, Integer>) null);
+      int i = in.map(new TagInt(42), null);
       fail();
     } catch (IllegalArgumentException e) {
       // expected
@@ -264,7 +265,7 @@ public class AxionReaderTest {
 
     // should throw IllegalArgumentException on null class parameter
     try {
-      in.read("vector", (Class) null);
+      in.read("vector", null);
       fail();
     } catch (IllegalArgumentException e) {
       // expected
@@ -281,7 +282,7 @@ public class AxionReaderTest {
     assertEquals(v, in.read("novec", Vector.class, v));
 
     // should allow null as a default parameter
-    assertNull(in.read("zomg", Vector.class, (Vector) null));
+    assertNull(in.read("zomg", Vector.class, null));
 
     // should throw IllegalArgumentException on null name parameter
     try {
@@ -306,10 +307,10 @@ public class AxionReaderTest {
     AxionReader in = getTestReader();
 
     // should return null if the tag doesn't exist
-    assertNull(in.read("yay", Vector.class, (Function<Vector, Vector>) vector -> vector));
+    assertNull(in.map("yay", Vector.class, vector -> vector));
 
     // should apply given function before returning value
-    Vector v = in.read("vector", Vector.class, (Function<Vector, Vector>) vector -> {
+    Vector v = in.map("vector", Vector.class, vector -> {
       vector.y = 42;
       return vector;
     });
@@ -317,7 +318,7 @@ public class AxionReaderTest {
 
     // should throw IllegalArgumentException on null class parameter
     try {
-      in.read("vector", Vector.class, (Function<Vector, Vector>) null);
+      in.map("vector", Vector.class, null);
       fail();
     } catch (IllegalArgumentException e) {
       // expected
@@ -325,7 +326,7 @@ public class AxionReaderTest {
 
     // should throw IllegalArgumentException on null name parameter
     try {
-      in.read((String) null, Vector.class, (Function<Vector, Vector>) vector -> vector);
+      in.map((String) null, Vector.class, vector -> vector);
       fail();
     } catch (IllegalArgumentException e) {
       // expected
@@ -333,7 +334,7 @@ public class AxionReaderTest {
 
     // should throw IllegalArgumentException on null function parameter
     try {
-      in.read("vector", (Class<Vector>) null, (Function<Vector, Vector>) vector -> vector);
+      in.map("vector", null, vector -> vector);
       fail();
     } catch (IllegalArgumentException e) {
       // expected
@@ -344,11 +345,11 @@ public class AxionReaderTest {
   public void test_read_tag_class() {
     AxionReader in = getTestReader();
 
-    // should read implementations of AxionWritable that have a nullary constructor
+    // should map implementations of AxionWritable that have a nullary constructor
     WritableVector writableVector = in.read(axion.createTagFrom(getTestWritableVector()), WritableVector.class);
     assertEquals(1, writableVector.y);
 
-    // should read mappable classes
+    // should map mappable classes
     Vector v = in.read((Tag) axion.createTagFrom(getTestVector()), Vector.class);
     assertEquals(1, v.y);
 
@@ -391,11 +392,11 @@ public class AxionReaderTest {
   public void test_read_tag_class_defaultValue() {
     AxionReader in = getTestReader();
 
-    // should read implementations of AxionWritable that have a nullary constructor
+    // should map implementations of AxionWritable that have a nullary constructor
     WritableVector writableVector = in.read(axion.createTagFrom(getTestWritableVector()), WritableVector.class);
     assertEquals(1, writableVector.y);
 
-    // should read mappable classes
+    // should map mappable classes
     Vector v = in.read((Tag) axion.createTagFrom(getTestVector()), Vector.class);
     assertEquals(1, v.y);
 
@@ -422,7 +423,7 @@ public class AxionReaderTest {
     assertEquals(1, vector.y);
 
     // should accept null as defaultValue
-    vector = in.read((Tag) null, Vector.class, (Vector) null);
+    vector = in.read((Tag) null, Vector.class, null);
     assertNull(vector);
 
     // should throw IllegalArgumentException on null class parameter
@@ -438,18 +439,18 @@ public class AxionReaderTest {
   public void read_tag_class_function() {
     AxionReader in = getTestReader();
 
-    // should read implementations of AxionWritable that have a nullary constructor and apply function to the value
+    // should map implementations of AxionWritable that have a nullary constructor and apply function to the value
     // before returning
-    WritableVector writableVector = in.read(
+    WritableVector writableVector = in.map(
         axion.createTagFrom(getTestWritableVector()),
         WritableVector.class,
-        (Function<WritableVector, WritableVector>) v -> {
+        v -> {
           v.y += 41;
           return v;
         });
     assertEquals(42, writableVector.y);
 
-    // should read mappable classes and apply function to the value before returning
+    // should map mappable classes and apply function to the value before returning
     Vector v = in.read((Tag) axion.createTagFrom(getTestVector()), Vector.class);
     assertEquals(1, v.y);
 

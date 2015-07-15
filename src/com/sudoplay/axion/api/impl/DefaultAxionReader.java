@@ -58,11 +58,11 @@ public class DefaultAxionReader implements AxionReader {
   }
 
   @Override
-  public <V> V read(String name, Function<V, V> function) {
+  public <V> V map(String name, Function<V, V> function) {
     this.assertNotNull(name, "name");
     Tag tag = tagCompound.get(name);
     if (tag != null) {
-      return this.read((Tag) tagCompound.get(name), function);
+      return this.map((Tag) tagCompound.get(name), function);
     } else {
       return null;
     }
@@ -90,7 +90,7 @@ public class DefaultAxionReader implements AxionReader {
   }
 
   @Override
-  public <V, T extends Tag> V read(T tag, Function<V, V> function) {
+  public <V, T extends Tag> V map(T tag, Function<V, V> function) {
     this.assertNotNull(tag, "tag");
     this.assertNotNull(function, "function");
     if (axion.hasConverterFor(tag)) {
@@ -123,7 +123,7 @@ public class DefaultAxionReader implements AxionReader {
   }
 
   @Override
-  public <V> V read(String name, Class<V> vClass, Function<V, V> function) {
+  public <V> V map(String name, Class<V> vClass, Function<V, V> function) {
     assertNotNull(name, "name");
     assertNotNull(vClass, "class");
     assertNotNull(function, "function");
@@ -162,14 +162,14 @@ public class DefaultAxionReader implements AxionReader {
   @Override
   public <V, T extends Tag> V read(T tag, Class<V> vClass, V defaultValue) {
     if (tag != null) {
-      return this.read(tag, vClass, AxionFunctions.ifNullChangeTo(defaultValue));
+      return this.map(tag, vClass, AxionFunctions.ifNullChangeTo(defaultValue));
     } else {
       return defaultValue;
     }
   }
 
   @Override
-  public <V, T extends Tag> V read(T tag, Class<V> vClass, Function<V, V> function) {
+  public <V, T extends Tag> V map(T tag, Class<V> vClass, Function<V, V> function) {
     return function.apply(this.read(tag, vClass));
   }
 

@@ -69,17 +69,17 @@ public interface AxionReader {
    * <p>
    * The name parameter can not be null.
    * <p>
-   * Note: This method will not read implementations of {@link AxionWritable} or objects that have been registered with
-   * {@link Axion#registerNBTObjectMapper(Class, NBTObjectMapper)}. It will only read tags registered with {@link
-   * Axion#registerTag(int, Class, Class, TagAdapter, TagConverter)}. To read a writable or mappable object, {@link
-   * AxionReader#read(String, Class, Function)};
+   * Note: This method will not map implementations of {@link AxionWritable} or objects that have been registered with
+   * {@link Axion#registerNBTObjectMapper(Class, NBTObjectMapper)}. It will only map tags registered with {@link
+   * Axion#registerTag(int, Class, Class, TagAdapter, TagConverter)}. To map a writable or mappable object, {@link
+   * AxionReader#map(String, Class, Function)};
    *
    * @param name     tag name
    * @param function function
    * @param <V>      return value type
    * @return tag's value after function or null if the tag doesn't exist
    */
-  <V> V read(String name, Function<V, V> function);
+  <V> V map(String name, Function<V, V> function);
 
   /**
    * Converts a tag to its value and returns it.
@@ -121,10 +121,10 @@ public interface AxionReader {
    * <p>
    * Neither the tag or function parameter can be null.
    * <p>
-   * Note: This method will not read implementations of {@link AxionWritable} or objects that have been registered with
-   * {@link Axion#registerNBTObjectMapper(Class, NBTObjectMapper)}. It will only read tags registered with {@link
-   * Axion#registerTag(int, Class, Class, TagAdapter, TagConverter)}. To read a writable or mappable object, {@link
-   * AxionReader#read(Tag, Class, Function)};
+   * Note: This method will not map implementations of {@link AxionWritable} or objects that have been registered with
+   * {@link Axion#registerNBTObjectMapper(Class, NBTObjectMapper)}. It will only map tags registered with {@link
+   * Axion#registerTag(int, Class, Class, TagAdapter, TagConverter)}. To map a writable or mappable object, {@link
+   * AxionReader#map(Tag, Class, Function)};
    *
    * @param tag      tag
    * @param function function
@@ -132,7 +132,7 @@ public interface AxionReader {
    * @param <T>      tag type
    * @return tag's value after function
    */
-  <V, T extends Tag> V read(T tag, Function<V, V> function);
+  <V, T extends Tag> V map(T tag, Function<V, V> function);
 
   /**
    * Locates the tag by name and converts it to its value if the given class is an AxionWritable instance or a mappable
@@ -173,10 +173,10 @@ public interface AxionReader {
    * <p>
    * Neither the name, class, or function parameter can be null.
    * <p>
-   * Note: This method will not read tags registered with {@link Axion#registerTag(int, Class, Class, TagAdapter,
-   * TagConverter)}. It will only read implementations of the {@link AxionWritable} interface and objects that have
+   * Note: This method will not map tags registered with {@link Axion#registerTag(int, Class, Class, TagAdapter,
+   * TagConverter)}. It will only map implementations of the {@link AxionWritable} interface and objects that have
    * registered a {@link com.sudoplay.axion.mapper.NBTObjectMapper} using {@link Axion#registerNBTObjectMapper(Class,
-   * NBTObjectMapper)}. To read registered tags see the {@link AxionReader#read(String, Function)} method.
+   * NBTObjectMapper)}. To map registered tags see the {@link AxionReader#map(String, Function)} method.
    *
    * @param name     tag name
    * @param vClass   value class
@@ -184,7 +184,7 @@ public interface AxionReader {
    * @param <V>      value type
    * @return tag's value after function
    */
-  <V> V read(String name, Class<V> vClass, Function<V, V> function);
+  <V> V map(String name, Class<V> vClass, Function<V, V> function);
 
   /**
    * Converts the given tag to its value.
@@ -224,10 +224,10 @@ public interface AxionReader {
    * <p>
    * Neither the tag, class or function parameters can be null.
    * <p>
-   * Note: This method will not read tags registered with {@link Axion#registerTag(int, Class, Class, TagAdapter,
-   * TagConverter)}. It will only read implementations of the {@link AxionWritable} interface and objects that have
+   * Note: This method will not map tags registered with {@link Axion#registerTag(int, Class, Class, TagAdapter,
+   * TagConverter)}. It will only map implementations of the {@link AxionWritable} interface and objects that have
    * registered a {@link com.sudoplay.axion.mapper.NBTObjectMapper} using {@link Axion#registerNBTObjectMapper(Class,
-   * NBTObjectMapper)}. To read registered tags see the {@link AxionReader#read(Tag, Function)} method.
+   * NBTObjectMapper)}. To map registered tags see the {@link AxionReader#map(Tag, Function)} method.
    *
    * @param tag      tag
    * @param vClass   value class
@@ -236,7 +236,7 @@ public interface AxionReader {
    * @param <T>      tag type
    * @return tag's value after function
    */
-  <V, T extends Tag> V read(T tag, Class<V> vClass, Function<V, V> function);
+  <V, T extends Tag> V map(T tag, Class<V> vClass, Function<V, V> function);
 
   /**
    * Returns the tag with the given name or null if the tag doesn't exist.
