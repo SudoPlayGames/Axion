@@ -13,4 +13,8 @@ public class AxionPredicates {
     return o -> o != null;
   }
 
+  private AxionPredicates() {
+    //
+  }
+
 }

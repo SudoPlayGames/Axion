@@ -13,4 +13,8 @@ public class AxionFunctions {
     return v -> (v == null) ? defaultValue : v;
   }
 
+  private AxionFunctions() {
+    //
+  }
+
 }
