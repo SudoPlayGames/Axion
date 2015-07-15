@@ -27,7 +27,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Predicate;
 
 /**
  * This is the main class for {@link Axion}, a tool for working with NBT.
@@ -70,6 +69,16 @@ public class Axion {
    */
   private Axion(final AxionConfiguration newConfiguration) {
     configuration = newConfiguration;
+  }
+
+  /**
+   * Returns true if Axion has an instance with the given name.
+   *
+   * @param name instance name
+   * @return true if Axion has an instance with the given name
+   */
+  public static boolean hasInstance(final String name) {
+    return INSTANCES.containsKey(name);
   }
 
   /**
