@@ -241,8 +241,9 @@ public class AxionConfiguration implements Cloneable {
    * @throws AxionInstanceException
    * @see #getBaseTagAdapter()
    */
-  protected void registerBaseTagAdapter(final TagAdapter<Tag> newBaseTagAdapter) throws AxionConfigurationException,
-      AxionInstanceException {
+  protected void registerBaseTagAdapter(
+      final TagAdapter<Tag> newBaseTagAdapter
+  ) throws AxionConfigurationException, AxionInstanceException {
     configurationProtection.assertUnlocked();
     configurationProtection.assertMutable();
     tagRegistry.registerBaseTagAdapter(newBaseTagAdapter);
@@ -268,10 +269,13 @@ public class AxionConfiguration implements Cloneable {
    * @see #getConverterFor(Object)
    * @see #getIdFor(Class)
    */
-  protected <T extends Tag, V> AxionConfiguration registerTag(final int id, final Class<T> tagClass, final Class<V>
-      type, final TagAdapter<T> adapter,
-                                                              final TagConverter<T, V> converter) throws
-      AxionTagRegistrationException, AxionInstanceException {
+  protected <T extends Tag, V> AxionConfiguration registerTag(
+      final int id,
+      final Class<T> tagClass,
+      final Class<V> type,
+      final TagAdapter<T> adapter,
+      final TagConverter<T, V> converter
+  ) throws AxionTagRegistrationException, AxionInstanceException {
     configurationProtection.assertUnlocked();
     configurationProtection.assertMutable();
     tagRegistry.register(id, tagClass, type, adapter, converter);
@@ -287,8 +291,10 @@ public class AxionConfiguration implements Cloneable {
    * @param mapper the mapper
    * @return this {@link AxionConfiguration}
    */
-  protected <T extends Tag, O> AxionConfiguration registerNBTObjectMapper(final Class<O> type, final
-  NBTObjectMapper<T, O> mapper) {
+  protected <T extends Tag, O> AxionConfiguration registerNBTObjectMapper(
+      final Class<O> type,
+      final NBTObjectMapper<T, O> mapper
+  ) {
     configurationProtection.assertUnlocked();
     configurationProtection.assertMutable();
     mappers.register(type, mapper);
@@ -464,8 +470,10 @@ public class AxionConfiguration implements Cloneable {
    * @see #setCompressionType(CompressionType)
    */
   protected AxionInputStream wrap(final InputStream inputStream) throws IOException {
-    return new AxionInputStream(streamCompressionWrapper.wrap(inputStream), CharacterEncoderFactory.create
-        (characterEncodingType));
+    return new AxionInputStream(
+        streamCompressionWrapper.wrap(inputStream),
+        CharacterEncoderFactory.create (characterEncodingType)
+    );
   }
 
   /**
@@ -478,8 +486,10 @@ public class AxionConfiguration implements Cloneable {
    * @see #setCompressionType(CompressionType)
    */
   protected AxionOutputStream wrap(final OutputStream outputStream) throws IOException {
-    return new AxionOutputStream(streamCompressionWrapper.wrap(outputStream), CharacterEncoderFactory.create
-        (characterEncodingType));
+    return new AxionOutputStream(
+        streamCompressionWrapper.wrap(outputStream),
+        CharacterEncoderFactory.create (characterEncodingType)
+    );
   }
 
   /**
@@ -487,6 +497,7 @@ public class AxionConfiguration implements Cloneable {
    *
    * @see AxionConfiguration#AxionConfiguration(AxionConfiguration)
    */
+  @SuppressWarnings({"CloneDoesntDeclareCloneNotSupportedException", "CloneDoesntCallSuperClone"})
   @Override
   protected AxionConfiguration clone() {
     return new AxionConfiguration(this);
