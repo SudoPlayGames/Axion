@@ -1,8 +1,10 @@
 package com.sudoplay.axion.api;
 
 import com.sudoplay.axion.Axion;
+import com.sudoplay.axion.mapper.NBTObjectMapper;
+import com.sudoplay.axion.registry.TagAdapter;
+import com.sudoplay.axion.registry.TagConverter;
 import com.sudoplay.axion.spec.tag.TagCompound;
-import com.sudoplay.axion.spec.tag.TagList;
 import com.sudoplay.axion.tag.Tag;
 
 import java.util.Collection;
@@ -19,61 +21,209 @@ import java.util.function.Predicate;
 @SuppressWarnings("unused")
 public interface AxionWriter {
 
-  <S extends Tag> AxionWriter write(String name, S tag);
+  /**
+   * Writes the tag with the name.
+   * <p>
+   * Neither name or tag parameter can be null.
+   *
+   * @param name name
+   * @param tag  tag
+   * @param <T>  tag type
+   * @return this {@link AxionWriter} for chaining
+   */
+  <T extends Tag> AxionWriter write(String name, T tag);
 
-  <S extends Tag> AxionWriter write(String name, S tag, Predicate<S> predicate);
-
+  /**
+   * Writes the {@link AxionWritable} implementation with the name.
+   * <p>
+   * Neither the name or axionWritable parameter can be null.
+   *
+   * @param name          name
+   * @param axionWritable AxionWritable instance
+   * @return this {@link AxionWriter} for chaining
+   */
   AxionWriter write(String name, AxionWritable axionWritable);
 
-  AxionWriter write(String name, AxionWritable axionWritable, Predicate<AxionWritable> predicate);
+  /**
+   * TODO
+   *
+   * @param name
+   * @param collection
+   * @param <V>
+   * @return
+   */
+  <V> AxionWriter write(String name, Collection<V> collection);
 
+  /**
+   * TODO
+   *
+   * @param name
+   * @param map
+   * @param <K>
+   * @param <V>
+   * @return
+   */
+  <K, V> AxionWriter write(String name, Map<K, V> map);
+
+  /**
+   * Writes an object that either has a {@link com.sudoplay.axion.mapper.NBTObjectMapper} registered with {@link
+   * Axion#registerNBTObjectMapper(Class, NBTObjectMapper)}, or a {@link TagConverter} registered with {@link
+   * Axion#registerTag(int, Class, Class, TagAdapter, TagConverter)}.
+   * <p>
+   * Note: This method will not write {@link AxionWritable} implementations, instead see {@link
+   * AxionWriter#write(String, AxionWritable)}.
+   * <p>
+   * Neither the name or object parameter can be null.
+   *
+   * @param name   name
+   * @param object object
+   * @return this {@link AxionWriter} for chaining
+   */
   AxionWriter write(String name, Object object);
 
-  <O> AxionWriter write(String name, O object, Predicate<O> predicate);
+  // --------------------------------------------------------------------------
+  // Predicate
+  // --------------------------------------------------------------------------
 
-  <K, V> AxionWriter writeMap(String name, Map<K, V> map);
+  /**
+   * Writes the {@link Tag} only if the given predicate returns true.
+   * <p>
+   * The name parameter can't be null, however, the tag parameter can be null if the predicate returns false.
+   *
+   * @param name      name
+   * @param tag       tag
+   * @param predicate predicate
+   * @param <T>       tag type
+   * @return this {@link AxionWriter} for chaining
+   */
+  <T extends Tag> AxionWriter writeIf(String name, T tag, Predicate<T> predicate);
 
-  AxionWriter writeCollection(String name, Collection<?> collection, Class<? extends Tag> tagClass);
+  /**
+   * Writes the {@link AxionWritable} only if the given predicate returns true.
+   * <p>
+   * The name parameter can't be null, however, the axionWritable parameter can be null if the predicate returns false.
+   *
+   * @param name          name
+   * @param axionWritable {@link AxionWritable} implementation
+   * @param predicate     predicate
+   * @return this {@link AxionWriter} for chaining
+   */
+  AxionWriter writeIf(String name, AxionWritable axionWritable, Predicate<AxionWritable> predicate);
+
+  /**
+   * TODO
+   *
+   * @param name
+   * @param collection
+   * @param predicate
+   * @param <V>
+   * @return
+   */
+  <V> AxionWriter writeIf(String name, Collection<V> collection, Predicate<Collection<V>> predicate);
+
+  /**
+   * TODO
+   *
+   * @param name
+   * @param map
+   * @param predicate
+   * @param <K>
+   * @param <V>
+   * @return
+   */
+  <K, V> AxionWriter writeIf(String name, Map<K, V> map, Predicate<Map<K, V>> predicate);
+
+  /**
+   * If the given predicate returns true, writes an object that either has a {@link
+   * com.sudoplay.axion.mapper.NBTObjectMapper} registered with {@link Axion#registerNBTObjectMapper(Class,
+   * NBTObjectMapper)}, or a {@link TagConverter} registered with {@link Axion#registerTag(int, Class, Class,
+   * TagAdapter, TagConverter)}.
+   * <p>
+   * Note: This method will not write {@link AxionWritable} implementations, instead see {@link
+   * AxionWriter#writeIf(String, AxionWritable, Predicate)}.
+   * <p>
+   * The name parameter can't be null, however, the object parameter can be null if the predicate returns false.
+   *
+   * @param name      name
+   * @param object    object
+   * @param predicate predicate
+   * @param <O>       object type
+   * @return this {@link AxionWriter} for chaining
+   */
+  <O> AxionWriter writeIf(String name, O object, Predicate<O> predicate);
+
+  // --------------------------------------------------------------------------
+  // Not Null
+  // --------------------------------------------------------------------------
+
+  /**
+   * Writes the {@link Tag} if it isn't null.
+   * <p>
+   * The name parameter can't be null.
+   *
+   * @param name name
+   * @param tag  tag
+   * @param <T>  tag type
+   * @return this {@link AxionWriter} for chaining
+   */
+  <T extends Tag> AxionWriter writeIfNotNull(String name, T tag);
+
+  /**
+   * Writes the {@link AxionWritable} implementation if it isn't null.
+   *
+   * @param name          name
+   * @param axionWritable {@link AxionWritable} implementation
+   * @return this {@link AxionWriter} for chaining
+   */
+  AxionWriter writeIfNotNull(String name, AxionWritable axionWritable);
+
+  /**
+   * TODO
+   *
+   * @param name
+   * @param collection
+   * @param <V>
+   * @return
+   */
+  <V> AxionWriter writeIfNotNull(String name, Collection<V> collection);
+
+  /**
+   * TODO
+   *
+   * @param name
+   * @param map
+   * @param <K>
+   * @param <V>
+   * @return
+   */
+  <K, V> AxionWriter writeIfNotNull(String name, Map<K, V> map);
+
+  /**
+   * If the given object parameter isn't null, writes an object that either has a {@link
+   * com.sudoplay.axion.mapper.NBTObjectMapper} registered with {@link Axion#registerNBTObjectMapper(Class,
+   * NBTObjectMapper)}, or a {@link TagConverter} registered with {@link Axion#registerTag(int, Class, Class,
+   * TagAdapter, TagConverter)}.
+   * <p>
+   * Note: This method will not write {@link AxionWritable} implementations, instead see {@link
+   * AxionWriter#writeIf(String, AxionWritable, Predicate)}.
+   * <p>
+   * The name parameter can't be null.
+   *
+   * @param name   name
+   * @param object object
+   * @param <O>    object type
+   * @return this {@link AxionWriter} for chaining
+   */
+  <O> AxionWriter writeIfNotNull(String name, O object);
+
+  // --------------------------------------------------------------------------
+  // Miscellaneous
+  // --------------------------------------------------------------------------
 
   Axion getAxion();
 
   TagCompound getTagCompound();
 
   AxionWriter setTagCompound(TagCompound tagCompound);
-
-  /**
-   * Writes a Map to a TagList.
-   * <p>
-   * A TagList was chosen over a TagCompound to provide support for sorted maps and non-string keys.
-   *
-   * @param axion
-   * @param map
-   * @param <K>
-   * @param <V>
-   * @return
-   */
-  static <K, V> TagList writeMap(
-      Axion axion,
-      Map<K, V> map
-  ) {
-    TagList store = new TagList(TagCompound.class);
-    map.forEach((key, value) -> {
-      TagCompound entry = new TagCompound();
-      entry.put(axion.createTagFrom("key", key));
-      entry.put(axion.createTagFrom("value", value));
-      store.add(entry);
-    });
-    return store;
-  }
-
-  static TagList writeCollection(
-      Axion axion,
-      Collection<?> collection,
-      Class<? extends Tag> tagClass
-  ) {
-    TagList store = new TagList(tagClass);
-    collection.forEach(element -> store.add(axion.createTagFrom(element)));
-    return store;
-  }
 
 }

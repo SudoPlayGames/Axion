@@ -45,7 +45,7 @@ public class TagListAdapter extends TagAdapter<TagList> {
     String name = (parent instanceof TagList) ? null : in.readString();
     Class<? extends Tag> type = getClassFor(in.readUnsignedByte());
     int size = in.readInt();
-    TagList tagList = new TagList(type, name, new ArrayList<Tag>());
+    TagList tagList = new TagList(type, name, new ArrayList<>());
     TagAdapter<? extends Tag> adapter = getAdapterFor(type);
     Tag child;
     for (int i = 0; i < size; i++) {

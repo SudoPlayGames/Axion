@@ -78,9 +78,9 @@ public class TagList extends ContainerTag {
     super(newName);
     type = tagClass;
     if (newList == null || newList.isEmpty()) {
-      data = new ArrayList<Tag>();
+      data = new ArrayList<>();
     } else {
-      data = new ArrayList<Tag>(newList);
+      data = new ArrayList<>(newList);
       for (Tag tag : data) {
         assertValid(tag);
         tag.setName("");
@@ -217,10 +217,7 @@ public class TagList extends ContainerTag {
 
   @Override
   public void clear() {
-    List<Tag> toRemove = new ArrayList<>(data);
-    for (Tag child : toRemove) {
-      child.removeFromParent();
-    }
+    new ArrayList<>(data).forEach(Tag::removeFromParent);
   }
 
   /**
@@ -322,11 +319,12 @@ public class TagList extends ContainerTag {
   @Override
   protected void onChildNameChange(final String oldName, final String newName) throws AxionIllegalTagNameException {
     if (newName != null && !newName.isEmpty()) {
-      throw new AxionIllegalTagNameException("Tag belongs to a " + TagList.class.getSimpleName() + " and can not be " +
+      throw new AxionIllegalTagNameException("Tag belongs to a " + TagList.class.getSimpleName() + " and can't be " +
           "named");
     }
   }
 
+  @SuppressWarnings("CloneDoesntCallSuperClone")
   @Override
   public TagList clone() {
     if (data.isEmpty()) {

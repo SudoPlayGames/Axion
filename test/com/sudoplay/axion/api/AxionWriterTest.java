@@ -1,8 +1,8 @@
 package com.sudoplay.axion.api;
 
 import com.sudoplay.axion.Axion;
-import com.sudoplay.axion.AxionReadException;
-import com.sudoplay.axion.api.impl.DefaultAxionReader;
+import com.sudoplay.axion.AxionWriteException;
+import com.sudoplay.axion.api.impl.DefaultAxionWriter;
 import com.sudoplay.axion.ext.tag.TagBoolean;
 import com.sudoplay.axion.mapper.NBTObjectMapper;
 import com.sudoplay.axion.spec.tag.TagCompound;
@@ -10,15 +10,11 @@ import com.sudoplay.axion.spec.tag.TagInt;
 import com.sudoplay.axion.spec.tag.TagList;
 import com.sudoplay.axion.spec.tag.TagString;
 import com.sudoplay.axion.tag.Tag;
-import com.sudoplay.axion.util.AxionConsumers;
+import com.sudoplay.axion.util.AxionPredicates;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.*;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 
@@ -32,6 +28,506 @@ public class AxionWriterTest {
       axion = Axion.createInstanceFrom(Axion.getExtInstance(), "test");
     }
     axion.registerNBTObjectMapper(Vector.class, new VectorMapper());
+  }
+
+  @Test
+  public void test_write_name_tag() {
+    AxionWriter out = getTestWriter();
+
+    // should add tag to backing compound
+    out.write("test", new TagInt(42));
+    assertEquals(42, (int) out.getTagCompound().getValue("test", axion));
+
+    // should throw IllegalArgumentException on null tag parameter
+    try {
+      out.write("test", (Tag) null);
+      fail();
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+
+    // should throw IllegalArgumentException on null name parameter
+    try {
+      out.write(null, new TagInt(42));
+      fail();
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+  }
+
+  @Test
+  public void test_write_name_axionWritable() {
+    AxionWriter out = getTestWriter();
+
+    // should write AxionWritable implementation
+    out.write("test", getTestWritableVector());
+    TagCompound vector = out.getTagCompound().get("test");
+    int actual = vector.getValue("y", axion);
+    assertEquals(1, actual);
+
+    // should throw IllegalArgumentException on null writable parameter
+    try {
+      out.write("test", (AxionWritable) null);
+      fail();
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+
+    // should throw IllegalArgumentException on null name parameter
+    try {
+      out.write(null, new WritableVector());
+      fail();
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+  }
+
+  @Test
+  public void test_write_name_object() {
+    AxionWriter out = getTestWriter();
+
+    // should write mappable
+    out.write("test", getTestVector());
+    TagList vector = out.getTagCompound().get("test");
+    int actual = vector.getValue(1, axion);
+    assertEquals(1, actual);
+
+    // should write convertible
+    out.write("test", 42);
+    TagInt tagInt = out.getTagCompound().get("test");
+    actual = tagInt.get();
+    assertEquals(42, actual);
+
+    // should throw IllegalArgumentException on null object parameter
+    try {
+      out.write("test", (Object) null);
+      fail();
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+
+    // should throw IllegalArgumentException on null name parameter
+    try {
+      out.write(null, new WritableVector());
+      fail();
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+  }
+
+  @Test
+  public void test_writeIf_name_tag_predicate() {
+    AxionWriter out = getTestWriter();
+
+    // should write if predicate passes
+    out.writeIf("pass", new TagInt(42), AxionPredicates.alwaysTrue());
+    assertNotNull(out.getTagCompound().get("pass"));
+
+    // should not write if predicate fails
+    out.writeIf("fail", new TagInt(73), AxionPredicates.alwaysFalse());
+    assertNull(out.getTagCompound().get("fail"));
+
+    // should not throw on null tag if predicate prevents writing
+    out.writeIf("test", (Tag) null, AxionPredicates.alwaysFalse());
+
+    // should throw IllegalArgumentException on null tag if predicate passes
+    try {
+      out.writeIf("test", (Tag) null, AxionPredicates.alwaysTrue());
+      fail();
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+
+    // should throw IllegalArgumentException on null name parameter if predicate passes
+    try {
+      out.writeIf(null, new TagInt(42), AxionPredicates.alwaysTrue());
+      fail();
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+
+    // should throw IllegalArgumentException on null name parameter if predicate passes
+    try {
+      out.writeIf(null, new TagInt(42), AxionPredicates.alwaysFalse());
+      fail();
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+
+    // should throw IllegalArgumentException on null predicate parameter if predicate passes
+    try {
+      out.writeIf("test", new TagInt(42), null);
+      fail();
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+  }
+
+  @Test
+  public void test_writeIf_name_axionWritable_predicate() {
+    AxionWriter out = getTestWriter();
+
+    // should write if predicate passes
+    out.writeIf("pass", new WritableArgsVector(3, 1, 4), AxionPredicates.alwaysTrue());
+    assertNotNull(out.getTagCompound().get("pass"));
+
+    // should not write if predicate fails
+    out.writeIf("fail", new WritableArgsVector(3, 1, 4), AxionPredicates.alwaysFalse());
+    assertNull(out.getTagCompound().get("fail"));
+
+    // should not throw on null AxionWritable if predicate prevents writing
+    out.writeIf("test", (AxionWritable) null, AxionPredicates.alwaysFalse());
+
+    // should throw IllegalArgumentException on null AxionWritable if predicate allows writing
+    try {
+      out.writeIf("test", (AxionWritable) null, AxionPredicates.alwaysTrue());
+      fail();
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+
+    // should throw IllegalArgumentException on null name parameter if predicate allows
+    try {
+      out.writeIf(null, new WritableArgsVector(3, 1, 4), AxionPredicates.alwaysTrue());
+      fail();
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+
+    // should throw IllegalArgumentException on null name parameter if predicate denies
+    try {
+      out.writeIf(null, new WritableArgsVector(3, 1, 4), AxionPredicates.alwaysFalse());
+      fail();
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+  }
+
+  @Test
+  public void test_writeIf_name_object_predicate() {
+    AxionWriter out = getTestWriter();
+
+    // should write mappable object if predicate passes
+    out.writeIf("pass1", getTestVector(), AxionPredicates.alwaysTrue());
+    assertNotNull(out.getTagCompound().get("pass1"));
+
+    // should not write mappable object if predicate fails
+    out.writeIf("fail1", getTestVector(), AxionPredicates.alwaysFalse());
+    assertNull(out.getTagCompound().get("fail1"));
+
+    // should write convertible object if predicate passes
+    out.writeIf("pass2", 42, AxionPredicates.alwaysTrue());
+    assertNotNull(out.getTagCompound().get("pass2"));
+
+    // should not write convertible object if predicate fails
+    out.writeIf("fail2", 42, AxionPredicates.alwaysFalse());
+    assertNull(out.getTagCompound().get("fail2"));
+
+    // should not throw on null object if predicate prevents writing
+    out.writeIf("test", (Object) null, AxionPredicates.alwaysFalse());
+
+    // should throw IllegalArgumentException on null object if predicate allows writing
+    try {
+      out.writeIf("test", (Object) null, AxionPredicates.alwaysTrue());
+      fail();
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+
+    // should throw IllegalArgumentException on null name parameter if predicate allows
+    try {
+      out.writeIf(null, getTestVector(), AxionPredicates.alwaysTrue());
+      fail();
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+
+    // should throw IllegalArgumentException on null name parameter if predicate denies
+    try {
+      out.writeIf(null, getTestVector(), AxionPredicates.alwaysFalse());
+      fail();
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+  }
+
+  @Test
+  public void test_writeIfNotNull_name_tag() {
+    AxionWriter out = getTestWriter();
+
+    // should write if not null
+    out.writeIfNotNull("test1", new TagInt(42));
+    assertNotNull(out.getTagCompound().get("test1"));
+
+    // should not write if null
+    out.writeIfNotNull("test2", (Tag) null);
+    assertNull(out.getTagCompound().get("test2"));
+
+    // should throw IllegalArgumentException on null name parameter
+    try {
+      out.writeIfNotNull(null, getTestVector());
+      fail();
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+  }
+
+  @Test
+  public void test_writeIfNotNull_name_axionWritable() {
+    AxionWriter out = getTestWriter();
+
+    // should write if not null
+    out.writeIfNotNull("test1", getTestWritableVector());
+    assertNotNull(out.getTagCompound().get("test1"));
+
+    // should not write if null
+    out.writeIfNotNull("test2", (AxionWritable) null);
+    assertNull(out.getTagCompound().get("test2"));
+
+    // should throw IllegalArgumentException on null name parameter
+    try {
+      out.writeIfNotNull(null, getTestWritableVector());
+      fail();
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+  }
+
+  @Test
+  public void test_writeIfNotNull_name_object() {
+    AxionWriter out = getTestWriter();
+
+    // should write mappable if not null
+    out.writeIfNotNull("test1", getTestVector());
+    assertNotNull(out.getTagCompound().get("test1"));
+
+    // should not write mappable if null
+    out.writeIfNotNull("test2", (Object) null);
+    assertNull(out.getTagCompound().get("test2"));
+
+    // should write if not null
+    out.writeIfNotNull("test3", 42);
+    assertNotNull(out.getTagCompound().get("test3"));
+
+    // should not write if null
+    out.writeIfNotNull("test4", (Object) null);
+    assertNull(out.getTagCompound().get("test4"));
+
+    // should throw IllegalArgumentException on null name parameter
+    try {
+      out.writeIfNotNull(null, getTestVector());
+      fail();
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+  }
+
+  @Test
+  public void test_write_name_map() {
+    AxionWriter out = getTestWriter();
+
+    { // should keep order and write convertible objects as keys and values
+      LinkedHashMap<String, Integer> linkedHashMap = new LinkedHashMap<>();
+      linkedHashMap.put("first", 1);
+      linkedHashMap.put("second", 2);
+      linkedHashMap.put("third", 3);
+      linkedHashMap.put("fourth", 4);
+      linkedHashMap.put("last", 5);
+      out.write("test", linkedHashMap);
+      TagList tagList = out.getTagCompound().get("test");
+      TagList valueList = tagList.get(1);
+      assertEquals(1, ((TagInt) valueList.get(0)).get());
+      assertEquals(5, ((TagInt) valueList.get(4)).get());
+    }
+
+    { // should write mappable as value
+      LinkedHashMap<String, Vector> linkedHashMap = new LinkedHashMap<>();
+      Vector vector = getTestVector();
+      linkedHashMap.put("vector", vector);
+      out.write("test", linkedHashMap);
+      TagList tagList = out.getTagCompound().get("test");
+      TagList valueList = tagList.get(1);
+      assertEquals(3, ((TagInt) ((TagList) valueList.get(0)).get(0)).get());
+    }
+
+    { // should write mappable as key
+      LinkedHashMap<Vector, String> linkedHashMap = new LinkedHashMap<>();
+      Vector vector = getTestVector();
+      linkedHashMap.put(vector, "vector");
+      out.write("test", linkedHashMap);
+      TagList tagList = out.getTagCompound().get("test");
+      TagList valueList = tagList.get(0);
+      assertEquals(3, ((TagInt) ((TagList) valueList.get(0)).get(0)).get());
+    }
+
+    { // should write AxionWritable as value
+      LinkedHashMap<String, WritableVector> linkedHashMap = new LinkedHashMap<>();
+      WritableVector vector = getTestWritableVector();
+      linkedHashMap.put("vector", vector);
+      out.write("test", linkedHashMap);
+      TagList tagList = out.getTagCompound().get("test");
+      TagList valueList = tagList.get(1);
+      assertEquals(3, ((TagInt) ((TagCompound) valueList.get(0)).get("x")).get());
+    }
+
+    { // should write AxionWritable as key
+      LinkedHashMap<WritableVector, String> linkedHashMap = new LinkedHashMap<>();
+      WritableVector vector = getTestWritableVector();
+      linkedHashMap.put(vector, "vector");
+      out.write("test", linkedHashMap);
+      TagList tagList = out.getTagCompound().get("test");
+      TagList valueList = tagList.get(0);
+      assertEquals(3, ((TagInt) ((TagCompound) valueList.get(0)).get("x")).get());
+    }
+
+    // should throw AxionWriteException if any key or value is null
+    try {
+      HashMap<String, Integer> map = new HashMap<>();
+      map.put("yes", 42);
+      map.put("yess", 73);
+      map.put("no", null);
+      out.write("test", map);
+      fail();
+    } catch (AxionWriteException e) {
+      // expected
+    }
+
+    // should throw IllegalArgumentException on null name parameter
+    try {
+      out.write(null, new HashMap<>());
+      fail();
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+
+    // should throw IllegalArgumentException on null map parameter
+    try {
+      out.write("test", (Map) null);
+      fail();
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+  }
+
+  @Test
+  public void test_write_name_collection() {
+    AxionWriter out = getTestWriter();
+
+    { // should keep order
+      Collection<Integer> collection = new ArrayList<>();
+      for (int i = 0; i < 20; ++i) {
+        collection.add(i);
+      }
+      out.write("test1", collection);
+      assertEquals(0, ((TagInt) ((TagList) out.getTagCompound().get("test1")).get(0)).get());
+      assertEquals(19, ((TagInt) ((TagList) out.getTagCompound().get("test1")).get(19)).get());
+    }
+
+    { // should write axionWritable
+      Collection<WritableVector> collection = new ArrayList<>();
+      collection.add(getTestWritableVector());
+      out.write("test2", collection);
+      TagList list = out.getTagCompound().get("test2");
+      TagCompound vector = list.get(0);
+      assertEquals(3, ((TagInt) vector.get("x")).get());
+      assertEquals(1, ((TagInt) vector.get("y")).get());
+      assertEquals(4, ((TagInt) vector.get("z")).get());
+    }
+
+    { // should write mappable
+      Collection<Vector> collection = new ArrayList<>();
+      collection.add(getTestVector());
+      out.write("test3", collection);
+      TagList list = out.getTagCompound().get("test3");
+      TagList vector = list.get(0);
+      assertEquals(3, ((TagInt) vector.get(0)).get());
+      assertEquals(1, ((TagInt) vector.get(1)).get());
+      assertEquals(4, ((TagInt) vector.get(2)).get());
+    }
+
+    // should throw IllegalArgumentException on null name parameter
+    try {
+      out.write(null, new ArrayList<>());
+      fail();
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+
+    // should throw IllegalArgumentException on null map parameter
+    try {
+      out.write("test", (Collection) null);
+      fail();
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+  }
+
+  public static class VectorMapper implements NBTObjectMapper<TagList, Vector> {
+    @Override
+    public TagList createTagFrom(String name, Vector object, Axion axion) {
+      TagList out = new TagList(TagInt.class);
+      out.add(new TagInt(object.x));
+      out.add(new TagInt(object.y));
+      out.add(new TagInt(object.z));
+      return out;
+    }
+
+    @Override
+    public Vector createObjectFrom(TagList tag, Axion axion) {
+      Vector object = new Vector();
+      object.x = ((TagInt) tag.get(0)).get();
+      object.y = ((TagInt) tag.get(1)).get();
+      object.z = ((TagInt) tag.get(2)).get();
+      return object;
+    }
+  }
+
+  public static class Vector {
+    public int x, y, z;
+  }
+
+  public static class ArgsVector {
+    public int x, y, z;
+
+    public ArgsVector(int x, int y, int z) {
+      this.x = x;
+      this.y = y;
+      this.z = z;
+    }
+  }
+
+  public static class WritableArgsVector extends ArgsVector implements AxionWritable {
+    public int x, y, z;
+
+    public WritableArgsVector(int x, int y, int z) {
+      super(x, y, z);
+    }
+
+    @Override
+    public void write(AxionWriter out) {
+      out.write("x", x).write("y", y).write("z", z);
+    }
+
+    @Override
+    public void read(AxionReader in) {
+      x = in.read("x");
+      y = in.read("y");
+      z = in.read("z");
+    }
+  }
+
+  public static class WritableVector extends Vector implements AxionWritable {
+    @Override
+    public void write(AxionWriter out) {
+      out.write("x", x).write("y", y).write("z", z);
+    }
+
+    @Override
+    public void read(AxionReader in) {
+      x = in.read("x");
+      y = in.read("y");
+      z = in.read("z");
+    }
   }
 
   private TagList getTestMapTagList() {
@@ -111,1083 +607,8 @@ public class AxionWriterTest {
     return t;
   }
 
-  private AxionReader getTestReader() {
-    return new DefaultAxionReader(getTestTagCompound(), axion);
-  }
-
-  @Test
-  public void test_has() {
-    AxionReader r = getTestReader();
-
-    // should return true when the tag exists
-    assertTrue(r.has("int"));
-
-    // should return false when the tag does not exist
-    assertFalse(r.has("omg"));
-
-    // should throw IllegalArgumentException on null name parameter
-    try {
-      r.has(null);
-      fail();
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
-  }
-
-  @Test
-  public void test_read_name() {
-    AxionReader in = getTestReader();
-
-    // support direct assignment of registered tags without cast
-    int read = in.read("int");
-    assertEquals(42, read);
-
-    // reading the vector should return an ArrayList not a Vector nor a TagInt
-    assertEquals(ArrayList.class, in.read("vector").getClass());
-    assertNotEquals(Vector.class, in.read("vector").getClass());
-    assertNotEquals(TagInt.class, in.read("vector").getClass());
-
-    // reading a compound should return a HashMap, not a TagCompound
-    assertEquals(HashMap.class, in.read("compound").getClass());
-    assertNotEquals(TagCompound.class, in.read("compound").getClass());
-
-    // should throw IllegalArgumentException on null name parameter
-    try {
-      in.read((String) null);
-      fail();
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
-
-    // should return null when trying to map a tag that doesn't exist
-    assertNull(in.read("omg"));
-  }
-
-  @Test
-  public void test_read_name_defaultValue() {
-    AxionReader in = getTestReader();
-
-    // should return the tag's value if the tag is found
-    assertEquals(42, (int) in.read("int", 73));
-
-    // should return supplied default value if the tag is not found
-    assertEquals(73, (int) in.read("who", 73));
-
-    // should return null if the supplied fallback default value is null
-    assertNull(in.read("who", (Object) null));
-
-    // should throw IllegalArgumentException on null name parameter
-    try {
-      in.read((String) null, 42);
-      fail();
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
-  }
-
-  @Test
-  public void test_read_name_function() {
-    AxionReader in = getTestReader();
-    boolean b;
-
-    // should return value after function application
-    assertTrue(in.map("boolean", value -> !value));
-
-    // should return null if tag doesn't exist
-    Boolean mayBeNull = in.map("booleao", value -> !value);
-    assertNull(mayBeNull);
-
-    // should throw IllegalArgumentException on null name parameter
-    try {
-      b = in.map((String) null, value -> !value);
-      fail();
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
-
-    // should throw IllegalArgumentException on null function parameter
-    try {
-      b = in.map("boolean", null);
-      fail();
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
-  }
-
-  @Test
-  public void test_read_tag() {
-    AxionReader in = getTestReader();
-
-    // should return the tag's value
-    assertEquals(42, (int) in.read(new TagInt(42)));
-
-    // should throw IllegalArgumentException on null tag parameter
-    try {
-      in.read((Tag) null);
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
-  }
-
-  @Test
-  public void test_read_tag_defaultValue() {
-    AxionReader in = getTestReader();
-
-    // should return tag's value if not null
-    assertEquals(42, (int) in.read(new TagInt(42), 73));
-
-    // should return default value on null tag parameter
-    assertEquals(42, (int) in.read((Tag) null, 42));
-
-    // should accept null as a default value
-    assertNull(in.read((Tag) null, (Integer) null));
-  }
-
-  @Test
-  public void test_read_tag_function() {
-    AxionReader in = getTestReader();
-
-    // should apply the function before returning the value
-    int actual = in.map(new TagInt(40), value -> value + 2);
-    assertEquals(42, actual);
-
-    // should throw IllegalArgumentException on null tag parameter
-    try {
-      int i = in.map((Tag) null, value -> value + 2);
-      fail();
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
-
-    // should throw IllegalArgumentException on null function parameter
-    try {
-      int i = in.map(new TagInt(42), null);
-      fail();
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
-  }
-
-  @Test
-  public void test_read_name_class() {
-    AxionReader in = getTestReader();
-
-    // should return null when the tag doesn't exist
-    assertNull(in.read("yay", Vector.class));
-
-    // should get tag by name and convert AxionWritable instances
-    Vector v = in.read("writableVector", WritableVector.class);
-    assertEquals(1, v.y);
-
-    // should get tag by name and convert mappable instances
-    Vector v2 = in.read("vector", Vector.class);
-    assertEquals(1, v2.y);
-
-    // should throw IllegalArgumentException on null name parameter
-    try {
-      in.read((String) null, Vector.class);
-      fail();
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
-
-    // should throw IllegalArgumentException on null class parameter
-    try {
-      in.read("vector", null);
-      fail();
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
-
-  }
-
-  @Test
-  public void test_read_name_class_defaultValue() {
-    AxionReader in = getTestReader();
-
-    // should return default value when tag doesn't exist
-    Vector v = new Vector();
-    assertEquals(v, in.read("novec", Vector.class, v));
-
-    // should allow null as a default parameter
-    assertNull(in.read("zomg", Vector.class, null));
-
-    // should throw IllegalArgumentException on null name parameter
-    try {
-      in.read((String) null, Vector.class, new Vector());
-      fail();
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
-
-    // should throw IllegalArgumentException on null class parameter
-    try {
-      in.read("vector", null, new Vector());
-      fail();
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
-
-  }
-
-  @Test
-  public void test_read_name_class_function() {
-    AxionReader in = getTestReader();
-
-    // should return null if the tag doesn't exist
-    assertNull(in.map("yay", Vector.class, vector -> vector));
-
-    // should apply given function before returning value
-    Vector v = in.map("vector", Vector.class, vector -> {
-      vector.y = 42;
-      return vector;
-    });
-    assertEquals(42, v.y);
-
-    // should throw IllegalArgumentException on null class parameter
-    try {
-      in.map("vector", Vector.class, null);
-      fail();
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
-
-    // should throw IllegalArgumentException on null name parameter
-    try {
-      in.map((String) null, Vector.class, vector -> vector);
-      fail();
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
-
-    // should throw IllegalArgumentException on null function parameter
-    try {
-      in.map("vector", null, vector -> vector);
-      fail();
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
-  }
-
-  @Test
-  public void test_read_tag_class() {
-    AxionReader in = getTestReader();
-
-    // should map implementations of AxionWritable that have a nullary constructor
-    WritableVector writableVector = in.read(axion.createTagFrom(getTestWritableVector()), WritableVector.class);
-    assertEquals(1, writableVector.y);
-
-    // should map mappable classes
-    Vector v = in.read((Tag) axion.createTagFrom(getTestVector()), Vector.class);
-    assertEquals(1, v.y);
-
-    // should throw AxionReadException if the class doesn't implement AxionWritable interface
-    try {
-      TagList tagList = in.getTagCompound().get("vector");
-      in.read(tagList, ArgsVector.class);
-      fail();
-    } catch (AxionReadException e) {
-      // expected
-    }
-
-    // should throw AxionReadException if the AxionWritable implementation has no nullary constructor
-    try {
-      TagCompound tagCompound = in.getTagCompound().get("writableArgsVector");
-      in.read(tagCompound, WritableArgsVector.class);
-      fail();
-    } catch (AxionReadException e) {
-      // expected
-    }
-
-    // should throw IllegalArgumentException on null tag parameter
-    try {
-      in.read((Tag) null, Vector.class);
-      fail();
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
-
-    // should throw IllegalArgumentException on null class parameter
-    try {
-      in.read(new TagCompound(), (Class<Vector>) null);
-      fail();
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
-  }
-
-  @Test
-  public void test_read_tag_class_defaultValue() {
-    AxionReader in = getTestReader();
-
-    // should map implementations of AxionWritable that have a nullary constructor
-    WritableVector writableVector = in.read(axion.createTagFrom(getTestWritableVector()), WritableVector.class);
-    assertEquals(1, writableVector.y);
-
-    // should map mappable classes
-    Vector v = in.read((Tag) axion.createTagFrom(getTestVector()), Vector.class);
-    assertEquals(1, v.y);
-
-    // should throw AxionReadException if the class doesn't implement AxionWritable interface
-    try {
-      TagList tagList = in.getTag("vector");
-      in.read(tagList, ArgsVector.class);
-      fail();
-    } catch (AxionReadException e) {
-      // expected
-    }
-
-    // should throw AxionReadException if the AxionWritable implementation has no nullary constructor
-    try {
-      TagCompound tagCompound = in.getTagCompound().get("writableArgsVector");
-      in.read(tagCompound, WritableArgsVector.class);
-      fail();
-    } catch (AxionReadException e) {
-      // expected
-    }
-
-    // should return default value if tag parameter is null
-    Vector vector = in.read((Tag) null, Vector.class, getTestVector());
-    assertEquals(1, vector.y);
-
-    // should accept null as defaultValue
-    vector = in.read((Tag) null, Vector.class, null);
-    assertNull(vector);
-
-    // should throw IllegalArgumentException on null class parameter
-    try {
-      in.read(new TagCompound(), null, new Vector());
-      fail();
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
-  }
-
-  @Test
-  public void read_tag_class_function() {
-    AxionReader in = getTestReader();
-
-    // should map implementations of AxionWritable that have a nullary constructor and apply function to the value
-    // before returning
-    WritableVector writableVector = in.map(
-        axion.createTagFrom(getTestWritableVector()),
-        WritableVector.class,
-        v -> {
-          v.y += 41;
-          return v;
-        });
-    assertEquals(42, writableVector.y);
-
-    // should map mappable classes and apply function to the value before returning
-    Vector v = in.read((Tag) axion.createTagFrom(getTestVector()), Vector.class);
-    assertEquals(1, v.y);
-
-    // should throw IllegalArgumentException on null tag parameter
-    try {
-      in.read((Tag) null, Vector.class);
-      fail();
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
-
-    // should throw IllegalArgumentException on null class parameter
-    try {
-      in.read(new TagCompound(), (Class<Vector>) null);
-      fail();
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
-  }
-
-  @Test
-  public void test_getTag_name() {
-    AxionReader in = getTestReader();
-
-    // should locate and return tag
-    assertEquals(in.getTagCompound().get("int"), in.getTag("int"));
-
-    // should return null if tag doesn't exist
-    assertNull(in.getTag("yarp"));
-
-    // should throw IllegalArgumentException on null name parameter
-    try {
-      in.getTag(null);
-      fail();
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
-  }
-
-  @Test
-  public void test_getTag_name_defaultTag() {
-    AxionReader in = getTestReader();
-    TagInt defaultTag = new TagInt(73);
-
-    // should locate and return tag
-    assertEquals(in.getTagCompound().get("int"), in.getTag("int", defaultTag));
-
-    // should return default tag if tag doesn't exist
-    assertEquals(defaultTag, in.getTag("yarp", defaultTag));
-
-    // should allow null as defaultTag parameter
-    assertNull(in.getTag("yarp", (Tag) null));
-
-    // should throw IllegalArgumentException on null name parameter
-    try {
-      in.getTag(null, defaultTag);
-      fail();
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
-  }
-
-  @Test
-  public void test_getTag_name_function() {
-    AxionReader in = getTestReader();
-    Function function = t -> new TagString("Peekaboo!");
-
-    // should apply function before returning tag
-    Tag tag = in.getTag("int", function);
-    assertTrue(tag instanceof TagString);
-
-    // should return null if the tag doesn't exist
-    assertNull(in.getTag("yargleberry", function));
-
-    // should throw IllegalArgumentException on null name parameter
-    try {
-      in.getTag(null, function);
-      fail();
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
-
-    // should throw IllegalArgumentException on null function parameter
-    try {
-      in.getTag("int", (Function) null);
-      fail();
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
-  }
-
-  @Test
-  public void test_consumeMap_name_class_class_consumer() {
-    AxionReader in = getTestReader();
-    Map<String, Integer> map;
-
-    map = new LinkedHashMap<>();
-    in.consumeMap("map", String.class, int.class, map::put);
-    assertEquals(5, map.size());
-    assertEquals(2, (int) map.get("third"));
-
-    // should throw IllegalArgumentException when tag doesn't exist
-    try {
-      in.consumeMap("what?", String.class, int.class, (s, integer) -> {
-        fail(); // should never get this far with a null tag
-      });
-      fail();
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
-
-    // should throw IllegalArgumentException when tag is not TagList
-    try {
-      in.consumeMap("int", String.class, int.class, (s, integer) -> {
-        fail(); // should never get this far with a null tag
-      });
-      fail();
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
-
-    // should throw IllegalArgumentException on null name parameter
-    try {
-      in.consumeMap((String) null, String.class, int.class, (s, integer) -> {
-        fail(); // should never get this far with a null name
-      });
-      fail();
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
-
-    // should throw IllegalArgumentException on null class parameter
-    try {
-      in.consumeMap("map", null, int.class, (s, integer) -> {
-        fail(); // should never get this far with a null class
-      });
-      fail();
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
-
-    // should throw IllegalArgumentException on null class parameter
-    try {
-      in.consumeMap("map", String.class, null, (s, integer) -> {
-        fail(); // should never get this far with a null class
-      });
-      fail();
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
-
-    // should throw IllegalArgumentException on null consumer parameter
-    try {
-      in.consumeMap("map", String.class, int.class, (BiConsumer<String, Integer>) null);
-      fail();
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
-  }
-
-  @Test
-  public void test_consumeMap_name_class_class_map() {
-    AxionReader in = getTestReader();
-    Map<String, Integer> map;
-
-    map = in.consumeMap("map", String.class, int.class, new LinkedHashMap<>());
-    assertEquals(5, map.size());
-    assertEquals(2, (int) map.get("third"));
-
-    // should throw IllegalArgumentException when tag doesn't exist
-    try {
-      in.consumeMap("what?", String.class, int.class, new LinkedHashMap<>());
-      fail();
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
-
-    // should throw IllegalArgumentException when tag is not TagList
-    try {
-      in.consumeMap("int", String.class, int.class, new LinkedHashMap<>());
-      fail();
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
-
-    // should throw IllegalArgumentException on null name parameter
-    try {
-      in.consumeMap((String) null, String.class, int.class, new LinkedHashMap<>());
-      fail();
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
-
-    // should throw IllegalArgumentException on null class parameter
-    try {
-      in.consumeMap("map", null, int.class, new LinkedHashMap<>());
-      fail();
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
-
-    // should throw IllegalArgumentException on null class parameter
-    try {
-      in.consumeMap("map", String.class, null, new LinkedHashMap<>());
-      fail();
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
-
-    // should throw IllegalArgumentException on null consumer parameter
-    try {
-      in.consumeMap("map", String.class, int.class, (Map<String, Integer>) null);
-      fail();
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
-  }
-
-  @Test
-  public void test_consumeMap_tag_class_class_consumer() {
-    AxionReader in = getTestReader();
-    Map<String, Integer> map;
-    TagList tagList;
-
-    map = new LinkedHashMap<>();
-    tagList = in.getTagCompound().get("map");
-    in.consumeMap(tagList, String.class, int.class, map::put);
-    assertEquals(5, map.size());
-    assertEquals(2, (int) map.get("third"));
-
-    // should throw IllegalArgumentException when tag doesn't exist
-    try {
-      in.consumeMap("what?", String.class, int.class, (s, integer) -> {
-        fail(); // should never get this far with a null tag
-      });
-      fail();
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
-
-    // should throw IllegalArgumentException when tag is not TagList
-    try {
-      in.consumeMap("int", String.class, int.class, (s, integer) -> {
-        fail(); // should never get this far with a null tag
-      });
-      fail();
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
-
-    // should throw IllegalArgumentException on null name parameter
-    try {
-      in.consumeMap((String) null, String.class, int.class, (s, integer) -> {
-        fail(); // should never get this far with a null name
-      });
-      fail();
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
-
-    // should throw IllegalArgumentException on null class parameter
-    try {
-      in.consumeMap("map", null, int.class, (s, integer) -> {
-        fail(); // should never get this far with a null class
-      });
-      fail();
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
-
-    // should throw IllegalArgumentException on null class parameter
-    try {
-      in.consumeMap("map", String.class, null, (s, integer) -> {
-        fail(); // should never get this far with a null class
-      });
-      fail();
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
-
-    // should throw IllegalArgumentException on null consumer parameter
-    try {
-      in.consumeMap("map", String.class, int.class, (BiConsumer<String, Integer>) null);
-      fail();
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
-  }
-
-  @Test
-  public void test_consumeMap_tag_class_class_map() {
-    AxionReader in = getTestReader();
-    Map<String, Integer> map;
-    TagList tagList;
-
-    tagList = in.getTagCompound().get("map");
-    map = in.consumeMap(tagList, String.class, int.class, new LinkedHashMap<>());
-    assertEquals(5, map.size());
-    assertEquals(2, (int) map.get("third"));
-
-    // should throw IllegalArgumentException when tag doesn't exist
-    try {
-      in.consumeMap("what?", String.class, int.class, new LinkedHashMap<>());
-      fail();
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
-
-    // should throw IllegalArgumentException when tag is not TagList
-    try {
-      in.consumeMap("int", String.class, int.class, new LinkedHashMap<>());
-      fail();
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
-
-    // should throw IllegalArgumentException on null name parameter
-    try {
-      in.consumeMap((String) null, String.class, int.class, new LinkedHashMap<>());
-      fail();
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
-
-    // should throw IllegalArgumentException on null class parameter
-    try {
-      in.consumeMap("map", null, int.class, new LinkedHashMap<>());
-      fail();
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
-
-    // should throw IllegalArgumentException on null class parameter
-    try {
-      in.consumeMap("map", String.class, null, new LinkedHashMap<>());
-      fail();
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
-
-    // should throw IllegalArgumentException on null map parameter
-    try {
-      in.consumeMap("map", String.class, int.class, (Map<String, Integer>) null);
-      fail();
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
-  }
-
-  @Test
-  public void test_streamMap_name_class_class() {
-    AxionReader in = getTestReader();
-    Map<String, Integer> map;
-
-    // should stream values
-    in.streamMap("map", String.class, int.class).forEach(entry -> {
-      //noinspection ConstantConditions
-      assertTrue(entry.getKey() instanceof String);
-      //noinspection ConstantConditions
-      assertTrue(entry.getValue() instanceof Integer);
-    });
-
-    map = in.streamMap("map", String.class, int.class)
-        .filter(entry -> entry.getValue() < 3)
-        .map(entry -> {
-          entry.setValue(entry.getValue() + 5);
-          return entry;
-        })
-        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-    assertEquals(3, map.size());
-    assertEquals(5, (int) map.get("first"));
-
-    // should throw IllegalArgumentException on null name parameter
-    try {
-      in.streamMap((String) null, String.class, int.class);
-      fail();
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
-
-    // should throw IllegalArgumentException on null class parameter
-    try {
-      in.streamMap("map", null, int.class);
-      fail();
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
-
-    // should throw IllegalArgumentException on null class parameter
-    try {
-      in.streamMap("map", String.class, null);
-      fail();
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
-  }
-
-  @Test
-  public void test_streamMap_tag_class_class() {
-    AxionReader in = getTestReader();
-    Map<String, Integer> map;
-    TagList tagList;
-
-    tagList = in.getTagCompound().get("map");
-
-    // should stream values
-    in.streamMap(tagList, String.class, int.class).forEach(entry -> {
-      //noinspection ConstantConditions
-      assertTrue(entry.getKey() instanceof String);
-      //noinspection ConstantConditions
-      assertTrue(entry.getValue() instanceof Integer);
-    });
-
-    map = in.streamMap(tagList, String.class, int.class)
-        .filter(entry -> entry.getValue() < 3)
-        .map(entry -> {
-          entry.setValue(entry.getValue() + 5);
-          return entry;
-        })
-        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-    assertEquals(3, map.size());
-    assertEquals(5, (int) map.get("first"));
-
-    // should throw IllegalArgumentException on null tag parameter
-    try {
-      in.streamMap((Tag) null, String.class, int.class);
-      fail();
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
-
-    // should throw IllegalArgumentException on null class parameter
-    try {
-      in.streamMap(tagList, null, int.class);
-      fail();
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
-
-    // should throw IllegalArgumentException on null class parameter
-    try {
-      in.streamMap(tagList, String.class, null);
-      fail();
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
-  }
-
-  @Test
-  public void test_consumeCollection_name_class_consumer() {
-    AxionReader in = getTestReader();
-    Collection<Integer> collection = new ArrayList<>();
-
-    // should consume
-    in.consumeCollection("list", int.class, collection::add);
-    assertEquals(100, collection.size());
-
-    // should throw IllegalArgumentException on null name parameter
-    try {
-      in.consumeCollection((String) null, int.class, AxionConsumers.nullConsumer());
-      fail();
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
-
-    // should throw IllegalArgumentException on null class parameter
-    try {
-      in.consumeCollection("list", null, AxionConsumers.nullConsumer());
-      fail();
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
-
-    // should throw IllegalArgumentException on null consumer parameter
-    try {
-      in.consumeCollection("list", int.class, (Consumer<Integer>) null);
-      fail();
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
-  }
-
-  @Test
-  public void test_consumeCollection_name_class_collection() {
-    AxionReader in = getTestReader();
-    Collection<Integer> collection;
-
-    // should consume
-    collection = in.consumeCollection("list", int.class, new ArrayList<>());
-    assertEquals(100, collection.size());
-
-    // should throw IllegalArgumentException on null name parameter
-    try {
-      in.consumeCollection((String) null, int.class, collection);
-      fail();
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
-
-    // should throw IllegalArgumentException on null class parameter
-    try {
-      in.consumeCollection("list", null, collection);
-      fail();
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
-
-    // should throw IllegalArgumentException on null collection parameter
-    try {
-      in.consumeCollection("list", int.class, (Collection<Integer>) null);
-      fail();
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
-  }
-
-  @Test
-  public void test_consumeCollection_tag_class_consumer() {
-    AxionReader in = getTestReader();
-    Collection<Integer> collection = new ArrayList<>();
-    Tag tag = in.getTagCompound().get("list");
-
-    // should consume
-    in.consumeCollection(tag, int.class, collection::add);
-    assertEquals(100, collection.size());
-
-    // should throw IllegalArgumentException on null name parameter
-    try {
-      in.consumeCollection((String) null, int.class, AxionConsumers.nullConsumer());
-      fail();
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
-
-    // should throw IllegalArgumentException on null class parameter
-    try {
-      in.consumeCollection(tag, null, AxionConsumers.nullConsumer());
-      fail();
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
-
-    // should throw IllegalArgumentException on null consumer parameter
-    try {
-      in.consumeCollection(tag, int.class, (Consumer<Integer>) null);
-      fail();
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
-  }
-
-  @Test
-  public void test_consumeCollection_tag_class_collection() {
-    AxionReader in = getTestReader();
-    Collection<Integer> collection;
-    Tag tag = in.getTagCompound().get("list");
-
-    // should consume
-    collection = in.consumeCollection(tag, int.class, new ArrayList<>());
-    assertEquals(100, collection.size());
-
-    // should throw IllegalArgumentException on null name parameter
-    try {
-      in.consumeCollection((String) null, int.class, collection);
-      fail();
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
-
-    // should throw IllegalArgumentException on null class parameter
-    try {
-      in.consumeCollection(tag, null, collection);
-      fail();
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
-
-    // should throw IllegalArgumentException on null collection parameter
-    try {
-      in.consumeCollection(tag, int.class, (Collection<Integer>) null);
-      fail();
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
-  }
-
-  @Test
-  public void test_streamCollection_name_class() {
-    AxionReader in = getTestReader();
-    Collection<Integer> collection;
-
-    // should stream
-    collection = in.streamCollection("list", int.class)
-        .filter(i -> i < 50)
-        .collect(Collectors.toCollection(ArrayList::new));
-    assertEquals(51, collection.size());
-
-    // should throw IllegalArgumentException on null name parameter
-    try {
-      in.streamCollection((String) null, int.class);
-      fail();
-    } catch (IllegalArgumentException e) {
-      //expected
-    }
-
-    // should throw IllegalArgumentException on null class parameter
-    try {
-      in.streamCollection("list", null);
-      fail();
-    } catch (IllegalArgumentException e) {
-      //expected
-    }
-  }
-
-  @Test
-  public void test_streamCollection_tag_class() {
-    AxionReader in = getTestReader();
-    Collection<Integer> collection;
-    Tag tag = in.getTagCompound().get("list");
-
-    // should stream
-    collection = in.streamCollection(tag, int.class)
-        .filter(i -> i < 50)
-        .collect(Collectors.toCollection(ArrayList::new));
-    assertEquals(51, collection.size());
-
-    // should throw IllegalArgumentException on null name parameter
-    try {
-      in.streamCollection((String) null, int.class);
-      fail();
-    } catch (IllegalArgumentException e) {
-      //expected
-    }
-
-    // should throw IllegalArgumentException on null class parameter
-    try {
-      in.streamCollection(tag, null);
-      fail();
-    } catch (IllegalArgumentException e) {
-      //expected
-    }
-  }
-
-  public static class VectorMapper implements NBTObjectMapper<TagList, Vector> {
-    @Override
-    public TagList createTagFrom(String name, Vector object, Axion axion) {
-      TagList out = new TagList(TagInt.class);
-      out.add(new TagInt(object.x));
-      out.add(new TagInt(object.y));
-      out.add(new TagInt(object.z));
-      return out;
-    }
-
-    @Override
-    public Vector createObjectFrom(TagList tag, Axion axion) {
-      Vector object = new Vector();
-      object.x = ((TagInt) tag.get(0)).get();
-      object.y = ((TagInt) tag.get(1)).get();
-      object.z = ((TagInt) tag.get(2)).get();
-      return object;
-    }
-  }
-
-  public static class Vector {
-    public int x, y, z;
-  }
-
-  public static class ArgsVector {
-    public int x, y, z;
-
-    public ArgsVector(int x, int y, int z) {
-      this.x = x;
-      this.y = y;
-      this.z = z;
-    }
-  }
-
-  public static class WritableArgsVector extends ArgsVector implements AxionWritable {
-    public int x, y, z;
-
-    public WritableArgsVector(int x, int y, int z) {
-      super(x, y, z);
-    }
-
-    @Override
-    public void write(AxionWriter out) {
-      out.write("x", x).write("y", y).write("z", z);
-    }
-
-    @Override
-    public void read(AxionReader in) {
-      x = in.read("x");
-      y = in.read("y");
-      z = in.read("z");
-    }
-  }
-
-  public static class WritableVector extends Vector implements AxionWritable {
-    @Override
-    public void write(AxionWriter out) {
-      out.write("x", x).write("y", y).write("z", z);
-    }
-
-    @Override
-    public void read(AxionReader in) {
-      x = in.read("x");
-      y = in.read("y");
-      z = in.read("z");
-    }
+  private AxionWriter getTestWriter() {
+    return new DefaultAxionWriter(axion);
   }
 
 }

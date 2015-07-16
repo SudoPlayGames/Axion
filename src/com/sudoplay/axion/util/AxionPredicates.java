@@ -9,8 +9,24 @@ import java.util.function.Predicate;
  */
 public class AxionPredicates {
 
-  public static <O> Predicate<O> notNull() {
+  public static <O> Predicate<O> isNotNull() {
     return o -> o != null;
+  }
+
+  public static <O> Predicate<O> alwaysFalse() {
+    return o -> false;
+  }
+
+  public static <O> Predicate<O> alwaysTrue() {
+    return o -> true;
+  }
+
+  public static <O> Predicate<O> isTrue(boolean b) {
+    return o -> b;
+  }
+
+  public static <O> Predicate<O> isFalse(boolean b) {
+    return o -> !b;
   }
 
   private AxionPredicates() {

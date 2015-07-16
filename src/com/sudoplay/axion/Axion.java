@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -676,14 +677,23 @@ public class Axion {
   @SuppressWarnings("unchecked")
   public <O, E extends Tag> E createTagFrom(String name, O object) {
 
-    if (this.hasMapperFor(object.getClass())) {
+    if (object instanceof AxionWritable) {
+      return (E) this.createTagFrom((AxionWritable) object);
+
+    } else if (object instanceof Collection) {
+      //TODO
+
+    } else if (object instanceof Map) {
+      //TODO
+
+    } else if (this.hasMapperFor(object.getClass())) {
       return this.createTagWithMapper(name, object);
 
     } else if (this.hasConverterFor(object)) {
       return this.createTagWithConverter(name, object);
     }
 
-    String message = "Class not assignable from AxionWritable, no converter registered, and no mapper registered: " +
+    String message = "Class has no converter or mapper registered : " +
         object.getClass().toString();
     LOG.error(message);
     throw new AxionWriteException(message);

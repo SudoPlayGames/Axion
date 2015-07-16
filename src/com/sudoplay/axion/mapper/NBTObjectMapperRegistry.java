@@ -102,6 +102,7 @@ public class NBTObjectMapperRegistry implements Cloneable {
    *
    * @see #NBTObjectMapperRegistry(NBTObjectMapperRegistry)
    */
+  @SuppressWarnings("CloneDoesntCallSuperClone")
   @Override
   public NBTObjectMapperRegistry clone() {
     LOG.debug("Entering clone()");
