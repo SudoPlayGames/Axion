@@ -2,18 +2,17 @@ package com.sudoplay.axion.api;
 
 import com.sudoplay.axion.Axion;
 import com.sudoplay.axion.AxionReadException;
-import com.sudoplay.axion.api.AxionReader;
-import com.sudoplay.axion.api.AxionWritable;
-import com.sudoplay.axion.api.AxionWriter;
 import com.sudoplay.axion.api.impl.DefaultAxionReader;
 import com.sudoplay.axion.ext.tag.TagBoolean;
-import com.sudoplay.axion.mapper.NBTObjectMapper;
+import com.sudoplay.axion.mapper.AxionMapper;
+import com.sudoplay.axion.mapper.AxionMapperFactory;
 import com.sudoplay.axion.spec.tag.TagCompound;
 import com.sudoplay.axion.spec.tag.TagInt;
 import com.sudoplay.axion.spec.tag.TagList;
 import com.sudoplay.axion.spec.tag.TagString;
 import com.sudoplay.axion.tag.Tag;
 import com.sudoplay.axion.util.AxionConsumers;
+import com.sudoplay.axion.util.AxionTypeToken;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -21,7 +20,6 @@ import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
@@ -35,7 +33,7 @@ public class AxionReaderTest {
     if ((axion = Axion.getInstance("test")) == null) {
       axion = Axion.createInstanceFrom(Axion.getExtInstance(), "test");
     }
-    axion.registerNBTObjectMapper(Vector.class, new VectorMapper());
+    axion.registerAxionMapperFactory(Vector.class, new VectorMapper());
   }
 
   private TagList getTestMapTagList() {
@@ -378,21 +376,12 @@ public class AxionReaderTest {
     AxionReader in = getTestReader();
 
     // should map implementations of AxionWritable that have a nullary constructor
-    WritableVector writableVector = in.read(axion.createTagFrom(getTestWritableVector()), WritableVector.class);
+    WritableVector writableVector = in.read((Tag) axion.createTagFrom(getTestWritableVector()), WritableVector.class);
     assertEquals(1, writableVector.y);
 
     // should map mappable classes
     Vector v = in.read((Tag) axion.createTagFrom(getTestVector()), Vector.class);
     assertEquals(1, v.y);
-
-    // should throw AxionReadException if the class doesn't implement AxionWritable interface
-    try {
-      TagList tagList = in.getTagCompound().get("vector");
-      in.read(tagList, ArgsVector.class);
-      fail();
-    } catch (AxionReadException e) {
-      // expected
-    }
 
     // should throw AxionReadException if the AxionWritable implementation has no nullary constructor
     try {
@@ -425,21 +414,12 @@ public class AxionReaderTest {
     AxionReader in = getTestReader();
 
     // should map implementations of AxionWritable that have a nullary constructor
-    WritableVector writableVector = in.read(axion.createTagFrom(getTestWritableVector()), WritableVector.class);
+    WritableVector writableVector = in.read((Tag) axion.createTagFrom(getTestWritableVector()), WritableVector.class);
     assertEquals(1, writableVector.y);
 
     // should map mappable classes
     Vector v = in.read((Tag) axion.createTagFrom(getTestVector()), Vector.class);
     assertEquals(1, v.y);
-
-    // should throw AxionReadException if the class doesn't implement AxionWritable interface
-    try {
-      TagList tagList = in.getTag("vector");
-      in.read(tagList, ArgsVector.class);
-      fail();
-    } catch (AxionReadException e) {
-      // expected
-    }
 
     // should throw AxionReadException if the AxionWritable implementation has no nullary constructor
     try {
@@ -474,7 +454,7 @@ public class AxionReaderTest {
     // should map implementations of AxionWritable that have a nullary constructor and apply function to the value
     // before returning
     WritableVector writableVector = in.map(
-        axion.createTagFrom(getTestWritableVector()),
+        (Tag) axion.createTagFrom(getTestWritableVector()),
         WritableVector.class,
         v -> {
           v.y += 41;
@@ -1126,7 +1106,7 @@ public class AxionReaderTest {
     }
   }
 
-  public static class VectorMapper implements NBTObjectMapper<TagList, Vector> {
+  public static class VectorMapper implements AxionMapper<TagList, Vector> {
     @Override
     public TagList createTagFrom(String name, Vector object, Axion axion) {
       TagList out = new TagList(TagInt.class);

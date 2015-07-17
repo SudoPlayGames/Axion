@@ -2,9 +2,10 @@ package com.sudoplay.axion;
 
 import com.sudoplay.axion.AxionConfigurationProtection.ProtectionMode;
 import com.sudoplay.axion.ext.tag.*;
+import com.sudoplay.axion.mapper.AxionMapper;
+import com.sudoplay.axion.mapper.AxionMapperFactory;
 import com.sudoplay.axion.mapper.AxionMapperRegistrationException;
-import com.sudoplay.axion.mapper.NBTObjectMapper;
-import com.sudoplay.axion.mapper.NBTObjectMapperRegistry;
+import com.sudoplay.axion.mapper.AxionMapperRegistry;
 import com.sudoplay.axion.registry.AxionTagRegistrationException;
 import com.sudoplay.axion.registry.TagAdapter;
 import com.sudoplay.axion.registry.TagConverter;
@@ -15,12 +16,14 @@ import com.sudoplay.axion.stream.AxionOutputStream;
 import com.sudoplay.axion.stream.CharacterEncoderFactory;
 import com.sudoplay.axion.stream.StreamCompressionWrapper;
 import com.sudoplay.axion.tag.Tag;
+import com.sudoplay.axion.util.AxionTypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
 
@@ -99,7 +102,7 @@ public class AxionConfiguration implements Cloneable {
   }
 
   private final TagRegistry tagRegistry;
-  private final NBTObjectMapperRegistry mappers;
+  private final AxionMapperRegistry mappers;
   private StreamCompressionWrapper streamCompressionWrapper;
   private CharacterEncodingType characterEncodingType;
   private AxionConfigurationProtection configurationProtection;
@@ -113,7 +116,7 @@ public class AxionConfiguration implements Cloneable {
 
   /**
    * Creates a new {@link AxionConfiguration} instance by duplicating all registered {@link TagAdapter}s, {@link
-   * TagConverter}s and {@link NBTObjectMapper}s. The {@link StreamCompressionWrapper} is not duplicated, merely
+   * TagConverter}s and {@link AxionMapper}s. The {@link StreamCompressionWrapper} is not duplicated, merely
    * referenced.
    * <p>
    * The new instance created will be {@link ProtectionMode#Unlocked}.
@@ -138,7 +141,7 @@ public class AxionConfiguration implements Cloneable {
   protected AxionConfiguration(final ProtectionMode newProtectionMode) {
     LOG.debug("Entering AxionConfiguration(newProtectionMode=[{}])", newProtectionMode);
     tagRegistry = new TagRegistry();
-    mappers = new NBTObjectMapperRegistry();
+    mappers = new AxionMapperRegistry();
     configurationProtection = new AxionConfigurationProtection(newProtectionMode);
     streamCompressionWrapper = StreamCompressionWrapper.GZIP_STREAM_COMPRESSION_WRAPPER;
     characterEncodingType = CharacterEncodingType.MODIFIED_UTF_8;
@@ -283,21 +286,19 @@ public class AxionConfiguration implements Cloneable {
   }
 
   /**
-   * Registers a {@link NBTObjectMapper} for the class type given.
+   * Registers a {@link AxionMapperFactory}.
    * <p>
    * Can't use when <b>Locked</b> or <b>Immutable</b>.
    *
-   * @param type   the type of the object
-   * @param mapper the mapper
+   * @param mapperFactory the mapper factory
    * @return this {@link AxionConfiguration}
    */
-  protected <T extends Tag, O> AxionConfiguration registerNBTObjectMapper(
-      final Class<O> type,
-      final NBTObjectMapper<T, O> mapper
+  protected AxionConfiguration registerAxionMapper(
+      final AxionMapperFactory mapperFactory
   ) {
     configurationProtection.assertUnlocked();
     configurationProtection.assertMutable();
-    mappers.register(type, mapper);
+    mappers.register(mapperFactory);
     return this;
   }
 
@@ -427,6 +428,14 @@ public class AxionConfiguration implements Cloneable {
     return tagRegistry.hasConverterForValue(value.getClass());
   }
 
+  protected boolean hasConverterFor(final Type type) {
+    return tagRegistry.hasConverterForValue(type);
+  }
+
+  protected boolean hasConverterFor(final AxionTypeToken typeToken) {
+    return tagRegistry.hasConverterForValue(typeToken);
+  }
+
   /**
    * Returns true if the given tag's class has a converter registered.
    *
@@ -439,15 +448,17 @@ public class AxionConfiguration implements Cloneable {
   }
 
   /**
-   * Returns the {@link NBTObjectMapper} registered for the class type provided.
+   * Returns the {@link AxionMapper} registered for the {@link AxionTypeToken} provided.
    *
-   * @param type class type to get the {@link NBTObjectMapper} for
-   * @return the {@link NBTObjectMapper} registered for the class type provided
+   * @param type class type to get the {@link AxionMapper} for
+   * @return the {@link AxionMapper} registered for the class type provided
    * @throws AxionMapperRegistrationException
    */
-  protected <T extends Tag, O> NBTObjectMapper<T, O> getMapperFor(final Class<O> type) throws
-      AxionMapperRegistrationException {
-    return mappers.getMapperFor(type);
+  protected <T extends Tag, V> AxionMapper<T, V> getMapperFor(
+      final AxionTypeToken<V> type,
+      final Axion axion
+  ) throws AxionMapperRegistrationException {
+    return mappers.getMapperFor(type, axion);
   }
 
   /**
@@ -456,8 +467,8 @@ public class AxionConfiguration implements Cloneable {
    * @param type class
    * @return true if the given class has a mapper registered
    */
-  protected boolean hasMapperFor(final Class<?> type) {
-    return mappers.hasMapperFor(type);
+  protected boolean hasMapperFor(final AxionTypeToken<?> type, final Axion axion) {
+    return mappers.hasMapperFor(type, axion);
   }
 
   /**
@@ -472,7 +483,7 @@ public class AxionConfiguration implements Cloneable {
   protected AxionInputStream wrap(final InputStream inputStream) throws IOException {
     return new AxionInputStream(
         streamCompressionWrapper.wrap(inputStream),
-        CharacterEncoderFactory.create (characterEncodingType)
+        CharacterEncoderFactory.create(characterEncodingType)
     );
   }
 
@@ -488,7 +499,7 @@ public class AxionConfiguration implements Cloneable {
   protected AxionOutputStream wrap(final OutputStream outputStream) throws IOException {
     return new AxionOutputStream(
         streamCompressionWrapper.wrap(outputStream),
-        CharacterEncoderFactory.create (characterEncodingType)
+        CharacterEncoderFactory.create(characterEncodingType)
     );
   }
 

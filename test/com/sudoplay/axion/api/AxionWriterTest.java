@@ -4,7 +4,7 @@ import com.sudoplay.axion.Axion;
 import com.sudoplay.axion.AxionWriteException;
 import com.sudoplay.axion.api.impl.DefaultAxionWriter;
 import com.sudoplay.axion.ext.tag.TagBoolean;
-import com.sudoplay.axion.mapper.NBTObjectMapper;
+import com.sudoplay.axion.mapper.AxionMapper;
 import com.sudoplay.axion.spec.tag.TagCompound;
 import com.sudoplay.axion.spec.tag.TagInt;
 import com.sudoplay.axion.spec.tag.TagList;
@@ -27,7 +27,7 @@ public class AxionWriterTest {
     if ((axion = Axion.getInstance("test")) == null) {
       axion = Axion.createInstanceFrom(Axion.getExtInstance(), "test");
     }
-    axion.registerNBTObjectMapper(Vector.class, new VectorMapper());
+    axion.registerAxionMapperFactory(Vector.class, new VectorMapper());
   }
 
   @Test
@@ -419,8 +419,9 @@ public class AxionWriterTest {
         collection.add(i);
       }
       out.write("test1", collection);
-      assertEquals(0, ((TagInt) ((TagList) out.getTagCompound().get("test1")).get(0)).get());
-      assertEquals(19, ((TagInt) ((TagList) out.getTagCompound().get("test1")).get(19)).get());
+      TagList list = out.getTagCompound().get("test1");
+      assertEquals(0, ((TagInt) list.get(0)).get());
+      assertEquals(19, ((TagInt) list.get(19)).get());
     }
 
     { // should write axionWritable
@@ -462,7 +463,7 @@ public class AxionWriterTest {
     }
   }
 
-  public static class VectorMapper implements NBTObjectMapper<TagList, Vector> {
+  public static class VectorMapper implements AxionMapper<TagList, Vector> {
     @Override
     public TagList createTagFrom(String name, Vector object, Axion axion) {
       TagList out = new TagList(TagInt.class);

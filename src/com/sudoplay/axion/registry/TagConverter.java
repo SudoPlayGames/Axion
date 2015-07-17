@@ -75,8 +75,8 @@ public abstract class TagConverter<T extends Tag, V> extends RegistryAccessor {
       newInstance.setRegistry(newTagRegistry);
       return newInstance;
     } catch (Exception e) {
-      throw new AxionInstanceException("Unable to instantiate new converter of type " + this.getClass().getSimpleName
-          (), e);
+      throw new AxionInstanceException("Unable to instantiate new converter of type "
+          + this.getClass().getSimpleName(), e);
     }
   }
 

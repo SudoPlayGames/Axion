@@ -1,15 +1,14 @@
 package com.sudoplay.axion;
 
-import static org.junit.Assert.*;
-
-import org.junit.Test;
-
 import com.sudoplay.axion.AxionConfiguration.CharacterEncodingType;
 import com.sudoplay.axion.AxionConfiguration.CompressionType;
-import com.sudoplay.axion.mapper.NBTObjectMapper;
 import com.sudoplay.axion.registry.TagAdapter;
 import com.sudoplay.axion.registry.TagConverter;
 import com.sudoplay.axion.spec.tag.TagByte;
+import com.sudoplay.axion.util.AxionTypeToken;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 public class AxionConfigurationTest {
 
@@ -26,12 +25,12 @@ public class AxionConfigurationTest {
     // New, copied configurations should always be unlocked.
     assertTrue(config.clone().isUnlocked());
 
-    check(config);
+    check(config, axion);
 
     config.unlock();
     config.setImmutable();
 
-    check(config);
+    check(config, axion);
 
     /*
      * Must be unlocked and mutable to set as immutable.
@@ -45,7 +44,7 @@ public class AxionConfigurationTest {
 
   }
 
-  private void check(AxionConfiguration config) {
+  private void check(AxionConfiguration config, Axion axion) {
     /*
      * Must be unlocked and mutable to change character encoding type.
      */
@@ -100,20 +99,8 @@ public class AxionConfigurationTest {
      * Must be unlocked and mutable to register mapper.
      */
     try {
-      config.registerNBTObjectMapper(Byte.class, new NBTObjectMapper<TagByte, Byte>() {
-
-        @Override
-        public TagByte createTagFrom(String name, Byte object, Axion axion) {
-          // test
-          return null;
-        }
-
-        @Override
-        public Byte createObjectFrom(TagByte tag, Axion axion) {
-          // test
-          return null;
-        }
-      });
+      AxionTypeToken<?> typeToken = AxionTypeToken.get(Byte.class);
+      config.registerAxionMapper(null);
       fail("Expected AxionConfigurationException");
     } catch (AxionConfigurationException e) {
       // expected

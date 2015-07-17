@@ -2,10 +2,12 @@ package com.sudoplay.axion.registry;
 
 import com.sudoplay.axion.AxionInstanceException;
 import com.sudoplay.axion.tag.Tag;
+import com.sudoplay.axion.util.AxionTypeToken;
 import com.sudoplay.axion.util.TypeResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -24,12 +26,12 @@ public class TagRegistry implements Cloneable {
   /**
    * Maps {@link Tag} classes to their respective integer ids.
    */
-  private final Map<Class<? extends Tag>, Integer> classToId = new HashMap<Class<? extends Tag>, Integer>();
+  private final Map<Class<? extends Tag>, Integer> classToId = new HashMap<>();
 
   /**
    * Maps integer ids to their respective {@link Tag} classes.
    */
-  private final Map<Integer, Class<? extends Tag>> idToClass = new HashMap<Integer, Class<? extends Tag>>();
+  private final Map<Integer, Class<? extends Tag>> idToClass = new HashMap<>();
 
   /**
    * Maps {@link Tag} classes the their respective {@link TagAdapter}s.
@@ -39,7 +41,7 @@ public class TagRegistry implements Cloneable {
   /**
    * Maps integer ids to their respective {@link TagAdapter}s.
    */
-  private final Map<Integer, TagAdapter<? extends Tag>> idToAdapter = new HashMap<Integer, TagAdapter<? extends Tag>>();
+  private final Map<Integer, TagAdapter<? extends Tag>> idToAdapter = new HashMap<>();
 
   /**
    * Maps {@link Tag} classes to their respective {@link TagConverter}s.
@@ -49,7 +51,7 @@ public class TagRegistry implements Cloneable {
   /**
    * Maps value classes to their respective {@link TagConverter}s.
    */
-  private final Map<Class<?>, TagConverter<? extends Tag, ?>> typeToConverter = new HashMap<>();
+  private final Map<AxionTypeToken<?>, TagConverter<? extends Tag, ?>> typeToConverter = new HashMap<>();
 
   /**
    * The base {@link TagAdapter}; used as an entry point when reading and writing a {@link Tag} hierarchy.
@@ -84,7 +86,7 @@ public class TagRegistry implements Cloneable {
     for (Entry<Class<? extends Tag>, TagConverter<? extends Tag, ?>> entry : toCopy.classToConverter.entrySet()) {
       classToConverter.put(entry.getKey(), entry.getValue().newInstance(this));
     }
-    for (Entry<Class<?>, TagConverter<? extends Tag, ?>> entry : toCopy.typeToConverter.entrySet()) {
+    for (Entry<AxionTypeToken<?>, TagConverter<? extends Tag, ?>> entry : toCopy.typeToConverter.entrySet()) {
       typeToConverter.put(entry.getKey(), entry.getValue().newInstance(this));
     }
     baseTagAdapter = toCopy.baseTagAdapter.newInstance(this);
@@ -117,10 +119,13 @@ public class TagRegistry implements Cloneable {
    * @param converter the {@link TagConverter} for the {@link Tag}
    * @throws AxionTagRegistrationException
    */
-  public <T extends Tag, V> void register(final int id, final Class<T> tagClass, final Class<V> type, final
-  TagAdapter<T> adapter,
-                                          final TagConverter<T, V> converter) throws AxionTagRegistrationException,
-      AxionInstanceException {
+  public <T extends Tag, V> void register(
+      final int id,
+      final Class<T> tagClass,
+      final Class<V> type,
+      final TagAdapter<T> adapter,
+      final TagConverter<T, V> converter
+  ) throws AxionTagRegistrationException, AxionInstanceException {
 
     LOG.debug("Entering register(id=[{}], tagClass=[{}], type=[{}], adapter=[{}], converter=[{}])", id, tagClass,
         type, adapter, converter);
@@ -146,7 +151,7 @@ public class TagRegistry implements Cloneable {
     } else if (classToConverter.containsKey(tagClass)) {
       LOG.error("Converter already registered for class [{}]", tagClass);
       throw new AxionTagRegistrationException("Converter already registered for class: " + tagClass);
-    } else if (typeToConverter.containsKey(type)) {
+    } else if (typeToConverter.containsKey(AxionTypeToken.get(type))) {
       LOG.error("Converter already registered for type [{}]", type);
       throw new AxionTagRegistrationException("Converter already registered for type: " + type);
     }
@@ -160,7 +165,7 @@ public class TagRegistry implements Cloneable {
 
     TagConverter<T, V> newConverterInstance = converter.newInstance(this);
     classToConverter.put(tagClass, newConverterInstance);
-    typeToConverter.put(type, newConverterInstance);
+    typeToConverter.put(AxionTypeToken.get(type), newConverterInstance);
 
     LOG.debug("Leaving register()");
   }
@@ -301,12 +306,13 @@ public class TagRegistry implements Cloneable {
     LOG.trace("Entering getConverterForValue(valueClass=[{}])", valueClass);
     TagConverter<T, V> converter = null;
     if (valueClass != null) {
-      converter = (TagConverter<T, V>) typeToConverter.get(valueClass);
+      converter = (TagConverter<T, V>) typeToConverter.get(AxionTypeToken.get(valueClass));
       if (converter == null) {
         for (Class<?> c : TypeResolver.getAllClasses(valueClass)) {
-          if (typeToConverter.containsKey(c)) {
+          AxionTypeToken<?> typeToken = AxionTypeToken.get(c);
+          if (typeToConverter.containsKey(typeToken)) {
             try {
-              converter = (TagConverter<T, V>) typeToConverter.get(c);
+              converter = (TagConverter<T, V>) typeToConverter.get(typeToken);
               break;
             } catch (ClassCastException e) {
               //
@@ -330,7 +336,27 @@ public class TagRegistry implements Cloneable {
    * @return true if the given class has a converter registered
    */
   public <V> boolean hasConverterForValue(Class<V> type) {
-    return typeToConverter.containsKey(type);
+    return typeToConverter.containsKey(AxionTypeToken.get(type));
+  }
+
+  /**
+   * TODO
+   *
+   * @param type
+   * @return
+   */
+  public boolean hasConverterForValue(Type type) {
+    return typeToConverter.containsKey(AxionTypeToken.get(type));
+  }
+
+  /**
+   * TODO
+   *
+   * @param typeToken
+   * @return
+   */
+  public boolean hasConverterForValue(AxionTypeToken<?> typeToken) {
+    return typeToConverter.containsKey(typeToken);
   }
 
   /**

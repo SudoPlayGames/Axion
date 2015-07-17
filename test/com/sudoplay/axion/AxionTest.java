@@ -4,7 +4,7 @@ import com.sudoplay.axion.api.AxionReader;
 import com.sudoplay.axion.api.AxionWritable;
 import com.sudoplay.axion.api.AxionWriter;
 import com.sudoplay.axion.ext.tag.TagBoolean;
-import com.sudoplay.axion.mapper.NBTObjectMapper;
+import com.sudoplay.axion.mapper.AxionMapper;
 import com.sudoplay.axion.spec.tag.TagCompound;
 import com.sudoplay.axion.spec.tag.TagInt;
 import com.sudoplay.axion.spec.tag.TagList;
@@ -26,7 +26,7 @@ public class AxionTest {
     if ((axion = Axion.getInstance("test")) == null) {
       axion = Axion.createInstanceFrom(Axion.getExtInstance(), "test");
     }
-    axion.registerNBTObjectMapper(Vector.class, new VectorMapper());
+    axion.registerAxionMapperFactory(Vector.class, new VectorMapper());
   }
 
   @Test
@@ -85,8 +85,9 @@ public class AxionTest {
     testClass.aLong = 42;
 
     TagCompound tagCompound = axion.createTagFrom("testClass", testClass);
-    TestClassWithNullaryConstructor newTestClass = axion.createFromTag(tagCompound, TestClassWithNullaryConstructor
-        .class);
+    TestClassWithNullaryConstructor newTestClass = axion.createValueFromTag(tagCompound,
+        TestClassWithNullaryConstructor
+            .class);
     assertEquals(testClass.aLong, newTestClass.aLong);
   }
 
@@ -99,7 +100,7 @@ public class AxionTest {
   @Test
   public void test_createTagFrom_readsConvertibleObjects() {
     TagBoolean tag = axion.createTagFrom("aBoolean", true);
-    boolean b = axion.createFromTag(tag, boolean.class);
+    boolean b = axion.createValueFromTag(tag, boolean.class);
     assertEquals(true, b);
   }
 
@@ -124,13 +125,13 @@ public class AxionTest {
     v.z = 31415;
 
     TagList list = axion.createTagFrom(v);
-    Vector newV = axion.createFromTag(list, Vector.class);
+    Vector newV = axion.createValueFromTag(list, Vector.class);
     assertEquals(v.x, newV.x);
     assertEquals(v.y, newV.y);
     assertEquals(v.z, newV.z);
   }
 
-  public static class VectorMapper implements NBTObjectMapper<TagList, Vector> {
+  public static class VectorMapper implements AxionMapper<TagList, Vector> {
     @Override
     public TagList createTagFrom(String name, Vector object, Axion axion) {
       TagList out = new TagList(TagInt.class);

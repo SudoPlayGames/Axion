@@ -44,7 +44,7 @@ public class DefaultAxionWriter implements AxionWriter {
   public AxionWriter write(String name, AxionWritable axionWritable) {
     assertNotNull(name, "name");
     assertNotNull(axionWritable, "axionWritable");
-    this._writeAxionWritable(name, axionWritable);
+    this._write(name, axionWritable);
     return this;
   }
 
@@ -68,7 +68,7 @@ public class DefaultAxionWriter implements AxionWriter {
   public AxionWriter write(String name, Object object) {
     assertNotNull(name, "name");
     assertNotNull(object, "object");
-    this._writeObject(name, object);
+    this._write(name, object);
     return this;
   }
 
@@ -90,7 +90,7 @@ public class DefaultAxionWriter implements AxionWriter {
     assertNotNull(predicate, "predicate");
     if (predicate.test(axionWritable)) {
       assertNotNull(axionWritable, "axionWritable");
-      this._writeAxionWritable(name, axionWritable);
+      this._write(name, axionWritable);
     }
     return this;
   }
@@ -124,7 +124,7 @@ public class DefaultAxionWriter implements AxionWriter {
     assertNotNull(predicate, "predicate");
     if (predicate.test(object)) {
       assertNotNull(object, "object");
-      this._writeObject(name, object);
+      this._write(name, object);
     }
     return this;
   }
@@ -139,7 +139,7 @@ public class DefaultAxionWriter implements AxionWriter {
   @Override
   public AxionWriter writeIfNotNull(String name, AxionWritable axionWritable) {
     assertNotNull(name, "name");
-    if (axionWritable != null) this._writeAxionWritable(name, axionWritable);
+    if (axionWritable != null) this._write(name, axionWritable);
     return this;
   }
 
@@ -162,43 +162,22 @@ public class DefaultAxionWriter implements AxionWriter {
   @Override
   public <O> AxionWriter writeIfNotNull(String name, O object) {
     assertNotNull(name, "name");
-    if (object != null) this._writeObject(name, object);
+    if (object != null) this._write(name, object);
     return this;
   }
 
   /**
-   * Writes an implementation of AxionWritable.
+   * Calls {@link Axion#createTagFrom(Object)} and writes the result.
    * <p>
-   * Assumes neither name or axionWritable parameter is null.
-   *
-   * @param name          name
-   * @param axionWritable {@link AxionWritable} implementation
-   */
-  private void _writeAxionWritable(String name, AxionWritable axionWritable) {
-    AxionWriter writer = axion.defaultWriter();
-    axionWritable.write(writer);
-    tagCompound.put(name, writer.getTagCompound());
-  }
-
-  /**
-   * Maps or converts a mappable or convertible object.
-   * <p>
-   * Assumes neither name or object parameter is null.
+   * Neither name or object parameter can be null.
    *
    * @param name   name
    * @param object object
    */
-  private void _writeObject(String name, Object object) {
-    if (axion.hasMapperFor(object.getClass())) {
-      tagCompound.put(name, axion.createTagWithMapper(name, object));
-
-    } else if (axion.hasConverterFor(object)) {
-      tagCompound.put(name, axion.createTagWithConverter(name, object));
-
-    } else {
-      throw new AxionWriteException("Class has no mapper or converter registered: " + object.getClass()
-          .toString());
-    }
+  private void _write(String name, Object object) {
+    assertNotNull(name, "name");
+    assertNotNull(object, "object");
+    tagCompound.put(name, axion.createTagFrom(object));
   }
 
   private <K, V> TagList _writeMap(Map<K, V> map) {
@@ -258,9 +237,7 @@ public class DefaultAxionWriter implements AxionWriter {
       throw new AxionWriteException("Can't write a collection with a null value");
     }
 
-    Tag valueTag = (value instanceof AxionWritable)
-        ? axion.createTagFrom((AxionWritable) value)
-        : axion.createTagFrom(value);
+    Tag valueTag = axion.createTagFrom(value);
 
     TagList list = new TagList(valueTag.getClass());
 
@@ -268,9 +245,7 @@ public class DefaultAxionWriter implements AxionWriter {
       if (v == null) {
         throw new AxionWriteException("Can't write a collection with a null value");
       }
-      list.add((value instanceof AxionWritable)
-          ? axion.createTagFrom((AxionWritable) value)
-          : axion.createTagFrom(value));
+      list.add(axion.createTagFrom(v));
     });
 
     return list;

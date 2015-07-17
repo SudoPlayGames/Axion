@@ -1,8 +1,8 @@
 package com.sudoplay.axion.spec.tag;
 
 import com.sudoplay.axion.Axion;
+import com.sudoplay.axion.mapper.AxionMapper;
 import com.sudoplay.axion.mapper.AxionMapperRegistrationException;
-import com.sudoplay.axion.mapper.NBTObjectMapper;
 import com.sudoplay.axion.registry.AxionTagRegistrationException;
 import com.sudoplay.axion.registry.TagConverter;
 import com.sudoplay.axion.tag.AxionIllegalTagNameException;
@@ -162,21 +162,21 @@ public class TagCompound extends ContainerTag {
    * @throws AxionTagRegistrationException if no {@link TagConverter} is registered for the tag requested
    */
   public <V> V getValue(final String name, final Axion axion) throws AxionTagRegistrationException {
-    return axion.convertToValue(data.get(name));
+    return axion.createValueFromTag(data.get(name));
   }
 
   /**
-   * Uses the registered {@link NBTObjectMapper} for the type given to return a new object from the tag requested.
+   * Uses the registered {@link AxionMapper} for the type given to return a new object from the tag requested.
    *
    * @param name  the name of the {@link Tag} to get
    * @param type  the class of the object to return
    * @param axion an {@link Axion} instance
    * @return a new object from the tag requested
-   * @throws AxionMapperRegistrationException if no {@link NBTObjectMapper} is registered for the type given
+   * @throws AxionMapperRegistrationException if no {@link AxionMapper} is registered for the type given
    */
   public <V> V getValue(final String name, final Class<V> type, final Axion axion) throws
       AxionMapperRegistrationException {
-    return axion.createObjectFrom(data.get(name), type);
+    return axion.createValueFromTag(data.get(name), type);
   }
 
   /**
@@ -215,13 +215,13 @@ public class TagCompound extends ContainerTag {
   }
 
   /**
-   * Creates a tag from the mappable value given using the {@link NBTObjectMapper} registered for the value's type and
-   * adds the new tag to this {@link TagCompound}.
+   * Creates a tag from the mappable value given using the {@link AxionMapper} registered for the value's type and adds
+   * the new tag to this {@link TagCompound}.
    *
    * @param name  name of the {@link Tag}
    * @param value the value to map
    * @param axion an {@link Axion} instance
-   * @throws AxionMapperRegistrationException if no {@link NBTObjectMapper} is registered for the value's type
+   * @throws AxionMapperRegistrationException if no {@link AxionMapper} is registered for the value's type
    */
   public <V> void putMappableValue(final String name, final V value, final Axion axion) throws
       AxionMapperRegistrationException {

@@ -8,7 +8,7 @@ import com.sudoplay.axion.spec.tag.TagList;
 import com.sudoplay.axion.tag.Tag;
 
 /**
- * The {@link NBTObjectMapper} interface allows mapper classes to be created to convert objects into tags. This is
+ * The {@link AxionMapper} interface allows mapper classes to be created to convert objects into tags. This is
  * convenient when you need to repeatedly convert objects that you don't have access to into a collection of tags, such
  * as a {@link TagList} or {@link TagCompound}.
  * <p>
@@ -19,10 +19,10 @@ import com.sudoplay.axion.tag.Tag;
  * Once the mapper was created, simply call:<br> <code> axion.createObjectFrom("myNewTagName", myVector3fVar); </code>
  *
  * @param <T> the {@link Tag} type
- * @param <O> the object
+ * @param <V> the object
  * @author Jason Taylor
  */
-public interface NBTObjectMapper<T extends Tag, O> {
+public interface AxionMapper<T extends Tag, V> {
 
   /**
    * Creates and returns a new {@link Tag} from the name and object given.
@@ -32,7 +32,7 @@ public interface NBTObjectMapper<T extends Tag, O> {
    * @param axion  the {@link Axion} instance
    * @return new {@link Tag} from the name and object given
    */
-  T createTagFrom(final String name, final O object, final Axion axion);
+  T createTagFrom(final String name, final V object, final Axion axion);
 
   /**
    * Creates and returns a new object from the {@link Tag} given.
@@ -41,6 +41,6 @@ public interface NBTObjectMapper<T extends Tag, O> {
    * @param axion the {@link Axion} instance
    * @return a new object from the {@link Tag} given
    */
-  O createObjectFrom(final T tag, final Axion axion);
+  V createObjectFrom(final T tag, final Axion axion);
 
 }

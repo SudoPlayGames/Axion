@@ -1,7 +1,7 @@
 package com.sudoplay.axion.api;
 
 import com.sudoplay.axion.Axion;
-import com.sudoplay.axion.mapper.NBTObjectMapper;
+import com.sudoplay.axion.mapper.AxionMapper;
 import com.sudoplay.axion.registry.TagAdapter;
 import com.sudoplay.axion.registry.TagConverter;
 import com.sudoplay.axion.spec.tag.TagCompound;
@@ -38,7 +38,7 @@ public interface AxionReader {
    * The name parameter can't be null.
    * <p>
    * Note: This method will not read implementations of {@link AxionWritable} or objects that have been registered with
-   * {@link Axion#registerNBTObjectMapper(Class, NBTObjectMapper)}. It will only read tags registered with {@link
+   * {@link Axion#registerAxionMapper(Class, AxionMapper)}. It will only read tags registered with {@link
    * Axion#registerTag(int, Class, Class, TagAdapter, TagConverter)}. To read a writable or mappable object, {@link
    * AxionReader#read(String, Class)};
    *
@@ -54,7 +54,7 @@ public interface AxionReader {
    * The name parameter can't be null.
    * <p>
    * Note: This method will not read implementations of {@link AxionWritable} or objects that have been registered with
-   * {@link Axion#registerNBTObjectMapper(Class, NBTObjectMapper)}. It will only read tags registered with {@link
+   * {@link Axion#registerAxionMapper(Class, AxionMapper)}. It will only read tags registered with {@link
    * Axion#registerTag(int, Class, Class, TagAdapter, TagConverter)}. To read a writable or mappable object, {@link
    * AxionReader#read(String, Class, V)};
    *
@@ -72,7 +72,7 @@ public interface AxionReader {
    * The name parameter can not be null.
    * <p>
    * Note: This method will not map implementations of {@link AxionWritable} or objects that have been registered with
-   * {@link Axion#registerNBTObjectMapper(Class, NBTObjectMapper)}. It will only map tags registered with {@link
+   * {@link Axion#registerAxionMapper(Class, AxionMapper)}. It will only map tags registered with {@link
    * Axion#registerTag(int, Class, Class, TagAdapter, TagConverter)}. To map a writable or mappable object, {@link
    * AxionReader#map(String, Class, Function)};
    *
@@ -89,7 +89,7 @@ public interface AxionReader {
    * The name parameter can not be null.
    * <p>
    * Note: This method will not read implementations of {@link AxionWritable} or objects that have been registered with
-   * {@link Axion#registerNBTObjectMapper(Class, NBTObjectMapper)}. It will only read tags registered with {@link
+   * {@link Axion#registerAxionMapper(Class, AxionMapper)}. It will only read tags registered with {@link
    * Axion#registerTag(int, Class, Class, TagAdapter, TagConverter)}. To read a writable or mappable object, {@link
    * AxionReader#read(Tag, Class)};
    *
@@ -106,7 +106,7 @@ public interface AxionReader {
    * The tag parameter can not be null.
    * <p>
    * Note: This method will not read implementations of {@link AxionWritable} or objects that have been registered with
-   * {@link Axion#registerNBTObjectMapper(Class, NBTObjectMapper)}. It will only read tags registered with {@link
+   * {@link Axion#registerAxionMapper(Class, AxionMapper)}. It will only read tags registered with {@link
    * Axion#registerTag(int, Class, Class, TagAdapter, TagConverter)}. To read a writable or mappable object, {@link
    * AxionReader#read(Tag, Class, V)};
    *
@@ -124,7 +124,7 @@ public interface AxionReader {
    * Neither the tag or function parameter can be null.
    * <p>
    * Note: This method will not map implementations of {@link AxionWritable} or objects that have been registered with
-   * {@link Axion#registerNBTObjectMapper(Class, NBTObjectMapper)}. It will only map tags registered with {@link
+   * {@link Axion#registerAxionMapper(Class, AxionMapper)}. It will only map tags registered with {@link
    * Axion#registerTag(int, Class, Class, TagAdapter, TagConverter)}. To map a writable or mappable object, {@link
    * AxionReader#map(Tag, Class, Function)};
    *
@@ -177,8 +177,8 @@ public interface AxionReader {
    * <p>
    * Note: This method will not map tags registered with {@link Axion#registerTag(int, Class, Class, TagAdapter,
    * TagConverter)}. It will only map implementations of the {@link AxionWritable} interface and objects that have
-   * registered a {@link com.sudoplay.axion.mapper.NBTObjectMapper} using {@link Axion#registerNBTObjectMapper(Class,
-   * NBTObjectMapper)}. To map registered tags see the {@link AxionReader#map(String, Function)} method.
+   * registered a {@link AxionMapper} using {@link Axion#registerAxionMapper(Class,
+   * AxionMapper)}. To map registered tags see the {@link AxionReader#map(String, Function)} method.
    *
    * @param name     tag name
    * @param vClass   value class
@@ -228,8 +228,8 @@ public interface AxionReader {
    * <p>
    * Note: This method will not map tags registered with {@link Axion#registerTag(int, Class, Class, TagAdapter,
    * TagConverter)}. It will only map implementations of the {@link AxionWritable} interface and objects that have
-   * registered a {@link com.sudoplay.axion.mapper.NBTObjectMapper} using {@link Axion#registerNBTObjectMapper(Class,
-   * NBTObjectMapper)}. To map registered tags see the {@link AxionReader#map(Tag, Function)} method.
+   * registered a {@link AxionMapper} using {@link Axion#registerAxionMapper(Class,
+   * AxionMapper)}. To map registered tags see the {@link AxionReader#map(Tag, Function)} method.
    *
    * @param tag      tag
    * @param vClass   value class

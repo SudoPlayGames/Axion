@@ -15,7 +15,7 @@ public class MapperTest {
   @BeforeClass
   public static void before() {
     Axion.createInstanceFrom(Axion.getExtInstance(), "vectorTest");
-    Axion.getInstance("vectorTest").registerNBTObjectMapper(Vector3f.class, new Vector3fMapper());
+    Axion.getInstance("vectorTest").registerAxionMapperFactory(Vector3f.class, new Vector3fMapper());
   }
 
   @AfterClass
@@ -30,7 +30,7 @@ public class MapperTest {
 
     Vector3f position = new Vector3f(16f, 2.5f, 65f);
     TagList tagList = axion.createTagWithMapper("vec1", position);
-    Vector3f result = axion.createObjectFrom(tagList, Vector3f.class);
+    Vector3f result = axion.createValueFromTag(tagList, Vector3f.class);
 
     assertEquals(position, result);
   }
@@ -79,7 +79,7 @@ public class MapperTest {
 
   }
 
-  static class Vector3fMapper implements NBTObjectMapper<TagList, Vector3f> {
+  static class Vector3fMapper implements AxionMapper<TagList, Vector3f> {
 
     @Override
     public Vector3f createObjectFrom(TagList tag, Axion axion) {
