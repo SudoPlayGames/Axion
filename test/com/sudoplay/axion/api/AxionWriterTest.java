@@ -11,6 +11,7 @@ import com.sudoplay.axion.spec.tag.TagList;
 import com.sudoplay.axion.spec.tag.TagString;
 import com.sudoplay.axion.tag.Tag;
 import com.sudoplay.axion.util.AxionPredicates;
+import com.sudoplay.axion.util.AxionTypeToken;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -333,7 +334,7 @@ public class AxionWriterTest {
       linkedHashMap.put("third", 3);
       linkedHashMap.put("fourth", 4);
       linkedHashMap.put("last", 5);
-      out.write("test", linkedHashMap);
+      out.write("test", linkedHashMap, new AxionTypeToken<Map<String, Integer>>(){});
       TagList tagList = out.getTagCompound().get("test");
       TagList valueList = tagList.get(1);
       assertEquals(1, ((TagInt) valueList.get(0)).get());

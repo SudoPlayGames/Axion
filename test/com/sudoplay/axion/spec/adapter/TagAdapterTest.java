@@ -1,32 +1,33 @@
 package com.sudoplay.axion.spec.adapter;
 
+import com.sudoplay.axion.Axion;
+import com.sudoplay.axion.AxionConfiguration.CharacterEncodingType;
+import com.sudoplay.axion.TestUtil;
+import com.sudoplay.axion.spec.tag.*;
+import com.sudoplay.axion.stream.AxionInputStream;
+import com.sudoplay.axion.stream.AxionOutputStream;
+import com.sudoplay.axion.stream.CharacterEncoderFactory;
+import com.sudoplay.axion.tag.Tag;
+import org.junit.Assert;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.EOFException;
 import java.io.IOException;
 
-import org.junit.Assert;
-import org.junit.Test;
-
-import com.sudoplay.axion.AxionConfiguration.CharacterEncodingType;
-import com.sudoplay.axion.TestUtil;
-import com.sudoplay.axion.spec.tag.TagByte;
-import com.sudoplay.axion.spec.tag.TagByteArray;
-import com.sudoplay.axion.spec.tag.TagCompound;
-import com.sudoplay.axion.spec.tag.TagDouble;
-import com.sudoplay.axion.spec.tag.TagFloat;
-import com.sudoplay.axion.spec.tag.TagInt;
-import com.sudoplay.axion.spec.tag.TagIntArray;
-import com.sudoplay.axion.spec.tag.TagList;
-import com.sudoplay.axion.spec.tag.TagLong;
-import com.sudoplay.axion.spec.tag.TagShort;
-import com.sudoplay.axion.spec.tag.TagString;
-import com.sudoplay.axion.stream.AxionInputStream;
-import com.sudoplay.axion.stream.AxionOutputStream;
-import com.sudoplay.axion.stream.CharacterEncoderFactory;
-import com.sudoplay.axion.tag.Tag;
-
 public class TagAdapterTest {
+
+  private static Axion spec;
+
+  @BeforeClass
+  public static void before() {
+    if ((spec = Axion.getInstance("TagAdapterTest")) == null) {
+      spec = Axion.createInstanceFrom(Axion.getExtInstance(), "TagAdapterTest");
+      spec.registerTag(12, TestUtil.TagNull.class, TestUtil.Null.class, new TestUtil.TagNullAdapter(), new TestUtil.TagNullConverter());
+    }
+  }
 
   private static final AxionOutputStream getOutputStream(ByteArrayOutputStream baos) {
     return new AxionOutputStream(baos, CharacterEncoderFactory.create(CharacterEncodingType.MODIFIED_UTF_8));
@@ -46,7 +47,7 @@ public class TagAdapterTest {
       out.writeByte(0);
 
       ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
-      Tag tag = TestUtil.SPEC_REGISTRY.getBaseTagAdapter().read(null, getInputStream(bais));
+      Tag tag = spec.getBaseTagAdapter().read(null, getInputStream(bais));
 
       Assert.assertEquals(null, tag);
     }
@@ -59,7 +60,7 @@ public class TagAdapterTest {
       out.writeString("tagNull");
 
       ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
-      Tag tag = TestUtil.SPEC_REGISTRY.getBaseTagAdapter().read(null, getInputStream(bais));
+      Tag tag = spec.getBaseTagAdapter().read(null, getInputStream(bais));
 
       Assert.assertEquals(new TestUtil.TagNull("tagNull"), tag);
     }
@@ -68,7 +69,7 @@ public class TagAdapterTest {
     {
       ByteArrayOutputStream baos = new ByteArrayOutputStream();
       AxionOutputStream out = getOutputStream(baos);
-      TestUtil.SPEC_REGISTRY.getBaseTagAdapter().write(new TestUtil.TagNull("tagNull"), out);
+      spec.getBaseTagAdapter().write(new TestUtil.TagNull("tagNull"), out);
 
       ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
       AxionInputStream in = getInputStream(bais);
@@ -84,7 +85,7 @@ public class TagAdapterTest {
 
       ByteArrayOutputStream baos = new ByteArrayOutputStream();
       AxionOutputStream out = getOutputStream(baos);
-      TestUtil.SPEC_REGISTRY.getBaseTagAdapter().write(tag, out);
+      spec.getBaseTagAdapter().write(tag, out);
 
       ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
       AxionInputStream in = getInputStream(bais);
@@ -111,7 +112,7 @@ public class TagAdapterTest {
       AxionOutputStream out = getOutputStream(baos);
 
       TagByte tag = new TagByte("tagName", (byte) 16);
-      TestUtil.SPEC_REGISTRY.getAdapterFor(TagByte.class).write(tag, out);
+      spec.getAdapterFor(TagByte.class).write(tag, out);
 
       ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
       AxionInputStream in = getInputStream(bais);
@@ -127,7 +128,7 @@ public class TagAdapterTest {
       out.writeByte(16);
 
       ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
-      TagByte tag = TestUtil.SPEC_REGISTRY.getAdapterFor(TagByte.class).read(null, getInputStream(bais));
+      TagByte tag = spec.getAdapterFor(TagByte.class).read(null, getInputStream(bais));
 
       Assert.assertEquals("tagName", tag.getName());
       Assert.assertEquals((byte) 16, tag.get());
@@ -140,7 +141,7 @@ public class TagAdapterTest {
       out.writeByte(16);
 
       ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
-      TagByte tag = TestUtil.SPEC_REGISTRY.getAdapterFor(TagByte.class).read(new TagList(TagByte.class), getInputStream(bais));
+      TagByte tag = spec.getAdapterFor(TagByte.class).read(new TagList(TagByte.class), getInputStream(bais));
 
       Assert.assertEquals("", tag.getName());
       Assert.assertEquals((byte) 16, tag.get());
@@ -156,8 +157,8 @@ public class TagAdapterTest {
       ByteArrayOutputStream baos = new ByteArrayOutputStream();
       AxionOutputStream out = getOutputStream(baos);
 
-      TagByteArray tag = new TagByteArray("tagName", new byte[] { 0, 1, 2, 3 });
-      TestUtil.SPEC_REGISTRY.getAdapterFor(TagByteArray.class).write(tag, out);
+      TagByteArray tag = new TagByteArray("tagName", new byte[]{0, 1, 2, 3});
+      spec.getAdapterFor(TagByteArray.class).write(tag, out);
 
       ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
       AxionInputStream in = getInputStream(bais);
@@ -181,10 +182,10 @@ public class TagAdapterTest {
       out.writeByte(3);
 
       ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
-      TagByteArray tag = TestUtil.SPEC_REGISTRY.getAdapterFor(TagByteArray.class).read(null, getInputStream(bais));
+      TagByteArray tag = spec.getAdapterFor(TagByteArray.class).read(null, getInputStream(bais));
 
       Assert.assertEquals("tagName", tag.getName());
-      Assert.assertArrayEquals(new byte[] { 0, 1, 2, 3 }, tag.get());
+      Assert.assertArrayEquals(new byte[]{0, 1, 2, 3}, tag.get());
     }
 
     // read - should read NO name, an int, and a series of bytes
@@ -198,10 +199,11 @@ public class TagAdapterTest {
       out.writeByte(3);
 
       ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
-      TagByteArray tag = TestUtil.SPEC_REGISTRY.getAdapterFor(TagByteArray.class).read(new TagList(TagByteArray.class), getInputStream(bais));
+      TagByteArray tag = spec.getAdapterFor(TagByteArray.class).read(new TagList(TagByteArray.class), getInputStream
+          (bais));
 
       Assert.assertEquals("", tag.getName());
-      Assert.assertArrayEquals(new byte[] { 0, 1, 2, 3 }, tag.get());
+      Assert.assertArrayEquals(new byte[]{0, 1, 2, 3}, tag.get());
     }
 
   }
@@ -219,7 +221,7 @@ public class TagAdapterTest {
       TagByte tag = new TagByte("tagName", (byte) 16);
       tag.addTo(compound);
 
-      TestUtil.SPEC_REGISTRY.getAdapterFor(TagCompound.class).write(compound, out);
+      spec.getAdapterFor(TagCompound.class).write(compound, out);
 
       ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
       AxionInputStream in = getInputStream(bais);
@@ -243,7 +245,7 @@ public class TagAdapterTest {
       out.writeByte(0);
 
       ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
-      TagCompound compound = TestUtil.SPEC_REGISTRY.getAdapterFor(TagCompound.class).read(null, getInputStream(bais));
+      TagCompound compound = spec.getAdapterFor(TagCompound.class).read(null, getInputStream(bais));
 
       Assert.assertEquals("containerName", compound.getName());
 
@@ -265,7 +267,8 @@ public class TagAdapterTest {
       out.writeByte(0);
 
       ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
-      TagCompound compound = TestUtil.SPEC_REGISTRY.getAdapterFor(TagCompound.class).read(new TagList(TagCompound.class), getInputStream(bais));
+      TagCompound compound = spec.getAdapterFor(TagCompound.class).read(new TagList(TagCompound.class),
+          getInputStream(bais));
 
       Assert.assertEquals("", compound.getName());
 
@@ -286,7 +289,7 @@ public class TagAdapterTest {
       AxionOutputStream out = getOutputStream(baos);
 
       TagDouble tag = new TagDouble("tagName", 16.0235689);
-      TestUtil.SPEC_REGISTRY.getAdapterFor(TagDouble.class).write(tag, out);
+      spec.getAdapterFor(TagDouble.class).write(tag, out);
 
       ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
       AxionInputStream in = getInputStream(bais);
@@ -302,7 +305,7 @@ public class TagAdapterTest {
       out.writeDouble(16.0235689);
 
       ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
-      TagDouble tag = TestUtil.SPEC_REGISTRY.getAdapterFor(TagDouble.class).read(null, getInputStream(bais));
+      TagDouble tag = spec.getAdapterFor(TagDouble.class).read(null, getInputStream(bais));
 
       Assert.assertEquals("tagName", tag.getName());
       Assert.assertEquals(16.0235689, tag.get(), TestUtil.DOUBLE_DELTA);
@@ -315,7 +318,7 @@ public class TagAdapterTest {
       out.writeDouble(16.0235689);
 
       ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
-      TagDouble tag = TestUtil.SPEC_REGISTRY.getAdapterFor(TagDouble.class).read(new TagList(TagDouble.class), getInputStream(bais));
+      TagDouble tag = spec.getAdapterFor(TagDouble.class).read(new TagList(TagDouble.class), getInputStream(bais));
 
       Assert.assertEquals("", tag.getName());
       Assert.assertEquals(16.0235689, tag.get(), TestUtil.DOUBLE_DELTA);
@@ -332,7 +335,7 @@ public class TagAdapterTest {
       AxionOutputStream out = getOutputStream(baos);
 
       TagFloat tag = new TagFloat("tagName", 16.5f);
-      TestUtil.SPEC_REGISTRY.getAdapterFor(TagFloat.class).write(tag, out);
+      spec.getAdapterFor(TagFloat.class).write(tag, out);
 
       ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
       AxionInputStream in = getInputStream(bais);
@@ -348,7 +351,7 @@ public class TagAdapterTest {
       out.writeFloat(16.5f);
 
       ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
-      TagFloat tag = TestUtil.SPEC_REGISTRY.getAdapterFor(TagFloat.class).read(null, getInputStream(bais));
+      TagFloat tag = spec.getAdapterFor(TagFloat.class).read(null, getInputStream(bais));
 
       Assert.assertEquals("tagName", tag.getName());
       Assert.assertEquals(16.5f, tag.get(), TestUtil.DOUBLE_DELTA);
@@ -361,7 +364,7 @@ public class TagAdapterTest {
       out.writeFloat(16.5f);
 
       ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
-      TagFloat tag = TestUtil.SPEC_REGISTRY.getAdapterFor(TagFloat.class).read(new TagList(TagFloat.class), getInputStream(bais));
+      TagFloat tag = spec.getAdapterFor(TagFloat.class).read(new TagList(TagFloat.class), getInputStream(bais));
 
       Assert.assertEquals("", tag.getName());
       Assert.assertEquals(16.5f, tag.get(), TestUtil.DOUBLE_DELTA);
@@ -378,7 +381,7 @@ public class TagAdapterTest {
       AxionOutputStream out = getOutputStream(baos);
 
       TagInt tag = new TagInt("tagName", 16);
-      TestUtil.SPEC_REGISTRY.getAdapterFor(TagInt.class).write(tag, out);
+      spec.getAdapterFor(TagInt.class).write(tag, out);
 
       ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
       AxionInputStream in = getInputStream(bais);
@@ -394,7 +397,7 @@ public class TagAdapterTest {
       out.writeInt(16);
 
       ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
-      TagInt tag = TestUtil.SPEC_REGISTRY.getAdapterFor(TagInt.class).read(null, getInputStream(bais));
+      TagInt tag = spec.getAdapterFor(TagInt.class).read(null, getInputStream(bais));
 
       Assert.assertEquals("tagName", tag.getName());
       Assert.assertEquals(16, tag.get());
@@ -407,7 +410,7 @@ public class TagAdapterTest {
       out.writeInt(16);
 
       ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
-      TagInt tag = TestUtil.SPEC_REGISTRY.getAdapterFor(TagInt.class).read(new TagList(TagInt.class), getInputStream(bais));
+      TagInt tag = spec.getAdapterFor(TagInt.class).read(new TagList(TagInt.class), getInputStream(bais));
 
       Assert.assertEquals("", tag.getName());
       Assert.assertEquals(16, tag.get());
@@ -423,8 +426,8 @@ public class TagAdapterTest {
       ByteArrayOutputStream baos = new ByteArrayOutputStream();
       AxionOutputStream out = getOutputStream(baos);
 
-      TagIntArray tag = new TagIntArray("tagName", new int[] { 0, 1, 2, 3 });
-      TestUtil.SPEC_REGISTRY.getAdapterFor(TagIntArray.class).write(tag, out);
+      TagIntArray tag = new TagIntArray("tagName", new int[]{0, 1, 2, 3});
+      spec.getAdapterFor(TagIntArray.class).write(tag, out);
 
       ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
       AxionInputStream in = getInputStream(bais);
@@ -448,10 +451,10 @@ public class TagAdapterTest {
       out.writeInt(3);
 
       ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
-      TagIntArray tag = TestUtil.SPEC_REGISTRY.getAdapterFor(TagIntArray.class).read(null, getInputStream(bais));
+      TagIntArray tag = spec.getAdapterFor(TagIntArray.class).read(null, getInputStream(bais));
 
       Assert.assertEquals("tagName", tag.getName());
-      Assert.assertArrayEquals(new int[] { 0, 1, 2, 3 }, tag.get());
+      Assert.assertArrayEquals(new int[]{0, 1, 2, 3}, tag.get());
     }
 
     // read - should read NO name, an int, and a series of ints
@@ -465,10 +468,11 @@ public class TagAdapterTest {
       out.writeInt(3);
 
       ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
-      TagIntArray tag = TestUtil.SPEC_REGISTRY.getAdapterFor(TagIntArray.class).read(new TagList(TagIntArray.class), getInputStream(bais));
+      TagIntArray tag = spec.getAdapterFor(TagIntArray.class).read(new TagList(TagIntArray.class), getInputStream
+          (bais));
 
       Assert.assertEquals("", tag.getName());
-      Assert.assertArrayEquals(new int[] { 0, 1, 2, 3 }, tag.get());
+      Assert.assertArrayEquals(new int[]{0, 1, 2, 3}, tag.get());
     }
 
   }
@@ -485,7 +489,7 @@ public class TagAdapterTest {
       TagByte tag = new TagByte("tagName", (byte) 16);
       tag.addTo(list);
 
-      TestUtil.SPEC_REGISTRY.getAdapterFor(TagList.class).write(list, out);
+      spec.getAdapterFor(TagList.class).write(list, out);
 
       ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
       AxionInputStream in = getInputStream(bais);
@@ -505,7 +509,7 @@ public class TagAdapterTest {
       out.writeByte(16); // child payload
 
       ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
-      TagList list = TestUtil.SPEC_REGISTRY.getAdapterFor(TagList.class).read(null, getInputStream(bais));
+      TagList list = spec.getAdapterFor(TagList.class).read(null, getInputStream(bais));
 
       Assert.assertEquals("containerName", list.getName());
 
@@ -526,7 +530,7 @@ public class TagAdapterTest {
       out.writeByte(16); // child payload
 
       ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
-      TagList list = TestUtil.SPEC_REGISTRY.getAdapterFor(TagList.class).read(new TagList(TagList.class), getInputStream(bais));
+      TagList list = spec.getAdapterFor(TagList.class).read(new TagList(TagList.class), getInputStream(bais));
 
       Assert.assertEquals("", list.getName());
 
@@ -547,7 +551,7 @@ public class TagAdapterTest {
       AxionOutputStream out = getOutputStream(baos);
 
       TagLong tag = new TagLong("tagName", 16);
-      TestUtil.SPEC_REGISTRY.getAdapterFor(TagLong.class).write(tag, out);
+      spec.getAdapterFor(TagLong.class).write(tag, out);
 
       ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
       AxionInputStream in = getInputStream(bais);
@@ -563,7 +567,7 @@ public class TagAdapterTest {
       out.writeLong(16);
 
       ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
-      TagLong tag = TestUtil.SPEC_REGISTRY.getAdapterFor(TagLong.class).read(null, getInputStream(bais));
+      TagLong tag = spec.getAdapterFor(TagLong.class).read(null, getInputStream(bais));
 
       Assert.assertEquals("tagName", tag.getName());
       Assert.assertEquals(16, tag.get());
@@ -576,7 +580,7 @@ public class TagAdapterTest {
       out.writeLong(16);
 
       ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
-      TagLong tag = TestUtil.SPEC_REGISTRY.getAdapterFor(TagLong.class).read(new TagList(TagLong.class), getInputStream(bais));
+      TagLong tag = spec.getAdapterFor(TagLong.class).read(new TagList(TagLong.class), getInputStream(bais));
 
       Assert.assertEquals("", tag.getName());
       Assert.assertEquals(16, tag.get());
@@ -593,7 +597,7 @@ public class TagAdapterTest {
       AxionOutputStream out = getOutputStream(baos);
 
       TagShort tag = new TagShort("tagName", (short) 16);
-      TestUtil.SPEC_REGISTRY.getAdapterFor(TagShort.class).write(tag, out);
+      spec.getAdapterFor(TagShort.class).write(tag, out);
 
       ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
       AxionInputStream in = getInputStream(bais);
@@ -609,7 +613,7 @@ public class TagAdapterTest {
       out.writeShort(16);
 
       ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
-      TagShort tag = TestUtil.SPEC_REGISTRY.getAdapterFor(TagShort.class).read(null, getInputStream(bais));
+      TagShort tag = spec.getAdapterFor(TagShort.class).read(null, getInputStream(bais));
 
       Assert.assertEquals("tagName", tag.getName());
       Assert.assertEquals((short) 16, tag.get());
@@ -622,7 +626,7 @@ public class TagAdapterTest {
       out.writeShort(16);
 
       ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
-      TagShort tag = TestUtil.SPEC_REGISTRY.getAdapterFor(TagShort.class).read(new TagList(TagShort.class), getInputStream(bais));
+      TagShort tag = spec.getAdapterFor(TagShort.class).read(new TagList(TagShort.class), getInputStream(bais));
 
       Assert.assertEquals("", tag.getName());
       Assert.assertEquals((short) 16, tag.get());
@@ -639,7 +643,7 @@ public class TagAdapterTest {
       AxionOutputStream out = getOutputStream(baos);
 
       TagString tag = new TagString("tagName", "testString");
-      TestUtil.SPEC_REGISTRY.getAdapterFor(TagString.class).write(tag, out);
+      spec.getAdapterFor(TagString.class).write(tag, out);
 
       ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
       AxionInputStream in = getInputStream(bais);
@@ -655,7 +659,7 @@ public class TagAdapterTest {
       out.writeString("testString");
 
       ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
-      TagString tag = TestUtil.SPEC_REGISTRY.getAdapterFor(TagString.class).read(null, getInputStream(bais));
+      TagString tag = spec.getAdapterFor(TagString.class).read(null, getInputStream(bais));
 
       Assert.assertEquals("tagName", tag.getName());
       Assert.assertEquals("testString", tag.get());
@@ -668,7 +672,7 @@ public class TagAdapterTest {
       out.writeString("testString");
 
       ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
-      TagString tag = TestUtil.SPEC_REGISTRY.getAdapterFor(TagString.class).read(new TagList(TagString.class), getInputStream(bais));
+      TagString tag = spec.getAdapterFor(TagString.class).read(new TagList(TagString.class), getInputStream(bais));
 
       Assert.assertEquals("", tag.getName());
       Assert.assertEquals("testString", tag.get());

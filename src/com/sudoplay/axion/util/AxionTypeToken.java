@@ -116,7 +116,7 @@ public class AxionTypeToken<T> {
    * Gets type literal for the given {@code Class} instance.
    */
   public static <T> AxionTypeToken<T> get(Class<T> type) {
-    return new AxionTypeToken<T>(type);
+    return new AxionTypeToken<>(type);
   }
 
   /**

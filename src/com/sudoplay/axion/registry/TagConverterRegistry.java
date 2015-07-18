@@ -5,6 +5,7 @@ import com.sudoplay.axion.AxionInstanceException;
 import com.sudoplay.axion.tag.Tag;
 import com.sudoplay.axion.util.AxionContract;
 import com.sudoplay.axion.util.AxionTypeToken;
+import com.sudoplay.axion.util.Primitives;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -103,6 +104,7 @@ public class TagConverterRegistry implements Cloneable {
    * @throws AxionTagRegistrationException
    */
   public <T extends Tag, V> void registerTag(
+      final Axion axion,
       final Class<T> tClass,
       final Class<V> vClass,
       final TagConverter<T, V> converter
@@ -112,6 +114,7 @@ public class TagConverterRegistry implements Cloneable {
     AxionContract.assertArgumentNotNull(tClass, "tClass");
     AxionContract.assertArgumentNotNull(vClass, "vClass");
     AxionContract.assertArgumentNotNull(converter, "converter");
+    converter.setAxion(axion);
     tagToConverter.put(tClass, converter);
     AxionTypeToken<V> valueTypeToken = AxionTypeToken.get(vClass);
     TagConverterFactory factory = TagConverterFactory.newFactory(valueTypeToken, converter);
@@ -160,36 +163,39 @@ public class TagConverterRegistry implements Cloneable {
   ) throws AxionTagRegistrationException {
     LOG.trace("Entering getConverterForValue(typeToken=[{}])", typeToken);
 
-    TagConverter<?, ?> cachedConverter = converterCache.get(typeToken);
+    Class<V> c = (Class<V>) typeToken.getRawType();
+    AxionTypeToken<V> newTypeToken = AxionTypeToken.get(Primitives.wrap(c));
+
+    TagConverter<?, ?> cachedConverter = converterCache.get(newTypeToken);
     if (cachedConverter != null) {
       LOG.trace("Leaving getConverterForValue(): found cached converter -> {}, for type -> {}", cachedConverter,
-          typeToken);
+          newTypeToken);
       return (TagConverter<T, V>) cachedConverter;
     }
-    LOG.trace("Converter for type [{}] not found in cache", typeToken);
+    LOG.trace("Converter for type [{}] not found in cache", newTypeToken);
 
     Map<AxionTypeToken<?>, FutureConverter<? extends Tag, ?>> threadCalls = calls.get();
-    FutureConverter<T, V> ongoingCall = (FutureConverter<T, V>) threadCalls.get(typeToken);
+    FutureConverter<T, V> ongoingCall = (FutureConverter<T, V>) threadCalls.get(newTypeToken);
     if (ongoingCall != null) {
-      LOG.trace("Leaving getConverterForValue(): ongoingCall for type -> {}", typeToken);
+      LOG.trace("Leaving getConverterForValue(): ongoingCall for type -> {}", newTypeToken);
       return ongoingCall;
     }
 
     FutureConverter<T, V> call = new FutureConverter<>();
-    threadCalls.put(typeToken, call);
+    threadCalls.put(newTypeToken, call);
     try {
       for (TagConverterFactory factory : factories) {
-        TagConverter<T, V> candidate = factory.create(axion, typeToken);
+        TagConverter<T, V> candidate = factory.create(axion, newTypeToken);
         if (candidate != null) {
           call.setDelegate(candidate);
-          converterCache.put(typeToken, candidate);
-          LOG.trace("Leaving getConverterForValue(): found new converter -> {}, for type -> {}", candidate, typeToken);
+          converterCache.put(newTypeToken, candidate);
+          LOG.trace("Leaving getConverterForValue(): found new converter -> {}, for type -> {}", candidate, newTypeToken);
           return candidate;
         }
       }
-      throw new AxionTagRegistrationException("No converter found for type: " + typeToken);
+      throw new AxionTagRegistrationException("No converter found for type: " + newTypeToken);
     } finally {
-      threadCalls.remove(typeToken);
+      threadCalls.remove(newTypeToken);
     }
   }
 

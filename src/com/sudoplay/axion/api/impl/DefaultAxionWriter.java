@@ -6,7 +6,9 @@ import com.sudoplay.axion.api.AxionWriter;
 import com.sudoplay.axion.spec.tag.TagCompound;
 import com.sudoplay.axion.spec.tag.TagList;
 import com.sudoplay.axion.tag.Tag;
+import com.sudoplay.axion.util.AxionTypeToken;
 
+import java.text.AttributedCharacterIterator;
 import java.util.Collection;
 import java.util.Map;
 import java.util.function.Predicate;
@@ -56,10 +58,10 @@ public class DefaultAxionWriter implements AxionWriter {
 
   // TODO: finish test
   @Override
-  public <K, V> AxionWriter write(String name, Map<K, V> map) {
+  public <K, V> AxionWriter write(String name, Map<K, V> map, AxionTypeToken<Map<K, V>> typeToken) {
     assertNotNull(name, "name");
     assertNotNull(map, "map");
-    tagCompound.put(name, this._writeMap(map));
+    tagCompound.put(name, axion.convertValue(map, typeToken));
     return this;
   }
 
@@ -112,7 +114,7 @@ public class DefaultAxionWriter implements AxionWriter {
     assertNotNull(predicate, "predicate");
     if (predicate.test(map)) {
       assertNotNull(map, "map");
-      tagCompound.put(name, this._writeMap(map));
+      tagCompound.put(name, axion.convertValue(map));
     }
     return this;
   }
@@ -154,7 +156,7 @@ public class DefaultAxionWriter implements AxionWriter {
   @Override
   public <K, V> AxionWriter writeIfNotNull(String name, Map<K, V> map) {
     assertNotNull(name, "name");
-    if (map != null) tagCompound.put(name, this._writeMap(map));
+    if (map != null) tagCompound.put(name, axion.convertValue(map));
     return this;
   }
 
@@ -177,10 +179,6 @@ public class DefaultAxionWriter implements AxionWriter {
     assertNotNull(name, "name");
     assertNotNull(object, "object");
     tagCompound.put(name, axion.convertValue(object));
-  }
-
-  private <K, V> TagList _writeMap(Map<K, V> map) {
-    return axion.convertValue(map);
   }
 
   private <V> TagList _writeCollection(Collection<V> collection) {

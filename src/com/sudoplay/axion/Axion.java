@@ -786,8 +786,25 @@ public class Axion {
     configuration.getBaseTagAdapter().write(tag, out);
   }
 
+  @SuppressWarnings("unchecked")
+  public <T extends Tag, V> T convertValue(
+      final V value
+  ) {
+    Class<V> vClass = (Class<V>) value.getClass();
+    return this.convertValue((String) null, value, AxionTypeToken.get(vClass));
+  }
+
+  @SuppressWarnings("unchecked")
+  public <T extends Tag, V> T convertValue(
+      final String name,
+      final V value
+  ) {
+    Class<V> vClass = (Class<V>) value.getClass();
+    return this.convertValue(name, value, AxionTypeToken.get(vClass));
+  }
+
   /**
-   * Convenience method to call {@link Axion#convertValue(String, Object)} with a null name.
+   * Convenience method to call {@link Axion#convertValue(String, Object, AxionTypeToken)} with a null name.
    *
    * @param value the value to convert
    * @param <T>   tag type
@@ -795,9 +812,10 @@ public class Axion {
    * @return T tag
    */
   public <T extends Tag, V> T convertValue(
-      final V value
+      final V value,
+      final AxionTypeToken<V> typeToken
   ) {
-    return this.convertValue(null, value);
+    return this.convertValue(null, value, typeToken);
   }
 
   /**
@@ -812,10 +830,9 @@ public class Axion {
   @SuppressWarnings("unchecked")
   public <T extends Tag, V> T convertValue(
       final String name,
-      final V value
+      final V value,
+      final AxionTypeToken<V> typeToken
   ) {
-    Class<V> vClass = (Class<V>) value.getClass();
-    AxionTypeToken<V> typeToken = AxionTypeToken.get(vClass);
     TagConverter<T, V> tagConverter = configuration.getConverterForValue(this, typeToken);
     return tagConverter.convert(name, value);
   }

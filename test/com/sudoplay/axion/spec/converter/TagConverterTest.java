@@ -11,6 +11,8 @@ import java.util.Map.Entry;
 
 import com.sudoplay.axion.Axion;
 import org.junit.Assert;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.sudoplay.axion.TestUtil;
@@ -31,13 +33,18 @@ import com.sudoplay.axion.spec.tag.TagString;
 
 public class TagConverterTest {
 
-  private static final Axion axion = Axion.getExtInstance();
+  private static Axion axion;
+
+  @BeforeClass
+  public static void before() {
+    axion = Axion.getExtInstance();
+  }
 
   @Test
   public void test_TagByteArrayConverter() {
     byte[] value = new byte[] { 0, 1, 2, 3 };
     TagByteArray tag = new TagByteArray("name", value);
-    Assert.assertArrayEquals(value, (byte[]) TagConverter.Spec.BYTE_ARRAY.convert(tag));
+    Assert.assertArrayEquals(value, TagConverter.Spec.BYTE_ARRAY.convert(tag));
     Assert.assertEquals(tag, TagConverter.Spec.BYTE_ARRAY.convert("name", value));
   }
 
@@ -75,7 +82,7 @@ public class TagConverterTest {
 
   @Test
   public void test_TagDoubleConverter() {
-    double value = (double) 12.2568;
+    double value = 12.2568;
     TagDouble tag = new TagDouble("name", value);
     assertEquals(value, TagConverter.Spec.DOUBLE.convert(tag), TestUtil.DOUBLE_DELTA);
     assertEquals(tag, TagConverter.Spec.DOUBLE.convert("name", value));
@@ -93,7 +100,7 @@ public class TagConverterTest {
   public void test_TagIntArrayConverter() {
     int[] value = new int[] { 0, 1, 2, 3 };
     TagIntArray tag = new TagIntArray("name", value);
-    assertArrayEquals(value, (int[]) TagConverter.Spec.INT_ARRAY.convert(tag));
+    assertArrayEquals(value, TagConverter.Spec.INT_ARRAY.convert(tag));
     assertEquals(tag, TagConverter.Spec.INT_ARRAY.convert("name", value));
   }
 

@@ -1,6 +1,9 @@
 package com.sudoplay.axion;
 
 import com.sudoplay.axion.AxionConfigurationProtection.ProtectionMode;
+import com.sudoplay.axion.converter.AxionWritableTypeConverterFactory;
+import com.sudoplay.axion.converter.CollectionTypeConverterFactory;
+import com.sudoplay.axion.converter.MapTypeConverterFactory;
 import com.sudoplay.axion.ext.tag.*;
 import com.sudoplay.axion.registry.*;
 import com.sudoplay.axion.spec.tag.*;
@@ -30,8 +33,12 @@ public class AxionConfiguration implements Cloneable {
 
   private static final Logger LOG = LoggerFactory.getLogger(AxionConfiguration.class);
 
-  protected static AxionConfiguration getSpecConfiguration(Axion axion) {
+  public static AxionConfiguration getSpecConfiguration(Axion axion) {
     return new AxionConfiguration() {{
+      registerFactory(axion, new AxionWritableTypeConverterFactory());
+      registerFactory(axion, new CollectionTypeConverterFactory());
+      registerFactory(axion, new MapTypeConverterFactory());
+
       registerBaseTagAdapter(axion, TagAdapter.Spec.BASE);
       registerTag(axion, 1, TagByte.class, Byte.class, TagAdapter.Spec.BYTE, TagConverter.Spec.BYTE);
       registerTag(axion, 2, TagShort.class, Short.class, TagAdapter.Spec.SHORT, TagConverter.Spec.SHORT);
@@ -51,8 +58,12 @@ public class AxionConfiguration implements Cloneable {
     }};
   }
 
-  protected static AxionConfiguration getExtConfiguration(Axion axion) {
+  public static AxionConfiguration getExtConfiguration(Axion axion) {
     return new AxionConfiguration() {{
+      registerFactory(axion, new AxionWritableTypeConverterFactory());
+      registerFactory(axion, new CollectionTypeConverterFactory());
+      registerFactory(axion, new MapTypeConverterFactory());
+
       registerBaseTagAdapter(axion, TagAdapter.Spec.BASE);
       registerTag(axion, 1, TagByte.class, Byte.class, TagAdapter.Spec.BYTE, TagConverter.Spec.BYTE);
       registerTag(axion, 2, TagShort.class, Short.class, TagAdapter.Spec.SHORT, TagConverter.Spec.SHORT);
@@ -281,7 +292,7 @@ public class AxionConfiguration implements Cloneable {
    * @see #getAdapterFor(Class)
    * @see #getAdapterFor(int)
    * @see #getClassFor(int)
-   * @see #getConverterForTag(Tag)
+   * @see #getConverterForTag(Class)
    * @see #getConverterForValue(Axion, AxionTypeToken)
    * @see #getIdFor(Class)
    */
@@ -296,7 +307,7 @@ public class AxionConfiguration implements Cloneable {
     configurationProtection.assertUnlocked();
     configurationProtection.assertMutable();
     tagAdapterRegistry.register(axion, id, tClass, vClass, adapter);
-    tagConverterRegistry.registerTag(tClass, vClass, converter);
+    tagConverterRegistry.registerTag(axion, tClass, vClass, converter);
     return this;
   }
 
@@ -310,6 +321,8 @@ public class AxionConfiguration implements Cloneable {
       final Axion axion,
       final TagConverterFactory factory
   ) {
+    configurationProtection.assertUnlocked();
+    configurationProtection.assertMutable();
     tagConverterRegistry.registerFactory(axion, factory);
     return this;
   }

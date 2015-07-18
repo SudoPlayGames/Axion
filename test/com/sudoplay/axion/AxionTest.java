@@ -4,16 +4,17 @@ import com.sudoplay.axion.api.AxionReader;
 import com.sudoplay.axion.api.AxionWritable;
 import com.sudoplay.axion.api.AxionWriter;
 import com.sudoplay.axion.ext.tag.TagBoolean;
-import com.sudoplay.axion.mapper.AxionMapper;
+import com.sudoplay.axion.registry.TagConverter;
 import com.sudoplay.axion.spec.tag.TagCompound;
 import com.sudoplay.axion.spec.tag.TagInt;
 import com.sudoplay.axion.spec.tag.TagList;
 import com.sudoplay.axion.spec.tag.TagLong;
 import com.sudoplay.axion.tag.Tag;
+import com.sudoplay.axion.util.AxionTypeToken;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.util.Date;
+import java.util.BitSet;
 
 import static org.junit.Assert.*;
 
@@ -26,19 +27,19 @@ public class AxionTest {
     if ((axion = Axion.getInstance("test")) == null) {
       axion = Axion.createInstanceFrom(Axion.getExtInstance(), "test");
     }
-    axion.registerAxionMapperFactory(Vector.class, new VectorMapper());
+    axion.registerConverter(Vector.class, new VectorConverter());
   }
 
   @Test
   public void test_hasConverterForValueReturnsTrue_whenTrue() {
     Long value = 42L;
-    assertTrue(axion.hasConverterForValue(value));
+    assertTrue(axion.hasConverterForValue(AxionTypeToken.get(value.getClass())));
   }
 
   @Test
   public void test_hasConverterForValueReturnsFalse_whenFalse() {
     Vector value = new Vector();
-    assertFalse(axion.hasConverterForValue(value));
+    assertFalse(axion.hasConverterForValue(AxionTypeToken.get(BitSet.class)));
   }
 
   @Test
@@ -60,81 +61,72 @@ public class AxionTest {
   }
 
   @Test
-  public void test_hasMapperForReturnsTrue_whenTrue() {
-    assertTrue(axion.hasMapperFor(Vector.class));
-  }
-
-  @Test
-  public void test_hasMapperForReturnsFalse_whenFalse() {
-    assertFalse(axion.hasMapperFor(Date.class));
-  }
-
-  @Test
-  public void test_writeObject_writesImplementationsOfAxionWritable() {
+  public void test_convertValue_writesImplementationsOfAxionWritable() {
     TestClassWithNullaryConstructor testClass = new TestClassWithNullaryConstructor();
     testClass.aLong = 42;
 
-    TagCompound tagCompound = axion.convertToTag("testClass", testClass);
+    TagCompound tagCompound = axion.convertValue("testClass", testClass);
     long actual = tagCompound.getValue("aLong", axion);
     assertEquals(42L, actual);
   }
 
   @Test
-  public void test_createTagFrom_readsImplementationOfAxionWritableWithNullaryConstructor() {
+  public void test_convertValue_readsImplementationOfAxionWritableWithNullaryConstructor() {
     TestClassWithNullaryConstructor testClass = new TestClassWithNullaryConstructor();
     testClass.aLong = 42;
 
-    TagCompound tagCompound = axion.convertToTag("testClass", testClass);
-    TestClassWithNullaryConstructor newTestClass = axion.createValueFromTag(tagCompound,
-        TestClassWithNullaryConstructor
-            .class);
+    TagCompound tagCompound = axion.convertValue("testClass", testClass);
+    TestClassWithNullaryConstructor newTestClass = axion.convertTag(
+        tagCompound,
+        AxionTypeToken.get(TestClassWithNullaryConstructor.class)
+    );
     assertEquals(testClass.aLong, newTestClass.aLong);
   }
 
   @Test
-  public void test_createTagFrom_writesConvertibleObjects() {
-    TagBoolean tag = axion.convertToTag("aBoolean", true);
+  public void test_convertValue_writesConvertibleObjects() {
+    TagBoolean tag = axion.convertValue("aBoolean", true);
     assertEquals(true, tag.get());
   }
 
   @Test
-  public void test_createTagFrom_readsConvertibleObjects() {
-    TagBoolean tag = axion.convertToTag("aBoolean", true);
-    boolean b = axion.createValueFromTag(tag, boolean.class);
+  public void test_convertValue_readsConvertibleObjects() {
+    TagBoolean tag = axion.convertValue("aBoolean", true);
+    boolean b = axion.convertTag(tag, AxionTypeToken.get(boolean.class));
     assertEquals(true, b);
   }
 
   @Test
-  public void test_createTagFrom_writesMappableObjects() {
+  public void test_convertValue_writesMappableObjects() {
     Vector v = new Vector();
     v.x = 42;
     v.y = 73;
     v.z = 31415;
 
-    TagList list = axion.convertToTag(v);
+    TagList list = axion.convertValue(v);
     assertEquals(42, ((TagInt) list.get(0)).get());
     assertEquals(73, ((TagInt) list.get(1)).get());
     assertEquals(31415, ((TagInt) list.get(2)).get());
   }
 
   @Test
-  public void test_createTagFrom_readsMappableObjects() {
+  public void test_convertValue_readsMappableObjects() {
     Vector v = new Vector();
     v.x = 42;
     v.y = 73;
     v.z = 31415;
 
-    TagList list = axion.convertToTag(v);
-    Vector newV = axion.createValueFromTag(list, Vector.class);
+    TagList list = axion.convertValue(v);
+    Vector newV = axion.convertTag(list, AxionTypeToken.get(Vector.class));
     assertEquals(v.x, newV.x);
     assertEquals(v.y, newV.y);
     assertEquals(v.z, newV.z);
   }
 
-  public static class VectorMapper implements AxionMapper<TagList, Vector> {
+  public static class VectorConverter extends TagConverter<TagList, Vector> {
     @Override
-    public TagList createTagFrom(String name, Vector object, Axion axion) {
-      TagList out = new TagList(TagInt.class);
+    public TagList convert(String name, Vector object) {
+      TagList out = new TagList(TagInt.class, name);
       out.add(new TagInt(object.x));
       out.add(new TagInt(object.y));
       out.add(new TagInt(object.z));
@@ -142,7 +134,7 @@ public class AxionTest {
     }
 
     @Override
-    public Vector createObjectFrom(TagList tag, Axion axion) {
+    public Vector convert(TagList tag) {
       Vector object = new Vector();
       object.x = ((TagInt) tag.get(0)).get();
       object.y = ((TagInt) tag.get(1)).get();

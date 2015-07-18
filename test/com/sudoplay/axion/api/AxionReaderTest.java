@@ -381,15 +381,6 @@ public class AxionReaderTest {
     Vector v = in.read((Tag) axion.convertValue(getTestVector()), Vector.class);
     assertEquals(1, v.y);
 
-    // should throw AxionReadException if the AxionWritable implementation has no nullary constructor
-    try {
-      TagCompound tagCompound = in.getTagCompound().get("writableArgsVector");
-      in.read(tagCompound, WritableArgsVector.class);
-      fail();
-    } catch (AxionReadException e) {
-      // expected
-    }
-
     // should throw IllegalArgumentException on null tag parameter
     try {
       in.read((Tag) null, Vector.class);
@@ -418,15 +409,6 @@ public class AxionReaderTest {
     // should map mappable classes
     Vector v = in.read((Tag) axion.convertValue(getTestVector()), Vector.class);
     assertEquals(1, v.y);
-
-    // should throw AxionReadException if the AxionWritable implementation has no nullary constructor
-    try {
-      TagCompound tagCompound = in.getTagCompound().get("writableArgsVector");
-      in.read(tagCompound, WritableArgsVector.class);
-      fail();
-    } catch (AxionReadException e) {
-      // expected
-    }
 
     // should return default value if tag parameter is null
     Vector vector = in.read((Tag) null, Vector.class, getTestVector());
@@ -1139,7 +1121,6 @@ public class AxionReaderTest {
   }
 
   public static class WritableArgsVector extends ArgsVector implements AxionWritable {
-    public int x, y, z;
 
     public WritableArgsVector(int x, int y, int z) {
       super(x, y, z);

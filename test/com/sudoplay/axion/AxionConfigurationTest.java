@@ -4,6 +4,8 @@ import com.sudoplay.axion.AxionConfiguration.CharacterEncodingType;
 import com.sudoplay.axion.AxionConfiguration.CompressionType;
 import com.sudoplay.axion.registry.TagAdapter;
 import com.sudoplay.axion.registry.TagConverter;
+import com.sudoplay.axion.registry.TagConverterFactory;
+import com.sudoplay.axion.spec.converter.TagStringConverter;
 import com.sudoplay.axion.spec.tag.TagByte;
 import com.sudoplay.axion.util.AxionTypeToken;
 import org.junit.Test;
@@ -23,7 +25,7 @@ public class AxionConfigurationTest {
     assertFalse(config.isUnlocked());
 
     // New, copied configurations should always be unlocked.
-    assertTrue(config.clone().isUnlocked());
+    assertTrue(config.copy(axion).isUnlocked());
 
     check(config, axion);
 
@@ -76,31 +78,37 @@ public class AxionConfigurationTest {
     }
 
     /*
-     * Must be unlocked and mutable to registerFactory adapter.
+     * Must be unlocked and mutable to register adapter.
      */
     try {
-      config.registerTag(1, TagByte.class, Byte.class, TagAdapter.Spec.BYTE, TagConverter.Spec.BYTE);
+      config.registerTag(axion, 1, TagByte.class, Byte.class, TagAdapter.Spec.BYTE, TagConverter.Spec.BYTE);
       fail("Expected AxionConfigurationException");
     } catch (AxionConfigurationException e) {
       // expected
     }
 
     /*
-     * Must be unlocked and mutable to registerFactory base adapter.
+     * Must be unlocked and mutable to register base adapter.
      */
     try {
-      config.registerBaseTagAdapter(TagAdapter.Spec.BASE);
+      config.registerBaseTagAdapter(axion, TagAdapter.Spec.BASE);
       fail("Expected AxionConfigurationException");
     } catch (AxionConfigurationException e) {
       // expected
     }
 
     /*
-     * Must be unlocked and mutable to registerFactory mapper.
+     * Must be unlocked and mutable to register.
      */
     try {
       AxionTypeToken<?> typeToken = AxionTypeToken.get(Byte.class);
-      config.registerAxionMapper(null);
+      config.registerFactory(
+          axion,
+          TagConverterFactory.newFactory(
+              AxionTypeToken.get(String.class),
+              new TagStringConverter()
+          )
+      );
       fail("Expected AxionConfigurationException");
     } catch (AxionConfigurationException e) {
       // expected

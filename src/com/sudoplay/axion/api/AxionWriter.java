@@ -5,6 +5,7 @@ import com.sudoplay.axion.registry.TagAdapter;
 import com.sudoplay.axion.registry.TagConverter;
 import com.sudoplay.axion.spec.tag.TagCompound;
 import com.sudoplay.axion.tag.Tag;
+import com.sudoplay.axion.util.AxionTypeToken;
 
 import java.util.Collection;
 import java.util.Map;
@@ -62,7 +63,7 @@ public interface AxionWriter {
    * @param <V>
    * @return
    */
-  <K, V> AxionWriter write(String name, Map<K, V> map);
+  <K, V> AxionWriter write(String name, Map<K, V> map, AxionTypeToken<Map<K, V>> typeToken);
 
   /**
    * Writes an object that has a {@link TagConverter} registered with {@link Axion#registerTag(int, Class, Class,
