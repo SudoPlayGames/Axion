@@ -16,7 +16,7 @@ import com.sudoplay.axion.ext.tag.TagShortArray;
 import com.sudoplay.axion.ext.tag.TagStringArray;
 import com.sudoplay.axion.registry.TagAdapter;
 import com.sudoplay.axion.registry.TagConverter;
-import com.sudoplay.axion.registry.TagRegistry;
+import com.sudoplay.axion.registry.TagAdapterRegistry;
 import com.sudoplay.axion.spec.tag.TagByte;
 import com.sudoplay.axion.spec.tag.TagByteArray;
 import com.sudoplay.axion.spec.tag.TagCompound;
@@ -230,7 +230,7 @@ public class TestUtil {
 
   }
 
-  public static final TagRegistry SPEC_REGISTRY = new TagRegistry() {
+  public static final TagAdapterRegistry SPEC_REGISTRY = new TagAdapterRegistry() {
     {
       registerBaseTagAdapter(TagAdapter.Spec.BASE);
       register(1, TagByte.class, Byte.class, TagAdapter.Spec.BYTE, TagConverter.Spec.BYTE);
@@ -249,7 +249,7 @@ public class TestUtil {
     }
   };
 
-  public static final TagRegistry EXT_REGISTRY = new TagRegistry() {
+  public static final TagAdapterRegistry EXT_REGISTRY = new TagAdapterRegistry() {
     {
       register(80, TagBoolean.class, Boolean.class, TagAdapter.Ext.BOOLEAN, TagConverter.Ext.BOOLEAN);
       register(81, TagDoubleArray.class, double[].class, TagAdapter.Ext.DOUBLE_ARRAY, TagConverter.Ext.DOUBLE_ARRAY);

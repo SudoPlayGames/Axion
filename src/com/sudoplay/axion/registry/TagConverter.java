@@ -1,5 +1,6 @@
 package com.sudoplay.axion.registry;
 
+import com.sudoplay.axion.Axion;
 import com.sudoplay.axion.AxionInstanceException;
 import com.sudoplay.axion.ext.converter.*;
 import com.sudoplay.axion.spec.converter.*;
@@ -13,7 +14,9 @@ import com.sudoplay.axion.tag.Tag;
  * @param <V> value type
  * @author Jason Taylor
  */
-public abstract class TagConverter<T extends Tag, V> extends RegistryAccessor {
+public abstract class TagConverter<T extends Tag, V> {
+
+  protected Axion axion;
 
   /**
    * Group of {@link TagConverter}s that conform to the original NBT specification.
@@ -63,21 +66,24 @@ public abstract class TagConverter<T extends Tag, V> extends RegistryAccessor {
   public abstract T convert(final String name, final V value);
 
   /**
-   * Creates a new instance of this {@link TagConverter} and assigns a reference to the {@link TagRegistry} given.
+   * Creates a new instance of this {@link TagConverter}.
    *
-   * @param newTagRegistry the {@link TagRegistry} to assign to the new instance
    * @return a new instance of this {@link TagConverter}
    */
   @SuppressWarnings("unchecked")
-  protected TagConverter<T, V> newInstance(final TagRegistry newTagRegistry) {
+  protected TagConverter<T, V> newInstance(Axion axion) {
     try {
-      TagConverter<T, V> newInstance = this.getClass().getConstructor().newInstance();
-      newInstance.setRegistry(newTagRegistry);
-      return newInstance;
+      TagConverter<T, V> converter = this.getClass().newInstance();
+      converter.setAxion(axion);
+      return converter;
     } catch (Exception e) {
       throw new AxionInstanceException("Unable to instantiate new converter of type "
           + this.getClass().getSimpleName(), e);
     }
+  }
+
+  public void setAxion(Axion axion) {
+    this.axion = axion;
   }
 
   @Override

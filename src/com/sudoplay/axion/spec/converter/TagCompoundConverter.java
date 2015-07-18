@@ -22,7 +22,7 @@ public class TagCompoundConverter extends TagConverter<TagCompound, Map> {
     Map<String, Tag> tags = new HashMap<>();
     for (Object o : value.keySet()) {
       String n = (String) o;
-      tags.put(n, convertToTag(n, value.get(n)));
+      tags.put(n, axion.convertValue(n, value.get(n)));
     }
     return new TagCompound(name, tags);
   }
@@ -33,7 +33,7 @@ public class TagCompoundConverter extends TagConverter<TagCompound, Map> {
     Map<String, Tag> tags = tag.getAsMap();
     for (String name : tags.keySet()) {
       Tag t = tags.get(name);
-      map.put(t.getName(), convertToValue(t));
+      map.put(t.getName(), axion.convertTag(t));
     }
     return map;
   }

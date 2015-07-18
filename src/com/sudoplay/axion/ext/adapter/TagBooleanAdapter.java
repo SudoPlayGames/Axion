@@ -32,7 +32,7 @@ public class TagBooleanAdapter extends TagAdapter<TagBoolean> {
   @Override
   public TagBoolean read(final Tag parent, final AxionInputStream in) throws IOException {
     LOG.trace("Entering read(parent=[{}], in=[{}])", parent, in);
-    TagBoolean result = convertToTag((parent instanceof TagList) ? null : in.readString(), in.readBoolean());
+    TagBoolean result = new TagBoolean((parent instanceof TagList) ? null : in.readString(), in.readBoolean());
     LOG.trace("Leaving read(): [{}]", result);
     return result;
   }

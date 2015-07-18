@@ -1,14 +1,13 @@
 package com.sudoplay.axion.spec.tag;
 
 import com.sudoplay.axion.Axion;
-import com.sudoplay.axion.mapper.AxionMapper;
-import com.sudoplay.axion.mapper.AxionMapperRegistrationException;
 import com.sudoplay.axion.registry.AxionTagRegistrationException;
 import com.sudoplay.axion.registry.TagConverter;
 import com.sudoplay.axion.tag.AxionIllegalTagNameException;
 import com.sudoplay.axion.tag.AxionInvalidTagException;
 import com.sudoplay.axion.tag.ContainerTag;
 import com.sudoplay.axion.tag.Tag;
+import com.sudoplay.axion.util.AxionTypeToken;
 
 import java.util.*;
 import java.util.Map.Entry;
@@ -161,22 +160,27 @@ public class TagCompound extends ContainerTag {
    * @return the converted value of the {@link Tag} with the name given
    * @throws AxionTagRegistrationException if no {@link TagConverter} is registered for the tag requested
    */
-  public <V> V getValue(final String name, final Axion axion) throws AxionTagRegistrationException {
-    return axion.createValueFromTag(data.get(name));
+  public <V> V getValue(
+      final String name,
+      final Axion axion
+  ) throws AxionTagRegistrationException {
+    return axion.convertTag(data.get(name));
   }
 
   /**
-   * Uses the registered {@link AxionMapper} for the type given to return a new object from the tag requested.
+   * Return a new object from the tag requested.
    *
-   * @param name  the name of the {@link Tag} to get
-   * @param type  the class of the object to return
-   * @param axion an {@link Axion} instance
+   * @param name   the name of the {@link Tag} to get
+   * @param vClass the class of the object to return
+   * @param axion  an {@link Axion} instance
    * @return a new object from the tag requested
-   * @throws AxionMapperRegistrationException if no {@link AxionMapper} is registered for the type given
    */
-  public <V> V getValue(final String name, final Class<V> type, final Axion axion) throws
-      AxionMapperRegistrationException {
-    return axion.createValueFromTag(data.get(name), type);
+  public <V> V getValue(
+      final String name,
+      final Class<V> vClass,
+      final Axion axion
+  ) {
+    return axion.convertTag(data.get(name), AxionTypeToken.get(vClass));
   }
 
   /**
@@ -197,7 +201,10 @@ public class TagCompound extends ContainerTag {
    * @param name name of the {@link Tag}
    * @param tag  the {@link Tag} to add
    */
-  public void put(final String name, final Tag tag) {
+  public void put(
+      final String name,
+      final Tag tag
+  ) {
     put(tag.setName(name));
   }
 
@@ -210,22 +217,12 @@ public class TagCompound extends ContainerTag {
    * @param axion an {@link Axion} instance
    * @throws AxionTagRegistrationException if no {@link TagConverter} is registered for the value's type
    */
-  public <V> void putValue(final String name, final V value, final Axion axion) throws AxionTagRegistrationException {
-    put(axion.createTagWithConverter(name, value));
-  }
-
-  /**
-   * Creates a tag from the mappable value given using the {@link AxionMapper} registered for the value's type and adds
-   * the new tag to this {@link TagCompound}.
-   *
-   * @param name  name of the {@link Tag}
-   * @param value the value to map
-   * @param axion an {@link Axion} instance
-   * @throws AxionMapperRegistrationException if no {@link AxionMapper} is registered for the value's type
-   */
-  public <V> void putMappableValue(final String name, final V value, final Axion axion) throws
-      AxionMapperRegistrationException {
-    put(axion.createTagWithMapper(name, value));
+  public <V> void putValue(
+      final String name,
+      final V value,
+      final Axion axion
+  ) throws AxionTagRegistrationException {
+    put(axion.convertValue(name, value));
   }
 
   @Override

@@ -29,7 +29,7 @@ public class BaseTagAdapter extends TagAdapter<Tag> {
       LOG.debug("Leaving read(): null");
       return null;
     } else {
-      Tag tag = getAdapterFor(id).read(parent, in);
+      Tag tag = axion.getAdapterFor(id).read(parent, in);
       LOG.debug("Leaving read(): [{}]", tag);
       return tag;
     }
@@ -38,18 +38,18 @@ public class BaseTagAdapter extends TagAdapter<Tag> {
   @Override
   public void write(final Tag tag, final AxionOutputStream out) throws IOException {
     LOG.debug("Entering write(tag=[{}], out=[{}])", tag, out);
-    int id = getIdFor(tag.getClass());
+    int id = axion.getIdFor(tag.getClass());
     out.writeByte(id);
     if (!(tag.getParent() instanceof TagList)) {
       out.writeString(tag.getName());
     }
-    getAdapterFor(id).write(tag, out);
+    axion.getAdapterFor(id).write(tag, out);
     LOG.debug("Leaving write()");
   }
 
   @Override
   public StringBuilder toString(final Tag tag, final StringBuilder out) {
-    return getAdapterFor(tag.getClass()).toString(tag, out);
+    return axion.getAdapterFor(tag.getClass()).toString(tag, out);
   }
 
 }

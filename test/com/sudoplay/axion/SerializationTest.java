@@ -8,7 +8,6 @@ import java.io.IOException;
 
 import org.junit.Test;
 
-import com.sudoplay.axion.Axion;
 import com.sudoplay.axion.AxionConfiguration.CharacterEncodingType;
 import com.sudoplay.axion.spec.tag.TagByte;
 import com.sudoplay.axion.spec.tag.TagByteArray;
@@ -73,11 +72,11 @@ public class SerializationTest {
   private Tag serialize(Tag start) throws IOException {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     AxionOutputStream out = new AxionOutputStream(baos, CharacterEncoderFactory.create(CharacterEncodingType.MODIFIED_UTF_8));
-    Axion.getExtInstance().writeTag(start, out);
+    Axion.getExtInstance().adapt(start, out);
 
     ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
     AxionInputStream in = new AxionInputStream(bais, CharacterEncoderFactory.create(CharacterEncodingType.MODIFIED_UTF_8));
-    return Axion.getExtInstance().readTag(null, in);
+    return Axion.getExtInstance().adapt(null, in);
   }
 
 }

@@ -1,5 +1,6 @@
 package com.sudoplay.axion.spec.adapter;
 
+import com.sudoplay.axion.Axion;
 import com.sudoplay.axion.registry.TagAdapter;
 import com.sudoplay.axion.spec.tag.TagCompound;
 import com.sudoplay.axion.spec.tag.TagList;
@@ -27,7 +28,7 @@ public class TagCompoundAdapter extends TagAdapter<TagCompound> {
   public void write(final TagCompound tag, final AxionOutputStream out) throws IOException {
     LOG.debug("Entering write(tag=[{}], out=[{}])", tag, out);
     for (Tag child : tag.getAsMap().values()) {
-      getBaseTagAdapter().write(child, out);
+      axion.getBaseTagAdapter().write(child, out);
     }
     out.writeByte(0);
     LOG.debug("Leaving write()");
@@ -38,20 +39,21 @@ public class TagCompoundAdapter extends TagAdapter<TagCompound> {
     LOG.debug("Entering read(parent=[{}], in=[{}])", parent, in);
     TagCompound tag = new TagCompound((parent instanceof TagList) ? null : in.readString());
     Tag child;
-    while ((child = getBaseTagAdapter().read(tag, in)) != null) {
+    while ((child = axion.getBaseTagAdapter().read(tag, in)) != null) {
       tag.put(child);
     }
     LOG.debug("Leaving read(): [{}]", tag);
     return tag;
   }
 
+  @SuppressWarnings("ResultOfMethodCallIgnored")
   @Override
   public StringBuilder toString(Tag tag, StringBuilder out) {
     super.toString(tag, out);
     applyIndent(tag, out).append(OPEN).append(SEP);
     Collection<Tag> collection = ((TagCompound) tag).getAsMap().values();
     for (Tag t : collection) {
-      getBaseTagAdapter().toString(t, out);
+      axion.getBaseTagAdapter().toString(t, out);
     }
     applyIndent(tag, out).append(CLOSE).append(SEP);
     return out;

@@ -32,7 +32,7 @@ public class TagByteAdapter extends TagAdapter<TagByte> {
   @Override
   public TagByte read(final Tag parent, final AxionInputStream in) throws IOException {
     LOG.trace("Entering read(parent=[{}], in=[{}])", parent, in);
-    TagByte result = convertToTag((parent instanceof TagList) ? null : in.readString(), in.readByte());
+    TagByte result = new TagByte((parent instanceof TagList) ? null : in.readString(), in.readByte());
     LOG.trace("Leaving read(): [{}]", result);
     return result;
   }

@@ -9,13 +9,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.sudoplay.axion.Axion;
 import org.junit.Assert;
 import org.junit.Test;
 
 import com.sudoplay.axion.TestUtil;
 import com.sudoplay.axion.registry.TagAdapter;
 import com.sudoplay.axion.registry.TagConverter;
-import com.sudoplay.axion.registry.TagRegistry;
+import com.sudoplay.axion.registry.TagAdapterRegistry;
 import com.sudoplay.axion.spec.tag.TagByte;
 import com.sudoplay.axion.spec.tag.TagByteArray;
 import com.sudoplay.axion.spec.tag.TagCompound;
@@ -30,22 +31,7 @@ import com.sudoplay.axion.spec.tag.TagString;
 
 public class TagConverterTest {
 
-  private static final TagRegistry REGISTRY = new TagRegistry() {
-    {
-      registerBaseTagAdapter(TagAdapter.Spec.BASE);
-      register(1, TagByte.class, Byte.class, TagAdapter.Spec.BYTE, TagConverter.Spec.BYTE);
-      register(2, TagShort.class, Short.class, TagAdapter.Spec.SHORT, TagConverter.Spec.SHORT);
-      register(3, TagInt.class, Integer.class, TagAdapter.Spec.INT, TagConverter.Spec.INT);
-      register(4, TagLong.class, Long.class, TagAdapter.Spec.LONG, TagConverter.Spec.LONG);
-      register(5, TagFloat.class, Float.class, TagAdapter.Spec.FLOAT, TagConverter.Spec.FLOAT);
-      register(6, TagDouble.class, Double.class, TagAdapter.Spec.DOUBLE, TagConverter.Spec.DOUBLE);
-      register(7, TagByteArray.class, byte[].class, TagAdapter.Spec.BYTE_ARRAY, TagConverter.Spec.BYTE_ARRAY);
-      register(8, TagString.class, String.class, TagAdapter.Spec.STRING, TagConverter.Spec.STRING);
-      register(9, TagList.class, List.class, TagAdapter.Spec.LIST, TagConverter.Spec.LIST);
-      register(10, TagCompound.class, Map.class, TagAdapter.Spec.COMPOUND, TagConverter.Spec.COMPOUND);
-      register(11, TagIntArray.class, int[].class, TagAdapter.Spec.INT_ARRAY, TagConverter.Spec.INT_ARRAY);
-    }
-  };
+  private static final Axion axion = Axion.getExtInstance();
 
   @Test
   public void test_TagByteArrayConverter() {
@@ -67,10 +53,10 @@ public class TagConverterTest {
   @Test
   public void test_TagCompoundConverter() {
     TagCompound tag = TestUtil.getTagCompound();
-    assertEquals(tag, REGISTRY.getConverterForTag(TagCompound.class).convert("name", TestUtil.getMap()));
+    assertEquals(tag, axion.getConverterForTag(TagCompound.class).convert("name", TestUtil.getMap()));
 
     Map expected = TestUtil.getMap();
-    Map actual = (Map) REGISTRY.getConverterForTag(TagCompound.class).convert(tag);
+    Map actual = (Map) axion.getConverterForTag(TagCompound.class).convert(tag);
 
     assertEquals(expected.size(), actual.size());
 
@@ -130,8 +116,8 @@ public class TagConverterTest {
     tag.add(new TagInt("", 648));
     tag.add(new TagInt("", 9813));
     tag.add(new TagInt("", 72138));
-    assertEquals(value, REGISTRY.getConverterForTag(TagList.class).convert(tag));
-    assertEquals(tag, REGISTRY.getConverterForTag(TagList.class).convert("name", value));
+    assertEquals(value, axion.getConverterForTag(TagList.class).convert(tag));
+    assertEquals(tag, axion.getConverterForTag(TagList.class).convert("name", value));
   }
 
   @Test

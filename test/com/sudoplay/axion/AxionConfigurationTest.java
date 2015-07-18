@@ -76,7 +76,7 @@ public class AxionConfigurationTest {
     }
 
     /*
-     * Must be unlocked and mutable to register adapter.
+     * Must be unlocked and mutable to registerFactory adapter.
      */
     try {
       config.registerTag(1, TagByte.class, Byte.class, TagAdapter.Spec.BYTE, TagConverter.Spec.BYTE);
@@ -86,7 +86,7 @@ public class AxionConfigurationTest {
     }
 
     /*
-     * Must be unlocked and mutable to register base adapter.
+     * Must be unlocked and mutable to registerFactory base adapter.
      */
     try {
       config.registerBaseTagAdapter(TagAdapter.Spec.BASE);
@@ -96,7 +96,7 @@ public class AxionConfigurationTest {
     }
 
     /*
-     * Must be unlocked and mutable to register mapper.
+     * Must be unlocked and mutable to registerFactory mapper.
      */
     try {
       AxionTypeToken<?> typeToken = AxionTypeToken.get(Byte.class);

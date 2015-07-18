@@ -84,6 +84,7 @@ public class TagByte extends Tag {
     return super.toString() + ": " + data;
   }
 
+  @SuppressWarnings("CloneDoesntCallSuperClone")
   @Override
   public TagByte clone() {
     return new TagByte(getName(), data);

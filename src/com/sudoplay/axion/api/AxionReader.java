@@ -1,7 +1,6 @@
 package com.sudoplay.axion.api;
 
 import com.sudoplay.axion.Axion;
-import com.sudoplay.axion.mapper.AxionMapper;
 import com.sudoplay.axion.registry.TagAdapter;
 import com.sudoplay.axion.registry.TagConverter;
 import com.sudoplay.axion.spec.tag.TagCompound;
@@ -36,11 +35,6 @@ public interface AxionReader {
    * Locates a convertible Tag by name and returns its value or null if the tag doesn't exist.
    * <p>
    * The name parameter can't be null.
-   * <p>
-   * Note: This method will not read implementations of {@link AxionWritable} or objects that have been registered with
-   * {@link Axion#registerAxionMapper(Class, AxionMapper)}. It will only read tags registered with {@link
-   * Axion#registerTag(int, Class, Class, TagAdapter, TagConverter)}. To read a writable or mappable object, {@link
-   * AxionReader#read(String, Class)};
    *
    * @param name tag name
    * @param <V>  return value type
@@ -52,11 +46,6 @@ public interface AxionReader {
    * Locates a convertible Tag by name, and returns its value or the default value if the tag doesn't exist.
    * <p>
    * The name parameter can't be null.
-   * <p>
-   * Note: This method will not read implementations of {@link AxionWritable} or objects that have been registered with
-   * {@link Axion#registerAxionMapper(Class, AxionMapper)}. It will only read tags registered with {@link
-   * Axion#registerTag(int, Class, Class, TagAdapter, TagConverter)}. To read a writable or mappable object, {@link
-   * AxionReader#read(String, Class, V)};
    *
    * @param name         tag name
    * @param defaultValue default return value
@@ -70,11 +59,6 @@ public interface AxionReader {
    * before returning it. Null is returned if the tag doesn't exist.
    * <p>
    * The name parameter can not be null.
-   * <p>
-   * Note: This method will not map implementations of {@link AxionWritable} or objects that have been registered with
-   * {@link Axion#registerAxionMapper(Class, AxionMapper)}. It will only map tags registered with {@link
-   * Axion#registerTag(int, Class, Class, TagAdapter, TagConverter)}. To map a writable or mappable object, {@link
-   * AxionReader#map(String, Class, Function)};
    *
    * @param name     tag name
    * @param function function
@@ -87,11 +71,6 @@ public interface AxionReader {
    * Converts a tag to its value and returns it.
    * <p>
    * The name parameter can not be null.
-   * <p>
-   * Note: This method will not read implementations of {@link AxionWritable} or objects that have been registered with
-   * {@link Axion#registerAxionMapper(Class, AxionMapper)}. It will only read tags registered with {@link
-   * Axion#registerTag(int, Class, Class, TagAdapter, TagConverter)}. To read a writable or mappable object, {@link
-   * AxionReader#read(Tag, Class)};
    *
    * @param tag tag
    * @param <V> value type
@@ -104,11 +83,6 @@ public interface AxionReader {
    * Returns the tag's value or the default value if the tag parameter is null.
    * <p>
    * The tag parameter can not be null.
-   * <p>
-   * Note: This method will not read implementations of {@link AxionWritable} or objects that have been registered with
-   * {@link Axion#registerAxionMapper(Class, AxionMapper)}. It will only read tags registered with {@link
-   * Axion#registerTag(int, Class, Class, TagAdapter, TagConverter)}. To read a writable or mappable object, {@link
-   * AxionReader#read(Tag, Class, V)};
    *
    * @param tag          tag
    * @param defaultValue default value
@@ -122,11 +96,6 @@ public interface AxionReader {
    * Converts the given tag to its value, applies the given function, and returns the result.
    * <p>
    * Neither the tag or function parameter can be null.
-   * <p>
-   * Note: This method will not map implementations of {@link AxionWritable} or objects that have been registered with
-   * {@link Axion#registerAxionMapper(Class, AxionMapper)}. It will only map tags registered with {@link
-   * Axion#registerTag(int, Class, Class, TagAdapter, TagConverter)}. To map a writable or mappable object, {@link
-   * AxionReader#map(Tag, Class, Function)};
    *
    * @param tag      tag
    * @param function function
@@ -174,11 +143,6 @@ public interface AxionReader {
    * class. The given function is applied to the value before returning it. Returns null if the tag doesn't exist.
    * <p>
    * Neither the name, class, or function parameter can be null.
-   * <p>
-   * Note: This method will not map tags registered with {@link Axion#registerTag(int, Class, Class, TagAdapter,
-   * TagConverter)}. It will only map implementations of the {@link AxionWritable} interface and objects that have
-   * registered a {@link AxionMapper} using {@link Axion#registerAxionMapper(Class,
-   * AxionMapper)}. To map registered tags see the {@link AxionReader#map(String, Function)} method.
    *
    * @param name     tag name
    * @param vClass   value class
@@ -225,11 +189,6 @@ public interface AxionReader {
    * Converts the given tag to its value, then applies the given function before returning the value.
    * <p>
    * Neither the tag, class or function parameters can be null.
-   * <p>
-   * Note: This method will not map tags registered with {@link Axion#registerTag(int, Class, Class, TagAdapter,
-   * TagConverter)}. It will only map implementations of the {@link AxionWritable} interface and objects that have
-   * registered a {@link AxionMapper} using {@link Axion#registerAxionMapper(Class,
-   * AxionMapper)}. To map registered tags see the {@link AxionReader#map(Tag, Function)} method.
    *
    * @param tag      tag
    * @param vClass   value class

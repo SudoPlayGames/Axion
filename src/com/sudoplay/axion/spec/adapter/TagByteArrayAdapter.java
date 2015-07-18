@@ -37,7 +37,7 @@ public class TagByteArrayAdapter extends TagAdapter<TagByteArray> {
     String name = (parent instanceof TagList) ? null : in.readString();
     byte[] data = new byte[in.readInt()];
     in.readFully(data);
-    TagByteArray result = convertToTag(name, data);
+    TagByteArray result = new TagByteArray(name, data);
     LOG.trace("Leaving read(): [{}]", result);
     return result;
   }

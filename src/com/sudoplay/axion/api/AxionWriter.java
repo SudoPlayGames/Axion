@@ -1,7 +1,6 @@
 package com.sudoplay.axion.api;
 
 import com.sudoplay.axion.Axion;
-import com.sudoplay.axion.mapper.AxionMapper;
 import com.sudoplay.axion.registry.TagAdapter;
 import com.sudoplay.axion.registry.TagConverter;
 import com.sudoplay.axion.spec.tag.TagCompound;
@@ -66,9 +65,8 @@ public interface AxionWriter {
   <K, V> AxionWriter write(String name, Map<K, V> map);
 
   /**
-   * Writes an object that either has a {@link AxionMapper} registered with {@link
-   * Axion#registerAxionMapper(Class, AxionMapper)}, or a {@link TagConverter} registered with {@link
-   * Axion#registerTag(int, Class, Class, TagAdapter, TagConverter)}.
+   * Writes an object that has a {@link TagConverter} registered with {@link Axion#registerTag(int, Class, Class,
+   * TagAdapter, TagConverter)} or {@link Axion#registerConverter(Class, TagConverter)}.
    * <p>
    * Note: This method will not write {@link AxionWritable} implementations, instead see {@link
    * AxionWriter#write(String, AxionWritable)}.
@@ -134,10 +132,9 @@ public interface AxionWriter {
   <K, V> AxionWriter writeIf(String name, Map<K, V> map, Predicate<Map<K, V>> predicate);
 
   /**
-   * If the given predicate returns true, writes an object that either has a {@link
-   * AxionMapper} registered with {@link Axion#registerAxionMapper(Class,
-   * AxionMapper)}, or a {@link TagConverter} registered with {@link Axion#registerTag(int, Class, Class,
-   * TagAdapter, TagConverter)}.
+   * If the given predicate returns true, writes an object that  has a {@link TagConverter} registered with {@link
+   * Axion#registerTag(int, Class, Class, TagAdapter, TagConverter)} or {@link Axion#registerConverter(Class,
+   * TagConverter)}.
    * <p>
    * Note: This method will not write {@link AxionWritable} implementations, instead see {@link
    * AxionWriter#writeIf(String, AxionWritable, Predicate)}.
@@ -199,10 +196,9 @@ public interface AxionWriter {
   <K, V> AxionWriter writeIfNotNull(String name, Map<K, V> map);
 
   /**
-   * If the given object parameter isn't null, writes an object that either has a {@link
-   * AxionMapper} registered with {@link Axion#registerAxionMapper(Class,
-   * AxionMapper)}, or a {@link TagConverter} registered with {@link Axion#registerTag(int, Class, Class,
-   * TagAdapter, TagConverter)}.
+   * If the given object parameter isn't null, writes an object that has a {@link TagConverter} registered with {@link
+   * Axion#registerTag(int, Class, Class, TagAdapter, TagConverter)} or {@link Axion#registerConverter(Class,
+   * TagConverter)}.
    * <p>
    * Note: This method will not write {@link AxionWritable} implementations, instead see {@link
    * AxionWriter#writeIf(String, AxionWritable, Predicate)}.

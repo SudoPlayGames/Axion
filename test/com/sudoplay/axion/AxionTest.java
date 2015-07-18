@@ -32,19 +32,19 @@ public class AxionTest {
   @Test
   public void test_hasConverterForValueReturnsTrue_whenTrue() {
     Long value = 42L;
-    assertTrue(axion.hasConverterFor(value));
+    assertTrue(axion.hasConverterForValue(value));
   }
 
   @Test
   public void test_hasConverterForValueReturnsFalse_whenFalse() {
     Vector value = new Vector();
-    assertFalse(axion.hasConverterFor(value));
+    assertFalse(axion.hasConverterForValue(value));
   }
 
   @Test
   public void test_hasConverterForTagReturnsTrue_whenTrue() {
     TagLong tag = new TagLong(42L);
-    assertTrue(axion.hasConverterFor(tag));
+    assertTrue(axion.hasConverterForTag(tag));
   }
 
   @Test
@@ -56,7 +56,7 @@ public class AxionTest {
         return this;
       }
     };
-    assertFalse(axion.hasConverterFor(tag));
+    assertFalse(axion.hasConverterForTag(tag));
   }
 
   @Test
@@ -74,7 +74,7 @@ public class AxionTest {
     TestClassWithNullaryConstructor testClass = new TestClassWithNullaryConstructor();
     testClass.aLong = 42;
 
-    TagCompound tagCompound = axion.createTagFrom("testClass", testClass);
+    TagCompound tagCompound = axion.convertToTag("testClass", testClass);
     long actual = tagCompound.getValue("aLong", axion);
     assertEquals(42L, actual);
   }
@@ -84,7 +84,7 @@ public class AxionTest {
     TestClassWithNullaryConstructor testClass = new TestClassWithNullaryConstructor();
     testClass.aLong = 42;
 
-    TagCompound tagCompound = axion.createTagFrom("testClass", testClass);
+    TagCompound tagCompound = axion.convertToTag("testClass", testClass);
     TestClassWithNullaryConstructor newTestClass = axion.createValueFromTag(tagCompound,
         TestClassWithNullaryConstructor
             .class);
@@ -93,13 +93,13 @@ public class AxionTest {
 
   @Test
   public void test_createTagFrom_writesConvertibleObjects() {
-    TagBoolean tag = axion.createTagFrom("aBoolean", true);
+    TagBoolean tag = axion.convertToTag("aBoolean", true);
     assertEquals(true, tag.get());
   }
 
   @Test
   public void test_createTagFrom_readsConvertibleObjects() {
-    TagBoolean tag = axion.createTagFrom("aBoolean", true);
+    TagBoolean tag = axion.convertToTag("aBoolean", true);
     boolean b = axion.createValueFromTag(tag, boolean.class);
     assertEquals(true, b);
   }
@@ -111,7 +111,7 @@ public class AxionTest {
     v.y = 73;
     v.z = 31415;
 
-    TagList list = axion.createTagFrom(v);
+    TagList list = axion.convertToTag(v);
     assertEquals(42, ((TagInt) list.get(0)).get());
     assertEquals(73, ((TagInt) list.get(1)).get());
     assertEquals(31415, ((TagInt) list.get(2)).get());
@@ -124,7 +124,7 @@ public class AxionTest {
     v.y = 73;
     v.z = 31415;
 
-    TagList list = axion.createTagFrom(v);
+    TagList list = axion.convertToTag(v);
     Vector newV = axion.createValueFromTag(list, Vector.class);
     assertEquals(v.x, newV.x);
     assertEquals(v.y, newV.y);

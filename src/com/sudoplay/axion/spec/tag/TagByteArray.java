@@ -90,6 +90,7 @@ public class TagByteArray extends Tag {
     return super.toString() + ": [" + data.length + " bytes]";
   }
 
+  @SuppressWarnings("CloneDoesntCallSuperClone")
   @Override
   public TagByteArray clone() {
     return new TagByteArray(getName(), data);

@@ -32,7 +32,7 @@ public class TagDoubleAdapter extends TagAdapter<TagDouble> {
   @Override
   public TagDouble read(final Tag parent, final AxionInputStream in) throws IOException {
     LOG.trace("Entering read(parent=[{}], in=[{}])", parent, in);
-    TagDouble result = convertToTag((parent instanceof TagList) ? null : in.readString(), in.readDouble());
+    TagDouble result = new TagDouble((parent instanceof TagList) ? null : in.readString(), in.readDouble());
     LOG.trace("Leaving read(): [{}]", result);
     return result;
   }

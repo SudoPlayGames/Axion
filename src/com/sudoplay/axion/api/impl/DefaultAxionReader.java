@@ -7,6 +7,7 @@ import com.sudoplay.axion.spec.tag.TagCompound;
 import com.sudoplay.axion.spec.tag.TagList;
 import com.sudoplay.axion.tag.Tag;
 import com.sudoplay.axion.util.AxionFunctions;
+import com.sudoplay.axion.util.AxionTypeToken;
 
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -45,8 +46,8 @@ public class DefaultAxionReader implements AxionReader {
     this.assertNotNull(name, "name");
     Tag tag = tagCompound.get(name);
     if (tag != null) {
-      if (axion.hasConverterFor(tag)) {
-        return axion.createValueFromTag(tag);
+      if (axion.hasConverterForTag(tag)) {
+        return axion.convertTag(tag);
       }
       throw new AxionTagRegistrationException("No converter registered for tag: " + tag.getClass());
     }
@@ -74,14 +75,14 @@ public class DefaultAxionReader implements AxionReader {
   @Override
   public <V, T extends Tag> V read(T tag) {
     this.assertNotNull(tag, "tag");
-    return axion.createValueFromTag(tag);
+    return axion.convertTag(tag);
   }
 
   @Override
   public <V, T extends Tag> V read(T tag, V defaultValue) {
     if (tag != null) {
-      if (axion.hasConverterFor(tag)) {
-        return AxionFunctions.ifNullChangeTo(defaultValue).apply(axion.createValueFromTag(tag));
+      if (axion.hasConverterForTag(tag)) {
+        return AxionFunctions.ifNullChangeTo(defaultValue).apply(axion.convertTag(tag));
       }
       throw new AxionTagRegistrationException("No converter registered for tag: " + tag.getClass());
     } else {
@@ -93,7 +94,7 @@ public class DefaultAxionReader implements AxionReader {
   public <V, T extends Tag> V map(T tag, Function<V, V> function) {
     this.assertNotNull(tag, "tag");
     this.assertNotNull(function, "function");
-    return function.apply(axion.createValueFromTag(tag));
+    return function.apply(axion.convertTag(tag));
   }
 
   @Override
@@ -126,7 +127,7 @@ public class DefaultAxionReader implements AxionReader {
     assertNotNull(function, "function");
     Tag tag = tagCompound.get(name);
     if (tag != null) {
-      return function.apply(axion.createValueFromTag(tag, vClass));
+      return function.apply(axion.convertTag(tag, AxionTypeToken.get(vClass)));
     } else {
       return null;
     }
@@ -136,14 +137,14 @@ public class DefaultAxionReader implements AxionReader {
   public <V, T extends Tag> V read(T tag, Class<V> vClass) {
     assertNotNull(tag, "tag");
     assertNotNull(vClass, "class");
-    return axion.createValueFromTag(tag, vClass);
+    return axion.convertTag(tag, AxionTypeToken.get(vClass));
   }
 
   @Override
   public <V, T extends Tag> V read(T tag, Class<V> vClass, V defaultValue) {
     assertNotNull(vClass, "class");
     if (tag != null) {
-      return axion.createValueFromTag(tag, vClass);
+      return axion.convertTag(tag, AxionTypeToken.get(vClass));
     } else {
       return defaultValue;
     }
@@ -224,9 +225,11 @@ public class DefaultAxionReader implements AxionReader {
     assertNotNull(consumer, "consumer");
     TagList keyList = tagList.get(0);
     TagList valueList = tagList.get(1);
+    AxionTypeToken<K> kAxionTypeToken = AxionTypeToken.get(kClass);
+    AxionTypeToken<V> vAxionTypeToken = AxionTypeToken.get(vClass);
     for (int i = 0; i < keyList.size(); ++i) {
-      K key = axion.createValueFromTag(keyList.get(i), kClass);
-      V value = axion.createValueFromTag(valueList.get(i), vClass);
+      K key = axion.convertTag(keyList.get(i), kAxionTypeToken);
+      V value = axion.convertTag(valueList.get(i), vAxionTypeToken);
       consumer.accept(key, value);
     }
   }
@@ -261,9 +264,11 @@ public class DefaultAxionReader implements AxionReader {
     LinkedHashMap<K, V> map = new LinkedHashMap<>(tag.size());
     TagList keyList = tag.get(0);
     TagList valueList = tag.get(1);
+    AxionTypeToken<K> kAxionTypeToken = AxionTypeToken.get(kClass);
+    AxionTypeToken<V> vAxionTypeToken = AxionTypeToken.get(vClass);
     for (int i = 0; i < keyList.size(); ++i) {
-      K key = axion.createValueFromTag(keyList.get(i), kClass);
-      V value = axion.createValueFromTag(valueList.get(i), vClass);
+      K key = axion.convertTag(keyList.get(i), kAxionTypeToken);
+      V value = axion.convertTag(valueList.get(i), vAxionTypeToken);
       map.put(key, value);
     }
     return map.entrySet().stream();
@@ -327,7 +332,7 @@ public class DefaultAxionReader implements AxionReader {
 
   private <V> void _consumeCollection(TagList tag, Class<V> vClass, Consumer<V> consumer) {
     assertNotNull(vClass, "class");
-    tag.forEach(t -> consumer.accept(axion.createValueFromTag(t, vClass)));
+    tag.forEach(t -> consumer.accept(axion.convertTag(t, AxionTypeToken.get(vClass))));
   }
 
   @Override
@@ -358,8 +363,9 @@ public class DefaultAxionReader implements AxionReader {
   }
 
   private <V, T extends Tag> Stream<V> _streamCollection(TagList tag, Class<T> tClass, Class<V> vClass) {
+    AxionTypeToken<V> vAxionTypeToken = AxionTypeToken.get(vClass);
     return tag.stream(tClass)
-        .map(t -> axion.createValueFromTag(t, vClass))
+        .map(t -> axion.convertTag(t, vAxionTypeToken))
         .collect(Collectors.toCollection(LinkedList::new))
         .stream();
   }

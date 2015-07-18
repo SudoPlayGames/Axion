@@ -37,7 +37,7 @@ public class TagBooleanArrayAdapter extends TagAdapter<TagBooleanArray> {
     for (int i = 0; i < boolLen; i++) {
       bool[i] = (bytes[bytes.length - i / 8 - 1] & POW[i % 8]) != 0;
     }
-    TagBooleanArray result = convertToTag(name, bool);
+    TagBooleanArray result = new TagBooleanArray(name, bool);
     LOG.trace("Leaving read(): [{}]", result);
     return result;
   }

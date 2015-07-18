@@ -31,7 +31,7 @@ public class TagShortArrayAdapter extends TagAdapter<TagShortArray> {
     for (int i = 0; i < len; i++) {
       data[i] = in.readShort();
     }
-    TagShortArray result = convertToTag(name, data);
+    TagShortArray result = new TagShortArray(name, data);
     LOG.trace("Leaving read(): [{}]", result);
     return result;
   }

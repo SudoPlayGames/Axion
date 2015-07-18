@@ -31,7 +31,7 @@ public class TagDoubleArrayAdapter extends TagAdapter<TagDoubleArray> {
     for (int i = 0; i < len; i++) {
       data[i] = in.readDouble();
     }
-    TagDoubleArray result = convertToTag(name, data);
+    TagDoubleArray result = new TagDoubleArray(name, data);
     LOG.trace("Leaving read(): [{}]", result);
     return result;
   }

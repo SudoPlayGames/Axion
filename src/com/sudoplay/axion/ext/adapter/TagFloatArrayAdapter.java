@@ -31,7 +31,7 @@ public class TagFloatArrayAdapter extends TagAdapter<TagFloatArray> {
     for (int i = 0; i < len; i++) {
       data[i] = in.readFloat();
     }
-    TagFloatArray result = convertToTag(name, data);
+    TagFloatArray result = new TagFloatArray(name, data);
     LOG.trace("Leaving read(): [{}]", result);
     return result;
   }

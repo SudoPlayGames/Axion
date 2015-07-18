@@ -32,7 +32,7 @@ public class TagFloatAdapter extends TagAdapter<TagFloat> {
   @Override
   public TagFloat read(final Tag parent, final AxionInputStream in) throws IOException {
     LOG.trace("Entering read(parent=[{}], in=[{}])", parent, in);
-    TagFloat result = convertToTag((parent instanceof TagList) ? null : in.readString(), in.readFloat());
+    TagFloat result = new TagFloat((parent instanceof TagList) ? null : in.readString(), in.readFloat());
     LOG.trace("Leaving read(): [{}]", result);
     return result;
   }

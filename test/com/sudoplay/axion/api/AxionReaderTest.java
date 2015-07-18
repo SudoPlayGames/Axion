@@ -4,15 +4,13 @@ import com.sudoplay.axion.Axion;
 import com.sudoplay.axion.AxionReadException;
 import com.sudoplay.axion.api.impl.DefaultAxionReader;
 import com.sudoplay.axion.ext.tag.TagBoolean;
-import com.sudoplay.axion.mapper.AxionMapper;
-import com.sudoplay.axion.mapper.AxionMapperFactory;
+import com.sudoplay.axion.registry.TagConverter;
 import com.sudoplay.axion.spec.tag.TagCompound;
 import com.sudoplay.axion.spec.tag.TagInt;
 import com.sudoplay.axion.spec.tag.TagList;
 import com.sudoplay.axion.spec.tag.TagString;
 import com.sudoplay.axion.tag.Tag;
 import com.sudoplay.axion.util.AxionConsumers;
-import com.sudoplay.axion.util.AxionTypeToken;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -33,7 +31,7 @@ public class AxionReaderTest {
     if ((axion = Axion.getInstance("test")) == null) {
       axion = Axion.createInstanceFrom(Axion.getExtInstance(), "test");
     }
-    axion.registerAxionMapperFactory(Vector.class, new VectorMapper());
+    axion.registerConverter(Vector.class, new VectorConverter());
   }
 
   private TagList getTestMapTagList() {
@@ -92,7 +90,7 @@ public class AxionReaderTest {
     t.put("boolean", new TagBoolean(false));
     t.put("string", new TagString("someString"));
     t.put("int", new TagInt(42));
-    t.put("vector", axion.createTagFrom(getTestVector()));
+    t.put("vector", axion.convertValue(getTestVector()));
     t.put("list", getTestTagList());
     t.put("compound", getNestedTestTagCompound());
     t.put("map", getTestMapTagList());
@@ -100,7 +98,7 @@ public class AxionReaderTest {
     TagCompound out = new TagCompound();
     getTestWritableVector().write(axion.defaultWriter(out));
     t.put("writableVector", out);
-    t.put("writableArgsVector", axion.createTagFrom(new WritableArgsVector(3, 1, 4)));
+    t.put("writableArgsVector", axion.convertValue(new WritableArgsVector(3, 1, 4)));
     return t;
   }
 
@@ -108,7 +106,7 @@ public class AxionReaderTest {
     TagCompound t = new TagCompound();
     t.put("string", new TagString("someString"));
     t.put("int", new TagInt(42));
-    t.put("vector", axion.createTagFrom(getTestVector()));
+    t.put("vector", axion.convertValue(getTestVector()));
     t.put("list", getTestTagList());
     return t;
   }
@@ -376,11 +374,11 @@ public class AxionReaderTest {
     AxionReader in = getTestReader();
 
     // should map implementations of AxionWritable that have a nullary constructor
-    WritableVector writableVector = in.read((Tag) axion.createTagFrom(getTestWritableVector()), WritableVector.class);
+    WritableVector writableVector = in.read((Tag) axion.convertValue(getTestWritableVector()), WritableVector.class);
     assertEquals(1, writableVector.y);
 
     // should map mappable classes
-    Vector v = in.read((Tag) axion.createTagFrom(getTestVector()), Vector.class);
+    Vector v = in.read((Tag) axion.convertValue(getTestVector()), Vector.class);
     assertEquals(1, v.y);
 
     // should throw AxionReadException if the AxionWritable implementation has no nullary constructor
@@ -414,11 +412,11 @@ public class AxionReaderTest {
     AxionReader in = getTestReader();
 
     // should map implementations of AxionWritable that have a nullary constructor
-    WritableVector writableVector = in.read((Tag) axion.createTagFrom(getTestWritableVector()), WritableVector.class);
+    WritableVector writableVector = in.read((Tag) axion.convertValue(getTestWritableVector()), WritableVector.class);
     assertEquals(1, writableVector.y);
 
     // should map mappable classes
-    Vector v = in.read((Tag) axion.createTagFrom(getTestVector()), Vector.class);
+    Vector v = in.read((Tag) axion.convertValue(getTestVector()), Vector.class);
     assertEquals(1, v.y);
 
     // should throw AxionReadException if the AxionWritable implementation has no nullary constructor
@@ -454,7 +452,7 @@ public class AxionReaderTest {
     // should map implementations of AxionWritable that have a nullary constructor and apply function to the value
     // before returning
     WritableVector writableVector = in.map(
-        (Tag) axion.createTagFrom(getTestWritableVector()),
+        (Tag) axion.convertValue(getTestWritableVector()),
         WritableVector.class,
         v -> {
           v.y += 41;
@@ -463,7 +461,7 @@ public class AxionReaderTest {
     assertEquals(42, writableVector.y);
 
     // should map mappable classes and apply function to the value before returning
-    Vector v = in.read((Tag) axion.createTagFrom(getTestVector()), Vector.class);
+    Vector v = in.read((Tag) axion.convertValue(getTestVector()), Vector.class);
     assertEquals(1, v.y);
 
     // should throw IllegalArgumentException on null tag parameter
@@ -1106,10 +1104,10 @@ public class AxionReaderTest {
     }
   }
 
-  public static class VectorMapper implements AxionMapper<TagList, Vector> {
+  public static class VectorConverter extends TagConverter<TagList, Vector> {
     @Override
-    public TagList createTagFrom(String name, Vector object, Axion axion) {
-      TagList out = new TagList(TagInt.class);
+    public TagList convert(String name, Vector object) {
+      TagList out = new TagList(TagInt.class, name);
       out.add(new TagInt(object.x));
       out.add(new TagInt(object.y));
       out.add(new TagInt(object.z));
@@ -1117,7 +1115,7 @@ public class AxionReaderTest {
     }
 
     @Override
-    public Vector createObjectFrom(TagList tag, Axion axion) {
+    public Vector convert(TagList tag) {
       Vector object = new Vector();
       object.x = ((TagInt) tag.get(0)).get();
       object.y = ((TagInt) tag.get(1)).get();

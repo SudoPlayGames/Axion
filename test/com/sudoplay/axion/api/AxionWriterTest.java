@@ -4,7 +4,7 @@ import com.sudoplay.axion.Axion;
 import com.sudoplay.axion.AxionWriteException;
 import com.sudoplay.axion.api.impl.DefaultAxionWriter;
 import com.sudoplay.axion.ext.tag.TagBoolean;
-import com.sudoplay.axion.mapper.AxionMapper;
+import com.sudoplay.axion.registry.TagConverter;
 import com.sudoplay.axion.spec.tag.TagCompound;
 import com.sudoplay.axion.spec.tag.TagInt;
 import com.sudoplay.axion.spec.tag.TagList;
@@ -27,7 +27,7 @@ public class AxionWriterTest {
     if ((axion = Axion.getInstance("test")) == null) {
       axion = Axion.createInstanceFrom(Axion.getExtInstance(), "test");
     }
-    axion.registerAxionMapperFactory(Vector.class, new VectorMapper());
+    axion.registerConverter(Vector.class, new VectorConverter());
   }
 
   @Test
@@ -463,10 +463,10 @@ public class AxionWriterTest {
     }
   }
 
-  public static class VectorMapper implements AxionMapper<TagList, Vector> {
+  public static class VectorConverter extends TagConverter<TagList, Vector> {
     @Override
-    public TagList createTagFrom(String name, Vector object, Axion axion) {
-      TagList out = new TagList(TagInt.class);
+    public TagList convert(String name, Vector object) {
+      TagList out = new TagList(TagInt.class, name);
       out.add(new TagInt(object.x));
       out.add(new TagInt(object.y));
       out.add(new TagInt(object.z));
@@ -474,7 +474,7 @@ public class AxionWriterTest {
     }
 
     @Override
-    public Vector createObjectFrom(TagList tag, Axion axion) {
+    public Vector convert(TagList tag) {
       Vector object = new Vector();
       object.x = ((TagInt) tag.get(0)).get();
       object.y = ((TagInt) tag.get(1)).get();
@@ -587,7 +587,7 @@ public class AxionWriterTest {
     t.put("boolean", new TagBoolean(false));
     t.put("string", new TagString("someString"));
     t.put("int", new TagInt(42));
-    t.put("vector", axion.createTagFrom(getTestVector()));
+    t.put("vector", axion.convertValue(getTestVector()));
     t.put("list", getTestTagList());
     t.put("compound", getNestedTestTagCompound());
     t.put("map", getTestMapTagList());
@@ -595,7 +595,7 @@ public class AxionWriterTest {
     TagCompound out = new TagCompound();
     getTestWritableVector().write(axion.defaultWriter(out));
     t.put("writableVector", out);
-    t.put("writableArgsVector", axion.createTagFrom(new WritableArgsVector(3, 1, 4)));
+    t.put("writableArgsVector", axion.convertValue(new WritableArgsVector(3, 1, 4)));
     return t;
   }
 
@@ -603,7 +603,7 @@ public class AxionWriterTest {
     TagCompound t = new TagCompound();
     t.put("string", new TagString("someString"));
     t.put("int", new TagInt(42));
-    t.put("vector", axion.createTagFrom(getTestVector()));
+    t.put("vector", axion.convertValue(getTestVector()));
     t.put("list", getTestTagList());
     return t;
   }

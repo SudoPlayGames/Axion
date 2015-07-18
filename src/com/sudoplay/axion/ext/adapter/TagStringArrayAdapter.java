@@ -31,7 +31,7 @@ public class TagStringArrayAdapter extends TagAdapter<TagStringArray> {
     for (int i = 0; i < len; i++) {
       data[i] = in.readString();
     }
-    TagStringArray result = convertToTag(name, data);
+    TagStringArray result = new TagStringArray(name, data);
     LOG.trace("Leaving read(): [{}]", result);
     return result;
   }

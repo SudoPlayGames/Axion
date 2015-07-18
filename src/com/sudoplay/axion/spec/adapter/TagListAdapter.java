@@ -27,10 +27,10 @@ public class TagListAdapter extends TagAdapter<TagList> {
   public void write(final TagList tag, final AxionOutputStream out) throws IOException {
     LOG.debug("Entering write(tag=[{}], out=[{}])", tag, out);
     int size = tag.size();
-    int type = getIdFor(tag.getType());
+    int type = axion.getIdFor(tag.getType());
     out.writeByte(type);
     out.writeInt(size);
-    TagAdapter<Tag> adapter = getAdapterFor(type);
+    TagAdapter<Tag> adapter = axion.getAdapterFor(type);
     Tag child;
     for (int i = 0; i < size; i++) {
       child = tag.get(i);
@@ -43,10 +43,10 @@ public class TagListAdapter extends TagAdapter<TagList> {
   public TagList read(final Tag parent, final AxionInputStream in) throws IOException {
     LOG.debug("Entering read(parent=[{}], in=[{}])", parent, in);
     String name = (parent instanceof TagList) ? null : in.readString();
-    Class<? extends Tag> type = getClassFor(in.readUnsignedByte());
+    Class<? extends Tag> type = axion.getClassFor(in.readUnsignedByte());
     int size = in.readInt();
     TagList tagList = new TagList(type, name, new ArrayList<>());
-    TagAdapter<? extends Tag> adapter = getAdapterFor(type);
+    TagAdapter<? extends Tag> adapter = axion.getAdapterFor(type);
     Tag child;
     for (int i = 0; i < size; i++) {
       child = adapter.read(tagList, in);
@@ -56,13 +56,14 @@ public class TagListAdapter extends TagAdapter<TagList> {
     return tagList;
   }
 
+  @SuppressWarnings("ResultOfMethodCallIgnored")
   @Override
   public StringBuilder toString(final Tag tag, final StringBuilder out) {
     super.toString(tag, out);
     applyIndent(tag, out).append(OPEN).append(SEP);
     List<Tag> list = ((TagList) tag).getAsList();
     for (Tag t : list) {
-      getBaseTagAdapter().toString(t, out);
+      axion.getBaseTagAdapter().toString(t, out);
     }
     applyIndent(tag, out).append(CLOSE).append(SEP);
     return out;

@@ -32,7 +32,7 @@ public class TagLongAdapter extends TagAdapter<TagLong> {
   @Override
   public TagLong read(final Tag parent, final AxionInputStream in) throws IOException {
     LOG.trace("Entering read(parent=[{}], in=[{}])", parent, in);
-    TagLong result = convertToTag((parent instanceof TagList) ? null : in.readString(), in.readLong());
+    TagLong result = new TagLong((parent instanceof TagList) ? null : in.readString(), in.readLong());
     LOG.trace("Leaving read(): [{}]", result);
     return result;
   }

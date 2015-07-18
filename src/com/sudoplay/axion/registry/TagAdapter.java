@@ -1,5 +1,6 @@
 package com.sudoplay.axion.registry;
 
+import com.sudoplay.axion.Axion;
 import com.sudoplay.axion.AxionInstanceException;
 import com.sudoplay.axion.ext.adapter.*;
 import com.sudoplay.axion.spec.adapter.*;
@@ -18,7 +19,9 @@ import java.io.IOException;
  * @param <T> {@link Tag} type
  * @author Jason Taylor
  */
-public abstract class TagAdapter<T extends Tag> extends RegistryAccessor {
+public abstract class TagAdapter<T extends Tag> {
+
+  protected Axion axion;
 
   /**
    * Group of {@link TagAdapter}s that conform to the original NBT specification.
@@ -105,22 +108,27 @@ public abstract class TagAdapter<T extends Tag> extends RegistryAccessor {
   }
 
   /**
-   * Creates a new instance of this {@link TagAdapter} and assigns a reference to the {@link TagRegistry} given.
+   * Creates a new instance of this {@link TagAdapter} and assigns a reference to the {@link TagAdapterRegistry} given.
    *
-   * @param newTagRegistry the {@link TagRegistry} to assign to the new instance
    * @return a new instance of this {@link TagAdapter}
    * @throws AxionInstanceException
    */
   @SuppressWarnings("unchecked")
-  protected <A extends Tag> TagAdapter<A> newInstance(final TagRegistry newTagRegistry) throws AxionInstanceException {
+  protected TagAdapter<T> newInstance(Axion axion) throws AxionInstanceException {
     try {
-      TagAdapter<A> newInstance = this.getClass().newInstance();
-      newInstance.setRegistry(newTagRegistry);
-      return newInstance;
+      TagAdapter<T> adapter = this.getClass().newInstance();
+      adapter.setAxion(axion);
+      return adapter;
     } catch (Exception e) {
-      throw new AxionInstanceException("Unable to instantiate new adapter of type [" + this.getClass().getSimpleName
-          () + "]", e);
+      throw new AxionInstanceException(
+          "Unable to instantiate new adapter of type [" + this.getClass().getSimpleName() + "]",
+          e
+      );
     }
+  }
+
+  private void setAxion(Axion axion) {
+    this.axion = axion;
   }
 
   @Override

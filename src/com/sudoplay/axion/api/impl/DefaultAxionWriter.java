@@ -1,7 +1,6 @@
 package com.sudoplay.axion.api.impl;
 
 import com.sudoplay.axion.Axion;
-import com.sudoplay.axion.AxionWriteException;
 import com.sudoplay.axion.api.AxionWritable;
 import com.sudoplay.axion.api.AxionWriter;
 import com.sudoplay.axion.spec.tag.TagCompound;
@@ -167,7 +166,7 @@ public class DefaultAxionWriter implements AxionWriter {
   }
 
   /**
-   * Calls {@link Axion#createTagFrom(Object)} and writes the result.
+   * Calls {@link Axion#convertValue(Object)} and writes the result.
    * <p>
    * Neither name or object parameter can be null.
    *
@@ -177,78 +176,15 @@ public class DefaultAxionWriter implements AxionWriter {
   private void _write(String name, Object object) {
     assertNotNull(name, "name");
     assertNotNull(object, "object");
-    tagCompound.put(name, axion.createTagFrom(object));
+    tagCompound.put(name, axion.convertValue(object));
   }
 
   private <K, V> TagList _writeMap(Map<K, V> map) {
-    if (map.isEmpty()) {
-      throw new IllegalArgumentException("Can't write an empty map");
-    }
-
-    K key = map.keySet().iterator().next();
-    V value = map.values().iterator().next();
-
-    if (key == null) {
-      throw new AxionWriteException("Can't write a map with a null key");
-    } else if (value == null) {
-      throw new AxionWriteException("Can't write a map with a null value");
-    }
-
-    Tag keyTag = (key instanceof AxionWritable)
-        ? axion.createTagFrom((AxionWritable) key)
-        : axion.createTagFrom(key);
-    Tag valueTag = (value instanceof AxionWritable)
-        ? axion.createTagFrom((AxionWritable) value)
-        : axion.createTagFrom(value);
-
-    TagList list = new TagList(TagList.class);
-    TagList keyList = new TagList(keyTag.getClass());
-    TagList valueList = new TagList(valueTag.getClass());
-
-    list.add(keyList);
-    list.add(valueList);
-
-    map.forEach((k, v) -> {
-      if (k == null) {
-        throw new AxionWriteException("Can't write a map with a null key");
-      } else if (v == null) {
-        throw new AxionWriteException("Can't write a map with a null value for key: " + k);
-      }
-      keyList.add((k instanceof AxionWritable)
-          ? axion.createTagFrom((AxionWritable) k)
-          : axion.createTagFrom(k));
-      valueList.add((v instanceof AxionWritable)
-          ? axion.createTagFrom((AxionWritable) v)
-          : axion.createTagFrom(v));
-    });
-
-    return list;
+    return axion.convertValue(map);
   }
 
   private <V> TagList _writeCollection(Collection<V> collection) {
-    assertNotNull(collection, "collection");
-    if (collection.isEmpty()) {
-      throw new AxionWriteException("Can't write an empty collection");
-    }
-
-    V value = collection.iterator().next();
-
-    if (value == null) {
-      throw new AxionWriteException("Can't write a collection with a null value");
-    }
-
-    Tag valueTag = axion.createTagFrom(value);
-
-    TagList list = new TagList(valueTag.getClass());
-
-    collection.forEach(v -> {
-      if (v == null) {
-        throw new AxionWriteException("Can't write a collection with a null value");
-      }
-      list.add(axion.createTagFrom(v));
-    });
-
-    return list;
+    return axion.convertValue(collection);
   }
 
   @Override

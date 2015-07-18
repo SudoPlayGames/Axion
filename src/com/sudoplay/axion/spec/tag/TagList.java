@@ -1,14 +1,13 @@
 package com.sudoplay.axion.spec.tag;
 
 import com.sudoplay.axion.Axion;
-import com.sudoplay.axion.mapper.AxionMapper;
-import com.sudoplay.axion.mapper.AxionMapperRegistrationException;
 import com.sudoplay.axion.registry.AxionTagRegistrationException;
 import com.sudoplay.axion.registry.TagConverter;
 import com.sudoplay.axion.tag.AxionIllegalTagNameException;
 import com.sudoplay.axion.tag.AxionInvalidTagException;
 import com.sudoplay.axion.tag.ContainerTag;
 import com.sudoplay.axion.tag.Tag;
+import com.sudoplay.axion.util.AxionTypeToken;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -106,19 +105,7 @@ public class TagList extends ContainerTag {
    * @throws AxionTagRegistrationException if no {@link TagConverter} is registered for the value's type
    */
   public <V> void addValue(final V value, final Axion axion) throws AxionTagRegistrationException {
-    add(axion.createTagWithConverter(null, value));
-  }
-
-  /**
-   * Creates a tag from the mappable value given using the {@link AxionMapper} registered for the value's type and adds
-   * the new tag to this {@link TagList}.
-   *
-   * @param value the value to map
-   * @param axion an {@link Axion} instance
-   * @throws AxionMapperRegistrationException if no {@link AxionMapper} is registered for the value's type
-   */
-  public <V> void addMappableValue(final V value, final Axion axion) throws AxionMapperRegistrationException {
-    add(axion.createTagWithMapper(null, value));
+    add(axion.convertValue(value));
   }
 
   /**
@@ -191,7 +178,7 @@ public class TagList extends ContainerTag {
     return this.valueStream(
         tagClass,
         tag -> true,
-        tag -> axion.createValueFromTag(tag, valueClass),
+        tag -> axion.convertTag(tag, AxionTypeToken.get(valueClass)),
         ArrayList::new
     );
   }
@@ -258,22 +245,27 @@ public class TagList extends ContainerTag {
    * @return the converted value of the {@link Tag} with the index given
    * @throws AxionTagRegistrationException if no {@link TagConverter} is registered for the tag requested
    */
-  public <V> V getValue(final int index, final Axion axion) throws AxionTagRegistrationException {
-    return axion.createValueFromTag(data.get(index));
+  public <V> V getValue(
+      final int index,
+      final Axion axion
+  ) throws AxionTagRegistrationException {
+    return axion.convertTag(data.get(index));
   }
 
   /**
-   * Uses the registered {@link AxionMapper} for the type given to return a new object from the tag requested.
+   * Returns a new object from the tag requested.
    *
-   * @param index the index of the {@link Tag} to get
-   * @param type  the class of the object to return
-   * @param axion an {@link Axion} instance
+   * @param index  the index of the {@link Tag} to get
+   * @param vClass the class of the object to return
+   * @param axion  an {@link Axion} instance
    * @return a new object from the tag requested
-   * @throws AxionMapperRegistrationException if no {@link AxionMapper} is registered for the type given
    */
-  public <V> V getValue(final int index, final Class<V> type, final Axion axion) throws
-      AxionMapperRegistrationException {
-    return axion.createValueFromTag(data.get(index), type);
+  public <V> V getValue(
+      final int index,
+      final Class<V> vClass,
+      final Axion axion
+  ) {
+    return axion.convertTag(data.get(index), AxionTypeToken.get(vClass));
   }
 
   @Override
