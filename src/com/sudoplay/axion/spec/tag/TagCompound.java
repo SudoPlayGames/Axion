@@ -1,13 +1,9 @@
 package com.sudoplay.axion.spec.tag;
 
-import com.sudoplay.axion.Axion;
-import com.sudoplay.axion.registry.AxionTagRegistrationException;
-import com.sudoplay.axion.registry.TagConverter;
 import com.sudoplay.axion.tag.AxionIllegalTagNameException;
 import com.sudoplay.axion.tag.AxionInvalidTagException;
 import com.sudoplay.axion.tag.ContainerTag;
 import com.sudoplay.axion.tag.Tag;
-import com.sudoplay.axion.util.AxionTypeToken;
 
 import java.util.*;
 import java.util.Map.Entry;
@@ -39,7 +35,9 @@ public class TagCompound extends ContainerTag {
    *
    * @param newMap the {@link Map} value
    */
-  public TagCompound(final Map<String, Tag> newMap) {
+  public TagCompound(
+      final Map<String, Tag> newMap
+  ) {
     this(null, newMap);
   }
 
@@ -48,7 +46,9 @@ public class TagCompound extends ContainerTag {
    *
    * @param newName the {@link Tag} name
    */
-  public TagCompound(final String newName) {
+  public TagCompound(
+      final String newName
+  ) {
     this(newName, null);
   }
 
@@ -58,7 +58,10 @@ public class TagCompound extends ContainerTag {
    * @param newName the {@link Tag} name
    * @param newMap  the {@link Map} value
    */
-  public TagCompound(final String newName, final Map<String, Tag> newMap) {
+  public TagCompound(
+      final String newName,
+      final Map<String, Tag> newMap
+  ) {
     super(newName);
     if (newMap == null) {
       data = new HashMap<>();
@@ -88,9 +91,7 @@ public class TagCompound extends ContainerTag {
   @Override
   public void clear() {
     List<Tag> toRemove = new ArrayList<>(data.values());
-    for (Tag child : toRemove) {
-      child.removeFromParent();
-    }
+    toRemove.forEach(Tag::removeFromParent);
   }
 
   @Override
@@ -99,7 +100,9 @@ public class TagCompound extends ContainerTag {
   }
 
   @Override
-  public boolean contains(final Tag tag) {
+  public boolean contains(
+      final Tag tag
+  ) {
     return tag != null && data.values().contains(tag);
   }
 
@@ -118,7 +121,9 @@ public class TagCompound extends ContainerTag {
    * @param name the name of the {@link Tag} to look for
    * @return true if the backing map contains the key given
    */
-  public boolean containsKey(final String name) {
+  public boolean containsKey(
+      final String name
+  ) {
     return data.containsKey(name);
   }
 
@@ -128,7 +133,9 @@ public class TagCompound extends ContainerTag {
    * @param name the name of the {@link Tag} to remove
    * @return the tag with the name given
    */
-  public Tag remove(final String name) {
+  public Tag remove(
+      final String name
+  ) {
     if (name == null || "".equals(name)) {
       return null;
     }
@@ -147,40 +154,10 @@ public class TagCompound extends ContainerTag {
    * @return the {@link Tag} with the name given
    */
   @SuppressWarnings("unchecked")
-  public <T extends Tag> T get(final String name) {
-    return (T) data.get(name);
-  }
-
-  /**
-   * Uses the registered {@link TagConverter} for the type of the tag requested and returns the converted value of the
-   * {@link Tag} with the name given.
-   *
-   * @param name  the name of the {@link Tag} to get
-   * @param axion an {@link Axion} instance
-   * @return the converted value of the {@link Tag} with the name given
-   * @throws AxionTagRegistrationException if no {@link TagConverter} is registered for the tag requested
-   */
-  public <V> V getValue(
-      final String name,
-      final Axion axion
-  ) throws AxionTagRegistrationException {
-    return axion.convertTag(data.get(name));
-  }
-
-  /**
-   * Return a new object from the tag requested.
-   *
-   * @param name   the name of the {@link Tag} to get
-   * @param vClass the class of the object to return
-   * @param axion  an {@link Axion} instance
-   * @return a new object from the tag requested
-   */
-  public <V> V getValue(
-      final String name,
-      final Class<V> vClass,
-      final Axion axion
+  public <T extends Tag> T get(
+      final String name
   ) {
-    return axion.convertTag(data.get(name), AxionTypeToken.get(vClass));
+    return (T) data.get(name);
   }
 
   /**
@@ -189,7 +166,9 @@ public class TagCompound extends ContainerTag {
    *
    * @param tag the {@link Tag} to add
    */
-  public void put(final Tag tag) {
+  public void put(
+      final Tag tag
+  ) {
     assertValid(tag);
     remove(tag.getName());
     tag.addTo(this);
@@ -208,30 +187,17 @@ public class TagCompound extends ContainerTag {
     put(tag.setName(name));
   }
 
-  /**
-   * Converts the value given into a tag using the {@link TagConverter} registered for the value's type and adds the new
-   * tag to this {@link TagCompound}.
-   *
-   * @param name  name of the {@link Tag}
-   * @param value the value to convert
-   * @param axion an {@link Axion} instance
-   * @throws AxionTagRegistrationException if no {@link TagConverter} is registered for the value's type
-   */
-  public <V> void putValue(
-      final String name,
-      final V value,
-      final Axion axion
-  ) throws AxionTagRegistrationException {
-    put(axion.convertValue(name, value));
-  }
-
   @Override
-  protected void onChildAddition(Tag tag) {
+  protected void onChildAddition(
+      Tag tag
+  ) {
     data.put(tag.getName(), tag);
   }
 
   @Override
-  protected void onChildRemoval(Tag tag) {
+  protected void onChildRemoval(
+      Tag tag
+  ) {
     data.remove(tag.getName());
   }
 
@@ -242,7 +208,9 @@ public class TagCompound extends ContainerTag {
    * @return the {@link Tag} given
    * @throws AxionInvalidTagException
    */
-  protected Tag assertValid(final Tag tag) throws AxionInvalidTagException {
+  protected Tag assertValid(
+      final Tag tag
+  ) throws AxionInvalidTagException {
     if (tag == null) {
       throw new AxionInvalidTagException(this.toString() + " does not support null tags");
     } else if ("".equals(tag.getName())) {
@@ -260,7 +228,9 @@ public class TagCompound extends ContainerTag {
   }
 
   @Override
-  public boolean equals(Object obj) {
+  public boolean equals(
+      Object obj
+  ) {
     if (this == obj) return true;
     if (!super.equals(obj)) return false;
     if (getClass() != obj.getClass()) return false;
@@ -277,7 +247,10 @@ public class TagCompound extends ContainerTag {
   }
 
   @Override
-  protected void onChildNameChange(final String oldName, final String newName) throws AxionIllegalTagNameException {
+  protected void onChildNameChange(
+      final String oldName,
+      final String newName
+  ) throws AxionIllegalTagNameException {
     if (newName == null || newName.isEmpty()) {
       throw new AxionIllegalTagNameException("Tag belongs to [" + this.toString() + "] and can not have an empty or " +
           "null name");
@@ -285,12 +258,13 @@ public class TagCompound extends ContainerTag {
     data.put(newName, data.remove(oldName));
   }
 
+  @SuppressWarnings("CloneDoesntCallSuperClone")
   @Override
   public TagCompound clone() {
     if (data.isEmpty()) {
       return new TagCompound(getName());
     } else {
-      Map<String, Tag> newMap = new HashMap<String, Tag>(data.size());
+      Map<String, Tag> newMap = new HashMap<>(data.size());
       for (Entry<String, Tag> entry : data.entrySet()) {
         newMap.put(entry.getKey(), entry.getValue().clone());
       }

@@ -155,13 +155,13 @@ public class TestUtil {
   }
 
   public static Map<String, Object> getMap() {
-    List<Byte> list = new ArrayList<Byte>();
+    List<Byte> list = new ArrayList<>();
     list.add((byte) 16);
     list.add((byte) 8);
     list.add((byte) 4);
     list.add((byte) 2);
 
-    Map<String, Object> map = new HashMap<String, Object>();
+    Map<String, Object> map = new HashMap<>();
     map.put("list", list);
     map.put("byte", (byte) 16);
     map.put("byteArray", new byte[] { 0, 1, 2, 3 });

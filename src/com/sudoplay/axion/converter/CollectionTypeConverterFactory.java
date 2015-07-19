@@ -65,6 +65,7 @@ public class CollectionTypeConverterFactory implements TagConverterFactory {
       return list;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public TagList convert(String name, Collection<V> collection) {
       if (collection.isEmpty()) {

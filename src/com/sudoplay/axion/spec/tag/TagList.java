@@ -185,6 +185,20 @@ public class TagList extends ContainerTag {
 
   public <V, T extends Tag> Stream<V> valueStream(
       Class<T> tagClass,
+      Class<V> valueClass,
+      Supplier<List<V>> listSupplier,
+      Axion axion
+  ) {
+    return this.valueStream(
+        tagClass,
+        tag -> true,
+        tag -> axion.convertTag(tag, AxionTypeToken.get(valueClass)),
+        listSupplier
+    );
+  }
+
+  public <V, T extends Tag> Stream<V> valueStream(
+      Class<T> tagClass,
       Predicate<T> filter,
       Function<T, V> map,
       Supplier<List<V>> listSupplier

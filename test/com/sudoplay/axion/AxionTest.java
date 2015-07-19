@@ -66,7 +66,8 @@ public class AxionTest {
     testClass.aLong = 42;
 
     TagCompound tagCompound = axion.convertValue("testClass", testClass);
-    long actual = tagCompound.getValue("aLong", axion);
+    Tag tag = tagCompound.get("aLong");
+    long actual = axion.convertTag(tag);
     assertEquals(42L, actual);
   }
 

@@ -1,7 +1,12 @@
 package com.sudoplay.axion.spec.converter;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
+import com.sudoplay.axion.Axion;
+import com.sudoplay.axion.TestUtil;
+import com.sudoplay.axion.registry.TagConverter;
+import com.sudoplay.axion.spec.tag.*;
+import org.junit.Assert;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -9,27 +14,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.sudoplay.axion.Axion;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
-import com.sudoplay.axion.TestUtil;
-import com.sudoplay.axion.registry.TagAdapter;
-import com.sudoplay.axion.registry.TagConverter;
-import com.sudoplay.axion.registry.TagAdapterRegistry;
-import com.sudoplay.axion.spec.tag.TagByte;
-import com.sudoplay.axion.spec.tag.TagByteArray;
-import com.sudoplay.axion.spec.tag.TagCompound;
-import com.sudoplay.axion.spec.tag.TagDouble;
-import com.sudoplay.axion.spec.tag.TagFloat;
-import com.sudoplay.axion.spec.tag.TagInt;
-import com.sudoplay.axion.spec.tag.TagIntArray;
-import com.sudoplay.axion.spec.tag.TagList;
-import com.sudoplay.axion.spec.tag.TagLong;
-import com.sudoplay.axion.spec.tag.TagShort;
-import com.sudoplay.axion.spec.tag.TagString;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public class TagConverterTest {
 
@@ -42,7 +29,7 @@ public class TagConverterTest {
 
   @Test
   public void test_TagByteArrayConverter() {
-    byte[] value = new byte[] { 0, 1, 2, 3 };
+    byte[] value = new byte[]{0, 1, 2, 3};
     TagByteArray tag = new TagByteArray("name", value);
     Assert.assertArrayEquals(value, TagConverter.Spec.BYTE_ARRAY.convert(tag));
     Assert.assertEquals(tag, TagConverter.Spec.BYTE_ARRAY.convert("name", value));
@@ -56,11 +43,24 @@ public class TagConverterTest {
     Assert.assertEquals(tag, TagConverter.Spec.BYTE.convert("name", value));
   }
 
-  @SuppressWarnings({ "unchecked", "rawtypes" })
+  @SuppressWarnings({"unchecked", "rawtypes"})
   @Test
   public void test_TagCompoundConverter() {
     TagCompound tag = TestUtil.getTagCompound();
-    assertEquals(tag, axion.getConverterForTag(TagCompound.class).convert("name", TestUtil.getMap()));
+
+    /*
+     The integration of mappers and converters, and the addition of the
+     MapTypeConverter, has created conflict with map conversion and it
+     has been removed for now.
+     */
+    // should throw UnsupportedOperationException if trying to convert a map
+    try {
+      TagConverter<?, ? super Map> converter = axion.getConverterForTag(TagCompound.class);
+      converter.convert("name", TestUtil.getMap());
+      fail();
+    } catch (UnsupportedOperationException e) {
+      // expected
+    }
 
     Map expected = TestUtil.getMap();
     Map actual = (Map) axion.getConverterForTag(TagCompound.class).convert(tag);
@@ -98,7 +98,7 @@ public class TagConverterTest {
 
   @Test
   public void test_TagIntArrayConverter() {
-    int[] value = new int[] { 0, 1, 2, 3 };
+    int[] value = new int[]{0, 1, 2, 3};
     TagIntArray tag = new TagIntArray("name", value);
     assertArrayEquals(value, TagConverter.Spec.INT_ARRAY.convert(tag));
     assertEquals(tag, TagConverter.Spec.INT_ARRAY.convert("name", value));
@@ -112,7 +112,7 @@ public class TagConverterTest {
     assertEquals(tag, TagConverter.Spec.INT.convert("name", value));
   }
 
-  @SuppressWarnings({ "rawtypes", "unchecked" })
+  @SuppressWarnings({"rawtypes", "unchecked"})
   @Test
   public void test_TagListConverter() {
     List value = new ArrayList();

@@ -127,7 +127,7 @@ public class DefaultAxionReader implements AxionReader {
     assertNotNull(function, "function");
     Tag tag = tagCompound.get(name);
     if (tag != null) {
-      return function.apply(axion.convertTag(tag, AxionTypeToken.get(vClass)));
+      return function.apply(axion.convertTag(tag, vClass));
     } else {
       return null;
     }
@@ -137,14 +137,14 @@ public class DefaultAxionReader implements AxionReader {
   public <V, T extends Tag> V read(T tag, Class<V> vClass) {
     assertNotNull(tag, "tag");
     assertNotNull(vClass, "class");
-    return axion.convertTag(tag, AxionTypeToken.get(vClass));
+    return axion.convertTag(tag, vClass);
   }
 
   @Override
   public <V, T extends Tag> V read(T tag, Class<V> vClass, V defaultValue) {
     assertNotNull(vClass, "class");
     if (tag != null) {
-      return axion.convertTag(tag, AxionTypeToken.get(vClass));
+      return axion.convertTag(tag, vClass);
     } else {
       return defaultValue;
     }
@@ -332,7 +332,8 @@ public class DefaultAxionReader implements AxionReader {
 
   private <V> void _consumeCollection(TagList tag, Class<V> vClass, Consumer<V> consumer) {
     assertNotNull(vClass, "class");
-    tag.forEach(t -> consumer.accept(axion.convertTag(t, AxionTypeToken.get(vClass))));
+    AxionTypeToken<V> typeToken = AxionTypeToken.get(vClass);
+    tag.forEach(t -> consumer.accept(axion.convertTag(t, typeToken)));
   }
 
   @Override

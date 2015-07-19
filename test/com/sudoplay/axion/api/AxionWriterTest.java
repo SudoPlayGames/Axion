@@ -37,7 +37,8 @@ public class AxionWriterTest {
 
     // should add tag to backing compound
     out.write("test", new TagInt(42));
-    assertEquals(42, (int) out.getTagCompound().getValue("test", axion));
+    Tag tag = out.getTagCompound().get("test");
+    assertEquals(42, (int) axion.convertTag(tag));
 
     // should throw IllegalArgumentException on null tag parameter
     try {
@@ -63,7 +64,8 @@ public class AxionWriterTest {
     // should write AxionWritable implementation
     out.write("test", getTestWritableVector());
     TagCompound vector = out.getTagCompound().get("test");
-    int actual = vector.getValue("y", axion);
+    Tag tag = vector.get("y");
+    int actual = axion.convertTag(tag);
     assertEquals(1, actual);
 
     // should throw IllegalArgumentException on null writable parameter
@@ -334,7 +336,7 @@ public class AxionWriterTest {
       linkedHashMap.put("third", 3);
       linkedHashMap.put("fourth", 4);
       linkedHashMap.put("last", 5);
-      out.write("test", linkedHashMap, new AxionTypeToken<Map<String, Integer>>(){});
+      out.write("test", linkedHashMap);
       TagList tagList = out.getTagCompound().get("test");
       TagList valueList = tagList.get(1);
       assertEquals(1, ((TagInt) valueList.get(0)).get());

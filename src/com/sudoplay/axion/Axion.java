@@ -374,7 +374,7 @@ public class Axion {
    * @see #getAdapterFor(Class)
    * @see #getAdapterFor(int)
    * @see #getClassFor(int)
-   * @see #getConverterForTag(Tag)
+   * @see #getConverterForTag(Class)
    * @see #getConverterForValue(AxionTypeToken)
    * @see #getIdFor(Class)
    */
@@ -482,25 +482,35 @@ public class Axion {
   }
 
   /**
-   * Returns the registered {@link TagConverter} for the tag given.
+   * Returns the registered {@link TagConverter} for the tag class given.
    * <p>
    * If no converter is found, an exception is thrown.
    *
-   * @param tag tag to get the tag converter for
+   * @param tClass tag class
    * @return the registered {@link TagConverter} for the tag given
    * @throws AxionTagRegistrationException
    */
-  @SuppressWarnings({"unused", "unchecked"})
-  public <T extends Tag, V> TagConverter<T, V> getConverterForTag(
-      final T tag
-  ) throws AxionTagRegistrationException {
-    return configuration.getConverterForTag((Class<T>) tag.getClass());
-  }
-
   public <T extends Tag, V> TagConverter<T, V> getConverterForTag(
       final Class<T> tClass
   ) throws AxionTagRegistrationException {
     return configuration.getConverterForTag(tClass);
+  }
+
+  public <T extends Tag, V> TagConverter<T, V> getConverterForValue(
+      final Class<V> vClass
+  ) throws AxionTagRegistrationException {
+    return configuration.getConverterForValue(this, AxionTypeToken.get(vClass));
+  }
+
+  @SuppressWarnings("unchecked")
+  public <T extends Tag, V> TagConverter<T, V> getConverterFor(
+      final Class<?> aClass
+  ) {
+    if (Tag.class.isAssignableFrom(aClass)) {
+      return configuration.getConverterForTag((Class<T>) aClass);
+    } else {
+      return configuration.getConverterForValue(this, AxionTypeToken.get((Class<V>) aClass));
+    }
   }
 
   /**
@@ -781,8 +791,7 @@ public class Axion {
   public void adapt(
       final Tag tag,
       final AxionOutputStream out
-  ) throws IOException,
-      AxionTagRegistrationException {
+  ) throws IOException, AxionTagRegistrationException {
     configuration.getBaseTagAdapter().write(tag, out);
   }
 
@@ -790,8 +799,7 @@ public class Axion {
   public <T extends Tag, V> T convertValue(
       final V value
   ) {
-    Class<V> vClass = (Class<V>) value.getClass();
-    return this.convertValue((String) null, value, AxionTypeToken.get(vClass));
+    return this._convertValue((String) null, value);
   }
 
   @SuppressWarnings("unchecked")
@@ -799,23 +807,7 @@ public class Axion {
       final String name,
       final V value
   ) {
-    Class<V> vClass = (Class<V>) value.getClass();
-    return this.convertValue(name, value, AxionTypeToken.get(vClass));
-  }
-
-  /**
-   * Convenience method to call {@link Axion#convertValue(String, Object, AxionTypeToken)} with a null name.
-   *
-   * @param value the value to convert
-   * @param <T>   tag type
-   * @param <V>   value type
-   * @return T tag
-   */
-  public <T extends Tag, V> T convertValue(
-      final V value,
-      final AxionTypeToken<V> typeToken
-  ) {
-    return this.convertValue(null, value, typeToken);
+    return this._convertValue(name, value);
   }
 
   /**
@@ -828,11 +820,12 @@ public class Axion {
    * @return T tag
    */
   @SuppressWarnings("unchecked")
-  public <T extends Tag, V> T convertValue(
+  private <T extends Tag, V> T _convertValue(
       final String name,
-      final V value,
-      final AxionTypeToken<V> typeToken
+      final V value
   ) {
+    Class<V> vClass = (Class<V>) value.getClass();
+    AxionTypeToken<V> typeToken = AxionTypeToken.get(vClass);
     TagConverter<T, V> tagConverter = configuration.getConverterForValue(this, typeToken);
     return tagConverter.convert(name, value);
   }
@@ -851,6 +844,14 @@ public class Axion {
   ) {
     Class<T> tClass = (Class<T>) tag.getClass();
     TagConverter<T, V> tagConverter = configuration.getConverterForTag(tClass);
+    return tagConverter.convert(tag);
+  }
+
+  public <T extends Tag, V> V convertTag(
+      final T tag,
+      final Class<V> vClass
+  ) {
+    TagConverter<T, V> tagConverter = configuration.getConverterForValue(this, AxionTypeToken.get(vClass));
     return tagConverter.convert(tag);
   }
 

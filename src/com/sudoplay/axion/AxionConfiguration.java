@@ -4,6 +4,7 @@ import com.sudoplay.axion.AxionConfigurationProtection.ProtectionMode;
 import com.sudoplay.axion.converter.AxionWritableTypeConverterFactory;
 import com.sudoplay.axion.converter.CollectionTypeConverterFactory;
 import com.sudoplay.axion.converter.MapTypeConverterFactory;
+import com.sudoplay.axion.converter.ObjectTypeConverterFactory;
 import com.sudoplay.axion.ext.tag.*;
 import com.sudoplay.axion.registry.*;
 import com.sudoplay.axion.spec.tag.*;
@@ -52,6 +53,8 @@ public class AxionConfiguration implements Cloneable {
       registerTag(axion, 10, TagCompound.class, Map.class, TagAdapter.Spec.COMPOUND, TagConverter.Spec.COMPOUND);
       registerTag(axion, 11, TagIntArray.class, int[].class, TagAdapter.Spec.INT_ARRAY, TagConverter.Spec.INT_ARRAY);
 
+      registerFactory(axion, new ObjectTypeConverterFactory());
+
       setCharacterEncodingType(CharacterEncodingType.MODIFIED_UTF_8);
       setCompressionType(CompressionType.GZip);
       setImmutable();
@@ -89,6 +92,8 @@ public class AxionConfiguration implements Cloneable {
           .STRING_ARRAY);
       registerTag(axion, 86, TagBooleanArray.class, boolean[].class, TagAdapter.Ext.BOOLEAN_ARRAY, TagConverter.Ext
           .BOOLEAN_ARRAY);
+
+      registerFactory(axion, new ObjectTypeConverterFactory());
 
       setCharacterEncodingType(CharacterEncodingType.MODIFIED_UTF_8);
       setCompressionType(CompressionType.GZip);
