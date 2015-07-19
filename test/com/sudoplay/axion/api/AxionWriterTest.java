@@ -92,7 +92,7 @@ public class AxionWriterTest {
     // should write mappable
     out.write("test", getTestVector());
     TagList vector = out.getTagCompound().get("test");
-    int actual = vector.getValue(1, axion);
+    int actual = axion.convertTag(vector.get(1));
     assertEquals(1, actual);
 
     // should write convertible

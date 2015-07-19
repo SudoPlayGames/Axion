@@ -249,38 +249,6 @@ public class TagList extends ContainerTag {
     return (T) data.get(index);
   }
 
-  /**
-   * Uses the registered {@link TagConverter} for the type of the tag requested and returns the converted value of the
-   * {@link Tag} with the index given.
-   *
-   * @param index the index of the {@link Tag} to get
-   * @param axion an {@link Axion} instance
-   * @return the converted value of the {@link Tag} with the index given
-   * @throws AxionTagRegistrationException if no {@link TagConverter} is registered for the tag requested
-   */
-  public <V> V getValue(
-      final int index,
-      final Axion axion
-  ) throws AxionTagRegistrationException {
-    return axion.convertTag(data.get(index));
-  }
-
-  /**
-   * Returns a new object from the tag requested.
-   *
-   * @param index  the index of the {@link Tag} to get
-   * @param vClass the class of the object to return
-   * @param axion  an {@link Axion} instance
-   * @return a new object from the tag requested
-   */
-  public <V> V getValue(
-      final int index,
-      final Class<V> vClass,
-      final Axion axion
-  ) {
-    return axion.convertTag(data.get(index), AxionTypeToken.get(vClass));
-  }
-
   @Override
   protected void onChildAddition(Tag tag) {
     tag.setName(null);
