@@ -187,7 +187,7 @@ public class DefaultAxionReader implements AxionReader {
   }
 
   @Override
-  public <K, V> void consumeMap(String name, Class<K> kClass, Class<V> vClass, BiConsumer<K, V> consumer) {
+  public <K, V> void forEachInMap(String name, Class<K> kClass, Class<V> vClass, BiConsumer<K, V> consumer) {
     assertNotNull(name, "name");
     Tag tag = tagCompound.get(name);
     if (tag != null) {
@@ -202,14 +202,14 @@ public class DefaultAxionReader implements AxionReader {
   }
 
   @Override
-  public <K, V> Map<K, V> consumeMap(String name, Class<K> kClass, Class<V> vClass, Map<K, V> map) {
+  public <K, V> Map<K, V> readMap(String name, Class<K> kClass, Class<V> vClass, Map<K, V> map) {
     assertNotNull(map, "map");
-    this.consumeMap(name, kClass, vClass, map::put);
+    this.forEachInMap(name, kClass, vClass, map::put);
     return map;
   }
 
   @Override
-  public <K, V, T extends Tag> void consumeMap(T tag, Class<K> kClass, Class<V> vClass, BiConsumer<K, V> consumer) {
+  public <K, V, T extends Tag> void forEachInMap(T tag, Class<K> kClass, Class<V> vClass, BiConsumer<K, V> consumer) {
     assertNotNull(tag, "tag");
     if (tag instanceof TagList) {
       this._consumeMap((TagList) tag, kClass, vClass, consumer);
@@ -219,9 +219,9 @@ public class DefaultAxionReader implements AxionReader {
   }
 
   @Override
-  public <K, V, T extends Tag> Map<K, V> consumeMap(T tag, Class<K> kClass, Class<V> vClass, Map<K, V> map) {
+  public <K, V, T extends Tag> Map<K, V> readMap(T tag, Class<K> kClass, Class<V> vClass, Map<K, V> map) {
     assertNotNull(map, "map");
-    this.consumeMap(tag, kClass, vClass, map::put);
+    this.forEachInMap(tag, kClass, vClass, map::put);
     return map;
   }
 
@@ -281,7 +281,7 @@ public class DefaultAxionReader implements AxionReader {
   }
 
   @Override
-  public <V> void consumeCollection(String name, Class<V> vClass, Consumer<V> consumer) {
+  public <V> void forEachInCollection(String name, Class<V> vClass, Consumer<V> consumer) {
     assertNotNull(name, "name");
     assertNotNull(consumer, "consumer");
     Tag tag = tagCompound.get(name);
@@ -297,7 +297,7 @@ public class DefaultAxionReader implements AxionReader {
   }
 
   @Override
-  public <V> Collection<V> consumeCollection(String name, Class<V> vClass, Collection<V> collection) {
+  public <V> Collection<V> readCollection(String name, Class<V> vClass, Collection<V> collection) {
     assertNotNull(name, "name");
     assertNotNull(collection, "collection");
     Tag tag = tagCompound.get(name);
@@ -314,7 +314,7 @@ public class DefaultAxionReader implements AxionReader {
   }
 
   @Override
-  public <V, T extends Tag> void consumeCollection(T tag, Class<V> vClass, Consumer<V> consumer) {
+  public <V, T extends Tag> void forEachInCollection(T tag, Class<V> vClass, Consumer<V> consumer) {
     assertNotNull(tag, "tag");
     assertNotNull(consumer, "consumer");
     if (tag instanceof TagList) {
@@ -325,7 +325,7 @@ public class DefaultAxionReader implements AxionReader {
   }
 
   @Override
-  public <V, T extends Tag> Collection<V> consumeCollection(T tag, Class<V> vClass, Collection<V> collection) {
+  public <V, T extends Tag> Collection<V> readCollection(T tag, Class<V> vClass, Collection<V> collection) {
     assertNotNull(tag, "tag");
     assertNotNull(collection, "collection");
     if (tag instanceof TagList) {

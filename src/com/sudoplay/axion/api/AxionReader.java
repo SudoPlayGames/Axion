@@ -251,7 +251,7 @@ public interface AxionReader {
    * @param <V>    value type
    * @return the populated map
    */
-  <K, V> Map<K, V> consumeMap(String name, Class<K> kClass, Class<V> vClass, Map<K, V> map);
+  <K, V> Map<K, V> readMap(String name, Class<K> kClass, Class<V> vClass, Map<K, V> map);
 
   /**
    * Reads a map and passes its keys and values to the given consumer.
@@ -265,7 +265,7 @@ public interface AxionReader {
    * @param <K>      key type
    * @param <V>      value type
    */
-  <K, V> void consumeMap(String name, Class<K> kClass, Class<V> vClass, BiConsumer<K, V> consumer);
+  <K, V> void forEachInMap(String name, Class<K> kClass, Class<V> vClass, BiConsumer<K, V> consumer);
 
   /**
    * Reads a map into the given map.
@@ -281,7 +281,7 @@ public interface AxionReader {
    * @param <T>    tag type
    * @return the populated map
    */
-  <K, V, T extends Tag> Map<K, V> consumeMap(T tag, Class<K> kClass, Class<V> vClass, Map<K, V> map);
+  <K, V, T extends Tag> Map<K, V> readMap(T tag, Class<K> kClass, Class<V> vClass, Map<K, V> map);
 
   /**
    * Reads a map and passes its keys and values to the given consumer.
@@ -296,7 +296,7 @@ public interface AxionReader {
    * @param <V>      value type
    * @param <T>      tag type
    */
-  <K, V, T extends Tag> void consumeMap(T tag, Class<K> kClass, Class<V> vClass, BiConsumer<K, V> consumer);
+  <K, V, T extends Tag> void forEachInMap(T tag, Class<K> kClass, Class<V> vClass, BiConsumer<K, V> consumer);
 
   /**
    * Reads a map and returns a stream.
@@ -333,7 +333,7 @@ public interface AxionReader {
    * @param <V>        value type
    * @return the populated collection
    */
-  <V> Collection<V> consumeCollection(String name, Class<V> vClass, Collection<V> collection);
+  <V> Collection<V> readCollection(String name, Class<V> vClass, Collection<V> collection);
 
   /**
    * Reads a collection and offers each element in the collection to the given consumer.
@@ -345,7 +345,7 @@ public interface AxionReader {
    * @param consumer consumer
    * @param <V>      value type
    */
-  <V> void consumeCollection(String name, Class<V> vClass, Consumer<V> consumer);
+  <V> void forEachInCollection(String name, Class<V> vClass, Consumer<V> consumer);
 
   /**
    * Reads a collection into the given collection.
@@ -358,7 +358,7 @@ public interface AxionReader {
    * @param <V>        value type
    * @return the populated collection
    */
-  <V, T extends Tag> Collection<V> consumeCollection(T tag, Class<V> vClass, Collection<V> collection);
+  <V, T extends Tag> Collection<V> readCollection(T tag, Class<V> vClass, Collection<V> collection);
 
   /**
    * Reads a collection and offers each element in the collection to the given consumer.
@@ -370,7 +370,7 @@ public interface AxionReader {
    * @param consumer consumer
    * @param <V>      value type
    */
-  <V, T extends Tag> void consumeCollection(T tag, Class<V> vClass, Consumer<V> consumer);
+  <V, T extends Tag> void forEachInCollection(T tag, Class<V> vClass, Consumer<V> consumer);
 
   /**
    * Returns a stream of the collections values.

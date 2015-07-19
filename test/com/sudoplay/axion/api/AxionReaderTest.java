@@ -539,13 +539,13 @@ public class AxionReaderTest {
     Map<String, Integer> map;
 
     map = new LinkedHashMap<>();
-    in.consumeMap("map", String.class, int.class, map::put);
+    in.forEachInMap("map", String.class, int.class, map::put);
     assertEquals(5, map.size());
     assertEquals(2, (int) map.get("third"));
 
     // should throw IllegalArgumentException when tag doesn't exist
     try {
-      in.consumeMap("what?", String.class, int.class, (s, integer) -> {
+      in.forEachInMap("what?", String.class, int.class, (s, integer) -> {
         fail(); // should never get this far with a null tag
       });
       fail();
@@ -555,7 +555,7 @@ public class AxionReaderTest {
 
     // should throw IllegalArgumentException when tag is not TagList
     try {
-      in.consumeMap("int", String.class, int.class, (s, integer) -> {
+      in.forEachInMap("int", String.class, int.class, (s, integer) -> {
         fail(); // should never get this far with a null tag
       });
       fail();
@@ -565,7 +565,7 @@ public class AxionReaderTest {
 
     // should throw IllegalArgumentException on null name parameter
     try {
-      in.consumeMap((String) null, String.class, int.class, (s, integer) -> {
+      in.forEachInMap((String) null, String.class, int.class, (s, integer) -> {
         fail(); // should never get this far with a null name
       });
       fail();
@@ -575,7 +575,7 @@ public class AxionReaderTest {
 
     // should throw IllegalArgumentException on null class parameter
     try {
-      in.consumeMap("map", null, int.class, (s, integer) -> {
+      in.forEachInMap("map", null, int.class, (s, integer) -> {
         fail(); // should never get this far with a null class
       });
       fail();
@@ -585,7 +585,7 @@ public class AxionReaderTest {
 
     // should throw IllegalArgumentException on null class parameter
     try {
-      in.consumeMap("map", String.class, null, (s, integer) -> {
+      in.forEachInMap("map", String.class, null, (s, integer) -> {
         fail(); // should never get this far with a null class
       });
       fail();
@@ -595,7 +595,7 @@ public class AxionReaderTest {
 
     // should throw IllegalArgumentException on null consumer parameter
     try {
-      in.consumeMap("map", String.class, int.class, (BiConsumer<String, Integer>) null);
+      in.forEachInMap("map", String.class, int.class, (BiConsumer<String, Integer>) null);
       fail();
     } catch (IllegalArgumentException e) {
       // expected
@@ -607,13 +607,13 @@ public class AxionReaderTest {
     AxionReader in = getTestReader();
     Map<String, Integer> map;
 
-    map = in.consumeMap("map", String.class, int.class, new LinkedHashMap<>());
+    map = in.readMap("map", String.class, int.class, new LinkedHashMap<>());
     assertEquals(5, map.size());
     assertEquals(2, (int) map.get("third"));
 
     // should throw IllegalArgumentException when tag doesn't exist
     try {
-      in.consumeMap("what?", String.class, int.class, new LinkedHashMap<>());
+      in.readMap("what?", String.class, int.class, new LinkedHashMap<>());
       fail();
     } catch (IllegalArgumentException e) {
       // expected
@@ -621,7 +621,7 @@ public class AxionReaderTest {
 
     // should throw IllegalArgumentException when tag is not TagList
     try {
-      in.consumeMap("int", String.class, int.class, new LinkedHashMap<>());
+      in.readMap("int", String.class, int.class, new LinkedHashMap<>());
       fail();
     } catch (IllegalArgumentException e) {
       // expected
@@ -629,7 +629,7 @@ public class AxionReaderTest {
 
     // should throw IllegalArgumentException on null name parameter
     try {
-      in.consumeMap((String) null, String.class, int.class, new LinkedHashMap<>());
+      in.readMap((String) null, String.class, int.class, new LinkedHashMap<>());
       fail();
     } catch (IllegalArgumentException e) {
       // expected
@@ -637,7 +637,7 @@ public class AxionReaderTest {
 
     // should throw IllegalArgumentException on null class parameter
     try {
-      in.consumeMap("map", null, int.class, new LinkedHashMap<>());
+      in.readMap("map", null, int.class, new LinkedHashMap<>());
       fail();
     } catch (IllegalArgumentException e) {
       // expected
@@ -645,7 +645,7 @@ public class AxionReaderTest {
 
     // should throw IllegalArgumentException on null class parameter
     try {
-      in.consumeMap("map", String.class, null, new LinkedHashMap<>());
+      in.readMap("map", String.class, null, new LinkedHashMap<>());
       fail();
     } catch (IllegalArgumentException e) {
       // expected
@@ -653,7 +653,7 @@ public class AxionReaderTest {
 
     // should throw IllegalArgumentException on null consumer parameter
     try {
-      in.consumeMap("map", String.class, int.class, (Map<String, Integer>) null);
+      in.readMap("map", String.class, int.class, (Map<String, Integer>) null);
       fail();
     } catch (IllegalArgumentException e) {
       // expected
@@ -668,13 +668,13 @@ public class AxionReaderTest {
 
     map = new LinkedHashMap<>();
     tagList = in.getTagCompound().get("map");
-    in.consumeMap(tagList, String.class, int.class, map::put);
+    in.forEachInMap(tagList, String.class, int.class, map::put);
     assertEquals(5, map.size());
     assertEquals(2, (int) map.get("third"));
 
     // should throw IllegalArgumentException when tag doesn't exist
     try {
-      in.consumeMap("what?", String.class, int.class, (s, integer) -> {
+      in.forEachInMap("what?", String.class, int.class, (s, integer) -> {
         fail(); // should never get this far with a null tag
       });
       fail();
@@ -684,7 +684,7 @@ public class AxionReaderTest {
 
     // should throw IllegalArgumentException when tag is not TagList
     try {
-      in.consumeMap("int", String.class, int.class, (s, integer) -> {
+      in.forEachInMap("int", String.class, int.class, (s, integer) -> {
         fail(); // should never get this far with a null tag
       });
       fail();
@@ -694,7 +694,7 @@ public class AxionReaderTest {
 
     // should throw IllegalArgumentException on null name parameter
     try {
-      in.consumeMap((String) null, String.class, int.class, (s, integer) -> {
+      in.forEachInMap((String) null, String.class, int.class, (s, integer) -> {
         fail(); // should never get this far with a null name
       });
       fail();
@@ -704,7 +704,7 @@ public class AxionReaderTest {
 
     // should throw IllegalArgumentException on null class parameter
     try {
-      in.consumeMap("map", null, int.class, (s, integer) -> {
+      in.forEachInMap("map", null, int.class, (s, integer) -> {
         fail(); // should never get this far with a null class
       });
       fail();
@@ -714,7 +714,7 @@ public class AxionReaderTest {
 
     // should throw IllegalArgumentException on null class parameter
     try {
-      in.consumeMap("map", String.class, null, (s, integer) -> {
+      in.forEachInMap("map", String.class, null, (s, integer) -> {
         fail(); // should never get this far with a null class
       });
       fail();
@@ -724,7 +724,7 @@ public class AxionReaderTest {
 
     // should throw IllegalArgumentException on null consumer parameter
     try {
-      in.consumeMap("map", String.class, int.class, (BiConsumer<String, Integer>) null);
+      in.forEachInMap("map", String.class, int.class, (BiConsumer<String, Integer>) null);
       fail();
     } catch (IllegalArgumentException e) {
       // expected
@@ -738,13 +738,13 @@ public class AxionReaderTest {
     TagList tagList;
 
     tagList = in.getTagCompound().get("map");
-    map = in.consumeMap(tagList, String.class, int.class, new LinkedHashMap<>());
+    map = in.readMap(tagList, String.class, int.class, new LinkedHashMap<>());
     assertEquals(5, map.size());
     assertEquals(2, (int) map.get("third"));
 
     // should throw IllegalArgumentException when tag doesn't exist
     try {
-      in.consumeMap("what?", String.class, int.class, new LinkedHashMap<>());
+      in.readMap("what?", String.class, int.class, new LinkedHashMap<>());
       fail();
     } catch (IllegalArgumentException e) {
       // expected
@@ -752,7 +752,7 @@ public class AxionReaderTest {
 
     // should throw IllegalArgumentException when tag is not TagList
     try {
-      in.consumeMap("int", String.class, int.class, new LinkedHashMap<>());
+      in.readMap("int", String.class, int.class, new LinkedHashMap<>());
       fail();
     } catch (IllegalArgumentException e) {
       // expected
@@ -760,7 +760,7 @@ public class AxionReaderTest {
 
     // should throw IllegalArgumentException on null name parameter
     try {
-      in.consumeMap((String) null, String.class, int.class, new LinkedHashMap<>());
+      in.readMap((String) null, String.class, int.class, new LinkedHashMap<>());
       fail();
     } catch (IllegalArgumentException e) {
       // expected
@@ -768,7 +768,7 @@ public class AxionReaderTest {
 
     // should throw IllegalArgumentException on null class parameter
     try {
-      in.consumeMap("map", null, int.class, new LinkedHashMap<>());
+      in.readMap("map", null, int.class, new LinkedHashMap<>());
       fail();
     } catch (IllegalArgumentException e) {
       // expected
@@ -776,7 +776,7 @@ public class AxionReaderTest {
 
     // should throw IllegalArgumentException on null class parameter
     try {
-      in.consumeMap("map", String.class, null, new LinkedHashMap<>());
+      in.readMap("map", String.class, null, new LinkedHashMap<>());
       fail();
     } catch (IllegalArgumentException e) {
       // expected
@@ -784,7 +784,7 @@ public class AxionReaderTest {
 
     // should throw IllegalArgumentException on null map parameter
     try {
-      in.consumeMap("map", String.class, int.class, (Map<String, Integer>) null);
+      in.readMap("map", String.class, int.class, (Map<String, Integer>) null);
       fail();
     } catch (IllegalArgumentException e) {
       // expected
@@ -896,12 +896,12 @@ public class AxionReaderTest {
     Collection<Integer> collection = new ArrayList<>();
 
     // should consume
-    in.consumeCollection("list", int.class, collection::add);
+    in.forEachInCollection("list", int.class, collection::add);
     assertEquals(100, collection.size());
 
     // should throw IllegalArgumentException on null name parameter
     try {
-      in.consumeCollection((String) null, int.class, AxionConsumers.nullConsumer());
+      in.forEachInCollection((String) null, int.class, AxionConsumers.nullConsumer());
       fail();
     } catch (IllegalArgumentException e) {
       // expected
@@ -909,7 +909,7 @@ public class AxionReaderTest {
 
     // should throw IllegalArgumentException on null class parameter
     try {
-      in.consumeCollection("list", null, AxionConsumers.nullConsumer());
+      in.forEachInCollection("list", null, AxionConsumers.nullConsumer());
       fail();
     } catch (IllegalArgumentException e) {
       // expected
@@ -917,7 +917,7 @@ public class AxionReaderTest {
 
     // should throw IllegalArgumentException on null consumer parameter
     try {
-      in.consumeCollection("list", int.class, (Consumer<Integer>) null);
+      in.forEachInCollection("list", int.class, (Consumer<Integer>) null);
       fail();
     } catch (IllegalArgumentException e) {
       // expected
@@ -930,12 +930,12 @@ public class AxionReaderTest {
     Collection<Integer> collection;
 
     // should consume
-    collection = in.consumeCollection("list", int.class, new ArrayList<>());
+    collection = in.readCollection("list", int.class, new ArrayList<>());
     assertEquals(100, collection.size());
 
     // should throw IllegalArgumentException on null name parameter
     try {
-      in.consumeCollection((String) null, int.class, collection);
+      in.readCollection((String) null, int.class, collection);
       fail();
     } catch (IllegalArgumentException e) {
       // expected
@@ -943,7 +943,7 @@ public class AxionReaderTest {
 
     // should throw IllegalArgumentException on null class parameter
     try {
-      in.consumeCollection("list", null, collection);
+      in.readCollection("list", null, collection);
       fail();
     } catch (IllegalArgumentException e) {
       // expected
@@ -951,7 +951,7 @@ public class AxionReaderTest {
 
     // should throw IllegalArgumentException on null collection parameter
     try {
-      in.consumeCollection("list", int.class, (Collection<Integer>) null);
+      in.readCollection("list", int.class, (Collection<Integer>) null);
       fail();
     } catch (IllegalArgumentException e) {
       // expected
@@ -965,12 +965,12 @@ public class AxionReaderTest {
     Tag tag = in.getTagCompound().get("list");
 
     // should consume
-    in.consumeCollection(tag, int.class, collection::add);
+    in.forEachInCollection(tag, int.class, collection::add);
     assertEquals(100, collection.size());
 
     // should throw IllegalArgumentException on null name parameter
     try {
-      in.consumeCollection((String) null, int.class, AxionConsumers.nullConsumer());
+      in.forEachInCollection((String) null, int.class, AxionConsumers.nullConsumer());
       fail();
     } catch (IllegalArgumentException e) {
       // expected
@@ -978,7 +978,7 @@ public class AxionReaderTest {
 
     // should throw IllegalArgumentException on null class parameter
     try {
-      in.consumeCollection(tag, null, AxionConsumers.nullConsumer());
+      in.forEachInCollection(tag, null, AxionConsumers.nullConsumer());
       fail();
     } catch (IllegalArgumentException e) {
       // expected
@@ -986,7 +986,7 @@ public class AxionReaderTest {
 
     // should throw IllegalArgumentException on null consumer parameter
     try {
-      in.consumeCollection(tag, int.class, (Consumer<Integer>) null);
+      in.forEachInCollection(tag, int.class, (Consumer<Integer>) null);
       fail();
     } catch (IllegalArgumentException e) {
       // expected
@@ -1000,12 +1000,12 @@ public class AxionReaderTest {
     Tag tag = in.getTagCompound().get("list");
 
     // should consume
-    collection = in.consumeCollection(tag, int.class, new ArrayList<>());
+    collection = in.readCollection(tag, int.class, new ArrayList<>());
     assertEquals(100, collection.size());
 
     // should throw IllegalArgumentException on null name parameter
     try {
-      in.consumeCollection((String) null, int.class, collection);
+      in.readCollection((String) null, int.class, collection);
       fail();
     } catch (IllegalArgumentException e) {
       // expected
@@ -1013,7 +1013,7 @@ public class AxionReaderTest {
 
     // should throw IllegalArgumentException on null class parameter
     try {
-      in.consumeCollection(tag, null, collection);
+      in.readCollection(tag, null, collection);
       fail();
     } catch (IllegalArgumentException e) {
       // expected
@@ -1021,7 +1021,7 @@ public class AxionReaderTest {
 
     // should throw IllegalArgumentException on null collection parameter
     try {
-      in.consumeCollection(tag, int.class, (Collection<Integer>) null);
+      in.readCollection(tag, int.class, (Collection<Integer>) null);
       fail();
     } catch (IllegalArgumentException e) {
       // expected
