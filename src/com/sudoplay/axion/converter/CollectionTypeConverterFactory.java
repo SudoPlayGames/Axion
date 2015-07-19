@@ -2,8 +2,8 @@ package com.sudoplay.axion.converter;
 
 import com.sudoplay.axion.Axion;
 import com.sudoplay.axion.AxionWriteException;
-import com.sudoplay.axion.registry.TagConverter;
-import com.sudoplay.axion.registry.TagConverterFactory;
+import com.sudoplay.axion.registry.TypeConverter;
+import com.sudoplay.axion.registry.TypeConverterFactory;
 import com.sudoplay.axion.spec.tag.TagList;
 import com.sudoplay.axion.tag.Tag;
 import com.sudoplay.axion.util.AxionType;
@@ -17,9 +17,9 @@ import java.util.List;
 /**
  * Created by Jason Taylor on 7/17/2015.
  */
-public class CollectionTypeConverterFactory implements TagConverterFactory {
+public class CollectionTypeConverterFactory implements TypeConverterFactory {
   @Override
-  public <T extends Tag, V> TagConverter<T, V> create(
+  public <T extends Tag, V> TypeConverter<T, V> create(
       Axion axion,
       AxionTypeToken<V> typeToken
   ) {
@@ -33,24 +33,24 @@ public class CollectionTypeConverterFactory implements TagConverterFactory {
     Class<?> rawTypeOfSrc = AxionType.getRawType(type);
     Type elementType = AxionType.getCollectionElementType(type, rawTypeOfSrc);
 
-    TagConverter<? extends Tag, ?> elementConverter = axion.getConverterForValue(AxionTypeToken.get(elementType));
+    TypeConverter<? extends Tag, ?> elementConverter = axion.getConverterForValue(AxionTypeToken.get(elementType));
 
     @SuppressWarnings("unchecked")
-    TagConverter<T, V> result = new Converter(elementConverter);
+    TypeConverter<T, V> result = new Converter(elementConverter);
     return result;
   }
 
   @Override
-  public TagConverterFactory newInstance(Axion axion) {
+  public TypeConverterFactory newInstance(Axion axion) {
     return new CollectionTypeConverterFactory();
   }
 
-  private class Converter<V> extends TagConverter<TagList, Collection<V>> {
+  private class Converter<V> extends TypeConverter<TagList, Collection<V>> {
 
-    private final TagConverter<Tag, V> elementConverter;
+    private final TypeConverter<Tag, V> elementConverter;
 
     private Converter(
-        TagConverter<Tag, V> elementConverter
+        TypeConverter<Tag, V> elementConverter
     ) {
       this.elementConverter = elementConverter;
     }

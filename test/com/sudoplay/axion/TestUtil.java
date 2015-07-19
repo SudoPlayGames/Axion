@@ -15,8 +15,7 @@ import com.sudoplay.axion.ext.tag.TagLongArray;
 import com.sudoplay.axion.ext.tag.TagShortArray;
 import com.sudoplay.axion.ext.tag.TagStringArray;
 import com.sudoplay.axion.registry.TagAdapter;
-import com.sudoplay.axion.registry.TagConverter;
-import com.sudoplay.axion.registry.TagAdapterRegistry;
+import com.sudoplay.axion.registry.TypeConverter;
 import com.sudoplay.axion.spec.tag.TagByte;
 import com.sudoplay.axion.spec.tag.TagByteArray;
 import com.sudoplay.axion.spec.tag.TagCompound;
@@ -202,7 +201,7 @@ public class TestUtil {
 
   }
 
-  public static class TagNullConverter extends TagConverter<TagNull, Null> {
+  public static class TagNullConverter extends TypeConverter<TagNull, Null> {
 
     @Override
     public Null convert(TagNull tag) {

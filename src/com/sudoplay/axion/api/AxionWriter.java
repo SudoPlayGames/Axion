@@ -2,7 +2,7 @@ package com.sudoplay.axion.api;
 
 import com.sudoplay.axion.Axion;
 import com.sudoplay.axion.registry.TagAdapter;
-import com.sudoplay.axion.registry.TagConverter;
+import com.sudoplay.axion.registry.TypeConverter;
 import com.sudoplay.axion.spec.tag.TagCompound;
 import com.sudoplay.axion.tag.Tag;
 
@@ -31,8 +31,8 @@ public interface AxionWriter {
   <T extends Tag> AxionWriter write(String name, T tag);
 
   /**
-   * Writes an object that has a {@link TagConverter} registered with {@link Axion#registerTag(int, Class, Class,
-   * TagAdapter, TagConverter)} or {@link Axion#registerConverter(Class, TagConverter)}.
+   * Writes an object that has a {@link TypeConverter} registered with {@link Axion#registerTag(int, Class, Class,
+   * TagAdapter, TypeConverter)} or {@link Axion#registerConverter(Class, TypeConverter)}.
    * <p>
    * Neither the name or object parameter can be null.
    *
@@ -60,9 +60,9 @@ public interface AxionWriter {
   <T extends Tag> AxionWriter writeIf(String name, T tag, Predicate<T> predicate);
 
   /**
-   * If the given predicate returns true, writes an object that  has a {@link TagConverter} registered with {@link
-   * Axion#registerTag(int, Class, Class, TagAdapter, TagConverter)} or {@link Axion#registerConverter(Class,
-   * TagConverter)}.
+   * If the given predicate returns true, writes an object that  has a {@link TypeConverter} registered with {@link
+   * Axion#registerTag(int, Class, Class, TagAdapter, TypeConverter)} or {@link Axion#registerConverter(Class,
+   * TypeConverter)}.
    * <p>
    * The name parameter can't be null, however, the object parameter can be null if the predicate returns false.
    *
@@ -91,9 +91,9 @@ public interface AxionWriter {
   <T extends Tag> AxionWriter writeIfNotNull(String name, T tag);
 
   /**
-   * If the given object parameter isn't null, writes an object that has a {@link TagConverter} registered with {@link
-   * Axion#registerTag(int, Class, Class, TagAdapter, TagConverter)} or {@link Axion#registerConverter(Class,
-   * TagConverter)}.
+   * If the given object parameter isn't null, writes an object that has a {@link TypeConverter} registered with {@link
+   * Axion#registerTag(int, Class, Class, TagAdapter, TypeConverter)} or {@link Axion#registerConverter(Class,
+   * TypeConverter)}.
    * <p>
    * The name parameter can't be null.
    *

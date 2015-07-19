@@ -1,16 +1,16 @@
 package com.sudoplay.axion.ext.converter;
 
 import com.sudoplay.axion.ext.tag.TagBoolean;
-import com.sudoplay.axion.registry.TagConverter;
+import com.sudoplay.axion.registry.TypeConverter;
 
 /**
- * The {@link TagConverter} used to convert to and from a {@link TagBoolean}.
+ * The {@link TypeConverter} used to convert to and from a {@link TagBoolean}.
  * <p>
  * Part of the extended, custom specification.
  *
  * @author Jason Taylor
  */
-public class TagBooleanConverter extends TagConverter<TagBoolean, Boolean> {
+public class TagBooleanConverter extends TypeConverter<TagBoolean, Boolean> {
 
   @Override
   public Boolean convert(final TagBoolean tag) {

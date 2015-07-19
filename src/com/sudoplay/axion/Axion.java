@@ -10,8 +10,8 @@ import com.sudoplay.axion.api.impl.DefaultAxionReader;
 import com.sudoplay.axion.api.impl.DefaultAxionWriter;
 import com.sudoplay.axion.registry.AxionTagRegistrationException;
 import com.sudoplay.axion.registry.TagAdapter;
-import com.sudoplay.axion.registry.TagConverter;
-import com.sudoplay.axion.registry.TagConverterFactory;
+import com.sudoplay.axion.registry.TypeConverter;
+import com.sudoplay.axion.registry.TypeConverterFactory;
 import com.sudoplay.axion.spec.tag.TagCompound;
 import com.sudoplay.axion.stream.AxionInputStream;
 import com.sudoplay.axion.stream.AxionOutputStream;
@@ -263,15 +263,15 @@ public class Axion {
     return this;
   }
 
-  public AxionWriter defaultWriter() {
+  public AxionWriter newWriter() {
     return new DefaultAxionWriter(this);
   }
 
-  public AxionWriter defaultWriter(TagCompound tagCompound) {
+  public AxionWriter newWriter(TagCompound tagCompound) {
     return new DefaultAxionWriter(tagCompound, this);
   }
 
-  public AxionReader defaultReader(TagCompound tagCompound) {
+  public AxionReader newReader(TagCompound tagCompound) {
     return new DefaultAxionReader(tagCompound, this);
   }
 
@@ -367,7 +367,7 @@ public class Axion {
    * @param tagClass  the class of the tag
    * @param type      the class of the type
    * @param adapter   {@link TagAdapter} for the tag
-   * @param converter {@link TagConverter} for the tag
+   * @param converter {@link TypeConverter} for the tag
    * @return this {@link Axion} instance
    * @throws AxionTagRegistrationException
    * @throws AxionInstanceException
@@ -384,7 +384,7 @@ public class Axion {
       final Class<T> tagClass,
       final Class<V> type,
       final TagAdapter<T> adapter,
-      final TagConverter<T, V> converter
+      final TypeConverter<T, V> converter
   ) throws AxionTagRegistrationException, AxionInstanceException {
     configuration.registerTag(this, id, tagClass, type, adapter, converter);
     return this;
@@ -401,9 +401,9 @@ public class Axion {
    */
   public <T extends Tag, V> Axion registerConverter(
       Class<V> vClass,
-      TagConverter<T, V> converter
+      TypeConverter<T, V> converter
   ) {
-    configuration.registerFactory(this, TagConverterFactory.newFactory(AxionTypeToken.get(vClass), converter));
+    configuration.registerFactory(this, TypeConverterFactory.newFactory(AxionTypeToken.get(vClass), converter));
     return this;
   }
 
@@ -482,28 +482,28 @@ public class Axion {
   }
 
   /**
-   * Returns the registered {@link TagConverter} for the tag class given.
+   * Returns the registered {@link TypeConverter} for the tag class given.
    * <p>
    * If no converter is found, an exception is thrown.
    *
    * @param tClass tag class
-   * @return the registered {@link TagConverter} for the tag given
+   * @return the registered {@link TypeConverter} for the tag given
    * @throws AxionTagRegistrationException
    */
-  public <T extends Tag, V> TagConverter<T, V> getConverterForTag(
+  public <T extends Tag, V> TypeConverter<T, V> getConverterForTag(
       final Class<T> tClass
   ) throws AxionTagRegistrationException {
     return configuration.getConverterForTag(tClass);
   }
 
-  public <T extends Tag, V> TagConverter<T, V> getConverterForValue(
+  public <T extends Tag, V> TypeConverter<T, V> getConverterForValue(
       final Class<V> vClass
   ) throws AxionTagRegistrationException {
     return configuration.getConverterForValue(this, AxionTypeToken.get(vClass));
   }
 
   @SuppressWarnings("unchecked")
-  public <T extends Tag, V> TagConverter<T, V> getConverterFor(
+  public <T extends Tag, V> TypeConverter<T, V> getConverterFor(
       final Class<?> aClass
   ) {
     if (Tag.class.isAssignableFrom(aClass)) {
@@ -514,16 +514,16 @@ public class Axion {
   }
 
   /**
-   * Returns the registered {@link TagConverter} for the value given.
+   * Returns the registered {@link TypeConverter} for the value given.
    * <p>
    * If no converter is found, an exception is thrown.
    *
    * @param typeToken typeToken
-   * @return the registered {@link TagConverter} for the type given
+   * @return the registered {@link TypeConverter} for the type given
    * @throws AxionTagRegistrationException
    */
   @SuppressWarnings("unused")
-  public <T extends Tag, V> TagConverter<T, V> getConverterForValue(
+  public <T extends Tag, V> TypeConverter<T, V> getConverterForValue(
       final AxionTypeToken<V> typeToken
   ) throws AxionTagRegistrationException {
     return configuration.getConverterForValue(this, typeToken);
@@ -590,7 +590,7 @@ public class Axion {
       AxionTagRegistrationException {
     LOG.debug("Entering read(file=[{}], axionWritable=[{}])", file, axionWritable);
     long start = System.currentTimeMillis();
-    axionWritable.read(this.defaultReader(read(file)));
+    axionWritable.read(this.newReader(read(file)));
     LOG.info("Read of file [{}] into [{}] completed in [{}]", file, axionWritable, DurationUtil.formatDurationWords
         (System.currentTimeMillis() - start));
     LOG.debug("Leaving read(): [{}]", axionWritable);
@@ -608,7 +608,7 @@ public class Axion {
     LOG.debug("Entering write(axionWritable=[{}], file=[{}])", axionWritable, file);
     long start = System.currentTimeMillis();
     TagCompound tagCompound = new TagCompound();
-    axionWritable.write(this.defaultWriter(tagCompound));
+    axionWritable.write(this.newWriter(tagCompound));
     write(tagCompound, file);
     LOG.info(
         "Write of [{}] to file [{}] completed in [{}]",
@@ -667,7 +667,7 @@ public class Axion {
   public <T extends AxionWritable> T read(final InputStream inputStream, final T axionWritable) throws IOException {
     LOG.debug("Entering read(inputStream=[{}], axionWritable=[{}])", inputStream, axionWritable);
     long start = System.currentTimeMillis();
-    axionWritable.read(this.defaultReader(read(inputStream)));
+    axionWritable.read(this.newReader(read(inputStream)));
     LOG.info("Read into [{}] completed in [{}]", axionWritable, DurationUtil.formatDurationWords(System
         .currentTimeMillis() - start));
     LOG.debug("Leaving read(): [{}]", axionWritable);
@@ -689,7 +689,7 @@ public class Axion {
     LOG.debug("Entering write(axionWritable=[{}], outputStream=[{}])", axionWritable, outputStream);
     long start = System.currentTimeMillis();
     TagCompound tagCompound = new TagCompound();
-    axionWritable.write(this.defaultWriter(tagCompound));
+    axionWritable.write(this.newWriter(tagCompound));
     write(tagCompound, outputStream);
     LOG.info("Write completed in [{}]", DurationUtil.formatDurationWords(System.currentTimeMillis() - start));
     LOG.debug("Leaving write()");
@@ -826,8 +826,8 @@ public class Axion {
   ) {
     Class<V> vClass = (Class<V>) value.getClass();
     AxionTypeToken<V> typeToken = AxionTypeToken.get(vClass);
-    TagConverter<T, V> tagConverter = configuration.getConverterForValue(this, typeToken);
-    return tagConverter.convert(name, value);
+    TypeConverter<T, V> typeConverter = configuration.getConverterForValue(this, typeToken);
+    return typeConverter.convert(name, value);
   }
 
   /**
@@ -843,16 +843,16 @@ public class Axion {
       final T tag
   ) {
     Class<T> tClass = (Class<T>) tag.getClass();
-    TagConverter<T, V> tagConverter = configuration.getConverterForTag(tClass);
-    return tagConverter.convert(tag);
+    TypeConverter<T, V> typeConverter = configuration.getConverterForTag(tClass);
+    return typeConverter.convert(tag);
   }
 
   public <T extends Tag, V> V convertTag(
       final T tag,
       final Class<V> vClass
   ) {
-    TagConverter<T, V> tagConverter = configuration.getConverterForValue(this, AxionTypeToken.get(vClass));
-    return tagConverter.convert(tag);
+    TypeConverter<T, V> typeConverter = configuration.getConverterForValue(this, AxionTypeToken.get(vClass));
+    return typeConverter.convert(tag);
   }
 
   /**
@@ -868,8 +868,8 @@ public class Axion {
       final T tag,
       final AxionTypeToken<V> typeToken
   ) {
-    TagConverter<T, V> tagConverter = configuration.getConverterForValue(this, typeToken);
-    return tagConverter.convert(tag);
+    TypeConverter<T, V> typeConverter = configuration.getConverterForValue(this, typeToken);
+    return typeConverter.convert(tag);
   }
 
 }

@@ -4,14 +4,13 @@ import com.sudoplay.axion.Axion;
 import com.sudoplay.axion.AxionWriteException;
 import com.sudoplay.axion.api.impl.DefaultAxionWriter;
 import com.sudoplay.axion.ext.tag.TagBoolean;
-import com.sudoplay.axion.registry.TagConverter;
+import com.sudoplay.axion.registry.TypeConverter;
 import com.sudoplay.axion.spec.tag.TagCompound;
 import com.sudoplay.axion.spec.tag.TagInt;
 import com.sudoplay.axion.spec.tag.TagList;
 import com.sudoplay.axion.spec.tag.TagString;
 import com.sudoplay.axion.tag.Tag;
 import com.sudoplay.axion.util.AxionPredicates;
-import com.sudoplay.axion.util.AxionTypeToken;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -466,7 +465,7 @@ public class AxionWriterTest {
     }
   }
 
-  public static class VectorConverter extends TagConverter<TagList, Vector> {
+  public static class VectorConverter extends TypeConverter<TagList, Vector> {
     @Override
     public TagList convert(String name, Vector object) {
       TagList out = new TagList(TagInt.class, name);
@@ -596,7 +595,7 @@ public class AxionWriterTest {
     t.put("map", getTestMapTagList());
 
     TagCompound out = new TagCompound();
-    getTestWritableVector().write(axion.defaultWriter(out));
+    getTestWritableVector().write(axion.newWriter(out));
     t.put("writableVector", out);
     t.put("writableArgsVector", axion.convertValue(new WritableArgsVector(3, 1, 4)));
     return t;

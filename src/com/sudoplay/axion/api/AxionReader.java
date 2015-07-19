@@ -2,9 +2,10 @@ package com.sudoplay.axion.api;
 
 import com.sudoplay.axion.Axion;
 import com.sudoplay.axion.registry.TagAdapter;
-import com.sudoplay.axion.registry.TagConverter;
+import com.sudoplay.axion.registry.TypeConverter;
 import com.sudoplay.axion.spec.tag.TagCompound;
 import com.sudoplay.axion.tag.Tag;
+import com.sudoplay.axion.util.AxionTypeToken;
 
 import java.util.Collection;
 import java.util.Map;
@@ -112,7 +113,7 @@ public interface AxionReader {
    * Neither the name or class parameter can be null.
    * <p>
    * Note: This method won't read tags registered with {@link Axion#registerTag(int, Class, Class, TagAdapter,
-   * TagConverter)}. To read registered tags see the {@link AxionReader#read(String)} method.
+   * TypeConverter)}. To read registered tags see the {@link AxionReader#read(String)} method.
    *
    * @param name   tag name
    * @param vClass value class
@@ -121,6 +122,8 @@ public interface AxionReader {
    */
   <V> V read(String name, Class<V> vClass);
 
+  <V> V read(String name, AxionTypeToken<V> typeToken);
+
   /**
    * Locates the tag by name and converts it to its value if the given class is an AxionWritable instance or a mappable
    * class. Returns the given default value if the tag doesn't exist.
@@ -128,7 +131,7 @@ public interface AxionReader {
    * Neither the name or class parameter can be null.
    * <p>
    * Note: This method won't read tags registered with {@link Axion#registerTag(int, Class, Class, TagAdapter,
-   * TagConverter)}. To read registered tags see the {@link AxionReader#read(String, V)} method.
+   * TypeConverter)}. To read registered tags see the {@link AxionReader#read(String, V)} method.
    *
    * @param name         tag name
    * @param vClass       value class
@@ -158,7 +161,7 @@ public interface AxionReader {
    * Neither the tag, or class parameter can be null.
    * <p>
    * Note: This method won't read tags registered with {@link Axion#registerTag(int, Class, Class, TagAdapter,
-   * TagConverter)}. To read registered tags see the {@link AxionReader#read(Tag)} method.
+   * TypeConverter)}. To read registered tags see the {@link AxionReader#read(Tag)} method.
    *
    * @param tag    tag
    * @param vClass value class
@@ -174,7 +177,7 @@ public interface AxionReader {
    * The class parameter can't be null.
    * <p>
    * Note: This method won't read tags registered with {@link Axion#registerTag(int, Class, Class, TagAdapter,
-   * TagConverter)}. To read registered tags see the {@link AxionReader#read(Tag, V)} method.
+   * TypeConverter)}. To read registered tags see the {@link AxionReader#read(Tag, V)} method.
    *
    * @param tag          tag
    * @param vClass       value class
@@ -389,6 +392,10 @@ public interface AxionReader {
    * @return a stream of the collections values
    */
   <V, T extends Tag> Stream<V> streamCollection(T tag, Class<V> vClass);
+
+  AxionReader getReader(String name);
+
+  AxionReader newReader(TagCompound tagCompound);
 
   /**
    * @return Axion instance

@@ -1,16 +1,16 @@
 package com.sudoplay.axion.spec.converter;
 
-import com.sudoplay.axion.registry.TagConverter;
+import com.sudoplay.axion.registry.TypeConverter;
 import com.sudoplay.axion.spec.tag.TagDouble;
 
 /**
- * The {@link TagConverter} used to convert to and from a {@link TagDouble}.
+ * The {@link TypeConverter} used to convert to and from a {@link TagDouble}.
  * <p>
  * Part of the original specification.
  *
  * @author Jason Taylor
  */
-public class TagDoubleConverter extends TagConverter<TagDouble, Double> {
+public class TagDoubleConverter extends TypeConverter<TagDouble, Double> {
 
   @Override
   public TagDouble convert(final String name, final Double value) {

@@ -7,19 +7,19 @@ import com.sudoplay.axion.spec.converter.*;
 import com.sudoplay.axion.tag.Tag;
 
 /**
- * Classes that extend the abstract {@link TagConverter} class define how {@link Tag}s are converted to and from their
+ * Classes that extend the abstract {@link TypeConverter} class define how {@link Tag}s are converted to and from their
  * respective values.
  *
  * @param <T> {@link Tag} type
  * @param <V> value type
  * @author Jason Taylor
  */
-public abstract class TagConverter<T extends Tag, V> {
+public abstract class TypeConverter<T extends Tag, V> {
 
   protected Axion axion;
 
   /**
-   * Group of {@link TagConverter}s that conform to the original NBT specification.
+   * Group of {@link TypeConverter}s that conform to the original NBT specification.
    */
   public static class Spec {
     public static final TagByteConverter BYTE = new TagByteConverter();
@@ -36,7 +36,7 @@ public abstract class TagConverter<T extends Tag, V> {
   }
 
   /**
-   * Group of {@link TagConverter}s that conform to Axion's custom, extended specification.
+   * Group of {@link TypeConverter}s that conform to Axion's custom, extended specification.
    */
   public static class Ext {
     public static final TagBooleanConverter BOOLEAN = new TagBooleanConverter();
@@ -66,14 +66,14 @@ public abstract class TagConverter<T extends Tag, V> {
   public abstract T convert(final String name, final V value);
 
   /**
-   * Creates a new instance of this {@link TagConverter}.
+   * Creates a new instance of this {@link TypeConverter}.
    *
-   * @return a new instance of this {@link TagConverter}
+   * @return a new instance of this {@link TypeConverter}
    */
   @SuppressWarnings("unchecked")
-  protected TagConverter<T, V> newInstance(Axion axion) {
+  protected TypeConverter<T, V> newInstance(Axion axion) {
     try {
-      TagConverter<T, V> converter = this.getClass().newInstance();
+      TypeConverter<T, V> converter = this.getClass().newInstance();
       converter.setAxion(axion);
       return converter;
     } catch (Exception e) {

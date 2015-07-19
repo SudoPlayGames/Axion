@@ -3,8 +3,8 @@ package com.sudoplay.axion;
 import com.sudoplay.axion.AxionConfiguration.CharacterEncodingType;
 import com.sudoplay.axion.AxionConfiguration.CompressionType;
 import com.sudoplay.axion.registry.TagAdapter;
-import com.sudoplay.axion.registry.TagConverter;
-import com.sudoplay.axion.registry.TagConverterFactory;
+import com.sudoplay.axion.registry.TypeConverter;
+import com.sudoplay.axion.registry.TypeConverterFactory;
 import com.sudoplay.axion.spec.converter.TagStringConverter;
 import com.sudoplay.axion.spec.tag.TagByte;
 import com.sudoplay.axion.util.AxionTypeToken;
@@ -81,7 +81,7 @@ public class AxionConfigurationTest {
      * Must be unlocked and mutable to register adapter.
      */
     try {
-      config.registerTag(axion, 1, TagByte.class, Byte.class, TagAdapter.Spec.BYTE, TagConverter.Spec.BYTE);
+      config.registerTag(axion, 1, TagByte.class, Byte.class, TagAdapter.Spec.BYTE, TypeConverter.Spec.BYTE);
       fail("Expected AxionConfigurationException");
     } catch (AxionConfigurationException e) {
       // expected
@@ -104,7 +104,7 @@ public class AxionConfigurationTest {
       AxionTypeToken<?> typeToken = AxionTypeToken.get(Byte.class);
       config.registerFactory(
           axion,
-          TagConverterFactory.newFactory(
+          TypeConverterFactory.newFactory(
               AxionTypeToken.get(String.class),
               new TagStringConverter()
           )

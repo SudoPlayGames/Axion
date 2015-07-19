@@ -6,6 +6,7 @@ import com.sudoplay.axion.registry.AxionTagRegistrationException;
 import com.sudoplay.axion.spec.tag.TagCompound;
 import com.sudoplay.axion.spec.tag.TagList;
 import com.sudoplay.axion.tag.Tag;
+import com.sudoplay.axion.util.AxionContract;
 import com.sudoplay.axion.util.AxionFunctions;
 import com.sudoplay.axion.util.AxionTypeToken;
 
@@ -105,6 +106,11 @@ public class DefaultAxionReader implements AxionReader {
     if (tag != null) {
       return this.read(tag, vClass);
     }
+    return null;
+  }
+
+  @Override
+  public <V> V read(String name, AxionTypeToken<V> typeToken) {
     return null;
   }
 
@@ -369,6 +375,18 @@ public class DefaultAxionReader implements AxionReader {
         .map(t -> axion.convertTag(t, vAxionTypeToken))
         .collect(Collectors.toCollection(LinkedList::new))
         .stream();
+  }
+
+  @Override
+  public AxionReader getReader(String name) {
+    AxionContract.assertArgumentNotNull(name, "name");
+    return newReader(tagCompound.get(name));
+  }
+
+  @Override
+  public AxionReader newReader(TagCompound tagCompound) {
+    AxionContract.assertArgumentNotNull(tagCompound, "tagCompound");
+    return axion.newReader(tagCompound);
   }
 
   @Override

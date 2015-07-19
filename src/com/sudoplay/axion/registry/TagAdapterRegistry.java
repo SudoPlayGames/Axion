@@ -12,7 +12,7 @@ import java.util.Map.Entry;
 
 /**
  * The {@link TagAdapterRegistry} class is responsible for maintaining relationships between integer ids, {@link Tag}
- * classes, {@link Tag} value classes, {@link TagAdapter}s, and {@link TagConverter}s and providing lookup methods to
+ * classes, {@link Tag} value classes, {@link TagAdapter}s, and {@link TypeConverter}s and providing lookup methods to
  * access the data via its relationships.
  *
  * @author Jason Taylor
@@ -56,7 +56,7 @@ public class TagAdapterRegistry implements Cloneable {
   /**
    * Creates a new {@link TagAdapterRegistry} by copying the registry given.
    * <p>
-   * All {@link TagAdapter}s and {@link TagConverter}s are duplicated and assigned a reference to this registry.
+   * All {@link TagAdapter}s and {@link TypeConverter}s are duplicated and assigned a reference to this registry.
    *
    * @param toCopy registry to copy
    * @throws AxionInstanceException
@@ -95,7 +95,7 @@ public class TagAdapterRegistry implements Cloneable {
   }
 
   /**
-   * Registers a {@link TagAdapter} and {@link TagConverter} with an id, tag class, and value class. Tags must be
+   * Registers a {@link TagAdapter} and {@link TypeConverter} with an id, tag class, and value class. Tags must be
    * registered to be recognized by the system.
    * <p>
    * An exception is thrown if a duplicate id, tag class, or value class is registered.

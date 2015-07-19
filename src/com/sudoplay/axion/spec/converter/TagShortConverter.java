@@ -1,16 +1,16 @@
 package com.sudoplay.axion.spec.converter;
 
-import com.sudoplay.axion.registry.TagConverter;
+import com.sudoplay.axion.registry.TypeConverter;
 import com.sudoplay.axion.spec.tag.TagShort;
 
 /**
- * The {@link TagConverter} used to convert to and from a {@link TagShort}.
+ * The {@link TypeConverter} used to convert to and from a {@link TagShort}.
  * <p>
  * Part of the original specification.
  *
  * @author Jason Taylor
  */
-public class TagShortConverter extends TagConverter<TagShort, Short> {
+public class TagShortConverter extends TypeConverter<TagShort, Short> {
 
   @Override
   public TagShort convert(final String name, final Short value) {

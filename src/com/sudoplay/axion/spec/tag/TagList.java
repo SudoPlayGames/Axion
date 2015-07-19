@@ -2,7 +2,7 @@ package com.sudoplay.axion.spec.tag;
 
 import com.sudoplay.axion.Axion;
 import com.sudoplay.axion.registry.AxionTagRegistrationException;
-import com.sudoplay.axion.registry.TagConverter;
+import com.sudoplay.axion.registry.TypeConverter;
 import com.sudoplay.axion.tag.AxionIllegalTagNameException;
 import com.sudoplay.axion.tag.AxionInvalidTagException;
 import com.sudoplay.axion.tag.ContainerTag;
@@ -96,12 +96,12 @@ public class TagList extends ContainerTag {
   }
 
   /**
-   * Converts the value given into a tag using the {@link TagConverter} registered for the value's type and adds the new
+   * Converts the value given into a tag using the {@link TypeConverter} registered for the value's type and adds the new
    * tag to this {@link TagList}.
    *
    * @param value the value to convert
    * @param axion an {@link Axion} instance
-   * @throws AxionTagRegistrationException if no {@link TagConverter} is registered for the value's type
+   * @throws AxionTagRegistrationException if no {@link TypeConverter} is registered for the value's type
    */
   public <V> void addValue(final V value, final Axion axion) throws AxionTagRegistrationException {
     add(axion.convertValue(value));

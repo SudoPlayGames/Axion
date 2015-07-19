@@ -1,16 +1,16 @@
 package com.sudoplay.axion.ext.converter;
 
 import com.sudoplay.axion.ext.tag.TagLongArray;
-import com.sudoplay.axion.registry.TagConverter;
+import com.sudoplay.axion.registry.TypeConverter;
 
 /**
- * The {@link TagConverter} used to convert to and from a {@link TagLongArray}.
+ * The {@link TypeConverter} used to convert to and from a {@link TagLongArray}.
  * <p>
  * Part of the extended, custom specification.
  *
  * @author Jason Taylor
  */
-public class TagLongArrayConverter extends TagConverter<TagLongArray, long[]> {
+public class TagLongArrayConverter extends TypeConverter<TagLongArray, long[]> {
 
   @Override
   public long[] convert(final TagLongArray tag) {

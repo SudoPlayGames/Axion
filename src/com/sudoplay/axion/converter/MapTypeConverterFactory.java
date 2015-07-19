@@ -2,8 +2,8 @@ package com.sudoplay.axion.converter;
 
 import com.sudoplay.axion.Axion;
 import com.sudoplay.axion.AxionWriteException;
-import com.sudoplay.axion.registry.TagConverter;
-import com.sudoplay.axion.registry.TagConverterFactory;
+import com.sudoplay.axion.registry.TypeConverter;
+import com.sudoplay.axion.registry.TypeConverterFactory;
 import com.sudoplay.axion.spec.tag.TagList;
 import com.sudoplay.axion.tag.Tag;
 import com.sudoplay.axion.util.AxionType;
@@ -18,10 +18,10 @@ import java.util.Map;
  * <p>
  * Created by Jason Taylor on 7/17/2015.
  */
-public class MapTypeConverterFactory implements TagConverterFactory {
+public class MapTypeConverterFactory implements TypeConverterFactory {
 
   @Override
-  public <T extends Tag, V> TagConverter<T, V> create(
+  public <T extends Tag, V> TypeConverter<T, V> create(
       Axion axion,
       AxionTypeToken<V> typeToken
   ) {
@@ -35,27 +35,27 @@ public class MapTypeConverterFactory implements TagConverterFactory {
 
     Class<?> rawTypeOfSrc = AxionType.getRawType(type);
     Type[] keyAndValueTypes = AxionType.getMapKeyAndValueTypes(type, rawTypeOfSrc);
-    TagConverter<? extends Tag, ?> keyConverter = axion.getConverterForValue(AxionTypeToken.get(keyAndValueTypes[0]));
-    TagConverter<? extends Tag, ?> valueConverter = axion.getConverterForValue(AxionTypeToken.get(keyAndValueTypes[1]));
+    TypeConverter<? extends Tag, ?> keyConverter = axion.getConverterForValue(AxionTypeToken.get(keyAndValueTypes[0]));
+    TypeConverter<? extends Tag, ?> valueConverter = axion.getConverterForValue(AxionTypeToken.get(keyAndValueTypes[1]));
 
     @SuppressWarnings("unchecked")
-    TagConverter<T, V> result = new Converter(keyConverter, valueConverter);
+    TypeConverter<T, V> result = new Converter(keyConverter, valueConverter);
     return result;
   }
 
   @Override
-  public TagConverterFactory newInstance(Axion axion) {
+  public TypeConverterFactory newInstance(Axion axion) {
     return new MapTypeConverterFactory();
   }
 
-  private class Converter<K, V> extends TagConverter<TagList, Map<K, V>> {
+  private class Converter<K, V> extends TypeConverter<TagList, Map<K, V>> {
 
-    private final TagConverter<Tag, K> keyConverter;
-    private final TagConverter<Tag, V> valueConverter;
+    private final TypeConverter<Tag, K> keyConverter;
+    private final TypeConverter<Tag, V> valueConverter;
 
     public Converter(
-        TagConverter<Tag, K> keyConverter,
-        TagConverter<Tag, V> valueConverter
+        TypeConverter<Tag, K> keyConverter,
+        TypeConverter<Tag, V> valueConverter
     ) {
       this.keyConverter = keyConverter;
       this.valueConverter = valueConverter;

@@ -14,15 +14,15 @@ import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 /**
- * The {@link TagConverterRegistry} class is responsible for maintaining relationships between {@link Tag} classes,
- * {@link Tag} value classes, and {@link TagConverter}s and providing lookup methods to access the data via its
+ * The {@link TypeConverterRegistry} class is responsible for maintaining relationships between {@link Tag} classes,
+ * {@link Tag} value classes, and {@link TypeConverter}s and providing lookup methods to access the data via its
  * relationships.
  *
  * @author Jason Taylor
  */
-public class TagConverterRegistry implements Cloneable {
+public class TypeConverterRegistry implements Cloneable {
 
-  private static final Logger LOG = LoggerFactory.getLogger(TagConverterRegistry.class);
+  private static final Logger LOG = LoggerFactory.getLogger(TypeConverterRegistry.class);
 
   private final ThreadLocal<Map<AxionTypeToken<?>, FutureConverter<?, ?>>> calls = new
       ThreadLocal<Map<AxionTypeToken<?>, FutureConverter<?, ?>>>() {
@@ -32,41 +32,41 @@ public class TagConverterRegistry implements Cloneable {
         }
       };
 
-  private final Map<AxionTypeToken<?>, TagConverter<? extends Tag, ?>> converterCache = Collections.synchronizedMap
+  private final Map<AxionTypeToken<?>, TypeConverter<? extends Tag, ?>> converterCache = Collections.synchronizedMap
       (new HashMap<>());
 
   /**
-   * Maps {@link Tag} classes to their respective {@link TagConverter}s.
+   * Maps {@link Tag} classes to their respective {@link TypeConverter}s.
    */
-  private final Map<Class<? extends Tag>, TagConverter<? extends Tag, ?>> tagToConverter = new HashMap<>();
+  private final Map<Class<? extends Tag>, TypeConverter<? extends Tag, ?>> tagToConverter = new HashMap<>();
 
   /**
-   * List of {@link TagConverterFactory} implementations.
+   * List of {@link TypeConverterFactory} implementations.
    */
-  private final List<TagConverterFactory> factories = new LinkedList<>();
+  private final List<TypeConverterFactory> factories = new LinkedList<>();
 
   /**
-   * Creates a new, empty {@link TagConverterRegistry}.
+   * Creates a new, empty {@link TypeConverterRegistry}.
    */
-  public TagConverterRegistry() {
+  public TypeConverterRegistry() {
     LOG.debug("Created empty TagConverterRegistry [{}]", this);
   }
 
   /**
-   * Creates a new {@link TagConverterRegistry} by copying the registry given.
+   * Creates a new {@link TypeConverterRegistry} by copying the registry given.
    * <p>
-   * All {@link TagAdapter}s and {@link TagConverter}s are duplicated and assigned a reference to this registry.
+   * All {@link TagAdapter}s and {@link TypeConverter}s are duplicated and assigned a reference to this registry.
    *
    * @param toCopy registry to copy
    * @throws AxionInstanceException
    */
-  protected TagConverterRegistry(
+  protected TypeConverterRegistry(
       final Axion axion,
-      final TagConverterRegistry toCopy
+      final TypeConverterRegistry toCopy
   ) throws AxionInstanceException {
 
     LOG.debug("Entering TagConverterRegistry(toCopy=[{}])", toCopy);
-    for (Entry<Class<? extends Tag>, TagConverter<? extends Tag, ?>> entry : toCopy.tagToConverter.entrySet()) {
+    for (Entry<Class<? extends Tag>, TypeConverter<? extends Tag, ?>> entry : toCopy.tagToConverter.entrySet()) {
       tagToConverter.put(entry.getKey(), entry.getValue().newInstance(axion));
     }
     factories.addAll(
@@ -79,14 +79,14 @@ public class TagConverterRegistry implements Cloneable {
   }
 
   /**
-   * Registers a {@link TagConverterFactory}.
+   * Registers a {@link TypeConverterFactory}.
    *
-   * @param factory {@link TagConverterFactory}
+   * @param factory {@link TypeConverterFactory}
    * @throws AxionTagRegistrationException
    */
   public void registerFactory(
       final Axion axion,
-      final TagConverterFactory factory
+      final TypeConverterFactory factory
   ) throws AxionTagRegistrationException, AxionInstanceException {
 
     LOG.debug("Entering registerFactory(factory=[{}])", factory);
@@ -96,18 +96,18 @@ public class TagConverterRegistry implements Cloneable {
   }
 
   /**
-   * Registers a {@link TagConverter} with a tag class, and value class.
+   * Registers a {@link TypeConverter} with a tag class, and value class.
    *
    * @param tClass    the class of the {@link Tag}
    * @param vClass    the class of the value represented by the tag
-   * @param converter the {@link TagConverter} for the {@link Tag}
+   * @param converter the {@link TypeConverter} for the {@link Tag}
    * @throws AxionTagRegistrationException
    */
   public <T extends Tag, V> void registerTag(
       final Axion axion,
       final Class<T> tClass,
       final Class<V> vClass,
-      final TagConverter<T, V> converter
+      final TypeConverter<T, V> converter
   ) throws AxionTagRegistrationException, AxionInstanceException {
 
     LOG.debug("Entering registerTag(tClass=[{}], vClass=[{}], converter=[{}])", tClass, vClass, converter);
@@ -117,22 +117,22 @@ public class TagConverterRegistry implements Cloneable {
     converter.setAxion(axion);
     tagToConverter.put(tClass, converter);
     AxionTypeToken<V> valueTypeToken = AxionTypeToken.get(vClass);
-    TagConverterFactory factory = TagConverterFactory.newFactory(valueTypeToken, converter);
+    TypeConverterFactory factory = TypeConverterFactory.newFactory(valueTypeToken, converter);
     factories.add(factory);
     LOG.debug("Leaving registerTag()");
   }
 
   /**
-   * Returns the {@link TagConverter} registered to handle the {@link Tag} class given.
+   * Returns the {@link TypeConverter} registered to handle the {@link Tag} class given.
    * <p>
    * If no converter is found, an exception is thrown.
    *
    * @param tagClass the class of the tag to get the converter for
-   * @return the {@link TagConverter} registered to handle the tag class given
+   * @return the {@link TypeConverter} registered to handle the tag class given
    * @throws AxionTagRegistrationException
    */
   @SuppressWarnings("unchecked")
-  public <T extends Tag, V> TagConverter<T, V> getConverterForTag(
+  public <T extends Tag, V> TypeConverter<T, V> getConverterForTag(
       final Class<T> tagClass
   ) throws AxionTagRegistrationException {
 
@@ -142,22 +142,22 @@ public class TagConverterRegistry implements Cloneable {
     } else if (!tagToConverter.containsKey(tagClass)) {
       throw new AxionTagRegistrationException("No converter registered for tag class: " + tagClass);
     }
-    TagConverter<T, V> result = (TagConverter<T, V>) tagToConverter.get(tagClass);
+    TypeConverter<T, V> result = (TypeConverter<T, V>) tagToConverter.get(tagClass);
     LOG.trace("Leaving getConverterForTag(): [{}]", result);
     return result;
   }
 
   /**
-   * Returns a {@link TagConverter} capable of handling the {@link AxionTypeToken} given.
+   * Returns a {@link TypeConverter} capable of handling the {@link AxionTypeToken} given.
    * <p>
    * If no converter is found, an exception is thrown.
    *
    * @param typeToken the {@link AxionTypeToken} of the value
-   * @return the {@link TagConverter} registered to handle the value class given
+   * @return the {@link TypeConverter} registered to handle the value class given
    * @throws AxionTagRegistrationException
    */
   @SuppressWarnings("unchecked")
-  public <T extends Tag, V> TagConverter<T, V> getConverterForValue(
+  public <T extends Tag, V> TypeConverter<T, V> getConverterForValue(
       final Axion axion,
       final AxionTypeToken<V> typeToken
   ) throws AxionTagRegistrationException {
@@ -166,11 +166,11 @@ public class TagConverterRegistry implements Cloneable {
     Class<V> c = (Class<V>) typeToken.getRawType();
     AxionTypeToken<V> newTypeToken = AxionTypeToken.get(Primitives.wrap(c));
 
-    TagConverter<?, ?> cachedConverter = converterCache.get(newTypeToken);
+    TypeConverter<?, ?> cachedConverter = converterCache.get(newTypeToken);
     if (cachedConverter != null) {
       LOG.trace("Leaving getConverterForValue(): found cached converter -> {}, for type -> {}", cachedConverter,
           newTypeToken);
-      return (TagConverter<T, V>) cachedConverter;
+      return (TypeConverter<T, V>) cachedConverter;
     }
     LOG.trace("Converter for type [{}] not found in cache", newTypeToken);
 
@@ -184,8 +184,8 @@ public class TagConverterRegistry implements Cloneable {
     FutureConverter<T, V> call = new FutureConverter<>();
     threadCalls.put(newTypeToken, call);
     try {
-      for (TagConverterFactory factory : factories) {
-        TagConverter<T, V> candidate = factory.create(axion, newTypeToken);
+      for (TypeConverterFactory factory : factories) {
+        TypeConverter<T, V> candidate = factory.create(axion, newTypeToken);
         if (candidate != null) {
           call.setDelegate(candidate);
           converterCache.put(newTypeToken, candidate);
@@ -231,20 +231,20 @@ public class TagConverterRegistry implements Cloneable {
     return tagToConverter.containsKey(tagClass);
   }
 
-  public TagConverterRegistry copy(Axion axion) {
+  public TypeConverterRegistry copy(Axion axion) {
     LOG.debug("Entering copy()");
-    TagConverterRegistry copy = new TagConverterRegistry(axion, this);
+    TypeConverterRegistry copy = new TypeConverterRegistry(axion, this);
     LOG.debug("Leaving copy(): [{}]", copy);
     return copy;
   }
 
-  static class FutureConverter<T extends Tag, V> extends TagConverter<T, V> {
+  static class FutureConverter<T extends Tag, V> extends TypeConverter<T, V> {
 
-    private TagConverter<T, V> delegate;
+    private TypeConverter<T, V> delegate;
 
-    public void setDelegate(TagConverter<T, V> tagConverter) {
+    public void setDelegate(TypeConverter<T, V> typeConverter) {
       AxionContract.assertState(delegate == null, "delegate is already set");
-      delegate = tagConverter;
+      delegate = typeConverter;
     }
 
     @Override

@@ -1,6 +1,6 @@
 package com.sudoplay.axion.spec.converter;
 
-import com.sudoplay.axion.registry.TagConverter;
+import com.sudoplay.axion.registry.TypeConverter;
 import com.sudoplay.axion.spec.tag.TagList;
 import com.sudoplay.axion.tag.Tag;
 
@@ -8,14 +8,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The {@link TagConverter} used to convert to and from a {@link TagList}.
+ * The {@link TypeConverter} used to convert to and from a {@link TagList}.
  * <p>
  * Part of the original specification.
  *
  * @author Jason Taylor
  */
 @SuppressWarnings("rawtypes")
-public class TagListConverter extends TagConverter<TagList, List> {
+public class TagListConverter extends TypeConverter<TagList, List> {
 
   @Override
   public TagList convert(final String name, final List value) {

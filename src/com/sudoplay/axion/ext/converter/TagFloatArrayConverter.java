@@ -1,16 +1,16 @@
 package com.sudoplay.axion.ext.converter;
 
 import com.sudoplay.axion.ext.tag.TagFloatArray;
-import com.sudoplay.axion.registry.TagConverter;
+import com.sudoplay.axion.registry.TypeConverter;
 
 /**
- * The {@link TagConverter} used to convert to and from a {@link TagFloatArray}.
+ * The {@link TypeConverter} used to convert to and from a {@link TagFloatArray}.
  * <p>
  * Part of the extended, custom specification.
  *
  * @author Jason Taylor
  */
-public class TagFloatArrayConverter extends TagConverter<TagFloatArray, float[]> {
+public class TagFloatArrayConverter extends TypeConverter<TagFloatArray, float[]> {
 
   @Override
   public float[] convert(final TagFloatArray tag) {

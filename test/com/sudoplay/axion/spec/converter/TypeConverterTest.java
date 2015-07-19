@@ -2,7 +2,7 @@ package com.sudoplay.axion.spec.converter;
 
 import com.sudoplay.axion.Axion;
 import com.sudoplay.axion.TestUtil;
-import com.sudoplay.axion.registry.TagConverter;
+import com.sudoplay.axion.registry.TypeConverter;
 import com.sudoplay.axion.spec.tag.*;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -18,7 +18,7 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-public class TagConverterTest {
+public class TypeConverterTest {
 
   private static Axion axion;
 
@@ -31,16 +31,16 @@ public class TagConverterTest {
   public void test_TagByteArrayConverter() {
     byte[] value = new byte[]{0, 1, 2, 3};
     TagByteArray tag = new TagByteArray("name", value);
-    Assert.assertArrayEquals(value, TagConverter.Spec.BYTE_ARRAY.convert(tag));
-    Assert.assertEquals(tag, TagConverter.Spec.BYTE_ARRAY.convert("name", value));
+    Assert.assertArrayEquals(value, TypeConverter.Spec.BYTE_ARRAY.convert(tag));
+    Assert.assertEquals(tag, TypeConverter.Spec.BYTE_ARRAY.convert("name", value));
   }
 
   @Test
   public void test_TagByteConverter() {
     byte value = (byte) 42;
     TagByte tag = new TagByte("name", value);
-    Assert.assertEquals(value, (byte) TagConverter.Spec.BYTE.convert(tag));
-    Assert.assertEquals(tag, TagConverter.Spec.BYTE.convert("name", value));
+    Assert.assertEquals(value, (byte) TypeConverter.Spec.BYTE.convert(tag));
+    Assert.assertEquals(tag, TypeConverter.Spec.BYTE.convert("name", value));
   }
 
   @SuppressWarnings({"unchecked", "rawtypes"})
@@ -55,7 +55,7 @@ public class TagConverterTest {
      */
     // should throw UnsupportedOperationException if trying to convert a map
     try {
-      TagConverter<?, ? super Map> converter = axion.getConverterForTag(TagCompound.class);
+      TypeConverter<?, ? super Map> converter = axion.getConverterForTag(TagCompound.class);
       converter.convert("name", TestUtil.getMap());
       fail();
     } catch (UnsupportedOperationException e) {
@@ -84,32 +84,32 @@ public class TagConverterTest {
   public void test_TagDoubleConverter() {
     double value = 12.2568;
     TagDouble tag = new TagDouble("name", value);
-    assertEquals(value, TagConverter.Spec.DOUBLE.convert(tag), TestUtil.DOUBLE_DELTA);
-    assertEquals(tag, TagConverter.Spec.DOUBLE.convert("name", value));
+    assertEquals(value, TypeConverter.Spec.DOUBLE.convert(tag), TestUtil.DOUBLE_DELTA);
+    assertEquals(tag, TypeConverter.Spec.DOUBLE.convert("name", value));
   }
 
   @Test
   public void test_TagFloatConverter() {
     float value = 12.168f;
     TagFloat tag = new TagFloat("name", value);
-    assertEquals(value, TagConverter.Spec.FLOAT.convert(tag), TestUtil.DOUBLE_DELTA);
-    assertEquals(tag, TagConverter.Spec.FLOAT.convert("name", value));
+    assertEquals(value, TypeConverter.Spec.FLOAT.convert(tag), TestUtil.DOUBLE_DELTA);
+    assertEquals(tag, TypeConverter.Spec.FLOAT.convert("name", value));
   }
 
   @Test
   public void test_TagIntArrayConverter() {
     int[] value = new int[]{0, 1, 2, 3};
     TagIntArray tag = new TagIntArray("name", value);
-    assertArrayEquals(value, TagConverter.Spec.INT_ARRAY.convert(tag));
-    assertEquals(tag, TagConverter.Spec.INT_ARRAY.convert("name", value));
+    assertArrayEquals(value, TypeConverter.Spec.INT_ARRAY.convert(tag));
+    assertEquals(tag, TypeConverter.Spec.INT_ARRAY.convert("name", value));
   }
 
   @Test
   public void test_TagIntConverter() {
     int value = 42;
     TagInt tag = new TagInt("name", value);
-    assertEquals(value, (int) TagConverter.Spec.INT.convert(tag));
-    assertEquals(tag, TagConverter.Spec.INT.convert("name", value));
+    assertEquals(value, (int) TypeConverter.Spec.INT.convert(tag));
+    assertEquals(tag, TypeConverter.Spec.INT.convert("name", value));
   }
 
   @SuppressWarnings({"rawtypes", "unchecked"})
@@ -131,24 +131,24 @@ public class TagConverterTest {
   public void test_TagLongConverter() {
     long value = 4243563456L;
     TagLong tag = new TagLong("name", value);
-    assertEquals(value, (long) TagConverter.Spec.LONG.convert(tag));
-    assertEquals(tag, TagConverter.Spec.LONG.convert("name", value));
+    assertEquals(value, (long) TypeConverter.Spec.LONG.convert(tag));
+    assertEquals(tag, TypeConverter.Spec.LONG.convert("name", value));
   }
 
   @Test
   public void test_TagShortConverter() {
     short value = 4234;
     TagShort tag = new TagShort("name", value);
-    assertEquals(value, (short) TagConverter.Spec.SHORT.convert(tag));
-    assertEquals(tag, TagConverter.Spec.SHORT.convert("name", value));
+    assertEquals(value, (short) TypeConverter.Spec.SHORT.convert(tag));
+    assertEquals(tag, TypeConverter.Spec.SHORT.convert("name", value));
   }
 
   @Test
   public void test_TagStringConverter() {
     String value = "forty-two";
     TagString tag = new TagString("name", value);
-    assertEquals(value, TagConverter.Spec.STRING.convert(tag));
-    assertEquals(tag, TagConverter.Spec.STRING.convert("name", value));
+    assertEquals(value, TypeConverter.Spec.STRING.convert(tag));
+    assertEquals(tag, TypeConverter.Spec.STRING.convert("name", value));
   }
 
 }

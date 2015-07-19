@@ -1,6 +1,6 @@
 package com.sudoplay.axion.spec.converter;
 
-import com.sudoplay.axion.registry.TagConverter;
+import com.sudoplay.axion.registry.TypeConverter;
 import com.sudoplay.axion.spec.tag.TagCompound;
 import com.sudoplay.axion.tag.Tag;
 
@@ -8,14 +8,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * The {@link TagConverter} used to convert a {@link TagCompound} into a {@link Map}.
+ * The {@link TypeConverter} used to convert a {@link TagCompound} into a {@link Map}.
  * <p>
  * Part of the original specification.
  *
  * @author Jason Taylor
  */
 @SuppressWarnings("rawtypes")
-public class TagCompoundConverter extends TagConverter<TagCompound, Map> {
+public class TagCompoundConverter extends TypeConverter<TagCompound, Map> {
 
   @Override
   public TagCompound convert(final String name, final Map value) {

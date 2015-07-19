@@ -4,7 +4,7 @@ import com.sudoplay.axion.api.AxionReader;
 import com.sudoplay.axion.api.AxionWritable;
 import com.sudoplay.axion.api.AxionWriter;
 import com.sudoplay.axion.ext.tag.TagBoolean;
-import com.sudoplay.axion.registry.TagConverter;
+import com.sudoplay.axion.registry.TypeConverter;
 import com.sudoplay.axion.spec.tag.TagCompound;
 import com.sudoplay.axion.spec.tag.TagInt;
 import com.sudoplay.axion.spec.tag.TagList;
@@ -124,7 +124,7 @@ public class AxionTest {
     assertEquals(v.z, newV.z);
   }
 
-  public static class VectorConverter extends TagConverter<TagList, Vector> {
+  public static class VectorConverter extends TypeConverter<TagList, Vector> {
     @Override
     public TagList convert(String name, Vector object) {
       TagList out = new TagList(TagInt.class, name);
