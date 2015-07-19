@@ -243,7 +243,7 @@ The `AxionWritable` provides an interface for easily creating classes that can b
 For example, extending the `Vector3f` example used above:
 
 ```java
-public class Vector3f implements AxionWritable<TagList> {
+public class Vector3f implements AxionWritable {
 
   public float x, y, z;
 

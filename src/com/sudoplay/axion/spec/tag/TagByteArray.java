@@ -5,11 +5,10 @@ import com.sudoplay.axion.tag.Tag;
 import java.util.Arrays;
 
 /**
+ * tag.type 7 tag.name <code>TAG_Byte_Array</code> tag.payload * <code>TAG_Int</code> length<br> * An array of bytes of
+ * unspecified format. The length of this array is <code>length</code> bytes.
+ *
  * @author Jason Taylor
- * @tag.type 7
- * @tag.name <code>TAG_Byte_Array</code>
- * @tag.payload * <code>TAG_Int</code> length<br> * An array of bytes of unspecified format. The length of this array is
- * <code>length</code> bytes.
  */
 public class TagByteArray extends Tag {
 

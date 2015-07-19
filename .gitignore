@@ -6,4 +6,16 @@ dist/
 libs/
 src/logback-test.xml
 .settings/
+
+# Idea
+/.idea/
 *.iml
+*.ipr
+*.iws
+
+# Gradle
+/.gradle/
+/build/
+
+# Maven
+/target/

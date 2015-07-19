@@ -5,11 +5,10 @@ import com.sudoplay.axion.tag.Tag;
 import java.util.Arrays;
 
 /**
+ * tag.type 81<br> tag.name <code>TAG_Double_Array</code><br> tag.payload * <code>TAG_Int</code> length<br> An array of
+ * doubles. The length of this array is <code>length</code> doubles.
+ *
  * @author Jason Taylor
- * @tag.type 81
- * @tag.name <code>TAG_Double_Array</code>
- * @tag.payload * <code>TAG_Int</code> length<br> * An array of doubles. The length of this array is <code>length</code>
- * doubles.
  */
 public class TagDoubleArray extends Tag {
 

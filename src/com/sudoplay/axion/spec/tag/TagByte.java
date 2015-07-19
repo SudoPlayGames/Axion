@@ -3,10 +3,9 @@ package com.sudoplay.axion.spec.tag;
 import com.sudoplay.axion.tag.Tag;
 
 /**
+ * tag.type 1<br> tag.name <code>TAG_Byte</code><br> tag.payload * A single signed byte (8 bits)
+ *
  * @author Jason Taylor
- * @tag.type 1
- * @tag.name <code>TAG_Byte</code>
- * @tag.payload * A single signed byte (8 bits)
  */
 public class TagByte extends Tag {
 

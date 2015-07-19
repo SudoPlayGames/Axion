@@ -3,10 +3,9 @@ package com.sudoplay.axion.spec.tag;
 import com.sudoplay.axion.tag.Tag;
 
 /**
+ * tag.type 3<br> tag.name <code>TAG_Int</code><br> tag.payload * A signed short (32 bits, big endian).
+ *
  * @author Jason Taylor
- * @tag.type 3
- * @tag.name <code>TAG_Int</code>
- * @tag.payload * A signed short (32 bits, big endian).
  */
 public class TagInt extends Tag {
 

@@ -3,10 +3,10 @@ package com.sudoplay.axion.ext.tag;
 import com.sudoplay.axion.tag.Tag;
 
 /**
+ * tag.type 80<br /> tag.name <code>TAG_Boolean</code><br /> tag.payload * True is recorded as a byte value of 1 and
+ * false is a byte value of 0.
+ *
  * @author Jason Taylor
- * @tag.type 80
- * @tag.name <code>TAG_Boolean</code>
- * @tag.payload * True is recorded as a byte value of 1 and false is a byte value of 0.
  */
 public class TagBoolean extends Tag {
 

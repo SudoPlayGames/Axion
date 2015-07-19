@@ -20,12 +20,11 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
+ * tag.type 9<br> tag.name <code>TAG_List</code><br> tag.payload * <code>TAG_Byte</code> tagId<br> *
+ * <code>TAG_Int</code> length<br> * A sequential list of Tags (not Named Tags), of type <code>typeId</code>. The length
+ * of this array is <code>length</code> Tags.<br> tag.note All tags share the same type.
+ *
  * @author Jason Taylor
- * @tag.type 9
- * @tag.name <code>TAG_List</code>
- * @tag.payload * <code>TAG_Byte</code> tagId<br> * <code>TAG_Int</code> length<br> * A sequential list of Tags (not
- * Named Tags), of type <code>typeId</code>. The length of this array is <code>length</code> Tags.
- * @tag.note All tags share the same type.
  */
 public class TagList extends ContainerTag {
 

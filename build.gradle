@@ -1,0 +1,105 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'signing'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+sourceSets.main.java.srcDirs = [ "src/" ]
+sourceSets.test.java.srcDirs = [ "test/" ]
+
+if (JavaVersion.current().isJava8Compatible()) {
+    allprojects {
+        tasks.withType(Javadoc) {
+            options.addStringOption('Xdoclint:none', '-quiet')
+        }
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'org.slf4j:slf4j-api:1.7.12'
+    testCompile 'junit:junit:4.11'
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.1'
+}
+
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives jar
+    archives javadocJar
+    archives sourcesJar
+}
+
+signing {
+    sign configurations.archives
+}
+
+jar {
+    baseName = 'axion'
+    version =  '2.0.0'
+}
+
+group = 'com.sudoplay.axion'
+version = '2.0.0'
+archivesBaseName = 'axion'
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            pom.project {
+                name 'Axion'
+                packaging 'jar'
+                // optionally artifactId can be defined here
+                description 'Another Extensible Implementation of NBT.'
+                url 'https://github.com/SudoPlayGames/Axion'
+
+                scm {
+                    connection 'scm:git:git@github.com:SudoPlayGames/Axion.git'
+                    developerConnection 'scm:git:git@github.com:SudoPlayGames/Axion.git'
+                    url 'git@github.com:SudoPlayGames/Axion.git'
+                }
+
+                licenses {
+                    license {
+                        name 'The Apache License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+
+                developers {
+                    developer {
+                        name 'Jason Taylor'
+                        email 'jason@sudoplaygames.com'
+                        organization 'SudoPlay Games'
+                        organizationUrl 'http://www.sudoplaygames.com'
+                    }
+                }
+            }
+        }
+    }
+}

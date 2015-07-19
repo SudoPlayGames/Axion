@@ -10,14 +10,13 @@ import java.util.Map.Entry;
 import java.util.stream.Stream;
 
 /**
+ * tag.type 10<br> tag.name <code>TAG_Compound</code><br> tag.payload * A sequential list of Named Tags. This array
+ * keeps going until a <code>TAG_End</code> is found.<br> * <code>TAG_End</code> end<br> tag.note If there's a nested
+ * <code>TAG_Compound</code> within this tag, that one will also have a <code>TAG_End</code>, so simply reading until
+ * the next <code>TAG_End</code> will not work. The names of the named tags have to be unique within each
+ * <code>TAG_Compound</code> The order of the tags is not guaranteed.
+ *
  * @author Jason Taylor
- * @tag.type 10
- * @tag.name <code>TAG_Compound</code>
- * @tag.payload * A sequential list of Named Tags. This array keeps going until a <code>TAG_End</code> is found.<br> *
- * <code>TAG_End</code> end
- * @tag.note If there's a nested <code>TAG_Compound</code> within this tag, that one will also have a
- * <code>TAG_End</code>, so simply reading until the next <code>TAG_End</code> will not work. The names of the named
- * tags have to be unique within each <code>TAG_Compound</code> The order of the tags is not guaranteed.
  */
 public class TagCompound extends ContainerTag {
 

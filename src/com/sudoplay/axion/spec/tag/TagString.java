@@ -3,11 +3,10 @@ package com.sudoplay.axion.spec.tag;
 import com.sudoplay.axion.tag.Tag;
 
 /**
+ * tag.type 8<br> tag.name <code>TAG_String</code><br> tag.payload * <code>TAG_Short</code> length<br> * An array of
+ * bytes defining a string in UTF-8 format. The length of this array is <code>length</code> bytes.
+ *
  * @author Jason Taylor
- * @tag.type 8
- * @tag.name <code>TAG_String</code>
- * @tag.payload * <code>TAG_Short</code> length<br> * An array of bytes defining a string in UTF-8 format. The length of
- * this array is <code>length</code> bytes.
  */
 public class TagString extends Tag {
 

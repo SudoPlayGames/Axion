@@ -3,10 +3,9 @@ package com.sudoplay.axion.spec.tag;
 import com.sudoplay.axion.tag.Tag;
 
 /**
+ * tag.type 4<br> tag.name <code>TAG_Long</code><br> tag.payload * A signed long (64 bits, big endian).
+ *
  * @author Jason Taylor
- * @tag.type 4
- * @tag.name <code>TAG_Long</code>
- * @tag.payload * A signed long (64 bits, big endian).
  */
 public class TagLong extends Tag {
 

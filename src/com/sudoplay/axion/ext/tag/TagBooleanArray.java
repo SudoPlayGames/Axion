@@ -5,11 +5,10 @@ import com.sudoplay.axion.tag.Tag;
 import java.util.Arrays;
 
 /**
+ * tag.type 86<br> tag.name <code>TAG_Boolean_Array</code><br> tag.payload * <code>TAG_Int</code> length<br> An array of
+ * booleans. The length of this array is <code>length</code> / 8 booleans. Each boolean is stored as a bit.
+ *
  * @author Jason Taylor
- * @tag.type 86
- * @tag.name <code>TAG_Boolean_Array</code>
- * @tag.payload * <code>TAG_Int</code> length<br> * An array of booleans. The length of this array is
- * <code>length</code> / 8 booleans. Each boolean is stored as a bit.
  */
 public class TagBooleanArray extends Tag {
 

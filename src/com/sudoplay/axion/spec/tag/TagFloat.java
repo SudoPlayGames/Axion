@@ -3,10 +3,10 @@ package com.sudoplay.axion.spec.tag;
 import com.sudoplay.axion.tag.Tag;
 
 /**
+ * tag.type 5<br> tag.name <code>TAG_Float</code><br> tag.payload * A floating point value (32 bits, big endian, IEEE
+ * 754-2008, binary32).
+ *
  * @author Jason Taylor
- * @tag.type 5
- * @tag.name <code>TAG_Float</code>
- * @tag.payload * A floating point value (32 bits, big endian, IEEE 754-2008, binary32).
  */
 public class TagFloat extends Tag {
 
