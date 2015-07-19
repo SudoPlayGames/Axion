@@ -69,7 +69,6 @@ Configurations consist of:
 * tags
 * adapters
 * converters
-* mappers
 * a compression type
 * a character encoding type
 
