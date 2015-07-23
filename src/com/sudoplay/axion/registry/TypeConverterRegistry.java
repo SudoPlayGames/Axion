@@ -136,14 +136,14 @@ public class TypeConverterRegistry implements Cloneable {
       final Class<T> tagClass
   ) throws AxionTagRegistrationException {
 
-    LOG.trace("Entering getConverterForTag(tagClass=[{}])", tagClass);
+    LOG.trace("Entering getConverter(tagClass=[{}])", tagClass);
     if (tagClass == null) {
       return null;
     } else if (!tagToConverter.containsKey(tagClass)) {
       throw new AxionTagRegistrationException("No converter registered for tag class: " + tagClass);
     }
     TypeConverter<T, V> result = (TypeConverter<T, V>) tagToConverter.get(tagClass);
-    LOG.trace("Leaving getConverterForTag(): [{}]", result);
+    LOG.trace("Leaving getConverter(): [{}]", result);
     return result;
   }
 
@@ -157,19 +157,25 @@ public class TypeConverterRegistry implements Cloneable {
    * @throws AxionTagRegistrationException
    */
   @SuppressWarnings("unchecked")
-  public <T extends Tag, V> TypeConverter<T, V> getConverterForValue(
+  public <T extends Tag, V> TypeConverter<T, V> getConverter(
       final Axion axion,
       final AxionTypeToken<V> typeToken
   ) throws AxionTagRegistrationException {
-    LOG.trace("Entering getConverterForValue(typeToken=[{}])", typeToken);
+    LOG.trace("Entering getConverter(typeToken=[{}])", typeToken);
 
-    Class<V> c = (Class<V>) typeToken.getRawType();
-    AxionTypeToken<V> newTypeToken = AxionTypeToken.get(Primitives.wrap(c));
+    AxionTypeToken<V> newTypeToken = typeToken;
+    if (Primitives.isPrimitive(typeToken.getType())) {
+      Class<V> c = (Class<V>) typeToken.getRawType();
+      newTypeToken = AxionTypeToken.get(Primitives.wrap(c));
+    }
 
     TypeConverter<?, ?> cachedConverter = converterCache.get(newTypeToken);
     if (cachedConverter != null) {
-      LOG.trace("Leaving getConverterForValue(): found cached converter -> {}, for type -> {}", cachedConverter,
-          newTypeToken);
+      LOG.trace(
+          "Leaving getConverter(): found cached converter -> {}, for type -> {}",
+          cachedConverter,
+          newTypeToken
+      );
       return (TypeConverter<T, V>) cachedConverter;
     }
     LOG.trace("Converter for type [{}] not found in cache", newTypeToken);
@@ -177,7 +183,7 @@ public class TypeConverterRegistry implements Cloneable {
     Map<AxionTypeToken<?>, FutureConverter<? extends Tag, ?>> threadCalls = calls.get();
     FutureConverter<T, V> ongoingCall = (FutureConverter<T, V>) threadCalls.get(newTypeToken);
     if (ongoingCall != null) {
-      LOG.trace("Leaving getConverterForValue(): ongoingCall for type -> {}", newTypeToken);
+      LOG.trace("Leaving getConverter(): ongoingCall for type -> {}", newTypeToken);
       return ongoingCall;
     }
 
@@ -189,7 +195,7 @@ public class TypeConverterRegistry implements Cloneable {
         if (candidate != null) {
           call.setDelegate(candidate);
           converterCache.put(newTypeToken, candidate);
-          LOG.trace("Leaving getConverterForValue(): found new converter -> {}, for type -> {}", candidate, newTypeToken);
+          LOG.trace("Leaving getConverter(): found new converter -> {}, for type -> {}", candidate, newTypeToken);
           return candidate;
         }
       }
@@ -205,7 +211,7 @@ public class TypeConverterRegistry implements Cloneable {
    * @param typeToken typeToken
    * @return true if the given {@link AxionTypeToken} has a converter registered
    */
-  public boolean hasConverterForValue(
+  public boolean hasConverter(
       Axion axion,
       AxionTypeToken<?> typeToken
   ) {
@@ -213,7 +219,7 @@ public class TypeConverterRegistry implements Cloneable {
       return true;
     } else {
       try {
-        getConverterForValue(axion, typeToken);
+        getConverter(axion, typeToken);
         return true;
       } catch (AxionTagRegistrationException e) {
         return false;

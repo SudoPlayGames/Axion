@@ -100,7 +100,7 @@ public class DefaultAxionWriter implements AxionWriter {
   }
 
   /**
-   * Calls {@link Axion#convertValue(Object)} and writes the result.
+   * Calls {@link Axion#toTag(Object)} and writes the result.
    * <p>
    * Neither name or object parameter can be null.
    *
@@ -113,7 +113,7 @@ public class DefaultAxionWriter implements AxionWriter {
   ) {
     assertNotNull(name, "name");
     assertNotNull(object, "object");
-    tagCompound.put(name, axion.convertValue(object));
+    tagCompound.put(name, axion.toTag(object));
   }
 
   @Override

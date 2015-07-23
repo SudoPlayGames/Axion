@@ -24,7 +24,7 @@ public class TagListConverter extends TypeConverter<TagList, List> {
     }
     List<Tag> tags = new ArrayList<>();
     for (Object o : value) {
-      tags.add(axion.convertValue("", o));
+      tags.add(axion.toTag("", o));
     }
     return new TagList(tags.get(0).getClass(), name, tags);
   }
@@ -34,7 +34,7 @@ public class TagListConverter extends TypeConverter<TagList, List> {
     List<Object> list = new ArrayList<>();
     List<? extends Tag> tags = tag.getAsList();
     for (Tag child : tags) {
-      list.add(axion.convertTag(child));
+      list.add(axion.fromTag(child));
     }
     return list;
   }

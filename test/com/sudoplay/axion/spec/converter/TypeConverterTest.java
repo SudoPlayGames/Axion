@@ -55,7 +55,7 @@ public class TypeConverterTest {
      */
     // should throw UnsupportedOperationException if trying to convert a map
     try {
-      TypeConverter<?, ? super Map> converter = axion.getConverterForTag(TagCompound.class);
+      TypeConverter<?, ? super Map> converter = axion.getConverter(TagCompound.class);
       converter.convert("name", TestUtil.getMap());
       fail();
     } catch (UnsupportedOperationException e) {
@@ -63,7 +63,7 @@ public class TypeConverterTest {
     }
 
     Map expected = TestUtil.getMap();
-    Map actual = (Map) axion.getConverterForTag(TagCompound.class).convert(tag);
+    Map actual = (Map) axion.getConverter(TagCompound.class).convert(tag);
 
     assertEquals(expected.size(), actual.size());
 
@@ -123,8 +123,8 @@ public class TypeConverterTest {
     tag.add(new TagInt("", 648));
     tag.add(new TagInt("", 9813));
     tag.add(new TagInt("", 72138));
-    assertEquals(value, axion.getConverterForTag(TagList.class).convert(tag));
-    assertEquals(tag, axion.getConverterForTag(TagList.class).convert("name", value));
+    assertEquals(value, axion.getConverter(TagList.class).convert(tag));
+    assertEquals(tag, axion.getConverter(TagList.class).convert("name", value));
   }
 
   @Test

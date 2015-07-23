@@ -37,7 +37,7 @@ public class AxionWriterTest {
     // should add tag to backing compound
     out.write("test", new TagInt(42));
     Tag tag = out.getTagCompound().get("test");
-    assertEquals(42, (int) axion.convertTag(tag));
+    assertEquals(42, (int) axion.fromTag(tag));
 
     // should throw IllegalArgumentException on null tag parameter
     try {
@@ -64,7 +64,7 @@ public class AxionWriterTest {
     out.write("test", getTestWritableVector());
     TagCompound vector = out.getTagCompound().get("test");
     Tag tag = vector.get("y");
-    int actual = axion.convertTag(tag);
+    int actual = axion.fromTag(tag);
     assertEquals(1, actual);
 
     // should throw IllegalArgumentException on null writable parameter
@@ -91,7 +91,7 @@ public class AxionWriterTest {
     // should write mappable
     out.write("test", getTestVector());
     TagList vector = out.getTagCompound().get("test");
-    int actual = axion.convertTag(vector.get(1));
+    int actual = axion.fromTag(vector.get(1));
     assertEquals(1, actual);
 
     // should write convertible
@@ -589,7 +589,7 @@ public class AxionWriterTest {
     t.put("boolean", new TagBoolean(false));
     t.put("string", new TagString("someString"));
     t.put("int", new TagInt(42));
-    t.put("vector", axion.convertValue(getTestVector()));
+    t.put("vector", axion.toTag(getTestVector()));
     t.put("list", getTestTagList());
     t.put("compound", getNestedTestTagCompound());
     t.put("map", getTestMapTagList());
@@ -597,7 +597,7 @@ public class AxionWriterTest {
     TagCompound out = new TagCompound();
     getTestWritableVector().write(axion.newWriter(out));
     t.put("writableVector", out);
-    t.put("writableArgsVector", axion.convertValue(new WritableArgsVector(3, 1, 4)));
+    t.put("writableArgsVector", axion.toTag(new WritableArgsVector(3, 1, 4)));
     return t;
   }
 
@@ -605,7 +605,7 @@ public class AxionWriterTest {
     TagCompound t = new TagCompound();
     t.put("string", new TagString("someString"));
     t.put("int", new TagInt(42));
-    t.put("vector", axion.convertValue(getTestVector()));
+    t.put("vector", axion.toTag(getTestVector()));
     t.put("list", getTestTagList());
     return t;
   }

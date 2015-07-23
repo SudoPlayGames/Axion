@@ -5,6 +5,7 @@ import com.sudoplay.axion.AxionWriteException;
 import com.sudoplay.axion.registry.TypeConverter;
 import com.sudoplay.axion.registry.TypeConverterFactory;
 import com.sudoplay.axion.spec.tag.TagList;
+import com.sudoplay.axion.system.ObjectConstructor;
 import com.sudoplay.axion.tag.Tag;
 import com.sudoplay.axion.util.AxionType;
 import com.sudoplay.axion.util.AxionTypeToken;
@@ -35,11 +36,12 @@ public class MapTypeConverterFactory implements TypeConverterFactory {
 
     Class<?> rawTypeOfSrc = AxionType.getRawType(type);
     Type[] keyAndValueTypes = AxionType.getMapKeyAndValueTypes(type, rawTypeOfSrc);
-    TypeConverter<? extends Tag, ?> keyConverter = axion.getConverterForValue(AxionTypeToken.get(keyAndValueTypes[0]));
-    TypeConverter<? extends Tag, ?> valueConverter = axion.getConverterForValue(AxionTypeToken.get(keyAndValueTypes[1]));
+    TypeConverter<? extends Tag, ?> keyConverter = axion.getConverter(AxionTypeToken.get(keyAndValueTypes[0]));
+    TypeConverter<? extends Tag, ?> valueConverter = axion.getConverter(AxionTypeToken.get(keyAndValueTypes[1]));
+    ObjectConstructor<V> constructor = axion.getConstructorConstructor(typeToken);
 
     @SuppressWarnings("unchecked")
-    TypeConverter<T, V> result = new Converter(keyConverter, valueConverter);
+    TypeConverter<T, V> result = new Converter(keyConverter, valueConverter, constructor);
     return result;
   }
 
@@ -52,20 +54,23 @@ public class MapTypeConverterFactory implements TypeConverterFactory {
 
     private final TypeConverter<Tag, K> keyConverter;
     private final TypeConverter<Tag, V> valueConverter;
+    private final ObjectConstructor<? extends Map<K, V>> constructor;
 
     public Converter(
         TypeConverter<Tag, K> keyConverter,
-        TypeConverter<Tag, V> valueConverter
+        TypeConverter<Tag, V> valueConverter,
+        ObjectConstructor<? extends Map<K, V>> constructor
     ) {
       this.keyConverter = keyConverter;
       this.valueConverter = valueConverter;
+      this.constructor = constructor;
     }
 
     @Override
     public Map<K, V> convert(TagList tag) {
       TagList keyList = tag.get(0);
       TagList valueList = tag.get(1);
-      Map<K, V> map = new LinkedHashMap<>();
+      Map<K, V> map = constructor.construct();
       for (int i = 0; i < keyList.size(); ++i) {
         K key = keyConverter.convert(keyList.get(i));
         V value = valueConverter.convert(valueList.get(i));

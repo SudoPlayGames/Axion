@@ -5,6 +5,7 @@ import com.sudoplay.axion.AxionWriteException;
 import com.sudoplay.axion.registry.TypeConverter;
 import com.sudoplay.axion.registry.TypeConverterFactory;
 import com.sudoplay.axion.spec.tag.TagList;
+import com.sudoplay.axion.system.ObjectConstructor;
 import com.sudoplay.axion.tag.Tag;
 import com.sudoplay.axion.util.AxionType;
 import com.sudoplay.axion.util.AxionTypeToken;
@@ -33,10 +34,10 @@ public class CollectionTypeConverterFactory implements TypeConverterFactory {
     Class<?> rawTypeOfSrc = AxionType.getRawType(type);
     Type elementType = AxionType.getCollectionElementType(type, rawTypeOfSrc);
 
-    TypeConverter<? extends Tag, ?> elementConverter = axion.getConverterForValue(AxionTypeToken.get(elementType));
-
+    TypeConverter<? extends Tag, ?> elementConverter = axion.getConverter(AxionTypeToken.get(elementType));
+    ObjectConstructor<V> constructor = axion.getConstructorConstructor(typeToken);
     @SuppressWarnings("unchecked")
-    TypeConverter<T, V> result = new Converter(elementConverter);
+    TypeConverter<T, V> result = new Converter(elementConverter, constructor);
     return result;
   }
 
@@ -48,16 +49,19 @@ public class CollectionTypeConverterFactory implements TypeConverterFactory {
   private class Converter<V> extends TypeConverter<TagList, Collection<V>> {
 
     private final TypeConverter<Tag, V> elementConverter;
+    private final ObjectConstructor<? extends List<V>> constructor;
 
     private Converter(
-        TypeConverter<Tag, V> elementConverter
+        TypeConverter<Tag, V> elementConverter,
+        ObjectConstructor<? extends List<V>> constructor
     ) {
       this.elementConverter = elementConverter;
+      this.constructor = constructor;
     }
 
     @Override
     public Collection<V> convert(TagList tagList) {
-      List<V> list = new ArrayList<>(tagList.size());
+      List<V> list = constructor.construct();
       tagList.forEach(tag -> {
         V value = elementConverter.convert(tag);
         list.add(value);

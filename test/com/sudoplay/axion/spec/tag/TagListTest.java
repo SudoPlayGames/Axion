@@ -368,7 +368,7 @@ public class TagListTest {
             TagInt.class,
             int.class,
             Axion.getSpecInstance()
-        ).forEach(value -> assertTrue(value < 3));
+        ).forEach(value -> assertTrue((int) value < 3));
 
     assertEquals(
         3,

@@ -7,8 +7,8 @@ import com.sudoplay.axion.tag.AxionIllegalTagNameException;
 import com.sudoplay.axion.tag.AxionInvalidTagException;
 import com.sudoplay.axion.tag.ContainerTag;
 import com.sudoplay.axion.tag.Tag;
-import com.sudoplay.axion.util.AxionTypeToken;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -96,15 +96,15 @@ public class TagList extends ContainerTag {
   }
 
   /**
-   * Converts the value given into a tag using the {@link TypeConverter} registered for the value's type and adds the new
-   * tag to this {@link TagList}.
+   * Converts the value given into a tag using the {@link TypeConverter} registered for the value's type and adds the
+   * new tag to this {@link TagList}.
    *
    * @param value the value to convert
    * @param axion an {@link Axion} instance
    * @throws AxionTagRegistrationException if no {@link TypeConverter} is registered for the value's type
    */
   public <V> void addValue(final V value, final Axion axion) throws AxionTagRegistrationException {
-    add(axion.convertValue(value));
+    add(axion.toTag(value));
   }
 
   /**
@@ -171,27 +171,27 @@ public class TagList extends ContainerTag {
 
   public <V, T extends Tag> Stream<V> valueStream(
       Class<T> tagClass,
-      Class<V> valueClass,
+      Type type,
       Axion axion
   ) {
     return this.valueStream(
         tagClass,
         tag -> true,
-        tag -> axion.convertTag(tag, AxionTypeToken.get(valueClass)),
+        tag -> axion.fromTag(tag, type),
         ArrayList::new
     );
   }
 
   public <V, T extends Tag> Stream<V> valueStream(
       Class<T> tagClass,
-      Class<V> valueClass,
+      Type type,
       Supplier<List<V>> listSupplier,
       Axion axion
   ) {
     return this.valueStream(
         tagClass,
         tag -> true,
-        tag -> axion.convertTag(tag, AxionTypeToken.get(valueClass)),
+        tag -> axion.fromTag(tag, type),
         listSupplier
     );
   }

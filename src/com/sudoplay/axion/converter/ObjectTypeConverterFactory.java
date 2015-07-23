@@ -31,12 +31,12 @@ public class ObjectTypeConverterFactory implements TypeConverterFactory {
 
     @Override
     public Object convert(TT tag) {
-      return axion.convertTag(tag);
+      return axion.fromTag(tag);
     }
 
     @Override
     public TT convert(String name, Object value) {
-      return axion.convertValue(name, value);
+      return axion.toTag(name, value);
     }
   }
 }

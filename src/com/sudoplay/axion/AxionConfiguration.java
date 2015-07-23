@@ -297,8 +297,8 @@ public class AxionConfiguration implements Cloneable {
    * @see #getAdapterFor(Class)
    * @see #getAdapterFor(int)
    * @see #getClassFor(int)
-   * @see #getConverterForTag(Class)
-   * @see #getConverterForValue(Axion, AxionTypeToken)
+   * @see #getConverter(Class)
+   * @see #getConverter(Axion, AxionTypeToken)
    * @see #getIdFor(Class)
    */
   protected <T extends Tag, V> AxionConfiguration registerTag(
@@ -443,7 +443,7 @@ public class AxionConfiguration implements Cloneable {
    * @throws AxionTagRegistrationException
    */
   @SuppressWarnings("unchecked")
-  protected <T extends Tag, V> TypeConverter<T, V> getConverterForTag(
+  protected <T extends Tag, V> TypeConverter<T, V> getConverter(
       final Class<T> tClass
   ) throws AxionTagRegistrationException {
     return (TypeConverter<T, V>) typeConverterRegistry.getConverterForTag(tClass);
@@ -459,11 +459,11 @@ public class AxionConfiguration implements Cloneable {
    * @throws AxionTagRegistrationException
    */
   @SuppressWarnings("unchecked")
-  protected <T extends Tag, V> TypeConverter<T, V> getConverterForValue(
+  protected <T extends Tag, V> TypeConverter<T, V> getConverter(
       final Axion axion,
       final AxionTypeToken<V> typeToken
   ) throws AxionTagRegistrationException {
-    return (TypeConverter<T, V>) typeConverterRegistry.getConverterForValue(axion, typeToken);
+    return (TypeConverter<T, V>) typeConverterRegistry.getConverter(axion, typeToken);
   }
 
   /**
@@ -472,11 +472,11 @@ public class AxionConfiguration implements Cloneable {
    * @param typeToken typeToken
    * @return true if the given {@link AxionTypeToken} has a converter registered
    */
-  protected boolean hasConverterForValue(
+  protected boolean hasConverter(
       final Axion axion,
       final AxionTypeToken typeToken
   ) {
-    return typeConverterRegistry.hasConverterForValue(axion, typeToken);
+    return typeConverterRegistry.hasConverter(axion, typeToken);
   }
 
   /**
@@ -486,7 +486,7 @@ public class AxionConfiguration implements Cloneable {
    * @param <T> tag type
    * @return true if the given tag's class has a converter registered
    */
-  protected <T extends Tag> boolean hasConverterForTag(final T tag) {
+  protected <T extends Tag> boolean hasConverter(final T tag) {
     return typeConverterRegistry.hasConverterForTag(tag.getClass());
   }
 

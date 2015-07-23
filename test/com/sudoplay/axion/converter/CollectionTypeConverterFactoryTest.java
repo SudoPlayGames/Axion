@@ -1,13 +1,12 @@
 package com.sudoplay.axion.converter;
 
 import com.sudoplay.axion.Axion;
-import com.sudoplay.axion.spec.tag.TagInt;
-import com.sudoplay.axion.spec.tag.TagList;
 import com.sudoplay.axion.tag.Tag;
 import com.sudoplay.axion.util.AxionTypeToken;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -47,9 +46,9 @@ public class CollectionTypeConverterFactoryTest {
 
   @Test
   public void test_nested_lists() {
-    Tag tag = axion.convertValue(getNestedIntegerList());
-    AxionTypeToken<List<List<Integer>>> typeToken = new AxionTypeToken<List<List<Integer>>>(){};
-    List<List<Integer>> list = axion.convertTag(tag, typeToken);
+    Tag tag = axion.toTag(getNestedIntegerList());
+    Type type = new AxionTypeToken<ArrayList<ArrayList<Integer>>>(){}.getType();
+    List<List<Integer>> list = axion.fromTag(tag, type);
     assertEquals(5, list.size());
     list.forEach(integers -> assertEquals(5, integers.size()));
   }

@@ -48,9 +48,9 @@ import com.sudoplay.axion.util.AxionTypeToken;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.Collections;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Returns a function that can construct an instance of a requested type.
@@ -133,6 +133,62 @@ public final class ConstructorConstructor {
     } catch (NoSuchMethodException e) {
       return null;
     }
+  }
+
+  /**
+   * Constructors for common interface types like Map and List and their subytpes.
+   */
+  @SuppressWarnings("unchecked")
+  // use runtime checks to guarantee that 'T' is what it is
+  private <T> ObjectConstructor<T> newDefaultImplementationConstructor(
+      final Type type, Class<? super T> rawType) {
+
+    if (Collection.class.isAssignableFrom(rawType)) {
+
+      if (SortedSet.class.isAssignableFrom(rawType)) {
+        return () -> (T) new TreeSet<>();
+
+      } else if (EnumSet.class.isAssignableFrom(rawType)) {
+        return () -> {
+          if (type instanceof ParameterizedType) {
+            Type elementType = ((ParameterizedType) type).getActualTypeArguments()[0];
+            if (elementType instanceof Class) {
+              return (T) EnumSet.noneOf((Class) elementType);
+            } else {
+              throw new IllegalArgumentException("Invalid EnumSet type: " + type.toString());
+            }
+          } else {
+            throw new IllegalArgumentException("Invalid EnumSet type: " + type.toString());
+          }
+        };
+
+      } else if (Set.class.isAssignableFrom(rawType)) {
+        return () -> (T) new LinkedHashSet<>();
+
+      } else if (Queue.class.isAssignableFrom(rawType)) {
+        return () -> (T) new LinkedList<>();
+
+      } else {
+        return () -> (T) new ArrayList<>();
+      }
+    }
+
+    if (Map.class.isAssignableFrom(rawType)) {
+
+      if (SortedMap.class.isAssignableFrom(rawType)) {
+        return () -> (T) new TreeMap<>();
+
+      } else if (type instanceof ParameterizedType) {
+        Type[] types = ((ParameterizedType) type).getActualTypeArguments();
+        AxionTypeToken typeToken = AxionTypeToken.get(types[0]);
+        if (!(String.class.isAssignableFrom(typeToken.getRawType()))) {
+          return () -> (T) new LinkedHashMap<>();
+        }
+
+      }
+    }
+
+    return null;
   }
 
   private <T> ObjectConstructor<T> newUnsafeAllocator(

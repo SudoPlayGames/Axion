@@ -65,9 +65,9 @@ public class AxionTest {
     TestClassWithNullaryConstructor testClass = new TestClassWithNullaryConstructor();
     testClass.aLong = 42;
 
-    TagCompound tagCompound = axion.convertValue("testClass", testClass);
+    TagCompound tagCompound = axion.toTag("testClass", testClass);
     Tag tag = tagCompound.get("aLong");
-    long actual = axion.convertTag(tag);
+    long actual = axion.fromTag(tag);
     assertEquals(42L, actual);
   }
 
@@ -76,24 +76,24 @@ public class AxionTest {
     TestClassWithNullaryConstructor testClass = new TestClassWithNullaryConstructor();
     testClass.aLong = 42;
 
-    TagCompound tagCompound = axion.convertValue("testClass", testClass);
-    TestClassWithNullaryConstructor newTestClass = axion.convertTag(
+    TagCompound tagCompound = axion.toTag("testClass", testClass);
+    TestClassWithNullaryConstructor newTestClass = axion.fromTag(
         tagCompound,
-        AxionTypeToken.get(TestClassWithNullaryConstructor.class)
+        TestClassWithNullaryConstructor.class
     );
     assertEquals(testClass.aLong, newTestClass.aLong);
   }
 
   @Test
   public void test_convertValue_writesConvertibleObjects() {
-    TagBoolean tag = axion.convertValue("aBoolean", true);
+    TagBoolean tag = axion.toTag("aBoolean", true);
     assertEquals(true, tag.get());
   }
 
   @Test
   public void test_convertValue_readsConvertibleObjects() {
-    TagBoolean tag = axion.convertValue("aBoolean", true);
-    boolean b = axion.convertTag(tag, AxionTypeToken.get(boolean.class));
+    TagBoolean tag = axion.toTag("aBoolean", true);
+    boolean b = axion.fromTag(tag, boolean.class);
     assertEquals(true, b);
   }
 
@@ -104,7 +104,7 @@ public class AxionTest {
     v.y = 73;
     v.z = 31415;
 
-    TagList list = axion.convertValue(v);
+    TagList list = axion.toTag(v);
     assertEquals(42, ((TagInt) list.get(0)).get());
     assertEquals(73, ((TagInt) list.get(1)).get());
     assertEquals(31415, ((TagInt) list.get(2)).get());
@@ -117,8 +117,8 @@ public class AxionTest {
     v.y = 73;
     v.z = 31415;
 
-    TagList list = axion.convertValue(v);
-    Vector newV = axion.convertTag(list, AxionTypeToken.get(Vector.class));
+    TagList list = axion.toTag(v);
+    Vector newV = axion.fromTag(list, (Vector.class));
     assertEquals(v.x, newV.x);
     assertEquals(v.y, newV.y);
     assertEquals(v.z, newV.z);
