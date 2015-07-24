@@ -408,6 +408,13 @@ public class Axion {
     return this;
   }
 
+  public <T extends Tag, V> Axion registerConverterFactory(
+    TypeConverterFactory factory
+  ) {
+    configuration.registerFactory(this, factory);
+    return this;
+  }
+
   /**
    * Sets this {@link AxionConfiguration} to use the {@link CompressionType} given.
    * <p>

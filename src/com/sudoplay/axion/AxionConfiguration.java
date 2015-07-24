@@ -1,10 +1,7 @@
 package com.sudoplay.axion;
 
 import com.sudoplay.axion.AxionConfigurationProtection.ProtectionMode;
-import com.sudoplay.axion.converter.AxionWritableTypeConverterFactory;
-import com.sudoplay.axion.converter.CollectionTypeConverterFactory;
-import com.sudoplay.axion.converter.MapTypeConverterFactory;
-import com.sudoplay.axion.converter.ObjectTypeConverterFactory;
+import com.sudoplay.axion.converter.*;
 import com.sudoplay.axion.ext.tag.*;
 import com.sudoplay.axion.registry.*;
 import com.sudoplay.axion.spec.tag.*;
@@ -39,6 +36,7 @@ public class AxionConfiguration implements Cloneable {
       registerFactory(axion, new AxionWritableTypeConverterFactory());
       registerFactory(axion, new CollectionTypeConverterFactory());
       registerFactory(axion, new MapTypeConverterFactory());
+      registerFactory(axion, new EnumTypeConverterFactory());
 
       registerBaseTagAdapter(axion, TagAdapter.Spec.BASE);
       registerTag(axion, 1, TagByte.class, Byte.class, TagAdapter.Spec.BYTE, TypeConverter.Spec.BYTE);
@@ -66,6 +64,7 @@ public class AxionConfiguration implements Cloneable {
       registerFactory(axion, new AxionWritableTypeConverterFactory());
       registerFactory(axion, new CollectionTypeConverterFactory());
       registerFactory(axion, new MapTypeConverterFactory());
+      registerFactory(axion, new EnumTypeConverterFactory());
 
       registerBaseTagAdapter(axion, TagAdapter.Spec.BASE);
       registerTag(axion, 1, TagByte.class, Byte.class, TagAdapter.Spec.BYTE, TypeConverter.Spec.BYTE);
