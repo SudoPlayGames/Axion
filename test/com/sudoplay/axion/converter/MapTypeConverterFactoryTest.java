@@ -98,8 +98,7 @@ public class MapTypeConverterFactoryTest {
 
     Map<TestEnum, String> newMap = axion.fromTag(tagList, new AxionTypeToken<EnumMap<TestEnum, String>>(){}.getType());
 
-
-
+    assertEquals(map, newMap);
   }
 
   public enum TestEnum {

@@ -100,6 +100,11 @@ public final class ConstructorConstructor {
       return defaultConstructor;
     }
 
+    ObjectConstructor<T> defaultImplementation = newDefaultImplementationConstructor(type, rawType);
+    if (defaultImplementation != null) {
+      return defaultImplementation;
+    }
+
     // finally try unsafe
     return newUnsafeAllocator(type, rawType);
   }
