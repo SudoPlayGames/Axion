@@ -47,8 +47,7 @@ public class MapTypeConverterFactoryTest {
 
     AxionReader in = axion.newReader(out.getTagCompound());
 
-    Type type = new AxionTypeToken<HashMap<Writable, LinkedList<Writable>>>() {
-    }.getType();
+    Type type = new AxionTypeToken<HashMap<Writable, LinkedList<Writable>>>() {}.getType();
     Map<Writable, List<Writable>> newMap = in.read("map", type);
 
     // the maps should contain the same content
@@ -96,7 +95,7 @@ public class MapTypeConverterFactoryTest {
 
     TagList tagList = axion.toTag(map);
 
-    Map<TestEnum, String> newMap = axion.fromTag(tagList, new AxionTypeToken<EnumMap<TestEnum, String>>(){}.getType());
+    Map<TestEnum, String> newMap = axion.fromTag(tagList, new AxionTypeToken<EnumMap<TestEnum, String>>() {}.getType());
 
     assertEquals(map, newMap);
   }

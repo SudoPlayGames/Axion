@@ -116,4 +116,8 @@ public class AxionOutputStream extends FilterOutputStream {
     characterEncoder.write(this, v);
   }
 
+  public void close() throws IOException {
+    out.close();
+  }
+
 }

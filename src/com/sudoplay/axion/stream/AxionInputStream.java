@@ -217,4 +217,8 @@ public class AxionInputStream extends FilterInputStream {
     return ((b1 << 8) + (b2));
   }
 
+  public void close() throws IOException {
+    in.close();
+  }
+
 }

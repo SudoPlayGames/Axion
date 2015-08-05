@@ -724,7 +724,9 @@ public class Axion {
       AxionTagRegistrationException {
     LOG.debug("Entering write(tagCompound=[{}], outputStream=[{}])", tagCompound, outputStream);
     long start = System.currentTimeMillis();
-    adapt(tagCompound, configuration.wrap(outputStream));
+    AxionOutputStream axionOutputStream = configuration.wrap(outputStream);
+    adapt(tagCompound, axionOutputStream);
+    axionOutputStream.close();
     LOG.info("Write completed in [{}]", DurationUtil.formatDurationWords(System.currentTimeMillis() - start));
     LOG.debug("Leaving write()");
   }
