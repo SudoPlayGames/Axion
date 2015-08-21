@@ -2,7 +2,7 @@ package com.sudoplay.axion.stream;
 
 import com.sudoplay.axion.AxionConfiguration.CharacterEncodingType;
 
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 /**
  * The {@link CharacterEncoderFactory} is responsible for providing new instances of the {@link CharacterEncoder}.
@@ -24,17 +24,17 @@ public class CharacterEncoderFactory {
   public static CharacterEncoder create(final CharacterEncodingType type) {
     switch (type) {
       case ISO_8859_1:
-        return new CharacterEncoder(Charset.forName("ISO-8859-1"));
+        return new CharacterEncoder(StandardCharsets.ISO_8859_1);
       case US_ASCII:
-        return new CharacterEncoder(Charset.forName("US-ASCII"));
+        return new CharacterEncoder(StandardCharsets.US_ASCII);
       case UTF_16:
-        return new CharacterEncoder(Charset.forName("UTF-16"));
+        return new CharacterEncoder(StandardCharsets.UTF_16);
       case UTF_16BE:
-        return new CharacterEncoder(Charset.forName("UTF-16BE"));
+        return new CharacterEncoder(StandardCharsets.UTF_16BE);
       case UTF_16LE:
-        return new CharacterEncoder(Charset.forName("UTF-16LE"));
+        return new CharacterEncoder(StandardCharsets.UTF_16LE);
       case UTF_8:
-        return new CharacterEncoder(Charset.forName("UTF-8"));
+        return new CharacterEncoder(StandardCharsets.UTF_8);
       default:
       case MODIFIED_UTF_8:
         return new ModifiedUTFCharacterEncoder();
