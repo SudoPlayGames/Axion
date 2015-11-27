@@ -2,9 +2,6 @@ apply plugin: 'java'
 apply plugin: 'maven'
 apply plugin: 'signing'
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-
 sourceSets.main.java.srcDirs = [ "src/" ]
 sourceSets.test.java.srcDirs = [ "test/" ]
 
@@ -46,57 +43,74 @@ artifacts {
 }
 
 signing {
+    required { isReleaseBuild() && gradle.taskGraph.hasTask("uploadArchives") }
     sign configurations.archives
 }
 
-jar {
-    baseName = 'axion'
-    version =  '2.0.0'
+def isReleaseBuild() {
+    return VERSION_NAME.contains("SNAPSHOT") == false;
 }
 
-group = 'com.sudoplay.axion'
-version = '2.0.0'
-archivesBaseName = 'axion'
+def getReleaseRepositoryUrl() {
+    return hasProperty('RELEASE_REPOSITORY_URL') ? RELEASE_REPOSITORY_URL
+            : "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+}
 
+def getSnapshotRepositoryUrl() {
+    return hasProperty('SNAPSHOT_REPOSITORY_URL') ? SNAPSHOT_REPOSITORY_URL
+            : "https://oss.sonatype.org/content/repositories/snapshots/"
+}
+
+def getRepositoryUsername() {
+    return hasProperty('NEXUS_USERNAME') ? NEXUS_USERNAME : ""
+}
+
+def getRepositoryPassword() {
+    return hasProperty('NEXUS_PASSWORD') ? NEXUS_PASSWORD : ""
+}
+
+//noinspection GroovyAssignabilityCheck
 uploadArchives {
     repositories {
         mavenDeployer {
             beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
-            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-                authentication(userName: ossrhUsername, password: ossrhPassword)
-            }
+            pom.groupId = GROUP
+            pom.artifactId = POM_ARTIFACT_ID
+            pom.version = VERSION_NAME
 
-            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
-                authentication(userName: ossrhUsername, password: ossrhPassword)
+            repository(url: getReleaseRepositoryUrl()) {
+                authentication(userName: getRepositoryUsername(), password: getRepositoryPassword())
+            }
+            snapshotRepository(url: getSnapshotRepositoryUrl()) {
+                authentication(userName: getRepositoryUsername(), password: getRepositoryPassword())
             }
 
             pom.project {
-                name 'Axion'
-                packaging 'jar'
-                // optionally artifactId can be defined here
-                description 'Another Extensible Implementation of NBT.'
-                url 'https://github.com/SudoPlayGames/Axion'
+                name POM_NAME
+                packaging POM_PACKAGING
+                description POM_DESCRIPTION
+                url POM_URL
 
                 scm {
-                    connection 'scm:git:git@github.com:SudoPlayGames/Axion.git'
-                    developerConnection 'scm:git:git@github.com:SudoPlayGames/Axion.git'
-                    url 'git@github.com:SudoPlayGames/Axion.git'
+                    url POM_SCM_URL
+                    connection POM_SCM_CONNECTION
+                    developerConnection POM_SCM_DEV_CONNECTION
                 }
 
                 licenses {
                     license {
-                        name 'The Apache License, Version 2.0'
-                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        name POM_LICENSE_NAME
+                        url POM_LICENSE_URL
                     }
                 }
 
                 developers {
                     developer {
-                        name 'Jason Taylor'
-                        email 'jason@sudoplaygames.com'
-                        organization 'SudoPlay Games'
-                        organizationUrl 'http://www.sudoplaygames.com'
+                        name POM_DEVELOPER_NAME
+                        email POM_DEVELOPER_EMAIL
+                        organization POM_DEVELOPER_ORGANIZATION
+                        organizationUrl POM_DEVELOPER_ORGANIZATION_URL
                     }
                 }
             }

@@ -61,12 +61,12 @@ public class CollectionTypeConverterFactory implements TypeConverterFactory {
 
     @Override
     public Collection<V> convert(TagList tagList) {
-      List<V> list = constructor.construct();
+      Collection<V> collection = constructor.construct();
       tagList.forEach(tag -> {
         V value = elementConverter.convert(tag);
-        list.add(value);
+        collection.add(value);
       });
-      return list;
+      return collection;
     }
 
     @SuppressWarnings("unchecked")
