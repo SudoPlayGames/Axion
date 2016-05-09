@@ -69,7 +69,6 @@ Configurations consist of:
 * tags
 * adapters
 * converters
-* mappers
 * a compression type
 * a character encoding type
 
@@ -204,76 +203,6 @@ The `TagByteConverter` class is fairly simple and self-explanatory.
 
 ---
 
-### Mappers
-
-Mappers are simply utility classes that you can register with an Axion configuration instance to assist in converting objects to and from NBT tags. Mappers are useful when you don't have access to an object's source or otherwise can't implement the `AxionWritable` interface.
-
-For example, let's say you had a 3rd-party class that looked like this:
-
-```java
-public class Vector3f {
-
-  public float x, y, z;
-
-  public Vector3f() {
-    //
-  }
-
-  public Vector3f(final float x, final float y, final float z) {
-    this.x = x;
-    this.y = y;
-    this.z = z;
-  }
-
-}
-```
-
-You could write a mapper to convert a `Vector3f` object into a `TagList` of `TagFloat` like:
-
-```java
-public class Vector3fMapper implements NBTObjectMapper<TagList, Vector3f> {
-
-  @Override
-  public Vector3f createObjectFrom(TagList tag, Axion axion) {
-    Vector3f v = new Vector3f();
-    v.x = ((TagFloat) tag.get(0)).get();
-    v.y = ((TagFloat) tag.get(1)).get();
-    v.z = ((TagFloat) tag.get(2)).get();
-    return v;
-  }
-
-  @Override
-  public TagList createTagFrom(String name, Vector3f value, Axion axion) {
-    TagList list = new TagList(TagFloat.class, name);
-    list.add(new TagFloat("", value.x));
-    list.add(new TagFloat("", value.y));
-    list.add(new TagFloat("", value.z));
-    return list;
-  }
-
-}
-```
-
-Then register the mapper like so:
-
-```java
-axion.registerNBTObjectMapper(Vector3f.class, new Vector3fMapper());
-```
-
-Finally, use the mapper:
-
-```java
-Vector3f position = new Vector3f(16f, 2.5f, 65f);
-
-// Convert the Vector3f into a TagList
-TagList tagList = axion.createTagFrom("vec1", position);
-
-// Convert the TagList back into a Vector3f
-Vector3f result = axion.createObjectFrom(tagList, Vector3f.class);
-```
-
----
-
 ### Compression Type
 
 Both built-in configurations use GZip as the default compression type. This is consistent with the original specification of NBT. If you wish to change this, however, Axion configurations can use GZip, Deflater, or no compression.
@@ -314,7 +243,7 @@ The `AxionWritable` provides an interface for easily creating classes that can b
 For example, extending the `Vector3f` example used above:
 
 ```java
-public class Vector3f implements AxionWritable<TagList> {
+public class Vector3f implements AxionWritable {
 
   public float x, y, z;
 
@@ -322,26 +251,22 @@ public class Vector3f implements AxionWritable<TagList> {
     //
   }
 
-  public Vector3f(final float x, final float y, final float z) {
+  public Vector3f(float x, float y, float z) {
     this.x = x;
     this.y = y;
     this.z = z;
   }
 
   @Override
-  public TagList write(final Axion axion) {
-    TagList out = new TagList(TagFloat.class);
-    list.add(new TagFloat("", x));
-    list.add(new TagFloat("", y));
-    list.add(new TagFloat("", z));
-    return out;
+  public void write(AxionWriter out) {
+    out.write("x", x).write("y", y).write("z", z);
   }
 
   @Override
-  public void read(final TagList in, final Axion axion) {
-    x = ((TagFloat) in.get(0)).get();
-    y = ((TagFloat) in.get(1)).get();
-    z = ((TagFloat) in.get(2)).get();
+  public void read(AxionReader in) {
+    x = in.read("x");
+    y = in.read("y");
+    z = in.read("z");
   }
 
 }
