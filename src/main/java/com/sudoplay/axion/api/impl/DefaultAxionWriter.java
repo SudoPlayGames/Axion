@@ -45,7 +45,14 @@ public class DefaultAxionWriter implements AxionWriter {
   ) {
     assertNotNull(name, "name");
     assertNotNull(object, "object");
-    this._write(name, object);
+
+    if (object instanceof Tag) {
+      tagCompound.put(name, (Tag) object);
+
+    } else {
+      this._write(name, object);
+    }
+
     return this;
   }
 

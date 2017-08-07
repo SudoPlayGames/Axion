@@ -31,6 +31,22 @@ public class AxionWriterTest {
   }
 
   @Test
+  public void test_write_tag_as_object() {
+
+    // fixes: if a tag is passed as an object to the write method it
+    // is not seen as a tag and axion tries to find a converter that
+    // it doesn't have and throws
+
+    AxionWriter out = getTestWriter();
+
+    out.write("test", (Object) new TagInt(42));
+
+    Tag tag = out.getTagCompound().get("test");
+    assertEquals(42, (int) axion.fromTag(tag));
+
+  }
+
+  @Test
   public void test_write_name_tag() {
     AxionWriter out = getTestWriter();
 
