@@ -10,6 +10,10 @@ if (JavaVersion.current().isJava8Compatible()) {
     }
 }
 
+group = 'com.sudoplay.axion'
+version = new File("${project.projectDir}/project.version").text
+archivesBaseName = 'axion'
+
 repositories {
     mavenCentral()
 }
@@ -68,9 +72,9 @@ uploadArchives {
         mavenDeployer {
             beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
-            pom.groupId = GROUP
-            pom.artifactId = POM_ARTIFACT_ID
-            pom.version = VERSION_NAME
+            pom.groupId = group
+            pom.artifactId = archivesBaseName
+            pom.version = version
 
             repository(url: getReleaseRepositoryUrl()) {
                 authentication(userName: getRepositoryUsername(), password: getRepositoryPassword())
