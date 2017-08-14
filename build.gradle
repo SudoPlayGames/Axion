@@ -23,6 +23,10 @@ dependencies {
     testCompile 'junit:junit:4.11'
 }
 
+task wrapper(type: Wrapper) {
+  gradleVersion = '4.1'
+}
+
 task javadocJar(type: Jar) {
     classifier = 'javadoc'
     from javadoc
@@ -72,9 +76,9 @@ uploadArchives {
         mavenDeployer {
             beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
-            pom.groupId = group
-            pom.artifactId = archivesBaseName
-            pom.version = version
+            pom.groupId = project.group
+            pom.artifactId = project.archivesBaseName
+            pom.version = project.version
 
             repository(url: getReleaseRepositoryUrl()) {
                 authentication(userName: getRepositoryUsername(), password: getRepositoryPassword())
